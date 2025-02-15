@@ -64,7 +64,7 @@
 		"mapbox-gl-draw-snap-mode": "^0.2.0",
 		"mapbox-gl-style-switcher": "^1.0.11",
 		"minimatch": "^8.0.2",
-		"next": "15.0.3",
+		"next": "15.1.2",
 		"next-auth": "^4.24.5",
 		"next-i18next": "^13.0.3",
 		"next-seo": "^6.1.0",
