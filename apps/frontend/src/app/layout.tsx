@@ -13,6 +13,7 @@ import 'mantine-datatable/styles.layer.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
 import SWRSetup from '@/components/core/SWRSetup';
+import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck';
 import AppLayout from '@/components/layout';
 import { theme } from '@/util/theme';
 import { ModalsProvider } from '@mantine/modals';
@@ -43,6 +44,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					<SWRSetup>
 						<ModalsProvider>
 							<Notifications limit={3} />
+							<DEBUG_ScreenSizeCheck />
+
 							<AppLayout>{children}</AppLayout>
 						</ModalsProvider>
 					</SWRSetup>

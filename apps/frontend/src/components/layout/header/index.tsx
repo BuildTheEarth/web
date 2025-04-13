@@ -6,17 +6,11 @@ import classes from '@/styles/layout/Header.module.css';
 import { IconChevronRight } from '@tabler/icons-react';
 import Image from 'next/image';
 import Link from 'next/link';
-
-const links = [
-	{ link: '/gallery', label: 'Gallery' },
-	{ link: '/teams', label: 'Teams' },
-	{ link: '/map', label: 'Map' },
-	{ link: '/faq', label: 'FAQ' },
-	{ link: '/contact', label: 'Contact' },
-];
+import HeaderDrawer from './HeaderDrawer';
+import { headerLinks } from './links';
 
 export async function Header() {
-	const items = links.map((link) => (
+	const items = headerLinks.map((link) => (
 		<Link key={link.label} href={link.link} className={classes.link}>
 			{link.label}
 		</Link>
@@ -47,21 +41,14 @@ export async function Header() {
 						BuildTheEarth
 					</Text>
 				</Group>
-				<Group gap={5} visibleFrom="xs">
+				<Group gap={5} visibleFrom="sm" className={classes.linksContainer}>
 					{items}
 				</Group>
 				<Group>
-					<Button
-						variant="filled"
-						color="buildtheearth"
-						rightSection={<IconChevronRight size={12} />}
-						className={classes.link}
-					>
+					<Button variant="filled" color="buildtheearth" visibleFrom="xs" rightSection={<IconChevronRight size={12} />}>
 						Get Started
 					</Button>
-					<Button variant="outline" className={classes.link}>
-						Log In
-					</Button>
+					<HeaderDrawer />
 				</Group>
 			</Container>
 		</header>

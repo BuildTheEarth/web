@@ -20,6 +20,7 @@
 
 .link {
 	display: block;
+	position: relative;
 	line-height: 1;
 	padding: 8px 12px;
 	border-radius: var(--mantine-radius-sm);
@@ -29,7 +30,42 @@
 	font-size: var(--mantine-font-size-sm);
 	font-weight: 500;
 
-	@mixin hover {
-		background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+	transition: all 0.2s ease-in-out;
+}
+
+.linksContainer {
+	display: flex;
+	gap: 12px;
+
+	&:hover .link,
+	&:focus .link {
+		opacity: 0.5;
 	}
+
+	.link:hover,
+	.link:focus {
+		opacity: 1;
+		background-color: rgba(255, 255, 255, 0.1);
+	}
+
+	&:not(:hover) .link,
+	&:not(:focus) .link {
+		opacity: 1;
+	}
+}
+
+.drawerControl {
+	@media (min-width: $mantine-breakpoint-sm) {
+		display: none;
+	}
+}
+
+.drawerLink {
+	display: block;
+	line-height: 1;
+	padding: 8px 12px;
+	padding-left: 0px;
+	text-decoration: none;
+	color: light-dark(var(--mantine-color-gray-2), var(--mantine-color-gray-0));
+	font-size: var(--mantine-font-size-md);
 }
