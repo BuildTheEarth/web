@@ -60,7 +60,7 @@
 		"mapbox-gl": "2.13.0",
 		"mapbox-gl-draw-snap-mode": "^0.2.0",
 		"mapbox-gl-style-switcher": "^1.0.11",
-		"minimatch": "^8.0.2",
+		"minimatch": "^10.0.1",
 		"motion": "^12.6.5",
 		"next": "15.3.0",
 		"next-auth": "^4.24.5",

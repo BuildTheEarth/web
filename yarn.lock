@@ -5445,7 +5445,7 @@ __metadata:
     jsonwebtoken: "npm:^9.0.0"
     keycloak-connect: "npm:^22.0.0"
     mariadb: "npm:^3.0.2"
-    minimatch: "npm:^7.4.3"
+    minimatch: "npm:^10.0.1"
     multer: "npm:^1.4.5-lts.1"
     mysql: "npm:^2.18.1"
     plaiceholder: "npm:^3.0.0"
@@ -8814,7 +8814,7 @@ __metadata:
     mapbox-gl: "npm:2.13.0"
     mapbox-gl-draw-snap-mode: "npm:^0.2.0"
     mapbox-gl-style-switcher: "npm:^1.0.11"
-    minimatch: "npm:^8.0.2"
+    minimatch: "npm:^10.0.1"
     motion: "npm:^12.6.5"
     next: "npm:15.3.0"
     next-auth: "npm:^4.24.5"
@@ -11024,30 +11024,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^10.0.1":
+  version: 10.0.1
+  resolution: "minimatch@npm:10.0.1"
+  dependencies:
+    brace-expansion: "npm:^2.0.1"
+  checksum: 10c0/e6c29a81fe83e1877ad51348306be2e8aeca18c88fdee7a99df44322314279e15799e41d7cb274e4e8bb0b451a3bc622d6182e157dfa1717d6cda75e9cd8cd5d
+  languageName: node
+  linkType: hard
+
 "minimatch@npm:^3.0.5, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
   dependencies:
     brace-expansion: "npm:^1.1.7"
   checksum: 10c0/0262810a8fc2e72cca45d6fd86bd349eee435eb95ac6aa45c9ea2180e7ee875ef44c32b55b5973ceabe95ea12682f6e3725cbb63d7a2d1da3ae1163c8b210311
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^7.4.3":
-  version: 7.4.6
-  resolution: "minimatch@npm:7.4.6"
-  dependencies:
-    brace-expansion: "npm:^2.0.1"
-  checksum: 10c0/e587bf3d90542555a3d58aca94c549b72d58b0a66545dd00eef808d0d66e5d9a163d3084da7f874e83ca8cc47e91c670e6c6f6593a3e7bb27fcc0e6512e87c67
-  languageName: node
-  linkType: hard
-
-"minimatch@npm:^8.0.2":
-  version: 8.0.4
-  resolution: "minimatch@npm:8.0.4"
-  dependencies:
-    brace-expansion: "npm:^2.0.1"
-  checksum: 10c0/a0a394c356dd5b4cb7f821720841a82fa6f07c9c562c5b716909d1b6ec5e56a7e4c4b5029da26dd256b7d2b3a3f38cbf9ddd8680e887b9b5282b09c05501c1ca
   languageName: node
   linkType: hard
 
