@@ -36,13 +36,12 @@ export default function Footer({ style }: FooterProps) {
 						variant="transparent"
 						aria-label="Discord"
 						target="_blank"
+						c="dimmed"
+						size="sm"
 					>
 						<IconBrandDiscord />
 					</ActionIcon>
 				</Group>
-				<Anchor style={{ fontSize: '14px' }} c="dimmed" variant="text" className={classes.copyright2}>
-					© {new Date().getFullYear()} BuildTheEarth
-				</Anchor>
 			</Box>
 		</Box>
 	);
