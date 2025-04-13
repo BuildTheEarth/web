@@ -1,0 +1,36 @@
+name: Docker Publish
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Docker login
+        run: |
+          echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - name: 'Create env file'
+        run: |
+          touch build.env.local
+          echo KEYCLOAK_URL="https://auth.buildtheearth.net/realms/website" >> build.env.local
+          echo KEYCLOAK_ID="frontend" >> build.env.local
+          echo KEYCLOAK_SECRET="${{ secrets.KEYCLOAK_SECRET }}" >> build.env.local
+          echo NEXTAUTH_URL="https://dash.buildtheearth.net" >> build.env.local
+          echo NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" >> build.env.local
+          echo NEXT_PUBLIC_API_URL="https://api.buildtheearth.net/api/v1" >> build.env.local
+          echo NEXT_PUBLIC_SMYLER_API_URL="https://smybteapi.buildtheearth.net" >> build.env.local
+          echo NEXT_PUBLIC_FRONTEND_URL="https://buildtheearth.net" >> build.env.local
+          echo FRONTEND_KEY="${{ secrets.FRONTEND_KEY }}" >> build.env.local
+          echo REPORTS_WEBHOOK="${{ secrets.REPORTS_WEBHOOK }}" >> build.env.local
+          echo PORT=3000 >> build.env.local
+
+      - name: Build Docker Image
+        run: docker build . --file Dockerfile --tag ghcr.io/buildtheearth/dashboard-website:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/dashboard-website:latest
+      - name: Docker Push
+        run: docker push ghcr.io/buildtheearth/dashboard-website:$(git rev-parse --short HEAD)
+      - name: Docker Push Latest
+        run: docker push ghcr.io/buildtheearth/dashboard-website:latest

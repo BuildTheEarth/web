@@ -11,6 +11,8 @@ export const useScrollPosition = () => {
 		window.addEventListener('scroll', updatePosition);
 		updatePosition();
 
+		console.log('useScrollPosition.ts: updatePosition:', updatePosition);
+
 		return () => window.removeEventListener('scroll', updatePosition);
 	}, []);
 

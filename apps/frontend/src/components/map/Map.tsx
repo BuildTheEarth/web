@@ -1,26 +1,30 @@
+'use client';
+
 import 'mapbox-gl-style-switcher/styles.css';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 import * as React from 'react';
 
 import { LoadingOverlay, useMantineColorScheme, useMantineTheme } from '@mantine/core';
-import mapboxgl, { GeolocateControl } from 'mapbox-gl';
+import mapboxgl, { GeolocateControl, Map as MapType, MapboxOptions } from 'mapbox-gl';
 import { MapboxStyleDefinition, MapboxStyleSwitcherControl } from 'mapbox-gl-style-switcher';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { showNotification } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons-react';
-import { useRouter } from 'next/router';
 
 interface IMap {
-	initialOptions?: Omit<mapboxgl.MapboxOptions, 'container'>;
-	onMapLoaded?(map: mapboxgl.Map): void;
+	initialOptions?: Omit<MapboxOptions, 'container'>;
+	onMapLoaded?(map: MapType): void;
 	onMapRemoved?(): void;
 	allowFullscreen?: boolean;
 	savePos?: boolean;
 	themeControls?: boolean;
+	navigationControls?: boolean;
+	gelocateControls?: boolean;
 	src?: string;
 	initialStyle?: number;
-	layerSetup?(map: mapboxgl.Map): void;
+	layerSetup?(map: MapType): void;
 	onContextMenu?(event: any): void;
 }
 
@@ -44,15 +48,19 @@ function Map({
 	allowFullscreen,
 	savePos = true,
 	themeControls = true,
+	navigationControls = true,
+	gelocateControls = true,
 	layerSetup,
 	src,
 	initialStyle,
 	onContextMenu,
 }: IMap) {
 	// Mapbox map
-	const [map, setMap] = React.useState<mapboxgl.Map>();
+	const [map, setMap] = React.useState<MapType>();
 	// Next Router
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const pathname = usePathname();
 	// Boolean if position from url was loaded
 	const [posSet, setPosSet] = React.useState(false);
 	// Boolean if map is loading (-> Display mapLoader)
@@ -66,10 +74,10 @@ function Map({
 	// Update Query Parameters with position
 	React.useEffect(() => {
 		if (posSet) return;
-		const initialZoom = router.query.z?.toString();
-		const initialLat = router.query.lat?.toString();
-		const initialLng = router.query.lng?.toString();
-		const initialTheme = router.query.theme?.toString();
+		const initialZoom = searchParams.get('z');
+		const initialLat = searchParams.get('lat');
+		const initialLng = searchParams.get('lng');
+		const initialTheme = searchParams.get('theme');
 		if (initialLat && initialLng && initialZoom) {
 			map?.flyTo({
 				center: [parseFloat(initialLng), parseFloat(initialLat)],
@@ -81,7 +89,7 @@ function Map({
 			map?.setStyle(styles[parseInt(initialTheme)].uri);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [router.query]);
+	}, [searchParams]);
 
 	// Setup Map
 	React.useEffect(() => {
@@ -89,7 +97,7 @@ function Map({
 
 		if (typeof window === 'undefined' || node === null) return;
 
-		const mapboxMap = new mapboxgl.Map({
+		const mapboxMap = new MapType({
 			container: node,
 			accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN,
 			style: initialStyle || scheme.colorScheme == 'dark' ? styles[0].uri : styles[1].uri,
@@ -122,13 +130,14 @@ function Map({
 					}) as unknown as mapboxgl.IControl, // TODO: Types are wrong, dependency versions?
 				);
 
-			mapboxMap.addControl(
-				new GeolocateControl({
-					positionOptions: { enableHighAccuracy: true },
-					showUserLocation: true,
-				}),
-			);
-			mapboxMap.addControl(new mapboxgl.NavigationControl());
+			if (gelocateControls)
+				mapboxMap.addControl(
+					new GeolocateControl({
+						positionOptions: { enableHighAccuracy: true },
+						showUserLocation: true,
+					}),
+				);
+			if (navigationControls) mapboxMap.addControl(new mapboxgl.NavigationControl());
 
 			mapboxMap.on('style.load', async () => {
 				src &&
@@ -146,19 +155,16 @@ function Map({
 		const triggerPosChange = () => {
 			const zoom = Math.round(mapboxMap.getZoom() * 10) / 10;
 			const pos = mapboxMap.getCenter();
-			router.push(
-				{
-					query: {
-						...router.query,
-						z: zoom,
-						lat: pos.lat,
-						lng: pos.lng,
-					},
-				},
-				undefined,
-				{
-					shallow: true,
-				},
+			router.replace(
+				pathname.split('?')[0] + '?z=' + zoom + '&lat=' + pos.lat + '&lng=' + pos.lng,
+				// { TODO
+				// 	query: {
+
+				// 		z: zoom,
+				// 		lat: pos.lat,
+				// 		lng: pos.lng,
+				// 	},
+				// },
 			);
 		};
 
@@ -215,10 +221,28 @@ export function mapCopyCoordinates(map: any, clipboard: any) {
 		});
 	});
 }
+
+export function mapTooltip(map: any, layer: string, callback: (feature: any) => string | null) {
+	const popup = new mapboxgl.Popup({
+		closeButton: false,
+		closeOnClick: false,
+	});
+
+	map.on('mousemove', layer, (e: any) => {
+		const content = callback(e.features[0]);
+		if (content) popup.setLngLat(e.lngLat).setHTML(content).addTo(map);
+		else popup.remove();
+	});
+
+	map.on('mouseleave', layer, () => {
+		popup.remove();
+	});
+}
+
 // Map Load Helper Functions
 
 export async function mapLoadGeoJson(
-	map: mapboxgl.Map,
+	map: MapType,
 	url: string,
 	layer: string,
 	layerType: any,

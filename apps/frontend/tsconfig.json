@@ -8,17 +8,32 @@
 		],
 		"baseUrl": ".",
 		"paths": {
-			"@/components/*": ["src/components/*"],
-			"@/typings/*": ["typings/*"],
-			"@/hooks/*": ["src/hooks/*"],
-			"@/pages/*": ["src/pages/*"],
-			"@/styles/*": ["src/styles/*"],
-			"@/utils/*": ["src/utils/*"],
-			"@/src/*": ["src/*"],
-			"@/public/*": ["public/*"]
+			"@/*": ["./src/*"],
+			// "@/components/*": ["src/components/*"],
+			// "@/typings/*": ["typings/*"],
+			// "@/hooks/*": ["src/hooks/*"],
+			// "@/pages/*": ["src/pages/*"],
+			// "@/styles/*": ["src/styles/*"],
+			// "@/utils/*": ["src/utils/*"],
+			// "@/src/*": ["src/*"],
+			"@/public/*": ["public/*"],
+			"@repo/*": ["../../packages/*/src"]
 		},
 		"lib": ["dom", "dom.iterable", "esnext"]
+		// "moduleResolution": "NodeNext",
+		// "module": "NodeNext",
 	},
+	"allowSyntheticDefaultImports": false,
+	"preserveConstEnums": false,
+	"noImplicitAny": false,
+	"noImplicitThis": false,
+	"strictNullChecks": false,
+	"strictFunctionTypes": false,
+	"strictBindCallApply": false,
+	"strictPropertyInitialization": false,
+	"strictBuiltinIteratorReturn": false,
+	"alwaysStrict": false,
+	"useUnknownInCatchVariables": false,
 	"exclude": ["node_modules"],
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next-i18next.config.js", "next.config.js", ".next/types/**/*.ts"]
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.ts", ".next/types/**/*.ts"]
 }

@@ -5,6 +5,7 @@ import {
 	IconBrandBing,
 	IconBrandGoogleMaps,
 	IconBrandMinecraft,
+	IconCopy,
 	IconFile,
 	IconMap,
 	IconPin,
@@ -12,10 +13,11 @@ import {
 	IconWorld,
 } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
-import { ContextMenu, ContextMenuProps } from '../ContextMenu';
+import { ContextMenu, ContextMenuProps } from '../core/ContextMenu';
 
 import { fromGeoObject } from '@bte-germany/terraconvert';
 import { useClipboard } from '@mantine/hooks';
+import { showNotification } from '@mantine/notifications';
 import Link from 'next/link';
 
 interface MapContextMenuProps extends ContextMenuProps {
@@ -27,6 +29,17 @@ export function MapContextMenu({ contextMenuInfo, setContextMenuInfo, oLat, oLng
 	const clipboard = useClipboard();
 	const [{ lat, lng }, setCoords] = useState({ lat: oLat, lng: oLng });
 	const [data, setData] = useState<any>();
+
+	const copy = (text: string) => {
+		clipboard.copy(text);
+		showNotification({
+			title: 'Coordinates copied',
+			color: 'green',
+			autoClose: 1000,
+			message: 'The coordinates have been copied to your clipboard',
+			icon: <IconCopy style={{ width: rem(18), height: rem(18) }} />,
+		});
+	};
 
 	useEffect(() => {
 		setCoords({ lat: oLat, lng: oLng });
@@ -45,29 +58,27 @@ export function MapContextMenu({ contextMenuInfo, setContextMenuInfo, oLat, oLng
 				<>
 					<MenuLabel>Copy</MenuLabel>
 					<MenuItem
-						onClick={() => clipboard.copy(`${lat}, ${lng}`)}
+						onClick={() => copy(`${lat}, ${lng}`)}
 						leftSection={<IconPin style={{ width: rem(14), height: rem(14) }} />}
 					>
 						Coordinates
 					</MenuItem>
 					<MenuItem
-						onClick={() => clipboard.copy(`${data.mc?.x.toFixed(0)} ${data.mc?.z.toFixed(0)}`)}
+						onClick={() => copy(`${data.mc?.x.toFixed(0)} ${data.mc?.z.toFixed(0)}`)}
 						disabled={!data.mc}
 						leftSection={<IconBrandMinecraft style={{ width: rem(14), height: rem(14) }} />}
 					>
 						Block Coordinates
 					</MenuItem>
 					<MenuItem
-						onClick={() => clipboard.copy(`${Math.floor(data.mc?.x / 16)} ${Math.floor(data.mc?.z / 16)}`)}
+						onClick={() => copy(`${Math.floor(data.mc?.x / 16)} ${Math.floor(data.mc?.z / 16)}`)}
 						disabled={!data.mc}
 						leftSection={<IconSquare style={{ width: rem(14), height: rem(14) }} />}
 					>
 						Chunk Coordinates
 					</MenuItem>
 					<MenuItem
-						onClick={() =>
-							clipboard.copy(`r.${Math.floor(data.mc?.x / 16) >> 5}.${Math.floor(data.mc?.z / 16) >> 5}.mca`)
-						}
+						onClick={() => copy(`r.${Math.floor(data.mc?.x / 16) >> 5}.${Math.floor(data.mc?.z / 16) >> 5}.mca`)}
 						disabled={!data.mc}
 						leftSection={<IconFile style={{ width: rem(14), height: rem(14) }} />}
 					>

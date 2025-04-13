@@ -8,7 +8,7 @@ WORKDIR /app
 # Run turbo (will prune the lockfile to only include target dependencies)
 RUN yarn global add turbo@^2.1.1
 COPY . .
-RUN turbo prune frontend --docker
+RUN turbo prune dashboard --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
@@ -24,10 +24,8 @@ RUN yarn list postcss
 # Build the project
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/apps/frontend/.env ./apps/frontend/.env
-COPY --from=builder /app/apps/frontend/next.config.js ./apps/frontend/next.config.js
-COPY --from=builder /app/apps/frontend/next-seo.config.ts ./apps/frontend/next-seo.config.ts
-COPY --from=builder /app/apps/frontend/postcss.config.js ./apps/frontend/postcss.config.js
-COPY --from=builder /app/apps/frontend/next-i18next.config.js ./apps/frontend/next-i18next.config.js
+COPY --from=builder /app/apps/frontend/next.config.ts ./apps/frontend/next.config.ts
+COPY --from=builder /app/apps/frontend/postcss.config.cjs ./apps/frontend/postcss.config.cjs
 ENV NEXT_TELEMETRY_DISABLED 1
 
 
@@ -45,13 +43,13 @@ RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 # Reduce image size
-COPY --from=installer --chown=nextjs:nodejs /app/apps/frontend/.next/standalone ./
-COPY --from=installer --chown=nextjs:nodejs /app/apps/frontend/.next/static ./apps/frontend/.next/static
-COPY --from=installer --chown=nextjs:nodejs /app/apps/frontend/public ./apps/frontend/public
+COPY --from=installer --chown=nextjs:nodejs /app/apps/dashboard/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/dashboard/.next/static ./apps/dashboard/.next/static
+COPY --from=installer --chown=nextjs:nodejs /app/apps/dashboard/public ./apps/dashboard/public
 
 EXPOSE 3000
 
 ENV PORT 3000
 ENV HOSTNAME "0.0.0.0"
 
-CMD node apps/frontend/server.js
+CMD node apps/dashboard/server.js
