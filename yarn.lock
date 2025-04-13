@@ -3142,15 +3142,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-link@npm:^2.0.2":
-  version: 2.9.1
-  resolution: "@tiptap/extension-link@npm:2.9.1"
+"@tiptap/extension-link@npm:^2.11.7":
+  version: 2.11.7
+  resolution: "@tiptap/extension-link@npm:2.11.7"
   dependencies:
-    linkifyjs: "npm:^4.1.0"
+    linkifyjs: "npm:^4.2.0"
   peerDependencies:
     "@tiptap/core": ^2.7.0
     "@tiptap/pm": ^2.7.0
-  checksum: 10c0/6eda0d9914cb7e18998606b0a00943922ff59ef2d95568bb359f96cc212c703b8b59ad36b1911587bfdf1819a637807a20741f4774ebc1620ec4d6b9fb1adbcd
+  checksum: 10c0/2541c1511b57932519a6885c3b0d996c270ba13495fa7edfbcb0aca5019b6cdaf75d2763a43c83982ba0de071bf0e66d92d5af9d5a19ac27e35b35ee950fb0c5
   languageName: node
   linkType: hard
 
@@ -6976,7 +6976,7 @@ __metadata:
     "@repo/typescript-config": "npm:*"
     "@tabler/icons-react": "npm:^3.9.0"
     "@tiptap/extension-highlight": "npm:^2.0.2"
-    "@tiptap/extension-link": "npm:^2.0.2"
+    "@tiptap/extension-link": "npm:^2.11.7"
     "@tiptap/extension-placeholder": "npm:^2.11.7"
     "@tiptap/extension-subscript": "npm:^2.0.2"
     "@tiptap/extension-superscript": "npm:^2.0.2"
@@ -9059,7 +9059,7 @@ __metadata:
     "@repo/typescript-config": "npm:*"
     "@tabler/icons-react": "npm:^2.35.0"
     "@tiptap/extension-highlight": "npm:^2.0.2"
-    "@tiptap/extension-link": "npm:^2.0.2"
+    "@tiptap/extension-link": "npm:^2.11.7"
     "@tiptap/extension-placeholder": "npm:^2.11.7"
     "@tiptap/extension-subscript": "npm:^2.0.2"
     "@tiptap/extension-superscript": "npm:^2.0.2"
@@ -10824,10 +10824,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"linkifyjs@npm:^4.1.0":
-  version: 4.1.3
-  resolution: "linkifyjs@npm:4.1.3"
-  checksum: 10c0/9fb71da06ee710b5587c8b61ff9a0e45303d448f61fab135e44652cff95c09c1abe276158a72384cff6f35a2371d1cec33dfaa7e5280b71dbb142b43d210c75a
+"linkifyjs@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "linkifyjs@npm:4.2.0"
+  checksum: 10c0/fda4fe3e98df94400fbc70ba38798094c6852e7f41e8cc9b8a2fcd3cb122daa20502aedfd1ecb996cf9d829f6fdddd9813858ca070f9cb246389a5b161c6ac8d
   languageName: node
   linkType: hard
 
