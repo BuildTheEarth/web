@@ -3181,13 +3181,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tiptap/extension-placeholder@npm:^2.2.4":
-  version: 2.9.1
-  resolution: "@tiptap/extension-placeholder@npm:2.9.1"
+"@tiptap/extension-placeholder@npm:^2.11.7":
+  version: 2.11.7
+  resolution: "@tiptap/extension-placeholder@npm:2.11.7"
   peerDependencies:
     "@tiptap/core": ^2.7.0
     "@tiptap/pm": ^2.7.0
-  checksum: 10c0/cb8a91bfa98a7613b58a342b213fabef2cb394b5c4fe16098e800f2f0aaf3f4cda5c450d501c46de555be90ec1707fcd4f3480af99f96b7d5595de5fb7ff13d5
+  checksum: 10c0/542c9c2473c4ed2a65329a96a7ce7d53d71bd9d48df3ee5e1ed157ddfaa52317c812acbbfaaacd3299758726410a052124c50e130f413da7905df1fe040f8ea3
   languageName: node
   linkType: hard
 
@@ -6977,7 +6977,7 @@ __metadata:
     "@tabler/icons-react": "npm:^3.9.0"
     "@tiptap/extension-highlight": "npm:^2.0.2"
     "@tiptap/extension-link": "npm:^2.0.2"
-    "@tiptap/extension-placeholder": "npm:^2.2.4"
+    "@tiptap/extension-placeholder": "npm:^2.11.7"
     "@tiptap/extension-subscript": "npm:^2.0.2"
     "@tiptap/extension-superscript": "npm:^2.0.2"
     "@tiptap/extension-text-align": "npm:^2.0.2"
@@ -9060,7 +9060,7 @@ __metadata:
     "@tabler/icons-react": "npm:^2.35.0"
     "@tiptap/extension-highlight": "npm:^2.0.2"
     "@tiptap/extension-link": "npm:^2.0.2"
-    "@tiptap/extension-placeholder": "npm:^2.2.4"
+    "@tiptap/extension-placeholder": "npm:^2.11.7"
     "@tiptap/extension-subscript": "npm:^2.0.2"
     "@tiptap/extension-superscript": "npm:^2.0.2"
     "@tiptap/extension-text-align": "npm:^2.0.2"
