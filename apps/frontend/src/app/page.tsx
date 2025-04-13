@@ -20,7 +20,7 @@ import {
 import { IconBuildingSkyscraper, IconChevronRight, IconMap, IconUsersGroup } from '@tabler/icons-react';
 export default async function Page() {
 	return (
-		<Wrapper offsetHeader={false} style={{}}>
+		<Wrapper offsetHeader={false}>
 			<BackgroundImage src="/home.png" w="100%" h="100%" mih="100vh" style={{ position: 'relative', zIndex: 0 }}>
 				<Center h="100vh" w="100vw">
 					<div style={{ textAlign: 'center', zIndex: 1 }}>

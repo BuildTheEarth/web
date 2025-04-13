@@ -16,11 +16,15 @@ export default async function Wrapper({
 }) {
 	return (
 		<Box
-			w="100%"
+			w="100vw"
 			pt={offsetHeader ? '54px' : '0'}
-			h="100%"
-			mih={`calc(100vh - ${offsetHeader ? '54px' : '0'})`}
-			style={style}
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				flex: 1,
+				overflowX: 'hidden',
+				...style,
+			}}
 		>
 			{children}
 		</Box>

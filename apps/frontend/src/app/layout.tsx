@@ -35,11 +35,16 @@ const minecraftFont = localFont({
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en" className={`${interFont.variable} ${minecraftFont.variable}`} suppressHydrationWarning>
+		<html
+			lang="en"
+			className={`${interFont.variable} ${minecraftFont.variable}`}
+			suppressHydrationWarning
+			style={{ overflowX: 'hidden', width: '100vw' }}
+		>
 			<head>
 				<ColorSchemeScript />
 			</head>
-			<body>
+			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
 				<MantineProvider theme={theme}>
 					<SWRSetup>
 						<ModalsProvider>

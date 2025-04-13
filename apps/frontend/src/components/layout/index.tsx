@@ -13,9 +13,19 @@ export interface LayoutProps {
  */
 export default async function AppLayout(props: LayoutProps) {
 	return (
-		<Box style={{ maxWidth: '100vw', overflowX: 'hidden', padding: 0, margin: 0 }}>
+		<Box
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				minHeight: '100vh',
+				width: '100vw',
+				overflowX: 'hidden',
+				padding: 0,
+				margin: 0,
+			}}
+		>
 			<Header />
-			<div style={{ width: '100%', padding: 0 }}>{props.children}</div>
+			<Box style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>{props.children}</Box>
 			<Footer />
 		</Box>
 	);

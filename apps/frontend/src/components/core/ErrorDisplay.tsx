@@ -1,44 +1,80 @@
-'use client';
-
-import { ActionIcon, Box, Button, Text, Title } from '@mantine/core';
-
-import { useDisclosure } from '@mantine/hooks';
-import { IconChevronDown } from '@tabler/icons-react';
-import { usePathname } from 'next/navigation';
+import { Box, Button, Text, Title } from '@mantine/core';
+import { motion } from 'motion/react';
+import EarthBackground from '../layout/EarthBackground';
 
 export default function ErrorDisplay({
 	title = 'Something is not right...',
-	message = 'The Page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. If you think this is an error please contact us.',
+	message = 'The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. ',
 	showBackButton = true,
 }: {
 	title?: string;
 	message?: string;
 	showBackButton?: boolean;
 }) {
-	const [opened, { toggle }] = useDisclosure(false);
-	const pathname = usePathname();
-
 	return (
-		<Box mx="md" maw="90vw">
-			<Title order={1} mt="xl" mb="md">
-				{title}
+		<Box
+			w="100%"
+			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				justifyContent: 'center',
+				alignItems: 'center',
+				flex: 1,
+				position: 'relative',
+				overflow: 'hidden',
+			}}
+		>
+			<EarthBackground />
+			<Title order={1} mt="xl" mb="md" ta="center">
+				<motion.span
+					style={{ display: 'inline-block' }}
+					initial={{ opacity: 0, y: 10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{
+						default: {
+							delay: 0.1,
+							duration: 0.95,
+							ease: 'easeOut',
+						},
+					}}
+				>
+					{title}
+				</motion.span>
 			</Title>
-			<Text c="dimmed" size="md" maw="40%">
-				{message}{' '}
-				<ActionIcon size="xs" variant="transparent" color="gray" pt="xs" onClick={toggle}>
-					<IconChevronDown size={16} />
-				</ActionIcon>
+			<Text c="dimmed" size="md" maw="40%" ta="center" mb="xl">
+				<motion.span
+					style={{ display: 'inline-block' }}
+					initial={{ opacity: 0, y: 10 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{
+						default: {
+							delay: 0.25,
+							duration: 0.95,
+							ease: 'easeOut',
+						},
+					}}
+				>
+					{message}
+				</motion.span>
 			</Text>
-			{opened && (
-				<Text c="dimmed" size="sm" maw="40%" mt="md">
-					Page: {pathname}
-				</Text>
-			)}
-			{showBackButton && (
-				<Button variant="outline" size="sm" mt="lg">
-					Go Back
-				</Button>
-			)}
+			<motion.div
+				style={{ display: 'inline-block' }}
+				initial={{ opacity: 0, y: 10 }}
+				animate={{ opacity: 1, y: 0 }}
+				transition={{
+					default: {
+						delay: 0.35,
+						duration: 0.95,
+						ease: 'easeOut',
+					},
+				}}
+			>
+				{showBackButton && (
+					<Button variant="outline" size="sm" mt="md">
+						Go Back
+					</Button>
+				)}
+			</motion.div>
 		</Box>
 	);
 }
