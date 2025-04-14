@@ -37,19 +37,16 @@
 	display: flex;
 	gap: 12px;
 
-	&:hover .link,
-	&:focus .link {
+	&:hover .link {
 		opacity: 0.5;
 	}
 
-	.link:hover,
-	.link:focus {
+	.link:hover {
 		opacity: 1;
 		background-color: rgba(255, 255, 255, 0.1);
 	}
 
-	&:not(:hover) .link,
-	&:not(:focus) .link {
+	&:not(:hover) .link {
 		opacity: 1;
 	}
 }
