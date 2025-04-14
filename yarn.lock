@@ -10870,7 +10870,7 @@ __metadata:
     three: "npm:^0.149.0"
     tiptap-markdown: "npm:^0.8.10"
     typescript: "npm:^5.6.3"
-    uuid: "npm:^9.0.0"
+    uuid: "npm:^11.1.0"
     vague-time: "npm:^2.4.2"
   languageName: unknown
   linkType: soft
@@ -17455,7 +17455,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^9.0.0, uuid@npm:^9.0.1":
+"uuid@npm:^9.0.1":
   version: 9.0.1
   resolution: "uuid@npm:9.0.1"
   bin:
