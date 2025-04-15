@@ -1,4 +1,7 @@
-import { createTheme } from '@mantine/core';
+'use client';
+import classes from '@/styles/ResponsiveContainer.module.css';
+import { Container, createTheme } from '@mantine/core';
+import cx from 'clsx';
 
 /**
  * Main Mantine Theme of the Website
@@ -54,7 +57,13 @@ export const theme = createTheme({
 		// 	'#101113',
 		// ],
 	},
-
+	components: {
+		Container: Container.extend({
+			classNames: (_, { size }) => ({
+				root: cx({ [classes.responsiveContainer]: size === 'responsive' }),
+			}),
+		}),
+	},
 	autoContrast: true,
 	luminanceThreshold: 0.35,
 });

@@ -4,12 +4,15 @@
 
 	--text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.5);
 
+	/* --debug-border: 1px; */
+
 	@mixin dark-root {
 		--mantine-color-card-bg-light: var(--mantine-color-dark-6);
 	}
 	@mixin light-root {
 		--mantine-color-card-bg-light: var(--mantine-color-gray-0);
 	}
+	scroll-behavior: smooth;
 }
 
 .xl2 {

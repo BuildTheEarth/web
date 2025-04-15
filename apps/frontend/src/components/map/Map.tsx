@@ -74,10 +74,10 @@ function Map({
 	// Update Query Parameters with position
 	React.useEffect(() => {
 		if (posSet) return;
-		const initialZoom = searchParams.get('z');
-		const initialLat = searchParams.get('lat');
-		const initialLng = searchParams.get('lng');
-		const initialTheme = searchParams.get('theme');
+		const initialZoom = searchParams?.get('z');
+		const initialLat = searchParams?.get('lat');
+		const initialLng = searchParams?.get('lng');
+		const initialTheme = searchParams?.get('theme');
 		if (initialLat && initialLng && initialZoom) {
 			map?.flyTo({
 				center: [parseFloat(initialLng), parseFloat(initialLat)],
@@ -156,7 +156,7 @@ function Map({
 			const zoom = Math.round(mapboxMap.getZoom() * 10) / 10;
 			const pos = mapboxMap.getCenter();
 			router.replace(
-				pathname.split('?')[0] + '?z=' + zoom + '&lat=' + pos.lat + '&lng=' + pos.lng,
+				pathname?.split('?')[0] + '?z=' + zoom + '&lat=' + pos.lat + '&lng=' + pos.lng,
 				// { TODO
 				// 	query: {
 

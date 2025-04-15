@@ -1,5 +1,6 @@
 import { Box, Button, Text, Title } from '@mantine/core';
-import { motion } from 'motion/react';
+import AppearAnimation from '../animations/AppearAnimation';
+import SplitTextAnimation from '../animations/SplitText';
 import EarthBackground from '../layout/EarthBackground';
 
 export default function ErrorDisplay({
@@ -26,55 +27,20 @@ export default function ErrorDisplay({
 		>
 			<EarthBackground />
 			<Title order={1} mt="xl" mb="md" ta="center">
-				<motion.span
-					style={{ display: 'inline-block' }}
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{
-						default: {
-							delay: 0.1,
-							duration: 0.95,
-							ease: 'easeOut',
-						},
-					}}
-				>
-					{title}
-				</motion.span>
+				<SplitTextAnimation asOne>{title}</SplitTextAnimation>
 			</Title>
 			<Text c="dimmed" size="md" maw="40%" ta="center" mb="xl">
-				<motion.span
-					style={{ display: 'inline-block' }}
-					initial={{ opacity: 0, y: 10 }}
-					animate={{ opacity: 1, y: 0 }}
-					transition={{
-						default: {
-							delay: 0.25,
-							duration: 0.95,
-							ease: 'easeOut',
-						},
-					}}
-				>
+				<SplitTextAnimation asOne delay={0.15}>
 					{message}
-				</motion.span>
+				</SplitTextAnimation>
 			</Text>
-			<motion.div
-				style={{ display: 'inline-block' }}
-				initial={{ opacity: 0, y: 10 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{
-					default: {
-						delay: 0.35,
-						duration: 0.95,
-						ease: 'easeOut',
-					},
-				}}
-			>
+			<AppearAnimation delay={0.35} component="div">
 				{showBackButton && (
 					<Button variant="outline" size="sm" mt="md">
 						Go Back
 					</Button>
 				)}
-			</motion.div>
+			</AppearAnimation>
 		</Box>
 	);
 }

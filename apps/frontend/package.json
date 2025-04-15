@@ -44,6 +44,7 @@
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.13",
 		"embla-carousel-react": "^8.6.0",
+		"lottie-react": "^2.4.1",
 		"mantine-contextmenu": "^7.17.1",
 		"mantine-datatable": "^7.17.1",
 		"mapbox-gl": "2.13.0",
