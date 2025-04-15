@@ -25,7 +25,15 @@ import {
 	Text,
 	Title,
 } from '@mantine/core';
-import { IconBuildingSkyscraper, IconChevronRight, IconMap, IconUsersGroup } from '@tabler/icons-react';
+import {
+	IconBuildingSkyscraper,
+	IconChevronRight,
+	IconCrane,
+	IconMap,
+	IconMapPin,
+	IconMapSearch,
+	IconUsersGroup,
+} from '@tabler/icons-react';
 import * as motion from 'motion/react-client';
 import { Fragment } from 'react';
 
@@ -78,11 +86,11 @@ export default async function Page() {
 								<Title order={2}>Who we are</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>
-									We want to create a complete 1:1 scale replicate of every building on Earth in the computer game
-									Minecraft, a virtual copy of our whole world that showcases the diversity of culture and living space
-									on our planet and stands as a testament for what we can achieve when we work together as a global
-									humanity. We invite every interested player to build with us, to learn from each other about different
-									cultures and about the beauty of the Earth.
+									BuildTheEarth is a community project creating a complete 1:1 scale replicate of every building on
+									Earth in the computer game Minecraft, a virtual copy of our whole world that showcases the diversity
+									of culture and living space on our planet and stands as a testament for what we can achieve when we
+									work together as humanity. Together we connect, share and learn from builders worldwide, and explore
+									Earth like never before. Join our global community and help bring our world to life!
 								</Text>
 								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
 									Read more
@@ -177,12 +185,11 @@ export default async function Page() {
 								<Title order={2}>Our global Community</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>
-									The best way you can help is to become a Builder for the project. If you have a copy of Minecraft you
-									are welcome to join in and build a house anywhere in the world. Many people start by building their
-									own neighborhood or even just their own house and then they go on to build more. Don't be scared that
-									you are not good enough to build. We all start with something small. Remember that most houses on
-									Earth are very simple to build and we are there to help you learn how to build more complicated
-									things.
+									Each region or country is built on a Minecraft server and the progress is managed by each region or
+									country. To start building, search for the region's team and see how you can help them out! Many
+									people start by building their own neighborhood or even just their own house and then they go on to
+									build more. Don't be scared that you are not good enough to build. We all start with something small.
+									Remember that we are there to help you learn how to build more complicated things.
 								</Text>
 								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
 									Join us now
@@ -197,18 +204,16 @@ export default async function Page() {
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
-								<Title order={2}>Our Server</Title>
+								<Title order={2}>Explore the Earth</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>
-									The best way you can help is to become a Builder for the project. If you have a copy of Minecraft you
-									are welcome to join in and build a house anywhere in the world. Many people start by building their
-									own neighborhood or even just their own house and then they go on to build more. Don't be scared that
-									you are not good enough to build. We all start with something small. Remember that most houses on
-									Earth are very simple to build and we are there to help you learn how to build more complicated
-									things.
+									All of BuildTheEarth's progress is free to view and explore for visitors. The progress is separated
+									onto different servers depending on where in the world it is. All you have to do is find the IP of the
+									region you want to explore and connect to it! Many servers can be connected to though our central hub
+									accessible from buildtheearth.net on Java edition.
 								</Text>
 								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
-									Visit the Server
+									Find a server
 								</Button>
 							</Box>
 						</GridCol>
@@ -223,20 +228,20 @@ export default async function Page() {
 								<Title order={2}>How you can help</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>
-									You can also just explore our Minecraft server first to see what others have build and discover the
-									wonders of the world. Our servers are free for visitors and we welcome anyone that wants to explore.
-									Feel free to tell your friends about our project as well. If you like our project you can also donate
-									to our Patreon. Build the Earth is completely financed by donations. We use the money to pay for our
-									servers.
+									To start building, search for the region's team and see how you can help them out! All regions require
+									you to "apply" which is aimed at teaching you the basics of building on the Earth world. This usually
+									consists of recreating 1 or 2 small buildings on their server. You can always ask for help and
+									building advice on our Discord server. Experienced builders are always more than willing to help you
+									get started.
 								</Text>
 							</Box>
 						</GridCol>
 						<GridCol span={{ base: 10, sm: 7, md: 5 }} offset={{ base: 1, sm: 2, md: 0, xl: 1 }}>
 							<Box>
-								<Stepper active={0} size="xl">
-									<StepperStep label=""></StepperStep>
-									<StepperStep label=""></StepperStep>
-									<StepperStep label=""></StepperStep>
+								<Stepper active={0} size="xl" orientation="vertical">
+									<StepperStep label="Find your region" icon={<IconMapSearch size={20} />}></StepperStep>
+									<StepperStep label="Join the server" icon={<IconMapPin size={20} />}></StepperStep>
+									<StepperStep label="Build your first building" icon={<IconCrane size={20} />}></StepperStep>
 								</Stepper>
 							</Box>
 						</GridCol>
