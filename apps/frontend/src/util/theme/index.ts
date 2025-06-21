@@ -8,7 +8,7 @@ import cx from 'clsx';
  */
 export const theme = createTheme({
 	fontFamily:
-		'var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+		'var(--font-inter), Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
 	breakpoints: {
 		xs: '36em',
 		sm: '48em',
@@ -16,6 +16,7 @@ export const theme = createTheme({
 		lg: '75em',
 		xl: '88em',
 	},
+	defaultRadius: 'sm',
 	primaryColor: 'buildtheearth',
 	primaryShade: 6,
 	colors: {

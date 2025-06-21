@@ -1,5 +1,3 @@
-'use server';
-
 import AppearAnimation from '@/components/animations/AppearAnimation';
 import LottieAnimation from '@/components/animations/LottieAnimation';
 import SplitTextAnimation from '@/components/animations/SplitText';
@@ -39,7 +37,7 @@ import { Fragment } from 'react';
 
 export default async function Page() {
 	return (
-		<Wrapper offsetHeader={false}>
+		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage src="/home.png" w="100%" h="100%" mih="100vh" style={{ position: 'relative', zIndex: 0 }}>
 				<Center h="100vh" w="100vw" bg="radial-gradient(circle,rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%)">
 					<div style={{ textAlign: 'center', zIndex: 1 }}>
@@ -54,7 +52,7 @@ export default async function Page() {
 							<SplitTextAnimation>Building The Earth In Minecraft</SplitTextAnimation>
 						</Title>
 						<AppearAnimation component="div" delay={0.3} duration={1}>
-							<LinkButton href="/join" size="xl" mt="xl">
+							<LinkButton href="/join" size="xl" mt="xl" aria-label="Join the BuildTheEarth community">
 								Join us!
 							</LinkButton>
 						</AppearAnimation>
@@ -70,6 +68,8 @@ export default async function Page() {
 					}}
 					className="mantine-visible-from-sm"
 					href="#more"
+					aria-label="Scroll down to learn more"
+					// alt="Scroll down to learn more"
 				>
 					<LottieAnimation animationData={chevronBounceLottie} loop={true} style={{ height: '54px' }} />
 				</motion.a>
@@ -102,10 +102,15 @@ export default async function Page() {
 							offset={{ base: 0, xs: 1, sm: 0, xl: 1 }}
 							style={{ position: 'relative', zIndex: 0 }}
 						>
-							<Image style={{ aspectRatio: '16 / 9', position: 'relative', top: '35%' }} src="/home.png" w="100%" />
+							<Image
+								style={{ aspectRatio: '16 / 9', position: 'relative', top: '35%' }}
+								src="/home.png"
+								w="100%"
+								alt="Who we are - Background Image 1"
+							/>
 						</GridCol>
 						<GridCol span={{ base: 10, xs: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 2 }} style={{ zIndex: 1 }}>
-							<Image style={{ aspectRatio: '17 / 9' }} src="/home.png" h="100%" />
+							<Image style={{ aspectRatio: '17 / 9' }} src="/home.png" h="100%" alt="Who we are - Background Image 2" />
 						</GridCol>
 					</Grid>
 					<Grid
@@ -197,10 +202,17 @@ export default async function Page() {
 							</Box>
 						</GridCol>
 						<GridCol span={{ base: 12, xs: 9, sm: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 1 }}>
-							<Image style={{ aspectRatio: '5 / 3' }} src="/home.png" w="100%" h="100%" mt="xl" />
+							<Image
+								style={{ aspectRatio: '5 / 3' }}
+								src="/home.png"
+								w="100%"
+								h="100%"
+								mt="xl"
+								alt="Our community - Background Image 1"
+							/>
 						</GridCol>
 						<GridCol span={{ base: 9, xs: 7, sm: 5, xl: 5 }} offset={{ base: 2, xs: 4, sm: 0 }}>
-							<Image style={{ aspectRatio: '16 / 9' }} src="/home.png" />
+							<Image style={{ aspectRatio: '16 / 9' }} src="/home.png" alt="Our Community - Background Image 2" />
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
@@ -253,9 +265,10 @@ export default async function Page() {
 								mt="calc(var(--mantine-spacing-xl) * 2)"
 								loop
 								style={{ aspectRatio: '16 / 9', transform: 'translateX(-50%)', position: 'relative', left: '50%' }}
+								aria-label="Showcase Image Gallery of BuildTheEarth"
 							>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/home.png" />
+									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/home.png" alt="Carousel Image 1" />
 								</CarouselSlide>
 							</Carousel>
 							<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">

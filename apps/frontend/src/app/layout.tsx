@@ -18,6 +18,7 @@ import AppLayout from '@/components/layout';
 import { theme } from '@/util/theme';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
@@ -32,6 +33,21 @@ const minecraftFont = localFont({
 	style: 'normal',
 	variable: '--font-minecraft',
 });
+
+export const metadata: Metadata = {
+	metadataBase: new URL('https://buildtheearth.net'),
+	title: {
+		default: 'BuildTheEarth - Builiding the Earth in Minecraft 1:1',
+		template: '%s | BuildTheEarth',
+	},
+	description:
+		"Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
+	generator: 'BuildTheEarth',
+	applicationName: 'BuildTheEarth',
+	authors: [{ name: 'BuildTheEarth', url: 'https://buildtheearth.net' }],
+	referrer: 'origin-when-cross-origin',
+	keywords: ['BuildTheEarth', 'Minecraft', 'BTE', 'Community', 'Earth', 'Map', 'Minecraft', 'Server', '1:1', 'Global'],
+};
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (

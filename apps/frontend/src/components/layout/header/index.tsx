@@ -45,7 +45,14 @@ export async function Header() {
 					{items}
 				</Group>
 				<Group>
-					<Button variant="filled" color="buildtheearth" visibleFrom="xs" rightSection={<IconChevronRight size={12} />}>
+					<Button
+						variant="filled"
+						color="buildtheearth"
+						visibleFrom="xs"
+						rightSection={<IconChevronRight size={12} />}
+						component={Link}
+						href="/get-started"
+					>
 						Get Started
 					</Button>
 					<HeaderDrawer />
