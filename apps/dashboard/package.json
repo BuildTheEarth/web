@@ -46,7 +46,7 @@
 		"clsx": "^2.1.1",
 		"dayjs": "^1.11.11",
 		"mantine-contextmenu": "^7.11.0",
-		"mantine-datatable": "^7.12.4",
+		"mantine-datatable": "^8.1.2",
 		"mapbox-gl": "2.13.0",
 		"mapbox-gl-draw-snap-mode": "^0.4.0",
 		"mapbox-gl-style-switcher": "^1.0.11",
