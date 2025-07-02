@@ -49,7 +49,10 @@ function getData(searchQuery: string, signal: AbortSignal) {
 
 export function UserSelect(
 	props: Omit<React.ComponentProps<typeof TextInput>, 'onChange' | 'value'> & {
-		onChange?: (value: string) => void;
+		onChange?: (
+			value: { id: string; username: string; discordId: string; minecraft: string } | null,
+			reset: () => void,
+		) => void;
 	},
 ) {
 	const combobox = useCombobox({
@@ -111,7 +114,12 @@ export function UserSelect(
 				const user = data?.find((item) => item.id === optionValue) || null;
 				setSelectedUser(user);
 				setValue(user?.username || '');
-				props.onChange?.(user?.id || '');
+				props.onChange?.(user, () => {
+					setSelectedUser(null);
+					combobox.resetSelectedOption();
+					setValue('');
+					setEmpty(true);
+				});
 				combobox.closeDropdown();
 			}}
 			withinPortal={false}

@@ -29,6 +29,10 @@
 		"frontend/seo",
 		"api/applications",
 		"api/claims",
-		"frontend/legal"
+		"frontend/legal",
+		"frontend/gallery",
+		"dash/editor",
+		"db",
+		"dash/responsive"
 	]
 }

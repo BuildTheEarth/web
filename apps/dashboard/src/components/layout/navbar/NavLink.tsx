@@ -4,8 +4,10 @@ import {
 	IconBubble,
 	IconChartPie,
 	IconDeviceDesktop,
+	IconFileUpload,
 	IconForms,
 	IconHome,
+	IconMail,
 	IconPlugConnected,
 	IconPolygon,
 	IconQuestionMark,
@@ -59,6 +61,10 @@ function getIcon(name: string) {
 			return IconDeviceDesktop;
 		case 'Settings':
 			return IconSettings;
+		case 'Mail':
+			return IconMail;
+		case 'Upload':
+			return IconFileUpload;
 		case 'Bubble':
 			return IconBubble;
 		default:

@@ -35,7 +35,7 @@ async function fetchPastData(writeLog: (line: string) => void) {
 }
 
 async function fetchBuildTeams(writeLog: (line: string) => void) {
-	writeLog('Fetching build teams...');
+	writeLog('Fetching build regions...');
 	return prisma.buildTeam.findMany({
 		select: { id: true, name: true },
 		where: { allowApplications: true },
@@ -55,7 +55,7 @@ async function calculateReviewActivityScores(
 
 	const reviewActivities = await Promise.all(
 		buildTeams.map(async (buildTeam, i) => {
-			writeLog(`Calculating review activity score for build team ${buildTeam.id} (${i + 1}/${buildTeams.length})...`);
+			writeLog(`Calculating review activity score for build region ${buildTeam.id} (${i + 1}/${buildTeams.length})...`);
 			const reviewActivity = await getReviewActivityScore(buildTeam.id);
 			const pastReviewActivity = pastData.current.find((team: any) => team.id === buildTeam.id) || {
 				id: buildTeam.id,
@@ -225,7 +225,7 @@ async function sendDiscordMessage(message: any) {
 		body: JSON.stringify(message),
 		headers: {
 			'Content-Type': 'application/json',
-			'User-Agent': 'Build Team Dashboard',
+			'User-Agent': 'Build Region Dashboard',
 		},
 		method: 'POST',
 	});

@@ -2,8 +2,8 @@ import { ApplicationStatus } from '@repo/db';
 import prisma from '../db';
 
 /**
- * Calculate Review Activity Score for a BuildTeam
- * @param buildteamId BuildTeam ID
+ * Calculate Review Activity Score for a Build Region
+ * @param buildteamId Build Region ID
  * @returns PAR: Pending Application Ratio, PS: Pending Score, ART: Average Review Time, RES: Review Efficiency Score, RAS: Review Activity Score
  */
 export async function getReviewActivityScore(

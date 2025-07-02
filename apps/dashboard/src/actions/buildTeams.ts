@@ -45,7 +45,7 @@ export const adminTransferTeam = async (
 				select: { id: true },
 			});
 			const transaction = await prisma.$transaction(
-				members.map((m) =>
+				members.map((m: { id: any }) =>
 					prisma.user.update({ where: { id: m.id }, data: { joinedBuildTeams: { connect: { id: destinationId } } } }),
 				),
 			);

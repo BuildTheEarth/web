@@ -48,8 +48,8 @@ export default async function Page() {
 											</Group>
 											<Group wrap="nowrap" gap={16} mt={5}>
 												<IconUsers size={10} />
-												<Text size="xs" c="dimmed">
 													<Skeleton height={8} radius="xl" width="30%" />
+												<Text size="xs" c="dimmed">
 												</Text>
 											</Group>
 										</Stack>

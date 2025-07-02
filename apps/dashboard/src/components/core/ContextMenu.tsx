@@ -16,7 +16,7 @@ export function useContextMenu({
 		x: number;
 		y: number;
 	};
-}): [ContextMenuInfo, React.Dispatch<ContextMenuInfo>, React.MouseEventHandler] {
+}): [ContextMenuInfo, React.Dispatch<React.SetStateAction<ContextMenuInfo>>, React.MouseEventHandler] {
 	const [info, setInfo] = useState<ContextMenuInfo>({ x: 0, y: 0, opened: false });
 
 	const contextMenuHandler = useCallback<React.MouseEventHandler>(
@@ -28,6 +28,7 @@ export function useContextMenu({
 				setInfo({ ...info, opened: true });
 			}
 		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[setInfo, disableEventPosition, info],
 	);
 

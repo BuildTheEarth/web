@@ -19,7 +19,20 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	outputFileTracingRoot: path.join(__dirname, '../../'),
 	images: {
-		domains: ['cdn.buildtheearth.net'],
+		remotePatterns: [
+			{
+				protocol: 'https',
+				hostname: 'cdn.buildtheearth.net',
+				port: '',
+				pathname: '/uploads/**',
+			},
+			{
+				protocol: 'https',
+				hostname: 'cdn.buildtheearth.net',
+				port: '',
+				pathname: '/static/**',
+			},
+		],
 	},
 };
 

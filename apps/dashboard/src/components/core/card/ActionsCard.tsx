@@ -36,7 +36,7 @@ export function ActionsCard({
 				</Text>
 			)}
 
-			<SimpleGrid cols={3} mt="md">
+			<SimpleGrid cols={{ base: 2, md: 3 }} mt="md">
 				{items}
 			</SimpleGrid>
 		</Wrapper>

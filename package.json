@@ -28,7 +28,7 @@
 		"@repo/typescript-config": "*",
 		"husky": "^9.1.5",
 		"lint-staged": "^15.2.10",
-		"turbo": "^2.5.0"
+		"turbo": "^2.5.4"
 	},
 	"workspaces": [
 		"apps/*",

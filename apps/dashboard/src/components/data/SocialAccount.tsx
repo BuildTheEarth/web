@@ -30,7 +30,9 @@ export default function SocialAccount({
 		const hashRaw = nonce + session.data.user.session_state + session.data.user.azp + identity.identityProvider;
 
 		setLinkUrl(
-			`${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/broker/${identity.identityProvider}/link?client_id=${process.env.NEXT_PUBLIC_KEYCLOAK_ID}&redirect_uri=${encodeURIComponent(window.location.href)}&nonce=${nonce}&hash=${await hash(hashRaw)}`,
+			`${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/broker/${identity.identityProvider}/link?client_id=${
+				process.env.NEXT_PUBLIC_KEYCLOAK_ID
+			}&redirect_uri=${encodeURIComponent(window.location.href)}&nonce=${nonce}&hash=${await hash(hashRaw)}`,
 		);
 	};
 

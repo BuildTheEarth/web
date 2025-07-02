@@ -14,7 +14,7 @@ export const theme = createTheme({
 		xl: '88em',
 	},
 	primaryColor: 'buildtheearth',
-	primaryShade: 6,
+	primaryShade: 7,
 	colors: {
 		buildtheearth: [
 			'#f0f1fa',
@@ -55,6 +55,6 @@ export const theme = createTheme({
 		// ],
 	},
 
-	autoContrast: true,
-	luminanceThreshold: 0.33,
+	// autoContrast: true,
+	// luminanceThreshold: 0.33,
 });

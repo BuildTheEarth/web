@@ -26,6 +26,7 @@ interface IMap {
 	initialStyle?: number;
 	layerSetup?(map: MapType): void;
 	onContextMenu?(event: any): void;
+	style?: React.CSSProperties;
 }
 
 const styles: MapboxStyleDefinition[] = [
@@ -54,6 +55,7 @@ function Map({
 	src,
 	initialStyle,
 	onContextMenu,
+	...props
 }: IMap) {
 	// Mapbox map
 	const [map, setMap] = React.useState<MapType>();
@@ -177,7 +179,7 @@ function Map({
 	}, []);
 
 	return (
-		<div style={{ width: '100%', height: '100%', position: 'relative' }}>
+		<div style={{ width: '100%', height: '100%', position: 'relative', ...props.style }}>
 			<LoadingOverlay visible={loading} />
 			<div
 				ref={mapNode}
@@ -249,11 +251,13 @@ export async function mapLoadGeoJson(
 	source: string,
 	paint: any,
 	outline?: boolean | any,
+	{ sourceOptions = {} }: { sourceOptions?: mapboxgl.GeoJSONSourceOptions } = {},
 ) {
 	if (!map.getSource(source)) {
 		map.addSource(source, {
 			type: 'geojson',
 			data: url,
+			...sourceOptions,
 		});
 	}
 

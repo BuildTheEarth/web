@@ -1,4 +1,6 @@
-import { Group, MantineStyleProp, Paper, Text } from '@mantine/core';
+import { Button, Group, MantineStyleProp, Paper, Text } from '@mantine/core';
+import { IconExternalLink } from '@tabler/icons-react';
+import Link from 'next/link';
 
 export function TextCard(props: {
 	title: string;
@@ -7,6 +9,8 @@ export function TextCard(props: {
 	icon?: any;
 	isText?: boolean;
 	style?: MantineStyleProp;
+	href?: string;
+	hrefText?: string;
 }) {
 	const Icon = props.icon;
 	return (
@@ -15,13 +19,28 @@ export function TextCard(props: {
 				<Text size="xs" c="dimmed" fw={700} tt="uppercase">
 					{props.title}
 				</Text>
-				{props.icon && (
-					<Icon
-						style={{ color: 'light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3))' }}
-						size="1.4rem"
-						stroke={1.5}
-					/>
-				)}
+				<Group>
+					{props.href && (
+						<Button
+							variant="subtle"
+							color="cyan"
+							component={Link}
+							href={props.href}
+							target="_blank"
+							size="xs"
+							rightSection={<IconExternalLink size={14} />}
+						>
+							{props.hrefText || 'View all'}
+						</Button>
+					)}
+					{props.icon && (
+						<Icon
+							style={{ color: 'light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3))' }}
+							size="1.4rem"
+							stroke={1.5}
+						/>
+					)}
+				</Group>
 			</Group>
 
 			<Group align="flex-end" gap="xs" mt={25}>

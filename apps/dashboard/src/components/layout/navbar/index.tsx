@@ -1,9 +1,8 @@
 'use server';
 
-import { AppShellNavbar, Divider, Stack } from '@mantine/core';
-
 import { hasRole } from '@/util/auth';
 import { navLinks } from '@/util/links';
+import { AppShellNavbar, Divider, ScrollArea, Stack } from '@mantine/core';
 import NavLink from './NavLink';
 
 export interface Navbar {
@@ -28,7 +27,9 @@ export default async function Navbar(props: Navbar) {
 
 	return (
 		<AppShellNavbar p="md">
-			<Stack gap="xs">{links}</Stack>
+			<ScrollArea pb="xl" offsetScrollbars>
+				<Stack gap="xs">{links}</Stack>
+			</ScrollArea>
 		</AppShellNavbar>
 	);
 }

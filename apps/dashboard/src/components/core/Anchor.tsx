@@ -1,4 +1,4 @@
-import { Anchor as MantineAnchor, AnchorProps } from '@mantine/core';
+import { AnchorProps, Anchor as MantineAnchor } from '@mantine/core';
 import Link, { LinkProps } from 'next/link';
 
 /**

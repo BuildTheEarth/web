@@ -1,12 +1,12 @@
-import { Icon, IconProps, icons } from '@tabler/icons-react';
-import { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { icons } from '@tabler/icons-react';
+import { ForwardRefExoticComponent } from 'react';
 
 export default function DynamicIcon({
 	icon,
 	fallback: Fallback,
 }: {
 	icon: string;
-	fallback?: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
+	fallback?: ForwardRefExoticComponent<React.ComponentProps<'svg'>>;
 }) {
 	const Icon = icons[icon as keyof typeof icons];
 	if (isValidIconName(icon)) {

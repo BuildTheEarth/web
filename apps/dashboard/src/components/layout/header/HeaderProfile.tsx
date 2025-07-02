@@ -1,6 +1,15 @@
 'use client';
 
-import { Avatar, Button, Menu, MenuDropdown, MenuItem, MenuTarget, useMantineColorScheme } from '@mantine/core';
+import {
+	Avatar,
+	Button,
+	Menu,
+	MenuDivider,
+	MenuDropdown,
+	MenuItem,
+	MenuTarget,
+	useMantineColorScheme,
+} from '@mantine/core';
 import {
 	IconChevronDown,
 	IconLogout,
@@ -32,20 +41,38 @@ const HeaderProfile = () => {
 	return (
 		<Menu>
 			<MenuTarget>
-				<Button
-					variant="transparent"
-					color="gray"
+				<div>
+					<Button
+						variant="transparent"
+						color="gray"
+						leftSection={
+							<Avatar color="initials" name={session.data.user.username} size="sm" lh={0}>
+								{session.data.user.username[0].toUpperCase()}
+							</Avatar>
+						}
+						rightSection={<IconChevronDown size={12} />}
+						visibleFrom="xs"
+					>
+						{session.data.user.username}
+					</Button>
+					<Avatar color="initials" name={session.data.user.username} size="sm" lh={0} hiddenFrom="xs">
+						{session.data.user.username[0].toUpperCase()}
+					</Avatar>
+				</div>
+			</MenuTarget>
+			<MenuDropdown style={{ zIndex: 1000 }}>
+				<MenuItem
 					leftSection={
-						<Avatar color="initials" name={session.data.user.username} size="sm">
+						<Avatar color="initials" name={session.data.user.username} size="sm" lh={0}>
 							{session.data.user.username[0].toUpperCase()}
 						</Avatar>
 					}
-					rightSection={<IconChevronDown size={12} />}
+					hiddenFrom="xs"
 				>
 					{session.data.user.username}
-				</Button>
-			</MenuTarget>
-			<MenuDropdown style={{ zIndex: 1000 }}>
+				</MenuItem>
+				<MenuDivider hiddenFrom="xs" />
+				<Menu.Label>Links</Menu.Label>
 				<MenuItem component={Link} href="https://buildtheearth.net" leftSection={<IconWorld size={14} />}>
 					BuildTheEarth
 				</MenuItem>
@@ -56,15 +83,13 @@ const HeaderProfile = () => {
 					Settings
 				</Menu.Item>
 				<Menu.Divider />
-				<Menu.Label>Quick Actions</Menu.Label>
+				<Menu.Label>Actions</Menu.Label>
 				<Menu.Item
 					leftSection={colorScheme === 'dark' ? <IconMoonStars size={14} /> : <IconSun size={14} />}
 					onClick={() => toggleColorScheme()}
 				>
 					{colorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
 				</Menu.Item>
-
-				<Menu.Divider />
 				<Menu.Item
 					leftSection={<IconLogout size={14} />}
 					color="red"

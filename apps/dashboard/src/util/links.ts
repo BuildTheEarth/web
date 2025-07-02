@@ -20,17 +20,17 @@ export const meNavLinks: NavLink[] = [
 	},
 	{
 		link: '/me/teams',
-		label: 'Participating Teams',
+		label: 'Participating Regions',
 		icon: 'UsersGroup',
 	},
 	{
 		link: '/me/applications',
-		label: 'My Applications',
+		label: 'Your Applications',
 		icon: 'Forms',
 	},
 	{
-		link: '/me/claims',
-		label: 'Claim Overview',
+		link: '/editor',
+		label: 'Claim Editor',
 		icon: 'Polygon',
 	},
 
@@ -48,7 +48,7 @@ export const meNavLinks: NavLink[] = [
 	},
 	{
 		link: '/me/settings',
-		label: 'Global Settings',
+		label: 'Profile Settings',
 		icon: 'Settings',
 	},
 
@@ -61,18 +61,6 @@ export const meNavLinks: NavLink[] = [
 		divider: true,
 	},
 	{
-		link: '/am/users',
-		label: 'Website Users',
-		permission: 'get-users',
-		icon: 'UsersGroup',
-	},
-	{
-		link: '/am/teams',
-		label: 'BuildTeams',
-		permission: 'get-teams',
-		icon: 'UsersGroup',
-	},
-	{
 		link: '/am/faq',
 		label: 'FAQ',
 		permission: 'get-faq',
@@ -80,19 +68,43 @@ export const meNavLinks: NavLink[] = [
 	},
 	{
 		link: '/am/claims',
-		label: 'Map Claims',
+		label: 'Claims',
 		permission: 'get-claims',
 		icon: 'Polygon',
 	},
 	{
 		link: '/am/applications',
-		label: 'Team Applications',
+		label: 'Applications',
 		permission: 'get-applications',
 		icon: 'Forms',
 	},
 	{
+		link: '/am/users',
+		label: 'Website Users',
+		permission: 'get-users',
+		icon: 'UsersGroup',
+	},
+	{
+		link: '/am/teams',
+		label: 'Build Regions',
+		permission: 'get-teams',
+		icon: 'UsersGroup',
+	},
+	{
+		link: '/am/contacts',
+		label: 'Contacts',
+		permission: 'get-config',
+		icon: 'Mail',
+	},
+	{
+		link: '/am/uploads',
+		label: 'Uploads',
+		permission: 'get-config',
+		icon: 'Upload',
+	},
+	{
 		link: '/am/sso',
-		label: 'SSO Configuration and Security',
+		label: 'SSO Configuration',
 		permission: 'get-config',
 		icon: 'Settings',
 	},
