@@ -38,7 +38,7 @@ import { Fragment } from 'react';
 export default async function Page() {
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
-			<BackgroundImage src="/home.png" w="100%" h="100%" mih="100vh" style={{ position: 'relative', zIndex: 0 }}>
+			<BackgroundImage src="/thumbs/home.webp" aria-label="Roundabout in a french city, background image" w="100%" h="100%" mih="100vh" style={{ position: 'relative', zIndex: 0 }}>
 				<Center h="100vh" w="100vw" bg="radial-gradient(circle,rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%)">
 					<div style={{ textAlign: 'center', zIndex: 1 }}>
 						<Title
@@ -104,13 +104,13 @@ export default async function Page() {
 						>
 							<Image
 								style={{ aspectRatio: '16 / 9', position: 'relative', top: '35%' }}
-								src="/home.png"
+								src="/thumbs/wasserturm_mannheim.webp"
 								w="100%"
-								alt="Who we are - Background Image 1"
+								alt="Water tower in Mannheim, Germany built in Minecraft"
 							/>
 						</GridCol>
 						<GridCol span={{ base: 10, xs: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 2 }} style={{ zIndex: 1 }}>
-							<Image style={{ aspectRatio: '17 / 9' }} src="/home.png" h="100%" alt="Who we are - Background Image 2" />
+							<Image style={{ aspectRatio: '17 / 9' }} src="/thumbs/new_york.webp" h="100%" alt="The New York skyline, in the foreground a pier, built in Minecraft" />
 						</GridCol>
 					</Grid>
 					<Grid
@@ -204,15 +204,15 @@ export default async function Page() {
 						<GridCol span={{ base: 12, xs: 9, sm: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 1 }}>
 							<Image
 								style={{ aspectRatio: '5 / 3' }}
-								src="/home.png"
+								src="/thumbs/rio_niteroi_bridge.webp"
 								w="100%"
 								h="100%"
 								mt="xl"
-								alt="Our community - Background Image 1"
+								alt="Rio–Niterói Bridge in Brazil, going into the distance, built in Minecraft"
 							/>
 						</GridCol>
 						<GridCol span={{ base: 9, xs: 7, sm: 5, xl: 5 }} offset={{ base: 2, xs: 4, sm: 0 }}>
-							<Image style={{ aspectRatio: '16 / 9' }} src="/home.png" alt="Our Community - Background Image 2" />
+							<Image style={{ aspectRatio: '16 / 9' }} src="/thumbs/saldias_area.webp" alt="A industrial area in Argentina with many vehicles and large storage facilities" />
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
@@ -268,7 +268,13 @@ export default async function Page() {
 								aria-label="Showcase Image Gallery of BuildTheEarth"
 							>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/home.png" alt="Carousel Image 1" />
+									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/thumbs/shimen_reservoir.webp" alt="Taiwanese water reservoir" />
+								</CarouselSlide>
+								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
+									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/thumbs/chernobyl.webp" alt="Top of the chernobyl nuclear plant with a crane and the protective structure" />
+								</CarouselSlide>
+								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
+									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/thumbs/belgian_street.webp" alt="A generic street in a belgian city with trees, small houses and a waterside" />
 								</CarouselSlide>
 							</Carousel>
 							<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
