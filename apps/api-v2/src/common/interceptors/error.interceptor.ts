@@ -19,10 +19,10 @@ export class ExceptionsFilter implements ExceptionFilter {
 		const message =
 			exception instanceof HttpException
 				? (exception.getResponse() as any).message || exception.message
-				: 'Internal server error';
+				: (exception as any)?.message || 'Internal Server Error';
 
 		const errorResponse = {
-			statusCode: httpStatus,
+			status: httpStatus,
 			timestamp: new Date().toISOString(),
 			path: request.url,
 			error:
@@ -35,11 +35,8 @@ export class ExceptionsFilter implements ExceptionFilter {
 		// Log the error
 
 		if (!(exception instanceof HttpException)) {
-			this.logger.error(
-				`[Unhandled Error] ${httpStatus} - ${request.method} ${request.url}`,
-				errorResponse,
-				exception instanceof Error ? exception.stack : undefined,
-			);
+			this.logger.error(`Unhandled Error {${request.url}, ${request.method}}: ${errorResponse.message}`);
+			this.logger.debug(exception instanceof Error ? exception.stack : undefined);
 		}
 
 		httpAdapter.reply(response, errorResponse, httpStatus);

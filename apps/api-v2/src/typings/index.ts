@@ -1,12 +1,12 @@
 export interface Response<T> {
-	statusCode: number;
+	status: number;
 	message: string;
 	data: T;
-	meta?: PaginatedMeta | any;
+	meta?: PaginatedMeta;
 }
 export interface PaginatedMeta<> {
-	currentPage: number;
-	itemsPerPage: number;
+	page: number;
+	perPage: number;
 	totalItems: number;
 	totalPages: number;
 }

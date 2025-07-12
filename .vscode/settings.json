@@ -31,6 +31,7 @@
 		"api/claims",
 		"frontend/legal",
 		"frontend/gallery",
-		"dash/editor"
+		"dash/editor",
+		"api/v2"
 	]
 }
