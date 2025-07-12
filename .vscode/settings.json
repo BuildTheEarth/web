@@ -32,6 +32,7 @@
 		"frontend/legal",
 		"frontend/gallery",
 		"dash/editor",
-		"api/v2"
+		"api/v2",
+		"api/auth"
 	]
 }

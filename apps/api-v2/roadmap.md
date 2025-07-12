@@ -73,7 +73,7 @@
 
 # Old v1
 
--> Deprecation header on /api/v1 + 410
+✅ -> Deprecation header on /api/v1 + 410
 
 ```
 Deprecation: @1688169599
@@ -84,14 +84,17 @@ Sunset: Sun, 30 Jun 2024 23:59:59 UTC
 
 ## Utility
 
-get /docs \
-get /version \
-get /health
+✅ get /docs \
+✅ get /docs.json \
+✅ get /docs.yaml \
+✅ get /version \
+✅ get /health
 
 ## Auth
 
-get /auth
-post /auth/token
+✅ get /auth
+✅ post /auth/token
+post /auth/backup
 
 ## Users
 

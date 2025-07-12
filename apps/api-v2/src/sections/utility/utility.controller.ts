@@ -1,6 +1,7 @@
 import { Controller, Get, GoneException, Header, HttpCode } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { ApiDefaultResponse, ApiErrorResponse } from 'src/common/decorators/api-response.decorator';
+import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 import { ControllerResponse } from 'src/typings';
 import { HealthDto } from './dto/health.dto';
 import { VersionDto } from './dto/version.dto';
@@ -11,6 +12,7 @@ export class UtilityController {
 	constructor(private readonly utilityService: UtilityService) {}
 
 	@Get('/api/v1/*path')
+	@SkipAuth()
 	@Header('Deprecation', '@1767265200')
 	@Header('Sunset', 'Mon, 01 Jun 2026 10:00:00 UTC')
 	@HttpCode(410)
@@ -24,6 +26,7 @@ export class UtilityController {
 	}
 
 	@Get('/health')
+	@SkipAuth()
 	@ApiOperation({
 		summary: 'Health Check',
 		description: 'Returns the health status of the API.',
@@ -38,6 +41,7 @@ export class UtilityController {
 	}
 
 	@Get('/version')
+	@SkipAuth()
 	@ApiOperation({
 		summary: 'API Version',
 		description: 'Returns the current version of the API.',

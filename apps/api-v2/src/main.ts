@@ -38,6 +38,13 @@ async function bootstrap() {
 			'The BuildTheEarth API is a RESTful API that provides access to the BuildTheEarth project data and services.',
 		)
 		.setVersion('2.0')
+		.addBearerAuth({
+			type: 'http',
+			name: 'Authorization',
+			in: 'headers',
+			scheme: 'bearer',
+			bearerFormat: 'JWT',
+		})
 		.build();
 	const documentFactory = () => SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('/v2/docs', app, documentFactory, {
