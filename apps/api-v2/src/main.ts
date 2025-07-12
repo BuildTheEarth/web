@@ -18,6 +18,7 @@ async function bootstrap() {
 		defaultVersion: '2',
 	});
 
+	// Add global pipes, filters, and interceptors
 	app.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -31,7 +32,7 @@ async function bootstrap() {
 	app.useGlobalFilters(new ExceptionsFilter(httpAdapter));
 	app.useGlobalInterceptors(new ResponseInterceptor());
 
-	// Swagger UI
+	// Add Swagger UI
 	const config = new DocumentBuilder()
 		.setTitle('BuildTheEarth API')
 		.setDescription(

@@ -1,6 +1,10 @@
 import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { AbstractHttpAdapter } from '@nestjs/core';
 
+/**
+ * Global exception filter that handles all unhandled exceptions in the application.
+ * It formats the error response and logs the error details in case of non-HTTP exceptions.
+ */
 @Catch()
 export class ExceptionsFilter implements ExceptionFilter {
 	private readonly logger = new Logger(ExceptionsFilter.name);

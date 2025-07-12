@@ -5,12 +5,12 @@ import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 import { ControllerResponse } from 'src/typings';
 import { HealthDto } from './dto/health.dto';
 import { VersionDto } from './dto/version.dto';
-import { UtilityService } from './utility.service';
 
 @Controller()
 export class UtilityController {
-	constructor(private readonly utilityService: UtilityService) {}
-
+	/**
+	 * Handles deprecated API routes.
+	 */
 	@Get('/api/v1/*path')
 	@SkipAuth()
 	@Header('Deprecation', '@1767265200')
@@ -25,6 +25,9 @@ export class UtilityController {
 		throw new GoneException('Deprecated API endpoint. Please use the new API version 2');
 	}
 
+	/**
+	 * Returns the health status of the API.
+	 */
 	@Get('/health')
 	@SkipAuth()
 	@ApiOperation({
@@ -40,6 +43,9 @@ export class UtilityController {
 		};
 	}
 
+	/**
+	 * Returns the current version of the API.
+	 */
 	@Get('/version')
 	@SkipAuth()
 	@ApiOperation({
