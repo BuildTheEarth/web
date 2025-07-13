@@ -7,7 +7,7 @@
 
 ### Paginated URLs
 
-{url}?page={num}&perPage={num} \
+{url}?page={num}&limit={num} \
  ↳ Response:
 
 ```json
@@ -43,7 +43,7 @@
 
 ### Filtering
 
-{url}?filterBy={key}
+{url}?field=value
 
 ## Authentication
 
@@ -92,8 +92,8 @@ Sunset: Sun, 30 Jun 2024 23:59:59 UTC
 
 ## Auth
 
-✅ get /auth
-✅ post /auth/token
+✅ get /auth \
+✅ post /auth/token \
 post /auth/backup
 
 ## Users

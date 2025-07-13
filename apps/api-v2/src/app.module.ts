@@ -5,9 +5,10 @@ import { PrismaService } from './common/db/prisma.service';
 import { AuthGuard } from './common/guards/auth.guard';
 import { AuthModule } from './sections/auth/auth.module';
 import { UtilityModule } from './sections/utility/utility.module';
+import { ApplicationsModule } from './sections/applications/applications.module';
 
 @Module({
-	imports: [UtilityModule, AuthModule, ConfigModule.forRoot({ isGlobal: true, cache: true })],
+	imports: [UtilityModule, AuthModule, ApplicationsModule, ConfigModule.forRoot({ isGlobal: true, cache: true })],
 	providers: [PrismaService, { provide: APP_GUARD, useClass: AuthGuard }],
 })
 export class AppModule {}
