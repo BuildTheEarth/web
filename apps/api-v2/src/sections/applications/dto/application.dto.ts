@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { ApplicationStatus } from "../enums/application-status.enum";
+import { ApplicationStatus } from "@repo/db";
 
 export class ApplicationDto {
   @ApiProperty({

@@ -1,14 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApplicationStatus } from "@repo/db";
 import {
-  IsUUID,
-  IsOptional,
+  IsBoolean,
   IsEnum,
   IsISO8601,
-  IsBoolean,
+  IsOptional,
   IsString,
+  IsUUID,
 } from "class-validator";
-import { ApplicationStatus } from "../enums/application-status.enum";
-
 export class CreateApplicationDto {
   @ApiProperty({
     example: "00000000-0000-0000-0000-000000000000",
