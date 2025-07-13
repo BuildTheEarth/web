@@ -19,16 +19,16 @@ export class ApplicationsController {
 	 */
 	@Get('/')
 	@SkipAuth()
-	@ApiOperation({
-		summary: 'Get All Applications',
-		description: 'Returns all applications of the currently authenticated team.',
-	})
 	@Sortable({
 		defaultSortBy: 'createdAt',
 		allowedFields: ['userId', 'reviewerId', 'status', 'createdAt', 'reviewedAt', 'reason', 'claimId', 'trial'],
 		defaultOrder: 'desc',
 	})
 	@Paginated()
+	@ApiOperation({
+		summary: 'Get All Applications',
+		description: 'Returns all applications of the currently authenticated team.',
+	})
 	@ApiQuery({ name: 'userId', required: false, type: String, description: 'Filter by user id', nullable: true })
 	@ApiQuery({ name: 'reviewerId', required: false, type: String, description: 'Filter by reviewer id', nullable: true })
 	@ApiQuery({

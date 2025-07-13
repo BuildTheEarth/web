@@ -20,7 +20,10 @@ export const Sorting = createParamDecorator(
 		const { allowedFields, defaultOrder = 'asc', defaultSortBy = sortingMeta.allowedFields?.[0] } = sortingMeta;
 
 		let { sortBy, order } = request.query as { sortBy?: string; order?: 'asc' | 'desc' };
-		if (typeof sortBy !== 'string' || !allowedFields?.includes(sortBy)) {
+		if (
+			(typeof sortBy !== 'string' && typeof sortBy !== 'undefined') ||
+			(typeof sortBy === 'string' && !allowedFields?.includes(sortBy))
+		) {
 			throw new BadRequestException(
 				`Invalid sortBy field: ${sortBy}. Allowed fields are: ${allowedFields?.join(', ')}`,
 			);
