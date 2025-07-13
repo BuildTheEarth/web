@@ -2,9 +2,9 @@ import { BadRequestException, createParamDecorator, ExecutionContext } from '@ne
 import { Reflector } from '@nestjs/core';
 import { SortableOptions, SORTING_META } from './sortable.decorator';
 
-export interface PaginationParams {
-	page: number;
-	limit: number;
+export interface SortingParams<T = string> {
+	sortBy?: T;
+	order?: 'asc' | 'desc';
 }
 
 /**
@@ -34,8 +34,3 @@ export const Sorting = createParamDecorator(
 		return { sortBy, order };
 	},
 );
-
-export interface SortingParams<T = string> {
-	sortBy?: T;
-	order?: 'asc' | 'desc';
-}

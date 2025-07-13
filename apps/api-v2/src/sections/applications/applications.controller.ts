@@ -1,6 +1,5 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery } from '@nestjs/swagger';
-import { PrismaService } from 'src/common/db/prisma.service';
 import { ApiErrorResponse, ApiPaginatedResponseDto } from 'src/common/decorators/api-response.decorator';
 import { Paginated } from 'src/common/decorators/paginated.decorator';
 import { Pagination, PaginationParams } from 'src/common/decorators/pagination.decorator';
@@ -8,11 +7,12 @@ import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 import { Sortable } from 'src/common/decorators/sortable.decorator';
 import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator';
 import { PaginatedControllerResponse } from 'src/typings';
+import { ApplicationsService } from './applications.service';
 import { ApplicationDto } from './dto/application.dto';
 
 @Controller('applications')
 export class ApplicationsController {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly applicationsService: ApplicationsService) {}
 
 	/**
 	 * Returns all applications of the currently authenticated team.
@@ -63,43 +63,6 @@ export class ApplicationsController {
 		@Sorting() sorting: SortingParams,
 		@Query() query?: Record<string, any>,
 	): PaginatedControllerResponse {
-		const sortField = sorting.sortBy || 'createdAt';
-		const sortOrder = sorting.order === 'desc' ? 'desc' : 'asc';
-
-		const take = Math.max(Number(pagination.limit) || 20, 1);
-		const skip = Math.max((Number(pagination.page) || 1) - 1, 0) * take;
-
-		// Build where clause from query params (excluding pagination/sorting keys)
-		const filterKeys = ['sortBy', 'order', 'page', 'limit'];
-		const where: Record<string, any> = {};
-		Object.entries(query || {}).forEach(([key, value]) => {
-			if (!filterKeys.includes(key) && value !== undefined) {
-				if (key === 'trial') {
-					where.trial = value === 'true';
-				} else {
-					where[key] = value;
-				}
-			}
-		});
-
-		const [applications, count] = await Promise.all([
-			this.prisma.application.findMany({
-				where,
-				orderBy: { [sortField]: sortOrder },
-				skip,
-				take,
-			}),
-			this.prisma.application.count({ where }),
-		]);
-
-		return {
-			data: applications,
-			meta: {
-				page: pagination.page,
-				perPage: pagination.limit,
-				totalItems: count,
-				totalPages: Math.ceil(count / pagination.limit),
-			},
-		};
+		return await this.applicationsService.findAll(pagination, sorting.sortBy, sorting.order, query);
 	}
 }
