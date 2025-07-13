@@ -83,7 +83,7 @@ export function ApiPaginatedResponseDto<TModel extends Type<any>>(
 export function ApiErrorResponse({
   status = 500,
   description = "Error: Internal Server Error",
-}: { status?: number; description?: `Error: ${string}` } = {}) {
+}: { status?: number; description?: string } = {}) {
   return applyDecorators(
     ApiResponse({
       status,
