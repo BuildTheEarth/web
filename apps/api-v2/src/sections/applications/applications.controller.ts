@@ -7,6 +7,7 @@ import { ControllerResponse } from 'src/typings';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { ApplicationDto } from './dto/application.dto';
 import { Sortable } from 'src/common/decorators/sortable.decorator';
+import { Paginated } from 'src/common/decorators/paginated.decorator';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -23,8 +24,7 @@ export class ApplicationsController {
         description: 'Returns all applications of the currently authenticated team.',
     })
     @Sortable({ defaultSortBy: 'createdAt', allowedFields: ['userId', 'reviewerId', 'status', 'createdAt', 'reviewedAt', 'reason', 'claimId', 'trial'], defaultOrder: 'desc' })
-    @ApiQuery({ name: 'page', required: false, type: Number, example: 1, description: 'Page number', default: 1 })
-    @ApiQuery({ name: 'limit', required: false, type: Number, example: 20, description: 'Items per page', default: 20 })
+    @Paginated({ defaultPage: 1, defaultLimit: 2, maxLimit: 5 })
 
     @ApiQuery({ name: 'userId', required: false, type: String, description: 'Filter by user id', nullable: true })
     @ApiQuery({ name: 'reviewerId', required: false, type: String, description: 'Filter by reviewer id', nullable: true })
