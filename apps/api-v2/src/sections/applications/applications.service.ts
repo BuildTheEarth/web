@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
+import { FilterParams } from 'src/common/decorators/filter.decorator';
 import { PaginationParams } from 'src/common/decorators/pagination.decorator';
 import { SortingParams } from 'src/common/decorators/sorting.decorator';
 
@@ -11,7 +12,7 @@ export class ApplicationsService {
 		pagination: PaginationParams,
 		sortBy?: SortingParams['sortBy'],
 		order?: SortingParams['order'],
-		query?: Record<string, any>,
+		filter?: FilterParams['filter'],
 	) {
 		const sortField = sortBy || 'createdAt';
 		const sortOrder = order === 'desc' ? 'desc' : 'asc';
@@ -20,25 +21,15 @@ export class ApplicationsService {
 		const skip = Math.max((Number(pagination.page) || 1) - 1, 0) * take;
 
 		const filterKeys = ['sortBy', 'order', 'page', 'limit'];
-		const where: Record<string, any> = {};
-		Object.entries(query || {}).forEach(([key, value]) => {
-			if (!filterKeys.includes(key) && value !== undefined) {
-				if (key === 'trial') {
-					where.trial = value === 'true';
-				} else {
-					where[key] = value;
-				}
-			}
-		});
 
 		const [applications, count] = await Promise.all([
 			this.prisma.application.findMany({
-				where,
+				where: filter,
 				orderBy: { [sortField]: sortOrder },
 				skip,
 				take,
 			}),
-			this.prisma.application.count({ where }),
+			this.prisma.application.count({ where: filter }),
 		]);
 
 		return {

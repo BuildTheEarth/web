@@ -1,6 +1,8 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiQuery } from '@nestjs/swagger';
+import { Controller, Get } from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
 import { ApiErrorResponse, ApiPaginatedResponseDto } from 'src/common/decorators/api-response.decorator';
+import { Filter, FilterParams } from 'src/common/decorators/filter.decorator';
+import { Filtered } from 'src/common/decorators/filtered.decorator';
 import { Paginated } from 'src/common/decorators/paginated.decorator';
 import { Pagination, PaginationParams } from 'src/common/decorators/pagination.decorator';
 import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
@@ -29,40 +31,25 @@ export class ApplicationsController {
 		summary: 'Get All Applications',
 		description: 'Returns all applications of the currently authenticated team.',
 	})
-	@ApiQuery({ name: 'userId', required: false, type: String, description: 'Filter by user id', nullable: true })
-	@ApiQuery({ name: 'reviewerId', required: false, type: String, description: 'Filter by reviewer id', nullable: true })
-	@ApiQuery({
-		name: 'status',
-		required: false,
-		type: String,
-		enum: ['SEND', 'ACCEPTED', 'DECLINED'],
-		description: 'Filter by status',
-		nullable: true,
+	@Filtered({
+		fields: [
+			{ name: 'userId', required: false, type: String },
+			{ name: 'reviewerId', required: false, type: String },
+			{ name: 'status', required: false, type: String, enum: ['SEND', 'ACCEPTED', 'DECLINED'] },
+			{ name: 'createdAt', required: false, type: String },
+			{ name: 'reviewedAt', required: false, type: String },
+			{ name: 'reason', required: false, type: String },
+			{ name: 'claimId', required: false, type: String },
+			{ name: 'trial', required: false, type: Boolean },
+		],
 	})
-	@ApiQuery({
-		name: 'createdAt',
-		required: false,
-		type: String,
-		description: 'Filter by creation date',
-		nullable: true,
-	})
-	@ApiQuery({
-		name: 'reviewedAt',
-		required: false,
-		type: String,
-		description: 'Filter by reviewed date',
-		nullable: true,
-	})
-	@ApiQuery({ name: 'reason', required: false, type: String, description: 'Filter by reason', nullable: true })
-	@ApiQuery({ name: 'claimId', required: false, type: String, description: 'Filter by claim id', nullable: true })
-	@ApiQuery({ name: 'trial', required: false, type: Boolean, description: 'Filter by trial flag', nullable: true })
 	@ApiPaginatedResponseDto(ApplicationDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 500, description: 'Error: Internal Server Error' })
 	async getClaims(
 		@Pagination() pagination: PaginationParams,
 		@Sorting() sorting: SortingParams,
-		@Query() query?: Record<string, any>,
+		@Filter() filter: FilterParams,
 	): PaginatedControllerResponse {
-		return await this.applicationsService.findAll(pagination, sorting.sortBy, sorting.order, query);
+		return await this.applicationsService.findAll(pagination, sorting.sortBy, sorting.order, filter.filter);
 	}
 }
