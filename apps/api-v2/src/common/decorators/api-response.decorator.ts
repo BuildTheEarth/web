@@ -72,18 +72,23 @@ export function ApiErrorResponse({
 	status = 500,
 	description = 'Error: Internal Server Error',
 }: { status?: number; description?: `Error: ${string}` } = {}) {
-	return ApiResponse({
-		status,
-		type: ErrorResponseDto,
-		description: description,
-		schema: {
-			example: {
-				status,
-				timestamp: '2025-01-01T00:00:00.000Z',
-				path: '/',
-				error: description,
-				message: description,
+	return applyDecorators(
+		ApiResponse({
+			status,
+			description,
+			content: {
+				'application/json': {
+					schema: { $ref: getSchemaPath(ErrorResponseDto) },
+					example: {
+						status,
+						timestamp: '2025-01-01T00:00:00.000Z',
+						path: '/',
+						error: description,
+						message: description,
+					},
+				},
 			},
-		},
-	});
+		}),
+	);
 }
+
