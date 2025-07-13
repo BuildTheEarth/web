@@ -1,5 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { Controller, Get, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { ApiErrorResponse, ApiPaginatedResponseDto } from 'src/common/decorators/api-response.decorator';
 import { Filter, FilterParams } from 'src/common/decorators/filter.decorator';
 import { Filtered } from 'src/common/decorators/filtered.decorator';
@@ -11,6 +11,8 @@ import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator'
 import { PaginatedControllerResponse } from 'src/typings';
 import { ApplicationsService } from './applications.service';
 import { ApplicationDto } from './dto/application.dto';
+import { ApplicationStatus } from './enums/application-status.enum';
+import { Request } from 'express';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -20,7 +22,7 @@ export class ApplicationsController {
 	 * Returns all applications of the currently authenticated team.
 	 */
 	@Get('/')
-	@SkipAuth()
+	@ApiBearerAuth()
 	@Sortable({
 		defaultSortBy: 'createdAt',
 		allowedFields: ['userId', 'reviewerId', 'status', 'createdAt', 'reviewedAt', 'reason', 'claimId', 'trial'],
@@ -35,7 +37,7 @@ export class ApplicationsController {
 		fields: [
 			{ name: 'userId', required: false, type: String },
 			{ name: 'reviewerId', required: false, type: String },
-			{ name: 'status', required: false, type: String, enum: ['SEND', 'ACCEPTED', 'DECLINED'] },
+			{ name: 'status', required: false, type: String, enum: ApplicationStatus },
 			{ name: 'createdAt', required: false, type: String },
 			{ name: 'reviewedAt', required: false, type: String },
 			{ name: 'reason', required: false, type: String },
@@ -44,12 +46,13 @@ export class ApplicationsController {
 		],
 	})
 	@ApiPaginatedResponseDto(ApplicationDto, { description: 'Success' })
-	@ApiErrorResponse({ status: 500, description: 'Error: Internal Server Error' })
+	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	async getApplications(
 		@Pagination() pagination: PaginationParams,
 		@Sorting() sorting: SortingParams,
 		@Filter() filter: FilterParams,
+		@Req() req: Request,
 	): PaginatedControllerResponse {
-		return await this.applicationsService.findAll(pagination, sorting.sortBy, sorting.order, filter.filter);
+		return await this.applicationsService.findAll(pagination, sorting.sortBy, sorting.order, filter.filter, req.token.id);
 	}
 }

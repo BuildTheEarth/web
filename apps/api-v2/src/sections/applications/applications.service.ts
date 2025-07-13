@@ -6,13 +6,14 @@ import { SortingParams } from 'src/common/decorators/sorting.decorator';
 
 @Injectable()
 export class ApplicationsService {
-	constructor(private readonly prisma: PrismaService) {}
+	constructor(private readonly prisma: PrismaService) { }
 
 	async findAll(
 		pagination: PaginationParams,
 		sortBy?: SortingParams['sortBy'],
 		order?: SortingParams['order'],
 		filter?: FilterParams['filter'],
+		buildteamId?: string,
 	) {
 		const sortField = sortBy || 'createdAt';
 		const sortOrder = order === 'desc' ? 'desc' : 'asc';
@@ -20,16 +21,19 @@ export class ApplicationsService {
 		const take = Math.max(Number(pagination.limit) || 20, 1);
 		const skip = Math.max((Number(pagination.page) || 1) - 1, 0) * take;
 
-		const filterKeys = ['sortBy', 'order', 'page', 'limit'];
+		const combinedFilter = {
+			...filter,
+			...(buildteamId ? { buildteamId } : {}),
+		};
 
 		const [applications, count] = await Promise.all([
 			this.prisma.application.findMany({
-				where: filter,
+				where: combinedFilter,
 				orderBy: { [sortField]: sortOrder },
 				skip,
 				take,
 			}),
-			this.prisma.application.count({ where: filter }),
+			this.prisma.application.count({ where: combinedFilter }),
 		]);
 
 		return {
