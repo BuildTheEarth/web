@@ -5,5 +5,5 @@
 	"quoteProps": "as-needed",
 	"trailingComma": "all",
 	"endOfLine": "lf",
-	"plugins": ["prettier-plugin-organize-imports"]
+	"plugins": []
 }

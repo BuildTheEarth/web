@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import {
   IsUUID,
   IsOptional,
@@ -6,22 +6,22 @@ import {
   IsISO8601,
   IsBoolean,
   IsString,
-} from 'class-validator';
-import { ApplicationStatus } from '../enums/application-status.enum';
+} from "class-validator";
+import { ApplicationStatus } from "../enums/application-status.enum";
 
 export class CreateApplicationDto {
   @ApiProperty({
-    example: '00000000-0000-0000-0000-000000000000',
-    description: 'The ID of the user who applied.',
+    example: "00000000-0000-0000-0000-000000000000",
+    description: "The ID of the user who applied.",
   })
   @IsUUID()
   userId: string;
 
   @ApiPropertyOptional({
-    example: '00000000-0000-0000-0000-000000000000',
+    example: "00000000-0000-0000-0000-000000000000",
     nullable: true,
     default: null,
-    description: 'The ID of the reviewer, if any.',
+    description: "The ID of the reviewer, if any.",
   })
   @IsOptional()
   @IsUUID()
@@ -31,46 +31,46 @@ export class CreateApplicationDto {
     example: ApplicationStatus.ACCEPTED,
     enum: ApplicationStatus,
     default: ApplicationStatus.SEND,
-    description: 'The current status of the application.',
+    description: "The current status of the application.",
   })
   @IsOptional()
   @IsEnum(ApplicationStatus)
   status?: ApplicationStatus;
 
   @ApiPropertyOptional({
-    example: '2025-04-19T16:45:18.767Z',
+    example: "2025-04-19T16:45:18.767Z",
     description:
-      'The time the application was created. If not provided, defaults to the current time.',
+      "The time the application was created. If not provided, defaults to the current time.",
   })
   @IsOptional()
   @IsISO8601()
   createdAt?: string;
 
   @ApiPropertyOptional({
-    example: '2025-04-19T16:45:18.767Z',
+    example: "2025-04-19T16:45:18.767Z",
     nullable: true,
     default: null,
-    description: 'The time the application was reviewed.',
+    description: "The time the application was reviewed.",
   })
   @IsOptional()
   @IsISO8601()
   reviewedAt?: string | null;
 
   @ApiPropertyOptional({
-    example: 'User failed interview stage',
+    example: "User failed interview stage",
     nullable: true,
     default: null,
-    description: 'The reason for the application\'s decision, if any.',
+    description: "The reason for the application's decision, if any.",
   })
   @IsOptional()
   @IsString()
   reason?: string | null;
 
   @ApiPropertyOptional({
-    example: '00000000-0000-0000-0000-000000000000',
+    example: "00000000-0000-0000-0000-000000000000",
     nullable: true,
     default: null,
-    description: 'The ID of the claim associated with the application, if any.',
+    description: "The ID of the claim associated with the application, if any.",
   })
   @IsOptional()
   @IsUUID()
@@ -79,7 +79,7 @@ export class CreateApplicationDto {
   @ApiPropertyOptional({
     example: false,
     default: false,
-    description: 'Indicates whether the application is a trial application.',
+    description: "Indicates whether the application is a trial application.",
   })
   @IsOptional()
   @IsBoolean()
