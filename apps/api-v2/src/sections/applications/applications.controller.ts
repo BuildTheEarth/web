@@ -6,12 +6,13 @@ import { ApiBearerAuth, ApiOperation, ApiQuery, ApiUnauthorizedResponse } from '
 import { ControllerResponse } from 'src/typings';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { ApplicationDto } from './dto/application.dto';
+import { Sortable } from 'src/common/decorators/sortable.decorator';
 
 @Controller('applications')
 export class ApplicationsController {
 
-    constructor(private readonly prisma: PrismaService) {}
-    
+    constructor(private readonly prisma: PrismaService) { }
+
     /**
      * Returns all applications of the currently authenticated team.
      */
@@ -21,11 +22,10 @@ export class ApplicationsController {
         summary: 'Get All Applications',
         description: 'Returns all applications of the currently authenticated team.',
     })
-    @ApiQuery({ name: 'sortBy', required: false, type: String, example: 'createdAt', description: 'Field to sort by', default: 'createdAt' })
-    @ApiQuery({ name: 'order', required: false, enum: ['asc', 'desc'], example: 'asc', description: 'Sort order', default: 'asc' })
+    @Sortable({ defaultSortBy: 'createdAt', allowedFields: ['userId', 'reviewerId', 'status', 'createdAt', 'reviewedAt', 'reason', 'claimId', 'trial'], defaultOrder: 'desc' })
     @ApiQuery({ name: 'page', required: false, type: Number, example: 1, description: 'Page number', default: 1 })
     @ApiQuery({ name: 'limit', required: false, type: Number, example: 20, description: 'Items per page', default: 20 })
-    
+
     @ApiQuery({ name: 'userId', required: false, type: String, description: 'Filter by user id', nullable: true })
     @ApiQuery({ name: 'reviewerId', required: false, type: String, description: 'Filter by reviewer id', nullable: true })
     @ApiQuery({ name: 'status', required: false, type: String, enum: ['SEND', 'ACCEPTED', 'DECLINED'], description: 'Filter by status', nullable: true })
@@ -38,7 +38,7 @@ export class ApplicationsController {
     @ApiPaginatedResponseDto(ApplicationDto, { description: 'Success' })
     @ApiErrorResponse({ status: 500, description: 'Error: Internal Server Error' })
     async getClaims(
-        @Query('sortBy') sortBy?: string, 
+        @Query('sortBy') sortBy?: string,
         @Query('order') order?: 'asc' | 'desc',
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 20,
@@ -53,13 +53,13 @@ export class ApplicationsController {
         const filterKeys = ['sortBy', 'order', 'page', 'limit'];
         const where: Record<string, any> = {};
         Object.entries(query || {}).forEach(([key, value]) => {
-        if (!filterKeys.includes(key) && value !== undefined) {
-            if (key === 'trial') {
-                where.trial = value === 'true';
-            } else {
-                where[key] = value;
+            if (!filterKeys.includes(key) && value !== undefined) {
+                if (key === 'trial') {
+                    where.trial = value === 'true';
+                } else {
+                    where[key] = value;
+                }
             }
-        }
         });
 
 
@@ -75,6 +75,6 @@ export class ApplicationsController {
         return {
             applications,
         };
-    }   
-    
+    }
+
 }
