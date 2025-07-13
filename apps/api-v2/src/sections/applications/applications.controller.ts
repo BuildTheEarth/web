@@ -3,9 +3,10 @@ import { ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { ApiErrorResponse, ApiPaginatedResponseDto } from 'src/common/decorators/api-response.decorator';
 import { Paginated } from 'src/common/decorators/paginated.decorator';
-import { Pagination } from 'src/common/decorators/pagination.decorator';
+import { Pagination, PaginationParams } from 'src/common/decorators/pagination.decorator';
 import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 import { Sortable } from 'src/common/decorators/sortable.decorator';
+import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator';
 import { PaginatedControllerResponse } from 'src/typings';
 import { ApplicationDto } from './dto/application.dto';
 
@@ -58,13 +59,12 @@ export class ApplicationsController {
 	@ApiPaginatedResponseDto(ApplicationDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 500, description: 'Error: Internal Server Error' })
 	async getClaims(
-		@Pagination() pagination: { page: number; limit: number },
-		@Query('sortBy') sortBy?: string,
-		@Query('order') order?: 'asc' | 'desc',
+		@Pagination() pagination: PaginationParams,
+		@Sorting() sorting: SortingParams,
 		@Query() query?: Record<string, any>,
 	): PaginatedControllerResponse {
-		const sortField = sortBy || 'createdAt';
-		const sortOrder = order === 'desc' ? 'desc' : 'asc';
+		const sortField = sorting.sortBy || 'createdAt';
+		const sortOrder = sorting.order === 'desc' ? 'desc' : 'asc';
 
 		const take = Math.max(Number(pagination.limit) || 20, 1);
 		const skip = Math.max((Number(pagination.page) || 1) - 1, 0) * take;

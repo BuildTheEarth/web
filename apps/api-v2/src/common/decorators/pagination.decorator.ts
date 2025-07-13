@@ -34,3 +34,8 @@ export const Pagination = createParamDecorator((data: unknown, ctx: ExecutionCon
 
 	return { page, limit };
 });
+
+export interface PaginationParams {
+	page: number;
+	limit: number;
+}
