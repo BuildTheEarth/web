@@ -45,7 +45,7 @@ export class ApplicationsController {
 	})
 	@ApiPaginatedResponseDto(ApplicationDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 500, description: 'Error: Internal Server Error' })
-	async getClaims(
+	async getApplications(
 		@Pagination() pagination: PaginationParams,
 		@Sorting() sorting: SortingParams,
 		@Filter() filter: FilterParams,
