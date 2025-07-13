@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Post, Request } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { Request } from 'express';
 import { ApiDefaultResponse, ApiErrorResponse } from 'src/common/decorators/api-response.decorator';
 import { SkipAuth } from 'src/common/decorators/skip-auth.decorator';
 import { AuthService } from './auth.service';
@@ -37,7 +38,7 @@ export class AuthController {
 	@ApiBearerAuth()
 	@ApiDefaultResponse(BuildTeamProfileDto)
 	@ApiErrorResponse({ status: 401, description: 'Error: Unauthorized' })
-	getProfile(@Request() req) {
-		return req.user;
+	getProfile(@Req() req: Request) {
+		return req.token;
 	}
 }
