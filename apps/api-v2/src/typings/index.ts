@@ -16,7 +16,7 @@ export interface PaginatedResponse<T> extends Response<T[]> {
 
 export type ControllerResponse<T = any> = Promise<T>;
 
-export type PaginatedControllerResponse<T> = Promise<{
+export type PaginatedControllerResponse<T = any> = Promise<{
 	data: T[];
 	meta: PaginatedMeta;
 }>;
