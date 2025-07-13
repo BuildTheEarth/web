@@ -1,8 +1,10 @@
-import { applyDecorators, UsePipes } from '@nestjs/common';
+import { applyDecorators, SetMetadata, UsePipes } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
-import { MaxLimitPipe } from '../pipes/max-limit.pipe';
+import { PaginationValidationPipe } from '../pipes/pagination.pipe';
 
-interface PaginatedOptions {
+export const PAGINATION_META = 'paginationMeta';
+
+export interface PaginatedOptions {
   defaultPage?: number;
   defaultLimit?: number;
   maxLimit?: number;
@@ -16,6 +18,8 @@ export function Paginated(options: PaginatedOptions = {}) {
   } = options;
 
   return applyDecorators(
+    SetMetadata(PAGINATION_META, options),
+    UsePipes(PaginationValidationPipe),
     ApiQuery({
       name: 'page',
       required: false,
