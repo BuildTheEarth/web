@@ -1,8 +1,9 @@
-import { Controller, Get, Req } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { ApplicationStatus } from "@repo/db";
 import { Request } from "express";
 import {
+  ApiDefaultResponse,
   ApiErrorResponse,
   ApiPaginatedResponseDto,
 } from "src/common/decorators/api-response.decorator";
@@ -18,9 +19,10 @@ import {
   Sorting,
   SortingParams,
 } from "src/common/decorators/sorting.decorator";
-import { PaginatedControllerResponse } from "src/typings";
+import { ControllerResponse, PaginatedControllerResponse } from "src/typings";
 import { ApplicationsService } from "./applications.service";
 import { ApplicationDto } from "./dto/application.dto";
+import { CreateApplicationDto } from "./dto/create.application.dto";
 
 @Controller("applications")
 export class ApplicationsController {
@@ -84,4 +86,25 @@ export class ApplicationsController {
       req.token.id,
     );
   }
+
+
+
+	/**
+	 * Creates a new application for the currently authenticated team.
+	 */
+	@Post('/')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Create Application',
+		description: 'Creates a new application for the currently authenticated team.',
+	})
+	@ApiDefaultResponse(ApplicationDto, { status: 201, description: 'Application created successfully.' })
+	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
+	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
+	async createApplication(
+		@Body() createApplicationDto: CreateApplicationDto,
+		@Req() req: Request,
+	): ControllerResponse {
+		return await this.applicationsService.create(createApplicationDto, req.token.id);
+	}
 }
