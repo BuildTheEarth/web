@@ -67,6 +67,7 @@ export class ApplicationsService {
 	 * @returns The created application.
 	 */
 	async create(createApplicationDto: CreateApplicationDto, buildteamId: string) {
+		// TODO inject the userService to check if the user exists
 		const userExists = await this.prisma.user.findUnique({
 			where: { id: createApplicationDto.userId }
 		});

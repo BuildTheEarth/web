@@ -111,7 +111,7 @@ put /
 ## Applications
 
 ✅ get /applications \
-post /applications -> create application for a user \
+✅ post /applications -> create application for a user \
 get /applications/[appId] \
 put /applications/[appId] -> review applications \
 
