@@ -9039,7 +9039,7 @@ __metadata:
     eslint-config-next: "npm:15.3.0"
     eslint-plugin-storybook: "npm:^0.8.0"
     mantine-contextmenu: "npm:^7.11.0"
-    mantine-datatable: "npm:^7.12.4"
+    mantine-datatable: "npm:^8.2.0"
     mapbox-gl: "npm:2.13.0"
     mapbox-gl-draw-snap-mode: "npm:^0.4.0"
     mapbox-gl-style-switcher: "npm:^1.0.11"
@@ -13179,15 +13179,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mantine-datatable@npm:^7.12.4":
-  version: 7.12.4
-  resolution: "mantine-datatable@npm:7.12.4"
+"mantine-datatable@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "mantine-datatable@npm:8.2.0"
   peerDependencies:
-    "@mantine/core": ">=7.11"
-    "@mantine/hooks": ">=7.11"
+    "@mantine/core": ">=8.1"
+    "@mantine/hooks": ">=8.1"
     clsx: ">=2"
-    react: ">=18.2"
-  checksum: 10c0/0943737ca4c84a5db5b1d663f047829bb0ca91a1c578f486c1406909649e54ceb598505314e8b08782341e33ef524e38cdd76dd6adb24f6d22900e8dbccf9503
+    react: ">=19"
+    react-dom: ">=19"
+  checksum: 10c0/0e307f8d73fdfc01563227d92f54a182be1cb5eed947d0d37b80bbb5260b864c5dd5942396ea408ccbc6f98df67870205e4c61913b893edb4367112248b38ffa
   languageName: node
   linkType: hard
 
