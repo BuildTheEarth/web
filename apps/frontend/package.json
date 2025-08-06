@@ -30,7 +30,7 @@
 		"@mantine/spotlight": "^8.2.3",
 		"@mantine/tiptap": "^8.2.3",
 		"@mapbox/mapbox-gl-draw": "^1.4.3",
-		"@react-three/fiber": "^8.10.1",
+		"@react-three/fiber": "^9.3.0",
 		"@tabler/icons-react": "^2.35.0",
 		"@tiptap/core": "^2.11.7",
 		"@tiptap/extension-highlight": "^2.11.7",
