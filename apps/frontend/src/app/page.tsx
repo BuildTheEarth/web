@@ -38,7 +38,14 @@ import { Fragment } from 'react';
 export default async function Page() {
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
-			<BackgroundImage src="/thumbs/home.webp" aria-label="Roundabout in a french city, background image" w="100%" h="100%" mih="100vh" style={{ position: 'relative', zIndex: 0 }}>
+			<BackgroundImage
+				src="/thumbs/home.webp"
+				aria-label="Roundabout in a french city, background image"
+				w="100%"
+				h="100%"
+				mih="100vh"
+				style={{ position: 'relative', zIndex: 0 }}
+			>
 				<Center h="100vh" w="100vw" bg="radial-gradient(circle,rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%)">
 					<div style={{ textAlign: 'center', zIndex: 1 }}>
 						<Title
@@ -110,7 +117,12 @@ export default async function Page() {
 							/>
 						</GridCol>
 						<GridCol span={{ base: 10, xs: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 2 }} style={{ zIndex: 1 }}>
-							<Image style={{ aspectRatio: '17 / 9' }} src="/thumbs/new_york.webp" h="100%" alt="The New York skyline, in the foreground a pier, built in Minecraft" />
+							<Image
+								style={{ aspectRatio: '17 / 9' }}
+								src="/thumbs/new_york.webp"
+								h="100%"
+								alt="The New York skyline, in the foreground a pier, built in Minecraft"
+							/>
 						</GridCol>
 					</Grid>
 					<Grid
@@ -165,7 +177,7 @@ export default async function Page() {
 								{[
 									{ count: '100.000+', title: 'Buildings', icon: IconBuildingSkyscraper },
 									{ count: '350.000.000m²+', title: 'Area', icon: IconMap },
-									{ count: '25.000+', title: 'Builders', icon: IconUsersGroup },
+									{ count: '25.000+', title: 'Users', icon: IconUsersGroup },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
@@ -190,8 +202,8 @@ export default async function Page() {
 								<Title order={2}>Our global Community</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>
-									Each region or country is built on a Minecraft server and the progress is managed by each region or
-									country. To start building, search for the region's team and see how you can help them out! Many
+									Each region or country is built on a Minecraft server and the progress is managed by subteams of
+									BuildTheEarth. To start building, search for the region's Team and see how you can help them out! Many
 									people start by building their own neighborhood or even just their own house and then they go on to
 									build more. Don't be scared that you are not good enough to build. We all start with something small.
 									Remember that we are there to help you learn how to build more complicated things.
@@ -212,7 +224,11 @@ export default async function Page() {
 							/>
 						</GridCol>
 						<GridCol span={{ base: 9, xs: 7, sm: 5, xl: 5 }} offset={{ base: 2, xs: 4, sm: 0 }}>
-							<Image style={{ aspectRatio: '16 / 9' }} src="/thumbs/saldias_area.webp" alt="A industrial area in Argentina with many vehicles and large storage facilities" />
+							<Image
+								style={{ aspectRatio: '16 / 9' }}
+								src="/thumbs/saldias_area.webp"
+								alt="A industrial area in Argentina with many vehicles and large storage facilities"
+							/>
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
@@ -240,7 +256,7 @@ export default async function Page() {
 								<Title order={2}>How you can help</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>
-									To start building, search for the region's team and see how you can help them out! All regions require
+									To start building, search for the region's team and see how you can help them out! All Teams require
 									you to "apply" which is aimed at teaching you the basics of building on the Earth world. This usually
 									consists of recreating 1 or 2 small buildings on their server. You can always ask for help and
 									building advice on our Discord server. Experienced builders are always more than willing to help you
@@ -251,7 +267,7 @@ export default async function Page() {
 						<GridCol span={{ base: 10, sm: 7, md: 5 }} offset={{ base: 1, sm: 2, md: 0, xl: 1 }}>
 							<Box>
 								<Stepper active={0} size="xl" orientation="vertical">
-									<StepperStep label="Find your region" icon={<IconMapSearch size={20} />}></StepperStep>
+									<StepperStep label="Find your Team" icon={<IconMapSearch size={20} />}></StepperStep>
 									<StepperStep label="Join the server" icon={<IconMapPin size={20} />}></StepperStep>
 									<StepperStep label="Build your first building" icon={<IconCrane size={20} />}></StepperStep>
 								</Stepper>
@@ -268,13 +284,25 @@ export default async function Page() {
 								aria-label="Showcase Image Gallery of BuildTheEarth"
 							>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/thumbs/shimen_reservoir.webp" alt="Taiwanese water reservoir" />
+									<Image
+										style={{ aspectRatio: '16 / 9', height: '100%' }}
+										src="/thumbs/shimen_reservoir.webp"
+										alt="Taiwanese water reservoir"
+									/>
 								</CarouselSlide>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/thumbs/chernobyl.webp" alt="Top of the chernobyl nuclear plant with a crane and the protective structure" />
+									<Image
+										style={{ aspectRatio: '16 / 9', height: '100%' }}
+										src="/thumbs/chernobyl.webp"
+										alt="Top of the chernobyl nuclear plant with a crane and the protective structure"
+									/>
 								</CarouselSlide>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src="/thumbs/belgian_street.webp" alt="A generic street in a belgian city with trees, small houses and a waterside" />
+									<Image
+										style={{ aspectRatio: '16 / 9', height: '100%' }}
+										src="/thumbs/belgian_street.webp"
+										alt="A generic street in a belgian city with trees, small houses and a waterside"
+									/>
 								</CarouselSlide>
 							</Carousel>
 							<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">

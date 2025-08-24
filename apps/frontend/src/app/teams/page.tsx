@@ -9,9 +9,9 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-	title: 'Build Regions',
+	title: 'Build Teams',
 	description:
-		"Explore BuildTheEarth by choosing a region and visiting it's Minecraft server. BuildTheEarth Regions are subteams, which build specific countries or areas of the world.",
+		"Explore BuildTheEarth by choosing a Team and visiting it's Minecraft server. BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
 };
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string; page?: string }> }) {
@@ -36,10 +36,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 	});
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: 'Build Regions', src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: 'Build Teams', src: '/placeholders/home.png' }}>
 			<Text maw="65%">
-				Build Regions are subteams of BuildTheEarth, which build specific countries or areas of the world. Each Region
-				has its own Minecraft server, where you can join and start building.
+				BuildTheEarth is divided into subteams, which build specific countries or areas of the world. Each Team has its
+				own Minecraft server, where you can join and start building.
 			</Text>
 			<QuerySearchInput paramName="q" my="xl" />
 			<SimpleGrid cols={2} spacing="xl" mb="xl">
@@ -63,7 +63,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 						return (
 							<Link
 								key={element.id}
-								href={`/regions/${element.slug}`}
+								href={`/teams/${element.slug}`}
 								style={{ textDecoration: 'none', color: 'inherit' }}
 							>
 								<Group
