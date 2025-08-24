@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
 				src="/thumbs/home.webp"
-				aria-label="Roundabout in a french city, background image"
+				aria-label={t('landing.image.alt')}
 				w="100%"
 				h="100%"
 				mih="100vh"
@@ -62,11 +62,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								textShadow: '0px 0px 28px #000',
 							}}
 						>
-							<SplitTextAnimation>Building The Earth In Minecraft</SplitTextAnimation>
+							<SplitTextAnimation>{t('landing.title')}</SplitTextAnimation>
 						</Title>
 						<AppearAnimation component="div" delay={0.3} duration={1}>
-							<LinkButton href="/join" size="xl" mt="xl" aria-label="Join the BuildTheEarth community">
-								{t('title')}
+							<LinkButton href="/join" size="xl" mt="xl" aria-label={t('landing.cta.alt')}>
+								{t('landing.cta.label')}
 							</LinkButton>
 						</AppearAnimation>
 					</div>
@@ -81,7 +81,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					}}
 					className="mantine-visible-from-sm"
 					href="#more"
-					aria-label="Scroll down to learn more"
+					aria-label={t('landing.arrowDown.alt')}
 					// alt="Scroll down to learn more"
 				>
 					<LottieAnimation animationData={chevronBounceLottie} loop={true} style={{ height: '54px' }} />
@@ -96,17 +96,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					<Grid w="100%" styles={{ col: { border: 'var(--debug-border) solid green' } }}>
 						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 5 }}>
 							<Box>
-								<Title order={2}>Who we are</Title>
+								<Title order={2}>{t('whoWeAre.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-								<Text maw={{ base: '100%', xs: '85%' }}>
-									BuildTheEarth is a community project creating a complete 1:1 scale replicate of every building on
-									Earth in the computer game Minecraft, a virtual copy of our whole world that showcases the diversity
-									of culture and living space on our planet and stands as a testament for what we can achieve when we
-									work together as humanity. Together we connect, share and learn from builders worldwide, and explore
-									Earth like never before. Join our global community and help bring our world to life!
-								</Text>
+								<Text maw={{ base: '100%', xs: '85%' }}>{t('whoWeAre.description')}</Text>
 								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
-									Read more
+									{t('whoWeAre.cta')}
 								</Button>
 							</Box>
 						</GridCol>
@@ -138,7 +132,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					>
 						<GridCol>
 							<Box>
-								<Title order={2}>What we have done</Title>
+								<Title order={2}>{t('whatWeHaveDone.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 							</Box>
 						</GridCol>
@@ -155,9 +149,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								hiddenFrom="sm"
 							>
 								{[
-									{ count: '100.000+', title: 'Buildings', icon: IconBuildingSkyscraper },
-									{ count: '350.000.000m²+', title: 'Area', icon: IconMap },
-									{ count: '25.000+', title: 'Builders', icon: IconUsersGroup },
+									{ count: '100.000+', title: t('whatWeHaveDone.buildings'), icon: IconBuildingSkyscraper },
+									{ count: '350.000.000m²+', title: t('whatWeHaveDone.area'), icon: IconMap },
+									{ count: '25.000+', title: t('whatWeHaveDone.users'), icon: IconUsersGroup },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
@@ -181,9 +175,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								visibleFrom="sm"
 							>
 								{[
-									{ count: '100.000+', title: 'Buildings', icon: IconBuildingSkyscraper },
-									{ count: '350.000.000m²+', title: 'Area', icon: IconMap },
-									{ count: '25.000+', title: 'Users', icon: IconUsersGroup },
+									{ count: '100.000+', title: t('whatWeHaveDone.buildings'), icon: IconBuildingSkyscraper },
+									{ count: '350.000.000m²+', title: t('whatWeHaveDone.area'), icon: IconMap },
+									{ count: '25.000+', title: t('whatWeHaveDone.users'), icon: IconUsersGroup },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
@@ -205,17 +199,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					>
 						<GridCol span={{ base: 12, sm: 11, md: 9, xl: 6 }}>
 							<Box ml={{ base: 'xs', xs: 'xl' }} pl={{ base: 'xs', xs: 'xl' }}>
-								<Title order={2}>Our global Community</Title>
+								<Title order={2}>{t('globalCommunity.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-								<Text maw={{ base: '100%', xs: '85%' }}>
-									Each region or country is built on a Minecraft server and the progress is managed by subteams of
-									BuildTheEarth. To start building, search for the region's Team and see how you can help them out! Many
-									people start by building their own neighborhood or even just their own house and then they go on to
-									build more. Don't be scared that you are not good enough to build. We all start with something small.
-									Remember that we are there to help you learn how to build more complicated things.
-								</Text>
+								<Text maw={{ base: '100%', xs: '85%' }}>{t('globalCommunity.description')}</Text>
 								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
-									Join us now
+									{t('globalCommunity.cta')}
 								</Button>
 							</Box>
 						</GridCol>
@@ -238,16 +226,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
-								<Title order={2}>Explore the Earth</Title>
+								<Title order={2}>{t('explore.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-								<Text maw={{ base: '100%', xs: '85%' }}>
-									All of BuildTheEarth's progress is free to view and explore for visitors. The progress is separated
-									onto different servers depending on where in the world it is. All you have to do is find the IP of the
-									region you want to explore and connect to it! Many servers can be connected to though our central hub
-									accessible from buildtheearth.net on Java edition.
-								</Text>
+								<Text maw={{ base: '100%', xs: '85%' }}>{t('explore.description')}</Text>
 								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
-									Find a server
+									{t('explore.cta')}
 								</Button>
 							</Box>
 						</GridCol>
@@ -259,23 +242,17 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					>
 						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 6 }}>
 							<Box>
-								<Title order={2}>How you can help</Title>
+								<Title order={2}>{t('howToHelp.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-								<Text maw={{ base: '100%', xs: '85%' }}>
-									To start building, search for the region's team and see how you can help them out! All Teams require
-									you to "apply" which is aimed at teaching you the basics of building on the Earth world. This usually
-									consists of recreating 1 or 2 small buildings on their server. You can always ask for help and
-									building advice on our Discord server. Experienced builders are always more than willing to help you
-									get started.
-								</Text>
+								<Text maw={{ base: '100%', xs: '85%' }}>{t('howToHelp.description')}</Text>
 							</Box>
 						</GridCol>
 						<GridCol span={{ base: 10, sm: 7, md: 5 }} offset={{ base: 1, sm: 2, md: 0, xl: 1 }}>
 							<Box>
 								<Stepper active={0} size="xl" orientation="vertical">
-									<StepperStep label="Find your Team" icon={<IconMapSearch size={20} />}></StepperStep>
-									<StepperStep label="Join the server" icon={<IconMapPin size={20} />}></StepperStep>
-									<StepperStep label="Build your first building" icon={<IconCrane size={20} />}></StepperStep>
+									<StepperStep label={t('howToHelp.step1')} icon={<IconMapSearch size={20} />}></StepperStep>
+									<StepperStep label={t('howToHelp.step2')} icon={<IconMapPin size={20} />}></StepperStep>
+									<StepperStep label={t('howToHelp.step3')} icon={<IconCrane size={20} />}></StepperStep>
 								</Stepper>
 							</Box>
 						</GridCol>
@@ -287,7 +264,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								mt="calc(var(--mantine-spacing-xl) * 2)"
 								emblaOptions={{ loop: true }}
 								style={{ aspectRatio: '16 / 9', transform: 'translateX(-50%)', position: 'relative', left: '50%' }}
-								aria-label="Showcase Image Gallery of BuildTheEarth"
+								aria-label={t('gallery.alt')}
 							>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
 									<Image
@@ -312,7 +289,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								</CarouselSlide>
 							</Carousel>
 							<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
-								Explore the Gallery
+								{t('gallery.cta')}
 							</Button>
 						</GridCol>
 					</Grid>
@@ -323,7 +300,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					>
 						<GridCol>
 							<Box>
-								<Title order={2}>You may have seen</Title>
+								<Title order={2}>{t('mediaList.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 							</Box>
 						</GridCol>
@@ -370,7 +347,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 													rightSection={<IconChevronRight size={12} />}
 													mt="md"
 												>
-													Continue reading
+													{t('mediaList.cta')}
 												</Button>
 											</Card>
 											<Card key={item.title + '-sm'} withBorder maw="30vw" radius={0} visibleFrom="sm" hiddenFrom="lg">
@@ -392,7 +369,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 													rightSection={<IconChevronRight size={12} />}
 													mt="md"
 												>
-													Continue reading
+													{t('mediaList.cta')}
 												</Button>
 											</Card>
 											<Card key={item.title + '-xs'} withBorder maw="75vw" radius={0} hiddenFrom="sm">
@@ -414,7 +391,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 													rightSection={<IconChevronRight size={12} />}
 													mt="md"
 												>
-													Continue reading
+													{t('mediaList.cta')}
 												</Button>
 											</Card>
 										</Fragment>

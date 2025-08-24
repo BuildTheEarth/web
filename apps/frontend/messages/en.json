@@ -1,5 +1,53 @@
 {
 	"home": {
-		"title": "Hello world!"
+		"landing": {
+			"image": {
+				"alt": "Roundabout in a french city, background image"
+			},
+			"title": "Building The Earth In Minecraft",
+			"cta": {
+				"label": "Join us!",
+				"alt": "Join the BuildTheEarth community"
+			},
+			"arrowDown": {
+				"alt": "Scroll down to learn more"
+			}
+		},
+		"whoWeAre": {
+			"title": "Who we are",
+			"description": "BuildTheEarth is a community project creating a complete 1:1 scale replicate of every building on Earth in the computer game Minecraft, a virtual copy of our whole world that showcases the diversity of culture and living space on our planet and stands as a testament for what we can achieve when we work together as humanity. Together we connect, share and learn from builders worldwide, and explore Earth like never before. Join our global community and help bring our world to life!",
+			"cta": "Read more"
+		},
+		"whatWeHaveDone": {
+			"title": "What we have done",
+			"buildings": "Buildings",
+			"area": "Area",
+			"users": "Users"
+		},
+		"globalCommunity": {
+			"title": "Our global Community",
+			"description": "Each region or country is built on a Minecraft server and the progress is managed by subteams of BuildTheEarth. To start building, search for the region's Team and see how you can help them out! Many people start by building their own neighborhood or even just their own house and then they go on to build more. Don't be scared that you are not good enough to build. We all start with something small. Remember that we are there to help you learn how to build more complicated things.",
+			"cta": "Join us now"
+		},
+		"explore": {
+			"title": "Explore the Earth",
+			"description": "All of BuildTheEarth's progress is free to view and explore for visitors. The progress is separated onto different servers depending on where in the world it is. All you have to do is find the IP of the region you want to explore and connect to it! Many servers can be connected to though our central hub accessible from buildtheearth.net on Java edition.",
+			"cta": "Find a server"
+		},
+		"howToHelp": {
+			"title": "How you can help",
+			"description": "To start building, search for the region's team and see how you can help them out! All Teams require you to \"apply\" which is aimed at teaching you the basics of building on the Earth world. This usually consists of recreating 1 or 2 small buildings on their server. You can always ask for help and building advice on our Discord server. Experienced builders are always more than willing to help you get started.",
+			"step1": "Find your Team",
+			"step2": "Join the server",
+			"step3": "Build your first building"
+		},
+		"gallery": {
+			"alt": "Showcase Image Gallery of BuildTheEarth",
+			"cta": "Explore the Gallery"
+		},
+		"mediaList": {
+			"title": "You might have seen",
+			"cta": "Continue reading"
+		}
 	}
 }
