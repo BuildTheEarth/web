@@ -2,10 +2,10 @@
 
 import { Burger, Button, Divider, Drawer, Group, ScrollArea, Stack } from '@mantine/core';
 
+import { Link } from '@/i18n/navigation';
 import classes from '@/styles/layout/Header.module.css';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronRight } from '@tabler/icons-react';
-import Link from 'next/link';
 import { headerLinks } from './links';
 
 export function HeaderDrawer() {

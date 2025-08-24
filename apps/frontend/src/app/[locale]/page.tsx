@@ -33,9 +33,15 @@ import {
 	IconUsersGroup,
 } from '@tabler/icons-react';
 import * as motion from 'motion/react-client';
+import { Locale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Fragment } from 'react';
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
+	const locale = (await params).locale;
+	setRequestLocale(locale);
+	const t = await getTranslations('home');
+
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
@@ -60,7 +66,7 @@ export default async function Page() {
 						</Title>
 						<AppearAnimation component="div" delay={0.3} duration={1}>
 							<LinkButton href="/join" size="xl" mt="xl" aria-label="Join the BuildTheEarth community">
-								Join us!
+								{t('title')}
 							</LinkButton>
 						</AppearAnimation>
 					</div>

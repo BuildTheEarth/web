@@ -2,10 +2,10 @@
 
 import { Button, Container, Group, Text } from '@mantine/core';
 
+import { Link } from '@/i18n/navigation';
 import classes from '@/styles/layout/Header.module.css';
 import { IconChevronRight } from '@tabler/icons-react';
 import Image from 'next/image';
-import Link from 'next/link';
 import HeaderDrawer from './HeaderDrawer';
 import { headerLinks } from './links';
 

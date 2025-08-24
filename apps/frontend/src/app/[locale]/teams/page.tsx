@@ -1,13 +1,12 @@
 import { QueryPagination } from '@/components/core/Pagination';
 import { QuerySearchInput } from '@/components/core/SearchInput';
 import Wrapper from '@/components/layout/Wrapper';
+import { Link } from '@/i18n/navigation';
 import { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
 import { Avatar, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
 import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
 import { Metadata } from 'next';
-import Link from 'next/link';
-
 export const metadata: Metadata = {
 	title: 'Build Teams',
 	description:

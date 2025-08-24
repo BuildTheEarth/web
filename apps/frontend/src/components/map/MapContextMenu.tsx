@@ -15,10 +15,10 @@ import {
 import { useEffect, useState } from 'react';
 import { ContextMenu, ContextMenuProps } from '../core/ContextMenu';
 
+import { Link } from '@/i18n/navigation';
 import { fromGeoObject } from '@bte-germany/terraconvert';
 import { useClipboard } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import Link from 'next/link';
 
 interface MapContextMenuProps extends ContextMenuProps {
 	oLat?: number | null;

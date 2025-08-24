@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from '@/i18n/navigation';
 import { TextInput, TextInputProps } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
@@ -9,8 +10,6 @@ import { Suspense, useEffect } from 'react';
 export default function SearchInput(props: TextInputProps) {
 	return <TextInput placeholder="Search..." leftSection={<IconSearch size={16} />} {...props} />;
 }
-
-import { useRouter } from 'next/navigation';
 
 function QuerySearchInputInner({ paramName, ...props }: TextInputProps & { paramName: string }) {
 	const urlQuery = useSearchParams().get(paramName) || '';

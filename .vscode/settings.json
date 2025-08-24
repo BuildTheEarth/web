@@ -33,6 +33,7 @@
 		"frontend/gallery",
 		"dash/editor",
 		"db",
-		"dash/responsive"
+		"dash/responsive",
+		"frontend/i18n"
 	]
 }

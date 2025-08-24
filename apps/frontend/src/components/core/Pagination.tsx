@@ -1,6 +1,7 @@
 'use client';
+import { useRouter } from '@/i18n/navigation';
 import { Pagination as MPagination, PaginationProps } from '@mantine/core';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
 export default function Pagination() {

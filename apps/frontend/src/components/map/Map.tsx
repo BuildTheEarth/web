@@ -8,8 +8,9 @@ import * as React from 'react';
 import { LoadingOverlay, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import mapboxgl, { GeolocateControl, Map as MapType, MapboxOptions } from 'mapbox-gl';
 import { MapboxStyleDefinition, MapboxStyleSwitcherControl } from 'mapbox-gl-style-switcher';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { showNotification } from '@mantine/notifications';
 import { IconCheck } from '@tabler/icons-react';
 

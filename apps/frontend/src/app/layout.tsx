@@ -15,13 +15,16 @@ import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import SWRSetup from '@/components/core/SWRSetup';
 import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck';
 import AppLayout from '@/components/layout';
+import { routing } from '@/i18n/routing';
 import { theme } from '@/util/theme';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { Metadata } from 'next';
+import { Locale, NextIntlClientProvider, hasLocale } from 'next-intl';
+import { setRequestLocale } from 'next-intl/server';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-
+import { notFound } from 'next/navigation';
 const interFont = Inter({
 	subsets: ['latin'],
 	variable: '--font-inter',
@@ -61,16 +64,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 				<ColorSchemeScript />
 			</head>
 			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
-				<MantineProvider theme={theme}>
-					<SWRSetup>
-						<ModalsProvider>
-							<Notifications limit={3} />
-							<DEBUG_ScreenSizeCheck />
+				<NextIntlClientProvider>
+					<MantineProvider theme={theme}>
+						<SWRSetup>
+							<ModalsProvider>
+								<Notifications limit={3} />
+								<DEBUG_ScreenSizeCheck />
 
-							<AppLayout>{children}</AppLayout>
-						</ModalsProvider>
-					</SWRSetup>
-				</MantineProvider>
+								<AppLayout>{children}</AppLayout>
+							</ModalsProvider>
+						</SWRSetup>
+					</MantineProvider>
+				</NextIntlClientProvider>
 			</body>
 		</html>
 	);

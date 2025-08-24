@@ -1,11 +1,13 @@
+import { Link } from '@/i18n/navigation';
 import { AnchorProps, Anchor as MantineAnchor } from '@mantine/core';
-import Link, { LinkProps } from 'next/link';
 
 /**
  * Default Anchor component with direct usage of Next.js Link
  */
 export default function Anchor(
-	props: AnchorProps & LinkProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & { children: any },
+	props: AnchorProps &
+		React.AnchorHTMLAttributes<HTMLAnchorElement> & { children: any; href: string | import('url').UrlObject },
 ) {
-	return <MantineAnchor {...props} component={Link} />;
+	const { href, ...rest } = props;
+	return <MantineAnchor {...rest} href={href} component={Link} />;
 }
