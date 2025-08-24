@@ -279,7 +279,7 @@ export default async function Page() {
 								w="90%"
 								slideGap="0px"
 								mt="calc(var(--mantine-spacing-xl) * 2)"
-								loop
+								emblaOptions={{ loop: true }}
 								style={{ aspectRatio: '16 / 9', transform: 'translateX(-50%)', position: 'relative', left: '50%' }}
 								aria-label="Showcase Image Gallery of BuildTheEarth"
 							>
