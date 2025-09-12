@@ -66,5 +66,12 @@
 			"members": "Number of members in this team"
 		},
 		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}"
+	},
+	"faq": {
+		"title": "Frequently Asked Questions",
+		"differentLanguageAlert": {
+			"title": "Translation of Frequently asked Questions",
+			"description": "All questions listed on this page are written and answered in English. If you need help with getting an answer, please message us on Discord."
+		}
 	}
 }
