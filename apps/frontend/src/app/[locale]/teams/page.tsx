@@ -7,13 +7,25 @@ import prisma from '@/util/db';
 import { Avatar, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
 import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
 import { Metadata } from 'next';
+import { Locale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 export const metadata: Metadata = {
 	title: 'Build Teams',
 	description:
 		"Explore BuildTheEarth by choosing a Team and visiting it's Minecraft server. BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
 };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ q?: string; page?: string }> }) {
+export default async function Page({
+	searchParams,
+	params,
+}: {
+	params: Promise<{ locale: Locale }>;
+	searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+	const locale = (await params).locale;
+	setRequestLocale(locale);
+	const t = await getTranslations('teams');
+
 	const search = (await searchParams).q || '';
 	const page = parseInt((await searchParams).page || '1');
 	const buildTeams = await prisma.buildTeam.findMany({
@@ -35,10 +47,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 	});
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: 'Build Teams', src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
 			<Text maw="65%">
-				BuildTheEarth is divided into subteams, which build specific countries or areas of the world. Each Team has its
-				own Minecraft server, where you can join and start building.
+				{t('description.0')}
+				<br />
+				{t('description.1')}
 			</Text>
 			<QuerySearchInput paramName="q" my="xl" />
 			<SimpleGrid cols={2} spacing="xl" mb="xl">
@@ -91,7 +104,9 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 												{element.name}
 											</Text>
 											<Group wrap="nowrap" gap={10} mt={3}>
-												<IconPin size={16} />
+												<Tooltip label={t('tooltip.location')}>
+													<IconPin size={16} />
+												</Tooltip>
 												{element.location.length > 2 ? (
 													<Tooltip label={location.slice(2).join(', ')}>
 														<Text size="xs" c="dimmed">
@@ -105,9 +120,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ q
 												)}
 											</Group>
 											<Group wrap="nowrap" gap={10} mt={5}>
-												<IconUsers size={16} />
+												<Tooltip label={t('tooltip.members')}>
+													<IconUsers size={16} />
+												</Tooltip>
 												<Text size="xs" c="dimmed">
-													{element._count.members} members
+													{t('memberCount', { count: element._count.members })}
 												</Text>
 											</Group>
 										</Stack>

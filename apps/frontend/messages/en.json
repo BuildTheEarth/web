@@ -54,5 +54,17 @@
 		"title": "Something is not right...",
 		"description": "The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL.",
 		"cta": "Go back"
+	},
+	"teams": {
+		"title": "Build Teams",
+		"description": [
+			"BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
+			"Each Team has its own Minecraft server, where you can join and start building."
+		],
+		"tooltip": {
+			"location": "A list of countries this team builds in",
+			"members": "Number of members in this team"
+		},
+		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}"
 	}
 }
