@@ -1,4 +1,31 @@
 {
+	"common": {
+		"pagination": {
+			"page": "Page {page}",
+			"first": "First page",
+			"last": "Last page",
+			"next": "Next page",
+			"previous": "Previous page"
+		},
+		"search": {
+			"placeholder": "Search..."
+		},
+		"footer": {
+			"copyright": "© {year} BuildTheEarth"
+		},
+		"header": {
+			"cta": "Get Started",
+			"toggleNavigation": "Toggle navigation links"
+		},
+		"links": {
+			"faq": "FAQ",
+			"teams": "Teams",
+			"contact": "Contact",
+			"status": "Status",
+			"gallery": "Gallery",
+			"map": "Map"
+		}
+	},
 	"home": {
 		"landing": {
 			"image": {

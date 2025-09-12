@@ -1,6 +1,7 @@
 'use client';
 import { useRouter } from '@/i18n/navigation';
 import { Pagination as MPagination, PaginationProps } from '@mantine/core';
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 
@@ -17,6 +18,8 @@ function QueryPaginationInner({
 	PaginationProps,
 	'total' | 'value' | 'onChange'
 >) {
+	const t = useTranslations('common.pagination');
+
 	const router = useRouter();
 	const searchParams = useSearchParams();
 
@@ -43,6 +46,7 @@ function QueryPaginationInner({
 				component: 'a',
 				href: getHref(page),
 				'aria-current': page === currentPage ? 'page' : undefined,
+				'aria-label': t('page', { page }),
 			})}
 			getControlProps={(control) => {
 				let page: number | undefined;
@@ -57,12 +61,12 @@ function QueryPaginationInner({
 						'aria-current': page === currentPage ? 'page' : undefined,
 						'aria-label':
 							control === 'first'
-								? 'First page'
+								? t('first')
 								: control === 'last'
-									? 'Last page'
+									? t('last')
 									: control === 'next'
-										? 'Next page'
-										: 'Previous page',
+										? t('next')
+										: t('previous'),
 					};
 				}
 				return {};

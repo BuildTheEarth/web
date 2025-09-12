@@ -4,11 +4,13 @@ import { useRouter } from '@/i18n/navigation';
 import { TextInput, TextInputProps } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 
 export default function SearchInput(props: TextInputProps) {
-	return <TextInput placeholder="Search..." leftSection={<IconSearch size={16} />} {...props} />;
+	const t = useTranslations('common.search');
+	return <TextInput placeholder={t('placeholder')} leftSection={<IconSearch size={16} />} {...props} />;
 }
 
 function QuerySearchInputInner({ paramName, ...props }: TextInputProps & { paramName: string }) {

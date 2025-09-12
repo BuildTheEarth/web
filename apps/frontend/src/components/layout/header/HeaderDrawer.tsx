@@ -6,18 +6,22 @@ import { Link } from '@/i18n/navigation';
 import classes from '@/styles/layout/Header.module.css';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronRight } from '@tabler/icons-react';
+import { useTranslations } from 'next-intl';
 import { headerLinks } from './links';
 
 export function HeaderDrawer() {
+	const t = useTranslations('common.header');
+	const tLinks = useTranslations('common.links');
+
 	const [opened, { toggle, close }] = useDisclosure();
 	const items = headerLinks.map((link) => (
-		<Link key={link.label} href={link.link} className={classes.drawerLink}>
-			{link.label}
+		<Link key={link.key} href={link.link} className={classes.drawerLink}>
+			{tLinks(link.key)}
 		</Link>
 	));
 	return (
 		<>
-			<Burger className={classes.drawerControl} opened={opened} onClick={toggle} aria-label="Toggle navigation links" />
+			<Burger className={classes.drawerControl} opened={opened} onClick={toggle} aria-label={t('toggleNavigation')} />
 			<Drawer
 				opened={opened}
 				onClose={close}
@@ -36,7 +40,7 @@ export function HeaderDrawer() {
 
 				<Group mt="lg" mx="xl" mb="xl" grow style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
 					<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />}>
-						Get Started
+						{t('cta')}
 					</Button>
 				</Group>
 			</Drawer>

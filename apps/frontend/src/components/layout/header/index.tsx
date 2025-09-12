@@ -5,14 +5,17 @@ import { Button, Container, Group, Text } from '@mantine/core';
 import { Link } from '@/i18n/navigation';
 import classes from '@/styles/layout/Header.module.css';
 import { IconChevronRight } from '@tabler/icons-react';
+import { getTranslations } from 'next-intl/server';
 import Image from 'next/image';
 import HeaderDrawer from './HeaderDrawer';
 import { headerLinks } from './links';
 
 export async function Header() {
+	const t = await getTranslations('common.header');
+	const tLinks = await getTranslations('common.links');
 	const items = headerLinks.map((link) => (
-		<Link key={link.label} href={link.link} className={classes.link}>
-			{link.label}
+		<Link key={link.key} href={link.link} className={classes.link}>
+			{tLinks(link.key)}
 		</Link>
 	));
 
@@ -53,7 +56,7 @@ export async function Header() {
 						component={Link}
 						href="/get-started"
 					>
-						Get Started
+						{t('cta')}
 					</Button>
 					<HeaderDrawer />
 				</Group>
