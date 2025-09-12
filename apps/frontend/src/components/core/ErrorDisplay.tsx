@@ -6,11 +6,11 @@ import EarthBackground from '../layout/EarthBackground';
 export default function ErrorDisplay({
 	title = 'Something is not right...',
 	message = 'The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. ',
-	showBackButton = true,
+	backButton = true,
 }: {
 	title?: string;
 	message?: string;
-	showBackButton?: boolean;
+	backButton?: boolean | string;
 }) {
 	return (
 		<Box
@@ -35,9 +35,9 @@ export default function ErrorDisplay({
 				</SplitTextAnimation>
 			</Text>
 			<AppearAnimation delay={0.35} component="div">
-				{showBackButton && (
+				{backButton && (
 					<Button variant="outline" size="sm" mt="md">
-						Go Back
+						{typeof backButton === 'string' ? backButton : 'Go back'}
 					</Button>
 				)}
 			</AppearAnimation>

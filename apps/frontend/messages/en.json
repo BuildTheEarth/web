@@ -49,5 +49,10 @@
 			"title": "You might have seen",
 			"cta": "Continue reading"
 		}
+	},
+	"notfound": {
+		"title": "Something is not right...",
+		"description": "The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL.",
+		"cta": "Go back"
 	}
 }
