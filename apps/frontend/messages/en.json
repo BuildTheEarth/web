@@ -73,5 +73,14 @@
 			"title": "Translation of Frequently asked Questions",
 			"description": "All questions listed on this page are written and answered in English. If you need help with getting an answer, please message us on Discord."
 		}
+	},
+	"contact": {
+		"title": "Contact Us",
+		"socialMedia": "Social Media",
+		"staffContacts": "Project Management",
+		"appeals": {
+			"title": "Ban Appeals",
+			"description": "If you wish to appeal your ban on our Discord server, please send an E-Mail to <mail></mail>. In order to submit a ban appeal, you must include your Discord name and ID, screenshot of your ban message and your reason for appealing. Illegitimate appeals will be ignored."
+		}
 	}
 }

@@ -14,20 +14,26 @@ import {
 	IconBrandYoutube,
 } from '@tabler/icons-react';
 import { Metadata } from 'next';
+import { Locale } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 export const metadata: Metadata = {
 	title: 'Contact Us',
 	description: "If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
 };
 
-export default async function Page() {
+export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
+	const locale = (await params).locale;
+	setRequestLocale(locale);
+	const t = await getTranslations('contact');
+
 	const contacts = await prisma.contact.findMany({});
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: 'Contact Us', src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
 			<Box>
 				<Title order={2} mb="md">
-					Social Media
+					{t('socialMedia')}
 				</Title>
 				<Group gap="sm" wrap="nowrap">
 					{[
@@ -83,7 +89,7 @@ export default async function Page() {
 					})}
 				</Group>
 				<Title order={2} mb="md" mt="xl">
-					Project Management
+					{t('staffContacts')}
 				</Title>
 				<SimpleGrid cols={2} spacing="md" w="80%">
 					{contacts.map((contact) => (
@@ -124,10 +130,11 @@ export default async function Page() {
 					Ban Appeals
 				</Title>
 				<Text maw={{ base: '100%', xs: '85%' }}>
-					If you wish to appeal your ban on our Discord server, please send an E-Mail to{' '}
-					<Anchor href="mailto:appeals@buildtheearth.net">appeals@buildtheearth.net</Anchor>. In order to submit a ban
-					appeal, you must include your Discord name and ID, screenshot of your ban message and your reason for
-					appealing. Illegitimate appeals will be ignored.
+					{t.rich('appeals.description', {
+						mail: (chunks: string) => (
+							<Anchor href="mailto:appeals@buildtheearth.net">appeals@buildtheearth.net</Anchor>
+						),
+					})}
 				</Text>
 			</Box>
 		</Wrapper>
