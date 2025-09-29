@@ -92,7 +92,37 @@
 			"location": "A list of countries this team builds in",
 			"members": "Number of members in this team"
 		},
-		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}"
+		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}",
+		"ownPage": {
+			"overview": "Overview",
+			"details": "Details",
+			"ip": "Minecraft IP",
+			"version": "Minecraft Version",
+			"location": "{count, plural, =1 {Location} other {Locations}}",
+			"members": "Members",
+			"recentImages": "Recent Images",
+			"noRecentImages": "{team} has not uploaded any images yet.",
+			"joinServer": {
+				"label": "Join the server",
+				"step1": [
+					"1. Start Minecraft",
+					"Open the Launcher.",
+					"Select <i>Minecraft Java Edition</i> on the left sidebar.",
+					"Click the green <launcherButton>PLAY</launcherButton> button to start Minecraft.",
+					"Once Minecraft has started, click <button>Multiplayer</button> on the main menu."
+				],
+				"tip": "For the best experience you may need to <link>change your game version</link> to <code>{version}</code>.",
+				"step2": [
+					"2. Add the server",
+					"Click <button>Add Server</button> on the bottom right.",
+					"For <b>Server Name</b> enter a label for yourself (like <i>{name}</i>).",
+					"For <b>Server Address</b> enter <code>{ip}</code> and click <button>Done</button>.",
+					"Click the server you just added in the list.",
+					"Type <code>/bt {slug}</code> and hit <kbd>ENTER</kbd>."
+				],
+				"done": "<b>Done!</b> You are now on the {name} Minecraft Server."
+			}
+		}
 	},
 	"faq": {
 		"title": "Frequently Asked Questions",

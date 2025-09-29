@@ -1,6 +1,6 @@
 'use client';
 import classes from '@/styles/ResponsiveContainer.module.css';
-import { Container, createTheme } from '@mantine/core';
+import { Button, Container, createTheme } from '@mantine/core';
 import cx from 'clsx';
 
 /**
@@ -16,7 +16,7 @@ export const theme = createTheme({
 		lg: '75em',
 		xl: '88em',
 	},
-	defaultRadius: 'sm',
+	defaultRadius: '0',
 	primaryColor: 'buildtheearth',
 	primaryShade: 6,
 	colors: {
@@ -63,6 +63,11 @@ export const theme = createTheme({
 			classNames: (_, { size }) => ({
 				root: cx({ [classes.responsiveContainer]: size === 'responsive' }),
 			}),
+		}),
+		Button: Button.extend({
+			defaultProps: {
+				radius: 'sm',
+			},
 		}),
 	},
 	autoContrast: true,
