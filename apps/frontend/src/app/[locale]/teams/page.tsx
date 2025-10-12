@@ -110,7 +110,7 @@ export default async function Page({
 												{element.location.length > 2 ? (
 													<Tooltip label={location.slice(2).join(', ')}>
 														<Text size="xs" c="dimmed">
-															{location.slice(0, 2).join(', ')} +{element.location.length - 2}
+															{location.slice(0, 2).join(', ')} +{location.length - 2}
 														</Text>
 													</Tooltip>
 												) : (
