@@ -6,6 +6,7 @@ import prisma from '@/util/db';
 import {
 	Avatar,
 	Box,
+	Button,
 	Container,
 	Divider,
 	Flex,
@@ -116,6 +117,9 @@ export default async function Page({
 						></Avatar>
 						<h1>{buildTeam.name}</h1>
 					</Group>
+					<Button component={Link} href="https://my.buildtheearth.net/ineedtochangethisurl">
+						{t('apply')}
+					</Button>
 				</Group>
 			</Group>
 			<Container

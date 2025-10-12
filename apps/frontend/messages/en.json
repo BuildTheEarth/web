@@ -102,6 +102,7 @@
 			"members": "Members",
 			"recentImages": "Recent Images",
 			"noRecentImages": "{team} has not uploaded any images yet.",
+			"apply": "Apply to join",
 			"joinServer": {
 				"label": "Join the server",
 				"step1": [
