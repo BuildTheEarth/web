@@ -99,6 +99,7 @@
 			"ip": "Minecraft IP",
 			"version": "Minecraft Version",
 			"location": "{count, plural, =1 {Location} other {Locations}}",
+			"moreLocations": "{list}, +{count}",
 			"members": "Members",
 			"recentImages": "Recent Images",
 			"noRecentImages": "{team} has not uploaded any images yet.",
@@ -122,6 +123,10 @@
 					"Type <code>/bt {slug}</code> and hit <kbd>ENTER</kbd>."
 				],
 				"done": "<b>Done!</b> You are now on the {name} Minecraft Server."
+			},
+			"locationsList": {
+				"label": "Locations",
+				"description": "{buildTeam} is building in multiple countires. You can find the full list of countries below. If you want to view this list on a map, click the button below."
 			}
 		}
 	},

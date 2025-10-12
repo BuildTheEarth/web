@@ -5,6 +5,7 @@ import { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
 import {
 	Avatar,
+	Badge,
 	Box,
 	Button,
 	Container,
@@ -13,6 +14,8 @@ import {
 	Grid,
 	GridCol,
 	Group,
+	List,
+	ListItem,
 	Paper,
 	SimpleGrid,
 	Stack,
@@ -23,6 +26,7 @@ import { IconAddressBook, IconBrandMinecraft, IconChevronRight, IconMap, IconUse
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
+import build from 'next/dist/build';
 import JoinServerGuide from './interactivity';
 
 export const metadata: Metadata = {
@@ -182,7 +186,26 @@ export default async function Page({
 										<IconMap size={20} />
 										<Text c="dimmed">{t('location', { count: buildTeam.location.split(', ').length })}</Text>
 									</Flex>
-									<Text>{getCountryNames(buildTeam.location.split(', ')).join(', ')}</Text>
+									{buildTeam.location.split(', ').length > 2 ? (
+										<Flex
+											align="center"
+											gap={1}
+											py="xs"
+											style={{ cursor: 'pointer', textDecoration: 'none' }}
+											component={Link}
+											href="#locations"
+										>
+											<Text c="buildtheearth">
+												{t('moreLocations', {
+													count: buildTeam.location.split(', ').length - 2,
+													list: getCountryNames(buildTeam.location.split(', ').slice(0, 2)).join(', '),
+												})}
+											</Text>
+											<IconChevronRight size={20} stroke={2} color="var(--mantine-color-buildtheearth-4)" />
+										</Flex>
+									) : (
+										<Text>{getCountryNames(buildTeam.location.split(', ').slice(0, 2)).join(', ')}</Text>
+									)}
 								</Group>
 								<Divider style={{ margin: '0' }} my="xs" />
 
@@ -255,9 +278,38 @@ export default async function Page({
 							slug={buildTeam.slug}
 						/>
 					</GridCol>
+					{buildTeam.location.split(', ').length > 2 && (
+						<GridCol span={10} offset={1} mt="calc(var(--mantine-spacing-xl) * 3)">
+							<Title order={2} style={{ scrollMargin: '30vh' }} id="locations">
+								{t('locationsList.label')}
+							</Title>
+							<div className="heading-underline" />
+							<Box
+								style={{
+									backgroundColor: 'var(--mantine-color-dark-6)',
+									borderRadius: 0,
+									boxShadow: 'var(--mantine-shadow-block)',
+								}}
+								p="lg"
+								mt="calc(var(--mantine-spacing-xl) * 2)"
+							>
+								<Text mb="xl">{t('locationsList.description', { buildTeam: buildTeam.name })}</Text>
+								<Group gap="xs" mb="md">
+									{getCountryNames(buildTeam.location.split(', ')).map((country) => (
+										<Badge variant="light" color={buildTeam.color} size="lg" radius="sm" key={country}>
+											{country}
+										</Badge>
+									))}
+								</Group>
+								<Button component={Link} href="/map/teams" mt="md" rightSection={<IconChevronRight size={12} />}>
+									View on Map
+								</Button>
+							</Box>
+						</GridCol>
+					)}
 				</Grid>
 			</Container>
-			{/* <div style={{ height: '200vh' }} /> */}
+			<div style={{ height: '200vh' }} />
 		</Wrapper>
 	);
 }
