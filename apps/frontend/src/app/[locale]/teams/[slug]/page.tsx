@@ -309,7 +309,6 @@ export default async function Page({
 					)}
 				</Grid>
 			</Container>
-			<div style={{ height: '200vh' }} />
 		</Wrapper>
 	);
 }

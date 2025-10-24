@@ -34,6 +34,7 @@
 		"dash/editor",
 		"db",
 		"dash/responsive",
-		"frontend/i18n"
+		"frontend/i18n",
+		"frontend/stats"
 	]
 }

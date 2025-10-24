@@ -15,7 +15,7 @@
 	"dependencies": {
 		"@bte-germany/terraconvert": "^1.1.2",
 		"@mantine/carousel": "^8.2.7",
-		"@mantine/charts": "^8.2.7",
+		"@mantine/charts": "^8.3.5",
 		"@mantine/code-highlight": "^8.2.7",
 		"@mantine/core": "^8.2.7",
 		"@mantine/dates": "^8.2.7",
@@ -58,7 +58,7 @@
 		"next-transpile-modules": "^10.0.1",
 		"react": "19.1.0",
 		"react-dom": "19.1.0",
-		"recharts": "2",
+		"recharts": "^3.3.0",
 		"swr": "^2.3.3"
 	},
 	"devDependencies": {

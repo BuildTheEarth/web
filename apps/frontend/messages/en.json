@@ -145,5 +145,8 @@
 			"title": "Ban Appeals",
 			"description": "If you wish to appeal your ban on our Discord server, please send an E-Mail to <mail></mail>. In order to submit a ban appeal, you must include your Discord name and ID, screenshot of your ban message and your reason for appealing. Illegitimate appeals will be ignored."
 		}
+	},
+	"statistics": {
+		"title": "Project Statistics"
 	}
 }
