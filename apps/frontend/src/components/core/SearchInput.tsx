@@ -13,7 +13,7 @@ export default function SearchInput(props: TextInputProps) {
 	return <TextInput placeholder={t('placeholder')} leftSection={<IconSearch size={16} />} {...props} />;
 }
 
-function QuerySearchInputInner({ paramName, ...props }: TextInputProps & { paramName: string }) {
+function QuerySearchInputInner({ paramName, id, ...props }: TextInputProps & { paramName: string; id?: string }) {
 	const urlQuery = useSearchParams().get(paramName) || '';
 	const [query, setQuery] = useDebouncedState(urlQuery, 300);
 	const router = useRouter();
@@ -21,14 +21,14 @@ function QuerySearchInputInner({ paramName, ...props }: TextInputProps & { param
 	useEffect(() => {
 		if (query.length >= 2 || (urlQuery.length > 1 && query.length === 0)) {
 			if (query == urlQuery) return;
-			router.push(`?${paramName}=${encodeURIComponent(query)}`);
+			router.push(`${id ? '#' + id : ''}?${paramName}=${encodeURIComponent(query)}`);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [query]);
 
 	return <SearchInput defaultValue={query} onChange={(event) => setQuery(event.currentTarget.value)} {...props} />;
 }
-export function QuerySearchInput(props: TextInputProps & { paramName: string }) {
+export function QuerySearchInput(props: TextInputProps & { paramName: string; id?: string }) {
 	return (
 		<Suspense>
 			<QuerySearchInputInner {...props} />

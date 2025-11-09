@@ -148,5 +148,18 @@
 	},
 	"statistics": {
 		"title": "Project Statistics"
+	},
+	"get-started": {
+		"title": "Get Started with Building",
+		"explore": {
+			"title": "Explore BuildTheEarth",
+			"description": "Discover the incredible progress made by our global community as they recreate the world.",
+			"cta": "Find a Server"
+		},
+		"build": {
+			"title": "Start Building",
+			"description": "Join us and contribute to the creation of a 1:1 scale replica of Earth in Minecraft.",
+			"cta": "Find your Team"
+		}
 	}
 }

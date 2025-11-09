@@ -35,6 +35,7 @@
 		"db",
 		"dash/responsive",
 		"frontend/i18n",
-		"frontend/stats"
+		"frontend/stats",
+		"frontend/join"
 	]
 }
