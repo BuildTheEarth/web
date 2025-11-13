@@ -4,6 +4,7 @@ import {
 	IconBubble,
 	IconChartPie,
 	IconDeviceDesktop,
+	IconFileInfo,
 	IconFileUpload,
 	IconForms,
 	IconHome,
@@ -11,6 +12,7 @@ import {
 	IconPlugConnected,
 	IconPolygon,
 	IconQuestionMark,
+	IconSearch,
 	IconSettings,
 	IconUsersGroup,
 } from '@tabler/icons-react';
@@ -67,6 +69,10 @@ function getIcon(name: string) {
 			return IconFileUpload;
 		case 'Bubble':
 			return IconBubble;
+		case 'FileInfo':
+			return IconFileInfo;
+		case 'Search':
+			return IconSearch;
 		default:
 			return IconQuestionMark;
 	}

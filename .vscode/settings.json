@@ -33,7 +33,8 @@
 		"frontend/gallery",
 		"dash/editor",
 		"db",
-		"dash/responsive"
+		"dash/responsive",
+		"dash/team"
 	],
 	"githubPullRequests.ignoredPullRequestBranches": [
 		"main"

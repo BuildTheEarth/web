@@ -1,8 +1,10 @@
 'use server';
 import { revalidateWebsitePaths } from '@/util/data';
 import prisma from '@/util/db';
+import { sendBotMessage } from '@/util/discordIntegration';
+import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
-
+import { redirect } from 'next/navigation';
 export const adminTransferTeam = async (
 	prevState: any,
 	{
@@ -177,4 +179,101 @@ export const adminChangeTeamOwner = async (
 	revalidatePath(`/am/users/${oldOwner?.id}`);
 	revalidatePath(`/am/users/${newOwnerId}`);
 	return { status: 'success', team };
+};
+
+export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
+	const userId = formData.get('userId') as string;
+	const id = formData.get('id') as string;
+
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			userId,
+			buildTeamId: id,
+			permissionId: 'team.settings.edit',
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('User does not have permission to edit this information');
+	}
+
+	console.log(formData.keys());
+
+	const name = formData.get('name') as string;
+	const color = formData.get('color') as string;
+	const icon = formData.get('icon') as string;
+	const backgroundImage = formData.get('backgroundImage') as string;
+	const location = formData.get('location') as string;
+	const about = formData.get('about') as string;
+	const ip = formData.get('ip') as string;
+	const version = formData.get('version') as string;
+	const invite = formData.get('invite') as string;
+	const allowApplications = formData.get('allowApplications') === 'on';
+	const allowBuilderClaim = formData.get('allowBuilderClaim') === 'on';
+	const allowTrial = formData.get('allowTrial') === 'on';
+	const acceptionMessage = formData.get('acceptionMessage') as string;
+	const rejectionMessage = formData.get('rejectionMessage') as string;
+	const trialMessage = formData.get('trialMessage') as string;
+	const webhook = formData.get('webhook') as string;
+
+	const updatedTeam = await prisma.buildTeam.update({
+		where: { id },
+		data: {
+			name: name ?? undefined,
+			color: color ?? undefined,
+			icon: icon ?? undefined,
+			backgroundImage: backgroundImage ?? undefined,
+			location: location ?? undefined,
+			about: about ?? undefined,
+			ip: ip ?? undefined,
+			version: version ?? undefined,
+			invite: invite ?? undefined,
+			allowApplications: allowApplications ?? undefined,
+			allowBuilderClaim: allowBuilderClaim ?? undefined,
+			allowTrial: allowTrial ?? undefined,
+			acceptionMessage: acceptionMessage ?? undefined,
+			rejectionMessage: rejectionMessage ?? undefined,
+			trialMessage: trialMessage ?? undefined,
+			webhook: webhook ?? undefined,
+		},
+	});
+
+	if (!updatedTeam) {
+		throw Error('Could not update Build Team');
+	}
+
+	revalidateWebsitePaths(['/teams', `/teams/${updatedTeam.slug}`]);
+	revalidatePath(`/team/${updatedTeam.slug}`);
+	redirect(`/team/${updatedTeam.slug}/edit?saved=1`);
+};
+
+export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: string }): Promise<void> => {
+	console.log('budhuwad');
+	const userIsOwner = await prisma.buildTeam.findFirst({
+		where: {
+			id,
+			creatorId: userId,
+		},
+		include: {
+			creator: { select: { discordId: true } },
+		},
+	});
+	if (!userIsOwner) {
+		throw Error('User is not the owner of this Build Team');
+	}
+	const token = randomBytes(21).toString('hex');
+
+	await prisma.buildTeam.update({
+		where: { id },
+		data: {
+			token,
+		},
+	});
+
+	console.log('hi');
+
+	sendBotMessage(
+		`**${userIsOwner.name}** \\nGenerated new API Token: ||${token}|| \\nPlease save it somewhere secure.`,
+		[userIsOwner.creator.discordId!],
+	);
 };

@@ -34,6 +34,39 @@ export const meNavLinks: NavLink[] = [
 		icon: 'Polygon',
 	},
 
+	// ---- BuildTeam Specific ----
+	{
+		link: '',
+		label: 'Your BuildTeams',
+		icon: null,
+		divider: true,
+		permission: 'team|get-team|get-team-questions|review-team|get-team-members',
+	},
+	{
+		link: '/team',
+		label: 'Info Overview',
+		icon: 'FileInfo',
+		permission: 'get-team',
+	},
+	{
+		link: '/team/applications',
+		label: 'Application Questions',
+		icon: 'Forms',
+		permission: 'get-team-questions',
+	},
+	{
+		link: '/team/review',
+		label: 'Review',
+		icon: 'Search',
+		permission: 'review-team',
+	},
+	{
+		link: '/team/members',
+		label: 'Members',
+		icon: 'UsersGroup',
+		permission: 'get-team-members',
+	},
+
 	// ---- Account Links ----
 	{ link: '', label: 'Your Account', icon: null, divider: true },
 	{
