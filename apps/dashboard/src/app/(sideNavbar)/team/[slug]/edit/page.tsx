@@ -45,7 +45,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 	const ownerGenerateTokenAction = ownerGenerateToken.bind(null, { userId: user.id, id: team.id });
 
 	return (
-		<Protection requiredRole="get-teams">
+		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug: 'de' }}>
 			<ContentWrapper maw="90vw">
 				<SaveNotification />
 				<form action={userEditTeamInfo}>
