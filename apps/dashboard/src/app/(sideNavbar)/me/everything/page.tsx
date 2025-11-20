@@ -35,6 +35,10 @@ export default async function Page() {
 	const session = await getSession();
 	const data = await authedFetcher<WebsiteKeycloakUser>(`/users/${user.id}/kc`);
 
+	if (!data) {
+		throw new Error('Could not fetch user data. Please sign out and back in.');
+	}
+
 	return (
 		<ContentWrapper>
 			<Title order={1} mt="xl" mb="md">
@@ -85,7 +89,7 @@ export default async function Page() {
 							<Flex align={'center'} gap={'md'}>
 								<IconMail size={'2rem'} />
 								<Text>
-									<b>E-Mail Address:</b> {user.email}
+									<b>E-Mail Address:</b> {data.email}
 								</Text>
 							</Flex>
 						</Card>
@@ -93,7 +97,7 @@ export default async function Page() {
 							<Flex align={'center'} gap={'md'}>
 								<IconMailCheck size={'2rem'} />
 								<Text>
-									<b>E-Mail Status:</b> {user.emailVerified ? 'Verified' : 'Unverified'}
+									<b>E-Mail Status:</b> {data.emailVerified ? 'Verified' : 'Unverified'}
 								</Text>
 							</Flex>
 						</Card>

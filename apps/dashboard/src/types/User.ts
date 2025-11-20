@@ -46,6 +46,7 @@ export type WebsiteKeycloakUser = {
 	avatar: string;
 	username: string;
 	minecraft: string;
+	email: string;
 	emailVerified: boolean;
 	createdTimestamp: number;
 	enabled: boolean;
