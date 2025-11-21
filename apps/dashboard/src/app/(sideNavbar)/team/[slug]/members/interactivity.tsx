@@ -1,13 +1,14 @@
 'use client';
 
 import { ActionIcon, Button, Checkbox, Group, rem, Text, Textarea, TextInput, TextInputProps } from '@mantine/core';
-import { IconPlus, IconSearch, IconUserPlus, IconX } from '@tabler/icons-react';
+import { IconCheck, IconPlus, IconSearch, IconUserPlus, IconX } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import { addMember } from '@/actions/buildTeams';
 import { useDebouncedValue } from '@mantine/hooks';
 import { closeAllModals, openModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
 
 export function SearchMembers(props: TextInputProps) {
 	const router = useRouter();
@@ -69,6 +70,13 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 						buildTeamSlug: slug,
 					}).then(() => {
 						closeAllModals();
+						showNotification({
+							title: 'User Added',
+							message: 'The user has been added successfully.',
+							color: 'green',
+							autoClose: 2000,
+							icon: <IconCheck size={18} />,
+						});
 					});
 				};
 

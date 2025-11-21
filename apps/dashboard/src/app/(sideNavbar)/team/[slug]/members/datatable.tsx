@@ -18,13 +18,14 @@ import {
 	ThemeIcon,
 	Tooltip,
 } from '@mantine/core';
-import { IconDots, IconEye, IconId, IconTrash } from '@tabler/icons-react';
+import { IconCheck, IconDots, IconEye, IconId, IconTrash } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { removeMember } from '@/actions/buildTeams';
 import { toHumanDate } from '@/util/date';
 import { useClipboard } from '@mantine/hooks';
 import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
+import { showNotification } from '@mantine/notifications';
 import { ApplicationStatus } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import moment from 'moment';
@@ -168,6 +169,13 @@ export default function MembersDatatable({
 													buildTeamSlug: slug,
 												}).then(() => {
 													closeAllModals();
+													showNotification({
+														title: 'User Removed',
+														message: 'The user has been removed successfully.',
+														color: 'green',
+														autoClose: 2000,
+														icon: <IconCheck size={18} />,
+													});
 													router.refresh();
 												});
 											};
