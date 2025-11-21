@@ -248,7 +248,6 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 };
 
 export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: string }): Promise<void> => {
-	console.log('budhuwad');
 	const userIsOwner = await prisma.buildTeam.findFirst({
 		where: {
 			id,
@@ -270,10 +269,70 @@ export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: s
 		},
 	});
 
-	console.log('hi');
-
 	sendBotMessage(
 		`**${userIsOwner.name}** \\nGenerated new API Token: ||${token}|| \\nPlease save it somewhere secure.`,
 		[userIsOwner.creator.discordId!],
 	);
+};
+
+export const removeMember = async ({
+	userId,
+	removeId,
+	buildTeamSlug,
+	reason,
+	notifyUser = true,
+}: {
+	userId: string;
+	removeId: string;
+	reason?: string;
+	buildTeamSlug?: string;
+	notifyUser?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.remove',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.remove',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to remove members from this Build Team');
+	}
+
+	const memberToRemove = await prisma.user.findFirst({
+		where: { ssoId: removeId },
+	});
+
+	const buildTeam = await prisma.buildTeam.update({
+		where: { slug: buildTeamSlug },
+		data: {
+			members: {
+				disconnect: { ssoId: removeId },
+			},
+		},
+	});
+
+	if (notifyUser) {
+		console.log(buildTeam.name, memberToRemove?.discordId);
+		sendBotMessage(
+			`## <:warn:1441532241628102686> You have been removed from ${buildTeam.name}` +
+				`\n\nThe Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
+				(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
+				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+			[memberToRemove?.discordId!],
+		);
+	}
+
+	revalidatePath(`/am/users/${removeId}`);
+	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
