@@ -5,6 +5,7 @@ import {
 	Button,
 	Checkbox,
 	Code,
+	ColorSwatch,
 	Group,
 	Menu,
 	MenuDivider,
@@ -50,6 +51,8 @@ export default function MembersDatatable({
 			status: ApplicationStatus;
 			reviewedAt: Date | null;
 		}[];
+		permissions: { permission: { id: string; description: string } }[];
+		createdBuildTeams: { id: string }[];
 	}[];
 	count: number;
 	isAdmin?: boolean;
@@ -70,7 +73,21 @@ export default function MembersDatatable({
 				{
 					accessor: 'id',
 					title: '#',
-					render: ({ id }) => <Code>{id.split('-')[0]}</Code>,
+					render: ({ id, permissions, createdBuildTeams }) => (
+						<Group>
+							<Code>{id.split('-')[0]}</Code>
+							{permissions.length > 0 && (
+								<Tooltip label="This user has special permissions in this BuildTeam">
+									<ColorSwatch size={12} color={`orange`} />
+								</Tooltip>
+							)}
+							{createdBuildTeams.length > 0 && (
+								<Tooltip label="This user is the creator of this BuildTeam">
+									<ColorSwatch size={12} color={`purple`} />
+								</Tooltip>
+							)}
+						</Group>
+					),
 				},
 
 				{ accessor: 'username' },

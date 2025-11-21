@@ -82,6 +82,11 @@ export default async function Page({
 			discordId: true,
 			minecraft: true,
 			applications: { where: { buildteam: { slug } }, select: { id: true, status: true, reviewedAt: true } },
+			createdBuildTeams: { where: { slug }, select: { id: true } },
+			permissions: {
+				where: { buildTeam: { slug } },
+				select: { permission: { select: { id: true, description: true } } },
+			},
 		},
 	});
 
@@ -92,7 +97,15 @@ export default async function Page({
 					<Title order={1} mt="xl" mb="md">
 						BuildTeam Members
 					</Title>
-					<AddMemberButton slug={slug} userId={session?.user.id!} />
+					<AddMemberButton
+						slug={slug}
+						userId={session?.user.id!}
+						disabled={
+							!userPermissions.some(
+								(p) => (p.buildTeam?.slug == slug || p.buildTeam == null) && p.permissionId == 'permission.remove',
+							)
+						}
+					/>
 				</Group>
 				<SearchMembers mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<MembersDatatable
