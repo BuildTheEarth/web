@@ -323,7 +323,6 @@ export const removeMember = async ({
 	});
 
 	if (notifyUser) {
-		console.log(buildTeam.name, memberToRemove?.discordId);
 		sendBotMessage(
 			`## <:warn:1441532241628102686> You have been removed from ${buildTeam.name}` +
 				`\n\nThe Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
@@ -334,5 +333,71 @@ export const removeMember = async ({
 	}
 
 	revalidatePath(`/am/users/${removeId}`);
+	revalidatePath(`/team/${buildTeam.slug}/members`);
+};
+
+export const addMember = async ({
+	userId,
+	addId,
+	buildTeamSlug,
+	message,
+	notifyUser = true,
+}: {
+	userId: string;
+	addId: string;
+	message?: string;
+	buildTeamSlug?: string;
+	notifyUser?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to add members to this Build Team');
+	}
+
+	const memberToAdd = await prisma.user.findFirst({
+		where: { OR: [{ ssoId: addId }, { id: addId }, { discordId: addId }, { username: addId }] },
+	});
+
+	if (!memberToAdd) {
+		throw Error('User to add not found');
+	}
+
+	const buildTeam = await prisma.buildTeam.update({
+		where: { slug: buildTeamSlug },
+		data: {
+			members: {
+				connect: { ssoId: memberToAdd?.ssoId },
+			},
+		},
+	});
+
+	if (notifyUser) {
+		console.log(buildTeam.name, memberToAdd?.discordId);
+		sendBotMessage(
+			`## <:approved:1441532214562128034> You have been added to ${buildTeam.name}` +
+				`\n\nThe Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
+				(message ? ` The team has provided the following message: \n \n${message}` : '') +
+				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+			[memberToAdd?.discordId!],
+		);
+	}
+
+	revalidatePath(`/am/users/${addId}`);
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };

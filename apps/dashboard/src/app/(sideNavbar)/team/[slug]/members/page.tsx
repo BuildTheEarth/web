@@ -1,12 +1,12 @@
-import { getUser, getUserPermissions } from '@/actions/getUser';
+import { getUserPermissions } from '@/actions/getUser';
 import ContentWrapper from '@/components/core/ContentWrapper';
 import { Protection } from '@/components/Protection';
 import { getSession, hasRole } from '@/util/auth';
 import prisma from '@/util/db';
-import { Title } from '@mantine/core';
+import { Group, Title } from '@mantine/core';
 import { Metadata } from 'next';
 import MembersDatatable from './datatable';
-import { SearchMembers } from './interactivity';
+import { AddMemberButton, SearchMembers } from './interactivity';
 
 export const metadata: Metadata = {
 	title: 'Edit Build Team',
@@ -88,9 +88,12 @@ export default async function Page({
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug: 'de' }}>
 			<ContentWrapper maw="90vw">
-				<Title order={1} mt="xl" mb="md">
-					BuildTeam Members
-				</Title>
+				<Group justify="space-between" w="100%" mt="xl" mb="md">
+					<Title order={1} mt="xl" mb="md">
+						BuildTeam Members
+					</Title>
+					<AddMemberButton slug={slug} userId={session?.user.id!} />
+				</Group>
 				<SearchMembers mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<MembersDatatable
 					builders={builders}

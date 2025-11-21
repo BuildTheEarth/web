@@ -1,11 +1,13 @@
 'use client';
 
-import { ActionIcon, rem, TextInput, TextInputProps } from '@mantine/core';
-import { IconSearch, IconX } from '@tabler/icons-react';
+import { ActionIcon, Button, Checkbox, Group, rem, Text, Textarea, TextInput, TextInputProps } from '@mantine/core';
+import { IconPlus, IconSearch, IconUserPlus, IconX } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { addMember } from '@/actions/buildTeams';
 import { useDebouncedValue } from '@mantine/hooks';
+import { closeAllModals, openModal } from '@mantine/modals';
 
 export function SearchMembers(props: TextInputProps) {
 	const router = useRouter();
@@ -44,5 +46,72 @@ export function SearchMembers(props: TextInputProps) {
 			onChange={(event) => setValue(event.currentTarget.value)}
 			{...props}
 		/>
+	);
+}
+
+export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean; userId: string; slug: string }) {
+	return (
+		<Button
+			color="green"
+			disabled={disabled}
+			leftSection={<IconUserPlus size={14} />}
+			onClick={() => {
+				let addMessage: string | undefined = undefined;
+				let notifyUser = true;
+				let user = '';
+
+				let addUser = () => {
+					addMember({
+						addId: user!,
+						message: addMessage,
+						notifyUser: notifyUser,
+						userId,
+						buildTeamSlug: slug,
+					}).then(() => {
+						closeAllModals();
+					});
+				};
+
+				openModal({
+					title: 'Add User to BuildTeam',
+					children: (
+						<>
+							<Text mb="sm">
+								Input the SSO ID, ID, Discord ID or Username of the user you wish to add to the BuildTeam. Note, that
+								Usernames are not unique and may add the wrong user.
+							</Text>
+
+							<TextInput
+								placeholder="SSO ID, ID, Discord ID, Username"
+								label="User"
+								required
+								onChange={(event) => (user = event.currentTarget.value)}
+							/>
+							<Textarea
+								placeholder="Welcome message (optional)"
+								label="Welcome Message"
+								autosize
+								minRows={2}
+								onChange={(event) => (addMessage = event.currentTarget.value)}
+							/>
+							<Checkbox
+								mt="md"
+								defaultChecked={true}
+								label="Notify User about being added"
+								onChange={(event) => (notifyUser = event.currentTarget.checked)}
+							/>
+							<Group justify="end" mt="lg">
+								<Button onClick={addUser}>Add</Button>
+								<Button variant="default" onClick={() => closeAllModals()}>
+									Cancel
+								</Button>
+							</Group>
+						</>
+					),
+				});
+			}}
+		>
+			Add New
+		</Button>
 	);
 }
