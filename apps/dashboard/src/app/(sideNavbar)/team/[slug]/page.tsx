@@ -57,7 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 	const { slug: id } = await params;
 
 	return {
-		title: 'Build Region ' + id.split('-')[0],
+		title: 'Build Team ' + id.split('-')[0],
 	};
 }
 
@@ -92,7 +92,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 			},
 		},
 	});
-	if (!team) throw Error('Could not find Build Region');
+	if (!team) throw Error('Could not find Build Team');
 
 	return (
 		<ContentWrapper maw="90vw">
@@ -136,7 +136,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					icon={<IconForms />}
 				>
 					The applications to {team.name} are disabled. This means that no new applications can be submitted to this
-					Build Region. This might be due to a high number of pending applications, or other reasons.
+					Build Team. This might be due to a high number of pending applications, or other reasons.
 				</Alert>
 			) : undefined}
 			<SimpleGrid cols={{ base: 1, md: 2 }}>
@@ -163,7 +163,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 12, sm: 6, md: 12, lg: 6 }}>
-						<TextCard title="Region Owner" icon={IconUser}>
+						<TextCard title="Team Owner" icon={IconUser}>
 							<UserDisplay user={team.creator as any} />
 						</TextCard>
 					</GridCol>

@@ -10,7 +10,7 @@ export default function Page() {
 		<Protection requiredRole="get-teams">
 			<ContentWrapper maw="90vw">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
-					<Title order={1}>Build Regions</Title>
+					<Title order={1}>Build Teams</Title>
 					<Group gap="xs">
 						<Button
 							variant="light"

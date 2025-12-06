@@ -56,12 +56,12 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				<MenuItem
 					leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
-					aria-label="Delete or Transfer Region"
+					aria-label="Delete or Transfer Team"
 					component={Link}
 					href={`/am/teams/${team.id}/transfer?ref=transfer`}
 					rel="noopener"
 				>
-					Transfer Region
+					Transfer Team
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>

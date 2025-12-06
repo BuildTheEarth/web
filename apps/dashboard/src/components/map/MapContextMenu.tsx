@@ -82,7 +82,7 @@ export function MapContextMenu({ contextMenuInfo, setContextMenuInfo, oLat, oLng
 						disabled={!data.mc}
 						leftSection={<IconFile style={{ width: rem(14), height: rem(14) }} />}
 					>
-						Region File Name
+						Team File Name
 					</MenuItem>
 					<MenuDivider />
 					<MenuLabel>Open</MenuLabel>

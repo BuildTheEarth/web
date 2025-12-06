@@ -381,25 +381,25 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 					</Grid>
 				</SimpleGrid>
 				<Title order={2} mt="xl" mb="md">
-					Build Regions and Applications
+					Build Teams and Applications
 				</Title>
 				<Grid styles={{ inner: { height: 'calc(100% + var(--mantine-spacing-md))' } }} h="100%">
 					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 						<TextCard
 							isText
-							title="Joined Build Regions"
+							title="Joined Build Teams"
 							icon={IconUsers}
 							subtitle={`with an average of ${
 								Math.floor((websiteData.applications.length / websiteData.joinedBuildTeams.length) * 10) / 10
-							} Applications per Region`}
+							} Applications per Team`}
 							style={{ height: '100%' }}
 						>
-							{websiteData.joinedBuildTeams.length} Region{websiteData.joinedBuildTeams.length > 1 ? 's' : ''}
+							{websiteData.joinedBuildTeams.length} Team{websiteData.joinedBuildTeams.length > 1 ? 's' : ''}
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
-						<TextCard isText title="Owned Build Regions" icon={IconUser} subtitle={'beeing owned'}>
-							{websiteData.createdBuildTeams.length} Region{websiteData.createdBuildTeams.length > 1 ? 's' : ''}
+						<TextCard isText title="Owned Build Teams" icon={IconUser} subtitle={'beeing owned'}>
+							{websiteData.createdBuildTeams.length} Team{websiteData.createdBuildTeams.length > 1 ? 's' : ''}
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
@@ -445,12 +445,12 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 12, xl: 5 }}>
-						<TextCard title="Build Regions" icon={IconUsers} href={`/am/teams?query=${ssoId}`} hrefText="View all">
+						<TextCard title="Build Teams" icon={IconUsers} href={`/am/teams?query=${ssoId}`} hrefText="View all">
 							<ScrollArea h="45vh" w="100%" type="always" mih="45vh">
 								<Table
 									highlightOnHover
 									data={{
-										head: ['Build Region', 'Applications'],
+										head: ['Build Team', 'Applications'],
 										body: Array.from(
 											new Set(
 												websiteData.createdBuildTeams
@@ -502,7 +502,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 								<Table
 									highlightOnHover
 									data={{
-										head: ['#', 'Created At', 'Status', 'Build Region', 'Trial', 'Reviewer'],
+										head: ['#', 'Created At', 'Status', 'Build Team', 'Trial', 'Reviewer'],
 										body: websiteData.applications
 											.sort(
 												(a: Application, b: Application) =>
@@ -547,7 +547,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 					<GridCol span={{ base: 12, md: 4 }}>
 						<TextCard
 							isText
-							title="Managed Build Regions"
+							title="Managed Build Teams"
 							icon={IconUserCog}
 							subtitle={`
 							where the User can modify Data`}
@@ -560,7 +560,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 											permission.buildTeamId != null,
 									).length
 								}
-								singular="Region"
+								singular="Team"
 							/>
 						</TextCard>
 					</GridCol>
@@ -595,7 +595,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 									highlightOnHover
 									stickyHeader
 									data={{
-										head: ['#', 'Permission', 'Build Region', 'Status'],
+										head: ['#', 'Permission', 'Build Team', 'Status'],
 										body: websiteData.permissions.map((permission) => [
 											<Code key={permission.id}>{permission.id.split('-')[0]}</Code>,
 											<Tooltip key={permission.id} label={permission.permission.description}>
@@ -619,7 +619,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 													)
 												) : (
 													<Badge variant="transparent" color="pink">
-														Build Region
+														Build Team
 													</Badge>
 												)}
 												{permission.permission.defaultValue && (

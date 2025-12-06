@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 			},
 		},
 	});
-	if (!team) throw Error('Could not find Build Region');
+	if (!team) throw Error('Could not find Build Team');
 
 	const ownerGenerateTokenAction = ownerGenerateToken.bind(null, { userId: user.id, id: team.id });
 

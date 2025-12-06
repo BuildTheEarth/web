@@ -63,7 +63,7 @@ export default function ApplicationsDatatable<A extends { id: string }>({
 				},
 				{
 					accessor: 'buildteam.name',
-					title: 'Build Region',
+					title: 'Build Team',
 					render: ({ buildteam }: any) => <BuildTeamDisplay team={buildteam} />,
 				},
 				{

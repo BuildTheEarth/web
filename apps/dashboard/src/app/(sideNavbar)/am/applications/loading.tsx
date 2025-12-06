@@ -8,7 +8,7 @@ export default async function Page() {
 		<Protection requiredRole="get-users">
 			<ContentWrapper maw="50vw">
 				<Title order={1} mt="xl" mb="md">
-					Region Applications
+					Team Applications
 				</Title>
 			</ContentWrapper>
 		</Protection>

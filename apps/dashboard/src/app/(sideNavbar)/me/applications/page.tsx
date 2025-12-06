@@ -88,10 +88,9 @@ export default async function Page({
 				Your Applications
 			</Title>
 			<Text c="dimmed" size="md" mb="lg">
-				Applications are requests to join a specific Build Region as a member. Each Build Region has its own
-				requirements and application questions. You can apply to multiple Build Regions at once, but please keep in mind
-				that each Build Region reviews applications separately. Click on an application to view its status and your
-				answers.
+				Applications are requests to join a specific Build Team as a member. Each Build Team has its own requirements
+				and application questions. You can apply to multiple Build Teams at once, but please keep in mind that each
+				Build Team reviews applications separately. Click on an application to view its status and your answers.
 			</Text>
 			<SearchApplications mb="lg" />
 			<Stack gap="lg">

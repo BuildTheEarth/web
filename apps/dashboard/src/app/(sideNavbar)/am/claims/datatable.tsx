@@ -51,7 +51,7 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 				},
 				{
 					accessor: 'buildTeam',
-					title: 'Build Region',
+					title: 'Build Team',
 					render: ({ buildTeam }: any) => (buildTeam ? <BuildTeamDisplay team={buildTeam} /> : ''),
 				},
 				{

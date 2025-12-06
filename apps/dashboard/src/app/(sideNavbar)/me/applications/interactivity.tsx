@@ -30,7 +30,7 @@ export function SearchApplications(props: TextInputProps) {
 
 	return (
 		<TextInput
-			placeholder="ID, Region..."
+			placeholder="ID, Team..."
 			rightSection={
 				value ? (
 					<ActionIcon size="md" variant="subtle" onClick={() => setValue('')}>
