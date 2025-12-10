@@ -1,7 +1,9 @@
 {
 	"extends": "@repo/typescript-config/nestjs.json",
+	"exclude": ["./dist"],
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"declaration": true,
 		"removeComments": true,
 		"emitDecoratorMetadata": true,

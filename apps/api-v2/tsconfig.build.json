@@ -2,7 +2,8 @@
 	"extends": "./tsconfig.json",
 	"exclude": ["node_modules", "test", "dist", "**/*spec.ts"],
 	"compilerOptions": {
-		"module": "commonjs",
+		"module": "NodeNext",
+		"moduleResolution": "NodeNext",
 		"declaration": true,
 		"removeComments": true,
 		"emitDecoratorMetadata": true,
