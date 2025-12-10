@@ -1,7 +1,8 @@
 # General
 
-/[teamId]/{resource} -> specific BuildTeam \
-/{resource} -> auth? BT, else global
+/{resource} -> auth? -> no: global only
+-> BT: global, BT resources
+-> Admin: global, admin resources
 
 ## URL and Response structure
 
