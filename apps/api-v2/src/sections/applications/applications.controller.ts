@@ -87,24 +87,29 @@ export class ApplicationsController {
     );
   }
 
-
-
-	/**
-	 * Creates a new application for the currently authenticated team.
-	 */
-	@Post('/')
-	@ApiBearerAuth()
-	@ApiOperation({
-		summary: 'Create Application',
-		description: 'Creates a new application for the currently authenticated team.',
-	})
-	@ApiDefaultResponse(ApplicationDto, { status: 201, description: 'Application created successfully.' })
-	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
-	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
-	async createApplication(
-		@Body() createApplicationDto: CreateApplicationDto,
-		@Req() req: Request,
-	): ControllerResponse {
-		return await this.applicationsService.create(createApplicationDto, req.token.id);
-	}
+  /**
+   * Creates a new application for the currently authenticated team.
+   */
+  @Post("/")
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: "Create Application",
+    description:
+      "Creates a new application for the currently authenticated team.",
+  })
+  @ApiDefaultResponse(ApplicationDto, {
+    status: 201,
+    description: "Application created successfully.",
+  })
+  @ApiErrorResponse({ status: 401, description: "Unauthorized" })
+  @ApiErrorResponse({ status: 400, description: "Bad Request" })
+  async createApplication(
+    @Body() createApplicationDto: CreateApplicationDto,
+    @Req() req: Request,
+  ): ControllerResponse {
+    return await this.applicationsService.create(
+      createApplicationDto,
+      req.token.id,
+    );
+  }
 }

@@ -23,7 +23,7 @@ export class AuthService {
       select: { id: true, slug: true, token: true },
     });
 
-    if (!buildTeam || buildTeam.token !== token) {
+    if (!buildTeam || !buildTeam.token || buildTeam.token !== token) {
       throw new UnauthorizedException("Invalid BuildTeam or Token");
     }
 

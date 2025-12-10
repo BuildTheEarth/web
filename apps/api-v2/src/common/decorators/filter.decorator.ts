@@ -1,5 +1,6 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { Request } from "express";
 import { FILTER_META, FilteredOptions } from "./filtered.decorator";
 
 // T is a union of string keys, e.g. 'name' | 'age'
@@ -12,7 +13,7 @@ export interface FilterParams<T extends string = string> {
  */
 export const Filter = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest();
+    const request = ctx.switchToHttp().getRequest<Request>();
     const reflector = new Reflector();
     const handler = ctx.getHandler();
 
@@ -30,7 +31,7 @@ export const Filter = createParamDecorator(
 
     fields.forEach((field) => {
       const fieldName = field.name;
-      const value = query[fieldName];
+      const value = query[fieldName] as string | undefined;
       if (value !== undefined) {
         // Type validation
         switch (field.type) {

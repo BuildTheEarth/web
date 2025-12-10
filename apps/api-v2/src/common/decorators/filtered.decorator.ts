@@ -1,10 +1,10 @@
-import { applyDecorators, SetMetadata } from '@nestjs/common';
-import { ApiQuery, ApiQueryMetadata } from '@nestjs/swagger';
+import { applyDecorators, SetMetadata } from "@nestjs/common";
+import { ApiQuery, ApiQueryMetadata } from "@nestjs/swagger";
 
-export const FILTER_META = 'filterMeta';
+export const FILTER_META = "filterMeta";
 
 export interface FilteredOptions {
-	fields: (Omit<ApiQueryMetadata, 'description'> & { name: string })[];
+  fields: (Omit<ApiQueryMetadata, "description"> & { name: string })[];
 }
 
 /**
@@ -13,10 +13,16 @@ export interface FilteredOptions {
  * @returns Decorator that sets filter metadata and Swagger API query parameters
  */
 export function Filtered(options: FilteredOptions) {
-	const { fields } = options;
+  const { fields } = options;
 
-	return applyDecorators(
-		SetMetadata(FILTER_META, options),
-		...fields?.map((field) => ApiQuery({ nullable: true, ...field, description: `Filter by ${field.name}` })),
-	);
+  return applyDecorators(
+    SetMetadata(FILTER_META, options),
+    ...(fields || []).map((field) =>
+      ApiQuery({
+        nullable: true,
+        ...field,
+        description: `Filter by ${field.name}`,
+      }),
+    ),
+  );
 }

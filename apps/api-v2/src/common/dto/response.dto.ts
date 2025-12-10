@@ -1,13 +1,13 @@
 // src/common/dto/response.dto.ts
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class ResponseDto<T> {
-	@ApiProperty({ example: 200 })
-	status: number;
+  @ApiProperty({ example: 200 })
+  status: number;
 
-	@ApiProperty({ example: 'Success' })
-	message: string;
+  @ApiProperty({ example: "Success" })
+  message: string;
 
-	@ApiProperty()
-	data: T;
+  @ApiProperty()
+  data: T;
 }
