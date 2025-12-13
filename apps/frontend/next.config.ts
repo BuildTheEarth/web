@@ -1,7 +1,7 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 import path from 'path';
-
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
 	output: 'standalone',
 	poweredByHeader: false,
@@ -9,7 +9,14 @@ const nextConfig: NextConfig = {
 	images: {
 		domains: ['cdn.buildtheearth.net'],
 	},
+	experimental: {
+		optimizePackageImports: ['@tabler/icons-react'],
+	},
 };
 
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+	enabled: process.env.ANALYZE === 'true',
+});
+
 const withNextIntl = createNextIntlPlugin();
-export default withNextIntl(nextConfig);
+export default withBundleAnalyzer(withNextIntl(nextConfig));

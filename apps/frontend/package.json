@@ -4,10 +4,10 @@
 	"private": true,
 	"packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538",
 	"scripts": {
-		"build": "next build",
+		"build": "next build --webpack",
 		"clean": "rm -rf .next",
 		"start": "next start",
-		"dev": "next dev --turbopack --port 3000",
+		"dev": "next dev --port 3000",
 		"lint": "eslint . --max-warnings 0",
 		"prettier": "prettier ./src --write --ignore-unknown",
 		"env:copy": "cp .env.example .env"
@@ -27,6 +27,7 @@
 		"@mantine/spotlight": "^8.3.10",
 		"@mantine/tiptap": "^8.3.10",
 		"@mapbox/mapbox-gl-draw": "^1.4.3",
+		"@next/bundle-analyzer": "^16.0.10",
 		"@repo/db": "*",
 		"@tabler/icons-react": "^3.31.0",
 		"@tiptap/core": "^2.11.7",
