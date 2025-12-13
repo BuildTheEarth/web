@@ -53,11 +53,11 @@
 		"moment": "^2.30.1",
 		"moment-timezone": "^0.5.45",
 		"motion": "^12.6.5",
-		"next": "15.3.0",
+		"next": "16.0.10",
 		"next-intl": "^4.3.5",
 		"next-transpile-modules": "^10.0.1",
-		"react": "19.1.0",
-		"react-dom": "19.1.0",
+		"react": "19.2.3",
+		"react-dom": "19.2.3",
 		"recharts": "^3.3.0",
 		"swr": "^2.3.3"
 	},
@@ -65,10 +65,10 @@
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
 		"@types/node": "^22",
-		"@types/react": "19.1.1",
-		"@types/react-dom": "19.1.2",
+		"@types/react": "19.2.7",
+		"@types/react-dom": "19.2.3",
 		"eslint": "^9",
-		"eslint-config-next": "15.3.0",
+		"eslint-config-next": "16.0.10",
 		"eslint-plugin-storybook": "^0.12.0",
 		"postcss": "^8.5.3",
 		"postcss-preset-mantine": "^1.17.0",
@@ -80,7 +80,7 @@
 		"*": "prettier --write --ignore-unknown"
 	},
 	"resolutions": {
-		"@types/react": "19.1.1",
-		"@types/react-dom": "19.1.2"
+		"@types/react": "19.2.7",
+		"@types/react-dom": "19.2.3"
 	}
 }
