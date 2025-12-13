@@ -7,5 +7,5 @@ import { Button, ButtonProps } from '@mantine/core';
 export default function LinkButton(props: ButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 	const { href, ...rest } = props;
 
-	return <Button {...rest} href={href || ''} component={Link} />;
+	return <Button {...rest} href={href || ''} component={Link as any} />;
 }

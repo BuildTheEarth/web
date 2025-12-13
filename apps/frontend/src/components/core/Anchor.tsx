@@ -9,5 +9,5 @@ export default function Anchor(
 		React.AnchorHTMLAttributes<HTMLAnchorElement> & { children: any; href: string | import('url').UrlObject },
 ) {
 	const { href, ...rest } = props;
-	return <MantineAnchor {...rest} href={href} component={Link} />;
+	return <MantineAnchor {...rest} href={href} component={Link as any} />;
 }

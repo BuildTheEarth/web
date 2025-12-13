@@ -14,8 +14,6 @@ import {
 	Grid,
 	GridCol,
 	Group,
-	List,
-	ListItem,
 	Paper,
 	SimpleGrid,
 	Stack,
@@ -26,7 +24,6 @@ import { IconAddressBook, IconBrandMinecraft, IconChevronRight, IconMap, IconUse
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
-import build from 'next/dist/build';
 import JoinServerGuide from './interactivity';
 
 export const metadata: Metadata = {
@@ -40,7 +37,7 @@ export async function generateStaticParams() {
 	return teams;
 }
 export const dynamicParams = false;
-export const revalidate = 60 * 10; // 10 minutes
+export const revalidate = 600; // 10 minutes
 
 export default async function Page({
 	params,
