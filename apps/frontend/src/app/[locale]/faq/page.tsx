@@ -1,5 +1,6 @@
 import { QuerySearchInput } from '@/components/core/SearchInput';
 import Wrapper from '@/components/layout/Wrapper';
+import { routing } from '@/i18n/routing';
 import prisma from '@/util/db';
 import { Accordion, AccordionControl, AccordionItem, AccordionPanel, Alert, Box, Group, Title } from '@mantine/core';
 import { IconLanguage } from '@tabler/icons-react';

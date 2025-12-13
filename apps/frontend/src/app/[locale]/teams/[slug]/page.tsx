@@ -37,7 +37,8 @@ export async function generateStaticParams() {
 	return teams;
 }
 export const dynamicParams = false;
-export const revalidate = 600; // 10 minutes
+export const dynamic = 'force-static';
+export const revalidate = 3600; // 60 minutes
 
 export default async function Page({
 	params,

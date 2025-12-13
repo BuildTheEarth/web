@@ -1,3 +1,4 @@
+'use client';
 import { Link } from '@/i18n/navigation';
 import { Button, ButtonProps } from '@mantine/core';
 
@@ -7,5 +8,5 @@ import { Button, ButtonProps } from '@mantine/core';
 export default function LinkButton(props: ButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
 	const { href, ...rest } = props;
 
-	return <Button {...rest} href={href || ''} component={Link as any} />;
+	return <Button {...rest} href={href || ''} component={Link as any} scr />;
 }

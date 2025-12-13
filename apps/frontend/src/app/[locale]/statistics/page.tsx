@@ -5,8 +5,7 @@ import { Badge, Box, Code, Container, Grid, GridCol, Text, Title } from '@mantin
 // import { PrismaClient } from '@prisma/client';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
-import { getFormatter, getTranslations } from 'next-intl/server';
-import { Bar } from 'recharts';
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 
 export const metadata: Metadata = {
 	title: 'Project Statistics',
@@ -15,6 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
+	const locale = (await params).locale;
+	setRequestLocale(locale);
 	const t = await getTranslations('statistics');
 	const formatter = await getFormatter();
 	const counts = await prisma.$transaction([
@@ -78,7 +79,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						<div className="heading-underline" />
 					</GridCol>
 
-					<GridCol span={10} offset={1}>
+					<GridCol span={12}>
 						<Box
 							style={{
 								backgroundColor: 'var(--mantine-color-dark-6)',

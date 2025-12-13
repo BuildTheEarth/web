@@ -1,7 +1,9 @@
+'use server';
 import AppearAnimation from '@/components/animations/AppearAnimation';
 import SplitTextAnimation from '@/components/animations/SplitText';
-import SearchInput, { QuerySearchInput } from '@/components/core/SearchInput';
+import { QuerySearchInput } from '@/components/core/SearchInput';
 import Wrapper from '@/components/layout/Wrapper';
+import { Link } from '@/i18n/navigation';
 import getCountryName from '@/util/countries';
 import prisma from '@/util/db';
 import {
@@ -21,16 +23,18 @@ import {
 	Text,
 	Title,
 } from '@mantine/core';
-import { IconChevronRight, IconPhoto } from '@tabler/icons-react';
+import { IconChevronRight } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Link from 'next/link';
 
-export const metadata: Metadata = {
-	title: 'Get Started',
-	description: "If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
-};
+export async function generateMetadata(): Promise<Metadata> {
+	return {
+		title: 'Get Started',
+		description:
+			"If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
+	};
+}
 
 export default async function Page({
 	params,
@@ -124,6 +128,7 @@ export default async function Page({
 										rightSection={<IconChevronRight />}
 										px={'var(--mantine-spacing-xl)'}
 										mt="md"
+										scroll
 										style={{ width: 'fit-content' }}
 									>
 										{t('explore.cta')}
@@ -144,9 +149,10 @@ export default async function Page({
 										{t('build.description')}
 									</Text>
 									<Button
-										component={Link}
-										href="#build"
 										rightSection={<IconChevronRight />}
+										component={Link}
+										scroll
+										href="#build"
 										px={'var(--mantine-spacing-xl)'}
 										mt="md"
 										style={{ width: 'fit-content' }}

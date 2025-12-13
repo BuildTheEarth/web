@@ -9,7 +9,6 @@ import {
 	IconBrandLinkedin,
 	IconBrandTiktok,
 	IconBrandTwitch,
-	IconBrandTwitter,
 	IconBrandX,
 	IconBrandYoutube,
 } from '@tabler/icons-react';

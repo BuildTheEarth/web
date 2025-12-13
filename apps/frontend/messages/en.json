@@ -78,7 +78,7 @@
 		}
 	},
 	"notfound": {
-		"title": "Something is not right...",
+		"title": "Not found...",
 		"description": "The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL.",
 		"cta": "Go back"
 	},

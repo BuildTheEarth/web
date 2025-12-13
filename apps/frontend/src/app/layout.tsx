@@ -1,3 +1,4 @@
+'use server';
 import '@/styles/global.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/charts/styles.layer.css';
@@ -34,20 +35,33 @@ const minecraftFont = localFont({
 	variable: '--font-minecraft',
 });
 
-export const metadata: Metadata = {
-	metadataBase: new URL('https://buildtheearth.net'),
-	title: {
-		default: 'BuildTheEarth - Builiding the Earth in Minecraft 1:1',
-		template: '%s | BuildTheEarth',
-	},
-	description:
-		"Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
-	generator: 'BuildTheEarth',
-	applicationName: 'BuildTheEarth',
-	authors: [{ name: 'BuildTheEarth', url: 'https://buildtheearth.net' }],
-	referrer: 'origin-when-cross-origin',
-	keywords: ['BuildTheEarth', 'Minecraft', 'BTE', 'Community', 'Earth', 'Map', 'Minecraft', 'Server', '1:1', 'Global'],
-};
+export async function generateMetadata(): Promise<Metadata> {
+	return {
+		metadataBase: new URL('https://buildtheearth.net'),
+		title: {
+			default: 'BuildTheEarth - Builiding the Earth in Minecraft 1:1',
+			template: '%s | BuildTheEarth',
+		},
+		description:
+			"Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
+		generator: 'BuildTheEarth',
+		applicationName: 'BuildTheEarth',
+		authors: [{ name: 'BuildTheEarth', url: 'https://buildtheearth.net' }],
+		referrer: 'origin-when-cross-origin',
+		keywords: [
+			'BuildTheEarth',
+			'Minecraft',
+			'BTE',
+			'Community',
+			'Earth',
+			'Map',
+			'Minecraft',
+			'Server',
+			'1:1',
+			'Global',
+		],
+	};
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
