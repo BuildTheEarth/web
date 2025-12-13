@@ -43,5 +43,33 @@ export class CachetAPIService {
       .data.data;
   }
 
-  // async getComponents(): Promise<any[]> {
+  async getComponents({
+    status,
+  }: {
+    status?: 1 | 2 | 3 | 4 | 5 | 6;
+  }): Promise<any[]> {
+    return (
+      await firstValueFrom(
+        this.http.get(
+          `${this.baseURL}/api/components?per_page=30${status ? `&filter%5Bstatus%5D=${status}` : ""}`,
+        ),
+      )
+    ).data.data;
+  }
+
+  async getComponentGroups(): Promise<any[]> {
+    return (
+      await firstValueFrom(
+        this.http.get(`${this.baseURL}/api/component-groups`),
+      )
+    ).data.data;
+  }
+
+  async getIncidents(): Promise<any[]> {
+    return (
+      await firstValueFrom(
+        this.http.get(`${this.baseURL}/api/incidents?per_page=30`),
+      )
+    ).data.data;
+  }
 }
