@@ -9,7 +9,7 @@ import { Locale } from 'next-intl';
 import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
 
 export const metadata: Metadata = {
-	title: 'Contact Us',
+	title: 'Frequently Asked Questions',
 	description: "If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
 };
 

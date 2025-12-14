@@ -828,7 +828,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Most Claims <br />
+										Most Builders <br />
 										(By BuildTeam)
 									</Title>
 									<BarChart

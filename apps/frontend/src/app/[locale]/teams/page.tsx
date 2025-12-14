@@ -9,6 +9,7 @@ import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+
 export const metadata: Metadata = {
 	title: 'Build Teams',
 	description:

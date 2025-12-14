@@ -3,7 +3,9 @@ import LottieAnimation from '@/components/animations/LottieAnimation';
 import SplitTextAnimation from '@/components/animations/SplitText';
 import LinkButton from '@/components/core/LinkButton';
 import Wrapper from '@/components/layout/Wrapper';
+import { Link } from '@/i18n/navigation';
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
+import prisma from '@/util/db';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import {
 	BackgroundImage,
@@ -17,6 +19,7 @@ import {
 	GridCol,
 	Group,
 	Image,
+	NumberFormatter,
 	SimpleGrid,
 	Stepper,
 	StepperStep,
@@ -32,15 +35,25 @@ import {
 	IconMapSearch,
 	IconUsersGroup,
 } from '@tabler/icons-react';
+import { stat } from 'fs';
 import * as motion from 'motion/react-client';
 import { Locale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Fragment } from 'react';
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;
 	setRequestLocale(locale);
 	const t = await getTranslations('home');
+	const formatter = await getFormatter();
+
+	const statClaims = await prisma.claim.aggregate({
+		_sum: { buildings: true, size: true },
+		where: { active: true, finished: true },
+	});
+	const statUsers = await prisma.user.count({
+		where: { ssoId: { not: { contains: 'o_' } } },
+	});
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -65,7 +78,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							<SplitTextAnimation>{t('landing.title')}</SplitTextAnimation>
 						</Title>
 						<AppearAnimation component="div" delay={0.3} duration={1}>
-							<LinkButton href="/join" size="xl" mt="xl" aria-label={t('landing.cta.alt')}>
+							<LinkButton href="/get-started" size="xl" mt="xl" aria-label={t('landing.cta.alt')}>
 								{t('landing.cta.label')}
 							</LinkButton>
 						</AppearAnimation>
@@ -90,7 +103,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			<div style={{ width: '100%' }} id="more">
 				<Container
 					style={{ border: 'var(--debug-border) solid red' }}
-					mt="calc(var(--mantine-spacing-xl) * 3)"
+					mt="calc(var(--mantine-spacing-xl) * 5)"
 					size="responsive"
 				>
 					<Grid w="100%" styles={{ col: { border: 'var(--debug-border) solid green' } }}>
@@ -149,14 +162,20 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								hiddenFrom="sm"
 							>
 								{[
-									{ count: '100.000+', title: t('whatWeHaveDone.buildings'), icon: IconBuildingSkyscraper },
-									{ count: '350.000.000m²+', title: t('whatWeHaveDone.area'), icon: IconMap },
-									{ count: '25.000+', title: t('whatWeHaveDone.users'), icon: IconUsersGroup },
+									{
+										count: statClaims._sum.buildings,
+										title: t('whatWeHaveDone.buildings'),
+										icon: IconBuildingSkyscraper,
+										suffix: ' ',
+									},
+									{ count: statClaims._sum.size, title: t('whatWeHaveDone.area'), icon: IconMap, suffix: 'm² ' },
+									{ count: statUsers, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
 										<Text c="white" fw="700" fz="32px">
-											{stat.count}
+											{formatter.number(stat.count as number, { maximumSignificantDigits: 3, roundingMode: 'floor' })}
+											{stat.suffix}+
 										</Text>
 										<Text c="white" fw="700" fz="xl" mt="xs">
 											{stat.title}
@@ -171,18 +190,27 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										'linear-gradient(110deg,var(--mantine-color-buildtheearth-7) 20%, var(--mantine-color-buildtheearth-6) 100%)',
 									padding: 'calc(var(--mantine-spacing-xl) * 1.5)',
 									width: '100%',
+									textDecoration: 'none',
 								}}
 								visibleFrom="sm"
+								component={Link}
+								href="/statistics"
 							>
 								{[
-									{ count: '100.000+', title: t('whatWeHaveDone.buildings'), icon: IconBuildingSkyscraper },
-									{ count: '350.000.000m²+', title: t('whatWeHaveDone.area'), icon: IconMap },
-									{ count: '25.000+', title: t('whatWeHaveDone.users'), icon: IconUsersGroup },
+									{
+										count: statClaims._sum.buildings,
+										title: t('whatWeHaveDone.buildings'),
+										icon: IconBuildingSkyscraper,
+										suffix: ' ',
+									},
+									{ count: statClaims._sum.size, title: t('whatWeHaveDone.area'), icon: IconMap, suffix: 'm² ' },
+									{ count: statUsers, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
 										<Text c="white" fw="700" fz="32px">
-											{stat.count}
+											{formatter.number(stat.count as number, { maximumSignificantDigits: 3, roundingMode: 'floor' })}
+											{stat.suffix}+
 										</Text>
 										<Text c="white" fw="700" fz="xl" mt="xs">
 											{stat.title}
@@ -238,7 +266,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					<Grid
 						w="100%"
 						styles={{ col: { border: 'var(--debug-border) solid green' } }}
-						mt="calc(var(--mantine-spacing-xl) * 4)"
+						mt="calc(var(--mantine-spacing-xl) * 6)"
 					>
 						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 6 }}>
 							<Box>
@@ -256,14 +284,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								</Stepper>
 							</Box>
 						</GridCol>
-						<GridCol style={{ position: 'relative' }}>
+						<GridCol offset={1} span={10}>
 							<Carousel
 								withIndicators
 								w="90%"
 								slideGap="0px"
-								mt="calc(var(--mantine-spacing-xl) * 2)"
+								mt="calc(var(--mantine-spacing-xl) * 6)"
 								emblaOptions={{ loop: true }}
-								style={{ aspectRatio: '16 / 9', transform: 'translateX(-50%)', position: 'relative', left: '50%' }}
+								style={{ aspectRatio: '16 / 9' }}
 								aria-label={t('gallery.alt')}
 							>
 								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>

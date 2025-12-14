@@ -31,8 +31,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 export async function generateMetadata(): Promise<Metadata> {
 	return {
 		title: 'Get Started',
-		description:
-			"If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
+		description: 'Explore our servers, build your country, and contribute to the largest Minecraft project to date!',
 	};
 }
 
