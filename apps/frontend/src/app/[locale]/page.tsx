@@ -49,7 +49,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 	const statClaims = await prisma.claim.aggregate({
 		_sum: { buildings: true, size: true },
-		where: { active: true, finished: true },
+		where: {
+			active: true,
+			finished: true,
+		},
 	});
 	const statUsers = await prisma.user.count({
 		where: { ssoId: { not: { contains: 'o_' } } },

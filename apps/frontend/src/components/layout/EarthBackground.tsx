@@ -1,3 +1,4 @@
+'use client';
 import { motion } from 'motion/react';
 export default function EarthBackground(props: any) {
 	return (
@@ -7,7 +8,7 @@ export default function EarthBackground(props: any) {
 			initial={{ opacity: 0, ...props?.initial }}
 			animate={{ opacity: 1, ...props?.animate }}
 			transition={{ ease: 'easeOut', duration: 6, delay: 2, ...props?.transition }}
-			src={'/logo.png'}
+			src={props.src || '/logo.png'}
 			style={{
 				position: 'absolute',
 				bottom: '-35vh',

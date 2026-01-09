@@ -154,7 +154,11 @@
 		"explore": {
 			"title": "Explore BuildTheEarth",
 			"description": "Discover the incredible progress made by our global community as they recreate the world.",
-			"cta": "Find a Server"
+			"cta": "Find a Server",
+			"joinServer": {
+				"title": "Explore {country}",
+				"description": "Join the {name} Minecraft server to explore the amazing builds from this region.<br></br><br></br>If you need help navigating the server, dont hesitate to reach out to us on Discord!"
+			}
 		},
 		"build": {
 			"title": "Start Building",

@@ -1,12 +1,12 @@
 'use client';
 
-import { useRouter } from '@/i18n/navigation';
+import { usePathname, useRouter } from '@/i18n/navigation';
 import { TextInput, TextInputProps } from '@mantine/core';
-import { useDebouncedState } from '@mantine/hooks';
+import { useDebouncedValue } from '@mantine/hooks';
 import { IconSearch } from '@tabler/icons-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 
 export default function SearchInput(props: TextInputProps) {
 	const t = useTranslations('common.search');
@@ -14,19 +14,39 @@ export default function SearchInput(props: TextInputProps) {
 }
 
 function QuerySearchInputInner({ paramName, id, ...props }: TextInputProps & { paramName: string; id?: string }) {
-	const urlQuery = useSearchParams().get(paramName) || '';
-	const [query, setQuery] = useDebouncedState(urlQuery, 300);
+	const searchParams = useSearchParams();
+	const urlQuery = searchParams.get(paramName) || '';
+	const [value, setValue] = useState(urlQuery);
+	const [debounced] = useDebouncedValue(value, 300);
 	const router = useRouter();
+	const pathname = usePathname();
+	const searchParamsString = searchParams.toString();
 
 	useEffect(() => {
-		if (query.length >= 2 || (urlQuery.length > 1 && query.length === 0)) {
-			if (query == urlQuery) return;
-			router.push(`${id ? '#' + id : ''}?${paramName}=${encodeURIComponent(query)}`);
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [query]);
+		setValue(urlQuery);
+	}, [urlQuery]);
 
-	return <SearchInput defaultValue={query} onChange={(event) => setQuery(event.currentTarget.value)} {...props} />;
+	useEffect(() => {
+		if (debounced === urlQuery) return;
+
+		const shouldUpdate = debounced.length >= 2 || (urlQuery.length > 1 && debounced.length === 0);
+		if (!shouldUpdate) return;
+
+		const params = new URLSearchParams(searchParamsString);
+
+		if (debounced.length === 0) {
+			params.delete(paramName);
+		} else {
+			params.set(paramName, debounced);
+		}
+
+		const queryString = params.toString();
+		const hash = id ? `#${id}` : '';
+
+		router.push(`${pathname}${queryString ? `?${queryString}` : ''}${hash}`, { scroll: false });
+	}, [debounced, urlQuery, searchParamsString, pathname, paramName, id, router]);
+
+	return <SearchInput value={value} onChange={(event) => setValue(event.currentTarget.value)} {...props} />;
 }
 export function QuerySearchInput(props: TextInputProps & { paramName: string; id?: string }) {
 	return (
