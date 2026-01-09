@@ -163,7 +163,11 @@
 		"build": {
 			"title": "Start Building",
 			"description": "Join us and contribute to the creation of a 1:1 scale replica of Earth in Minecraft.",
-			"cta": "Find your Team"
+			"cta": "Find your Team",
+			"joinServer": {
+				"title": "Build in {country}",
+				"description": "Join the {name} Minecraft server to help build in this region!<br></br><br></br>Dont forget to join the Discord Servers with the links below!"
+			}
 		}
 	}
 }

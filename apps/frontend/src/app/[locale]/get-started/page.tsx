@@ -15,6 +15,7 @@ import {
 	Card,
 	CardSection,
 	Center,
+	Code,
 	Container,
 	Grid,
 	GridCol,
@@ -25,7 +26,7 @@ import {
 	Text,
 	Title,
 } from '@mantine/core';
-import { IconChevronRight } from '@tabler/icons-react';
+import { IconBrandDiscord, IconChevronRight } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
@@ -42,12 +43,13 @@ export default async function Page({
 	searchParams,
 }: {
 	params: Promise<{ locale: Locale }>;
-	searchParams: Promise<{ qex?: string; cex?: string }>;
+	searchParams: Promise<{ qex?: string; cex?: string; qbu?: string; cbu?: string }>;
 }) {
 	const locale = (await params).locale;
 	setRequestLocale(locale);
 	const t = await getTranslations('get-started');
-	const search = (await searchParams).qex || '';
+	const qex = (await searchParams).qex || '';
+	const qbu = (await searchParams).qbu || '';
 
 	const teams = await prisma.buildTeam.findMany({
 		select: {
@@ -105,7 +107,10 @@ export default async function Page({
 	);
 
 	const cex = (await searchParams).cex;
-	const selected = cex ? locations.find((loc) => loc.slug === cex) : undefined;
+	const selectedEx = cex ? locations.find((loc) => loc.slug === cex) : undefined;
+
+	const cbu = (await searchParams).cbu;
+	const selectedBu = cbu ? locations.find((loc) => loc.slug === cbu) : undefined;
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -161,7 +166,7 @@ export default async function Page({
 										<Button
 											component={Link}
 											href="#explore"
-											rightSection={<IconChevronRight />}
+											rightSection={<IconChevronRight size={12} />}
 											px={'var(--mantine-spacing-xl)'}
 											mt="md"
 											scroll
@@ -187,7 +192,7 @@ export default async function Page({
 											</Text>
 										</div>
 										<Button
-											rightSection={<IconChevronRight />}
+											rightSection={<IconChevronRight size={12} />}
 											component={Link}
 											scroll
 											href="#build"
@@ -254,17 +259,17 @@ export default async function Page({
 							</Button>
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
-							<QuerySearchInput paramName="qex" id="explore" my="xl" />
+							<QuerySearchInput paramName="qex" id="explore" my="xl" placeholder="Search Countries..." />
 							<SimpleGrid cols={2} spacing="xl" mb="xl">
 								{locations
 									?.filter((element) => !element.location.includes('Globe'))
 									?.filter(
 										(element) =>
-											element.location?.toLowerCase().includes(search?.toLowerCase() || '') ||
-											element.team?.toLowerCase().includes(search?.toLowerCase() || ''),
+											element.location?.toLowerCase().includes(qex?.toLowerCase() || '') ||
+											element.team?.toLowerCase().includes(qex?.toLowerCase() || ''),
 									)
 									.sort((a, b) =>
-										a.location.toLowerCase().startsWith(search) ? -1 : a.location.localeCompare(b.location),
+										a.location.toLowerCase().startsWith(qex) ? -1 : a.location.localeCompare(b.location),
 									)
 									.slice(0, 10)
 									.map((element, i: number) => (
@@ -306,7 +311,7 @@ export default async function Page({
 									))}
 							</SimpleGrid>
 						</GridCol>
-						{selected && (
+						{selectedEx && (
 							<GridCol
 								span={10}
 								offset={1}
@@ -314,25 +319,25 @@ export default async function Page({
 								style={{ scrollMargin: '-2vh', position: 'relative' }}
 								mt="calc(var(--mantine-spacing-xl) * 3)"
 							>
-								<Title order={2}>{t('explore.joinServer.title', { country: selected?.location })}</Title>
+								<Title order={2}>{t('explore.joinServer.title', { country: selectedEx?.location })}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw="50%">
 									{t.rich('explore.joinServer.description', {
-										name: selected?.team,
+										name: selectedEx?.team,
 										br: () => <br />,
 									})}
 								</Text>
 
 								<JoinServerGuide
-									ip={selected.ip}
-									version={selected?.version}
-									name={selected.team}
-									slug={selected.slug}
+									ip={selectedEx.ip}
+									version={selectedEx?.version}
+									name={selectedEx.team}
+									slug={selectedEx.slug}
 								/>
 								<Box mt="xl">
 									<LinkButton
-										rightSection={<IconChevronRight size={12} />}
-										href={selected?.discord}
+										rightSection={<IconBrandDiscord size={12} />}
+										href={selectedEx?.discord}
 										target="_blank"
 										mt="md"
 									>
@@ -340,13 +345,145 @@ export default async function Page({
 									</LinkButton>
 									<LinkButton
 										rightSection={<IconChevronRight size={12} />}
-										href={`/teams/${selected.slug}`}
+										href={`/teams/${selectedEx.slug}`}
 										mt="md"
 										variant="transparent"
 									>
 										More Information
 									</LinkButton>
 								</Box>
+							</GridCol>
+						)}
+						<GridCol
+							span={10}
+							offset={1}
+							id="build"
+							style={{ scrollMargin: '10vh' }}
+							mt="calc(var(--mantine-spacing-xl) * 6)"
+						>
+							<Title order={2}>{t('build.title')}</Title>
+							<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
+							<Text maw="50%">
+								BuildTheEarth is organized into multiple <b>Build Teams</b>, each responsible for recreating different
+								regions of the world. Build Teams often focus on specific <b>countries or continents</b>, allowing you
+								to contribute to areas you are passionate about.
+								<br />
+								<br />
+								There are no restrictions on which or how many Build Teams you can join, so feel free to explore how
+								many as you like!
+								<br />
+								<br />
+								Each Build Team has its own server where you can collaborate with other builders, participate in events,
+								and get support. Due to this, there is no single "application process".
+								<br />
+								Instead, simply <b>join the Discord server</b> of the Build Team you are interested in and follow their
+								simple instructions to get started.
+								<br />
+								<br />
+								You can also join our Hub Server (Minecraft: <Code>buildtheearth.net</Code>,{' '}
+								<Link
+									href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
+									target="_blank"
+								>
+									Discord
+								</Link>
+								) to get help and meet other builders from around the world!
+							</Text>
+						</GridCol>
+						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
+							<QuerySearchInput paramName="qbu" id="build" my="xl" placeholder="Search Countries..." />
+							<SimpleGrid cols={2} spacing="xl" mb="xl">
+								{locations
+									?.filter((element) => !element.location.includes('Globe'))
+									?.filter(
+										(element) =>
+											element.location?.toLowerCase().includes(qbu?.toLowerCase() || '') ||
+											element.team?.toLowerCase().includes(qbu?.toLowerCase() || ''),
+									)
+									.sort((a, b) =>
+										a.location.toLowerCase().startsWith(qbu) ? -1 : a.location.localeCompare(b.location),
+									)
+									.slice(0, 10)
+									.map((element, i: number) => (
+										<Link
+											key={`${element.location}-${element.slug}-group`}
+											href={`/get-started?qbu=${element.location}&cbu=${element.slug}#build-join`}
+											style={{ textDecoration: 'none', color: 'inherit' }}
+										>
+											<Group
+												wrap="nowrap"
+												style={{
+													backgroundColor: 'var(--mantine-color-dark-6)',
+													borderRadius: 0,
+													cursor: 'pointer',
+													boxShadow: 'var(--mantine-shadow-block)',
+												}}
+												p="md"
+											>
+												<ReactCountryFlag
+													countryCode={element.raw}
+													svg
+													key={element.raw + '-flag'}
+													aria-label={`${element.location} flag`}
+													style={{ height: 90, width: 90, borderRadius: '50%', objectFit: 'cover' }}
+												/>
+												<div>
+													<Stack gap={'xs'}>
+														<Text fs="xl" fw="bold">
+															{element.location}
+														</Text>
+														<BuildTeamDisplay
+															noAnchor
+															team={{ id: element.tid, name: element.team, slug: element.slug, icon: element.icon }}
+														/>
+													</Stack>
+												</div>
+											</Group>
+										</Link>
+									))}
+							</SimpleGrid>
+						</GridCol>
+						{selectedBu && (
+							<GridCol
+								span={10}
+								offset={1}
+								id="build-join"
+								style={{ scrollMargin: '-2vh', position: 'relative' }}
+								mt="calc(var(--mantine-spacing-xl) * 3)"
+							>
+								<Title order={2}>{t('build.joinServer.title', { country: selectedBu?.location })}</Title>
+								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
+								<Text maw="50%">
+									{t.rich('build.joinServer.description', {
+										name: selectedBu?.team,
+										br: () => <br />,
+									})}
+								</Text>
+								<Box>
+									<LinkButton
+										rightSection={<IconBrandDiscord size={12} />}
+										href={selectedEx?.discord}
+										target="_blank"
+										mt="md"
+									>
+										{selectedBu?.team} Discord Server
+									</LinkButton>
+									<LinkButton
+										rightSection={<IconBrandDiscord size={12} />}
+										href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
+										target="_blank"
+										mt="md"
+										ml="md"
+									>
+										Hub Discord Server
+									</LinkButton>
+								</Box>
+								<JoinServerGuide
+									ip={selectedBu.ip}
+									version={selectedBu?.version}
+									name={selectedBu.team}
+									slug={selectedBu.slug}
+								/>
 							</GridCol>
 						)}
 					</Grid>
