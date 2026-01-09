@@ -6,7 +6,7 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import EarthBackground from '@/components/layout/EarthBackground';
 import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
-import getCountryName from '@/util/countries';
+import getCountryName, { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
 import {
 	BackgroundImage,
@@ -78,23 +78,10 @@ export default async function Page({
 	}[] = [];
 	teams?.forEach((element) =>
 		!element.location.includes('glb')
-			? element.location.includes(', ')
-				? element.location.split(', ').map((part: any) =>
-						locations.push({
-							location: getCountryName(part),
-							raw: part,
-							team: element.name,
-							tid: element.id,
-							ip: element.ip,
-							slug: element.slug,
-							icon: element.icon,
-							version: element.version,
-							discord: element.invite,
-						}),
-					)
-				: locations.push({
-						location: getCountryName(element.location),
-						raw: element.location,
+			? element.location.split(', ').map((part: any) =>
+					locations.push({
+						location: getCountryName(part),
+						raw: part,
 						team: element.name,
 						tid: element.id,
 						ip: element.ip,
@@ -102,15 +89,16 @@ export default async function Page({
 						icon: element.icon,
 						version: element.version,
 						discord: element.invite,
-					})
+					}),
+				)
 			: null,
 	);
 
 	const cex = (await searchParams).cex;
-	const selectedEx = cex ? locations.find((loc) => loc.slug === cex) : undefined;
+	const selectedEx = cex ? teams.find((t) => t.slug === cex) : undefined;
 
 	const cbu = (await searchParams).cbu;
-	const selectedBu = cbu ? locations.find((loc) => loc.slug === cbu) : undefined;
+	const selectedBu = cbu ? teams.find((t) => t.slug === cbu) : undefined;
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -210,7 +198,7 @@ export default async function Page({
 				</Center>
 			</BackgroundImage>
 
-			<div style={{ width: '100%', height: '600vh', position: 'relative' }} id="more">
+			<div style={{ width: '100%', position: 'relative' }} id="more">
 				<EarthBackground
 					style={{
 						position: 'absolute',
@@ -319,11 +307,11 @@ export default async function Page({
 								style={{ scrollMargin: '-2vh', position: 'relative' }}
 								mt="calc(var(--mantine-spacing-xl) * 3)"
 							>
-								<Title order={2}>{t('explore.joinServer.title', { country: selectedEx?.location })}</Title>
+								<Title order={2}>{t('explore.joinServer.title', { country: selectedEx?.name })}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw="50%">
 									{t.rich('explore.joinServer.description', {
-										name: selectedEx?.team,
+										name: selectedEx?.name,
 										br: () => <br />,
 									})}
 								</Text>
@@ -331,13 +319,13 @@ export default async function Page({
 								<JoinServerGuide
 									ip={selectedEx.ip}
 									version={selectedEx?.version}
-									name={selectedEx.team}
+									name={selectedEx.name}
 									slug={selectedEx.slug}
 								/>
 								<Box mt="xl">
 									<LinkButton
 										rightSection={<IconBrandDiscord size={12} />}
-										href={selectedEx?.discord}
+										href={selectedEx?.invite}
 										target="_blank"
 										mt="md"
 									>
@@ -451,22 +439,30 @@ export default async function Page({
 								style={{ scrollMargin: '-2vh', position: 'relative' }}
 								mt="calc(var(--mantine-spacing-xl) * 3)"
 							>
-								<Title order={2}>{t('build.joinServer.title', { country: selectedBu?.location })}</Title>
+								<Title order={2}>
+									{t('build.joinServer.title', {
+										country:
+											getCountryNames(selectedBu?.location.split(', ')).slice(0, 4).join(', ') +
+											(selectedBu?.location.split(', ').length > 4
+												? `+${selectedBu?.location.split(', ').length - 4}`
+												: ''),
+									})}
+								</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw="50%">
 									{t.rich('build.joinServer.description', {
-										name: selectedBu?.team,
+										name: selectedBu?.name,
 										br: () => <br />,
 									})}
 								</Text>
 								<Box>
 									<LinkButton
 										rightSection={<IconBrandDiscord size={12} />}
-										href={selectedEx?.discord}
+										href={selectedEx?.invite}
 										target="_blank"
 										mt="md"
 									>
-										{selectedBu?.team} Discord Server
+										{selectedBu?.name} Discord Server
 									</LinkButton>
 									<LinkButton
 										rightSection={<IconBrandDiscord size={12} />}
@@ -481,7 +477,7 @@ export default async function Page({
 								<JoinServerGuide
 									ip={selectedBu.ip}
 									version={selectedBu?.version}
-									name={selectedBu.team}
+									name={selectedBu.name}
 									slug={selectedBu.slug}
 								/>
 							</GridCol>
