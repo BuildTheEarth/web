@@ -66,7 +66,7 @@ declare module 'next-auth' {
 		type: string;
 		id: string;
 		accessToken: string;
-		accessTokenExpires?: any;
+		accessTokenExpires?: number;
 		refreshToken: string;
 		idToken: string;
 		access_token: string;
@@ -105,7 +105,7 @@ declare module 'next-auth/jwt' {
 		accessToken: string;
 		refreshToken: string;
 		accessTokenExpired: number;
-		refreshTokenExpired: number;
+		refreshTokenExpired: number | undefined;
 		user: User;
 		error: string;
 	}

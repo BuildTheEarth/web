@@ -9,8 +9,8 @@ const keycloakAdminClientSingleton = () => {
 	client
 		.auth({
 			grantType: 'client_credentials',
-			clientId: process.env.KEYCLOAK_ADMIN_CLIENT_ID || '',
-			clientSecret: process.env.KEYCLOAK_ADMIN_CLIENT_SECRET,
+			clientId: process.env.NEXT_PUBLIC_KEYCLOAK_ID || '',
+			clientSecret: process.env.KEYCLOAK_SECRET,
 		})
 		.then(() => {})
 		.catch((err) => {

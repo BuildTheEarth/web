@@ -19,6 +19,7 @@ import getCountryName from '@/utils/ISOCountries';
 import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -39,6 +40,9 @@ const Teams: NextPage = ({ data }: any) => {
 		>
 			<p>
 				{t('description')}
+				<br />
+				<br />
+				<Link href="/map/teams">View teams on the map</Link>
 				<br />
 				<br />
 				{t('joining')}
