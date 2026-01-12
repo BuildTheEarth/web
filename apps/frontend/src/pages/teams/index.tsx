@@ -1,6 +1,7 @@
 import {
 	Avatar,
 	Badge,
+	Button,
 	Grid,
 	Group,
 	Pagination,
@@ -20,6 +21,7 @@ import { NextPage } from 'next';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useState } from 'react';
 
 const Teams: NextPage = ({ data }: any) => {
@@ -42,6 +44,11 @@ const Teams: NextPage = ({ data }: any) => {
 				<br />
 				<br />
 				{t('joining')}
+				<br />
+				<br />
+				<Button component={Link} href="/map/teams">
+					{t('viewOnMap')}
+				</Button>
 			</p>
 			<SearchInput onSearch={(search) => setSearch(search)} />
 			<Grid gutter="xl" style={{ marginTop: theme.spacing.xl }}>
