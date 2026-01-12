@@ -52,7 +52,7 @@ const Header = ({ links }: { links: { link: string; translation: string }[] }) =
 					{linkItems}
 				</Group>
 				<Group>
-					{session.status !== 'authenticated' ? (
+					{session.status !== 'authenticated' || !session.data ? (
 						<>
 							<Button className={classes.button} onClick={() => router.push('/join')}>
 								Join us!
@@ -69,12 +69,12 @@ const Header = ({ links }: { links: { link: string; translation: string }[] }) =
 								data-on-top={scrollY < 100}
 								leftSection={
 									<Avatar color="initials" name={session.data.user.username} size="sm">
-										{session.data.user.username[0].toUpperCase()}
+										{session?.data?.user?.username?.at(0)?.toUpperCase()}
 									</Avatar>
 								}
 								rightSection={<ChevronDown size={12} />}
 							>
-								{session.data.user.username}
+								{session?.data?.user?.username}
 							</Button>
 						</HeaderMenu>
 					)}

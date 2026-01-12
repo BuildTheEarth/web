@@ -3,16 +3,18 @@ import { Button, Text, useMantineTheme } from '@mantine/core';
 import Page from '@/components/Page';
 import thumbnail from '@/public/images/placeholder.webp';
 import { NextPage } from 'next';
-import { signIn } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 
 const SignIn: NextPage = () => {
 	const router = useRouter();
 	const theme = useMantineTheme();
+	const { status } = useSession();
 	if (router.query.error) {
 		console.error('Sign In Error: ', router.query.error, ' Please report to BuildTheEarth');
 	}
+
 	return (
 		<Page
 			head={{

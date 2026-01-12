@@ -6,17 +6,6 @@ declare module 'next-auth' {
 	 */
 	interface Session {
 		user: {
-			// username: string;
-			// sub: string;
-			// email_verified: boolean;
-			// name: string;
-			// preferred_username: string;
-			// given_name: string;
-			// family_name: string;
-			// email: string;
-			// id: string;
-			// org_name?: string;
-			// telephone?: string;
 			exp: number;
 			iat: number;
 			auth_time: number;
@@ -38,6 +27,16 @@ declare module 'next-auth' {
 			email: string;
 			username: string;
 			id: string;
+			realm_access: {
+				roles: string[];
+			};
+			resource_access: {
+				[string | 'account']: {
+					roles: string[];
+				};
+			};
+			minecraft?: string;
+			minecraft_verified?: boolean;
 		};
 		accessToken: string;
 		error: string;
@@ -67,7 +66,7 @@ declare module 'next-auth' {
 		type: string;
 		id: string;
 		accessToken: string;
-		accessTokenExpires?: any;
+		accessTokenExpires?: number;
 		refreshToken: string;
 		idToken: string;
 		access_token: string;
@@ -106,7 +105,7 @@ declare module 'next-auth/jwt' {
 		accessToken: string;
 		refreshToken: string;
 		accessTokenExpired: number;
-		refreshTokenExpired: number;
+		refreshTokenExpired: number | undefined;
 		user: User;
 		error: string;
 	}

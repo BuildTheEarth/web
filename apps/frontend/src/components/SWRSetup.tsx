@@ -1,13 +1,23 @@
 import { showNotification } from '@mantine/notifications';
 import { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
+import { useEffect } from 'react';
 import { SWRConfig } from 'swr';
 
 export default function SWRSetup({ children }: any) {
 	const session = useSession();
-	// if (session.status == 'loading') {
-	// 	return <LoadingOverlay visible />;
-	// }
+
+	useEffect(() => {
+		console.log('Session changed:', session);
+		if (session?.data?.error === 'ForceLogout') {
+			signOut();
+		}
+	}, [session]);
+
+	if (session?.data?.error === 'ForceLogout') {
+		return null;
+	}
+
 	return (
 		<SWRConfig
 			value={{

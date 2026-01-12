@@ -18,13 +18,15 @@ import { MantineProvider } from '@mantine/core';
 import { useLocalStorage } from '@mantine/hooks';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
-import { SessionProvider } from 'next-auth/react';
+import { SessionProvider, signOut } from 'next-auth/react';
 import { appWithTranslation } from 'next-i18next';
 import { DefaultSeo } from 'next-seo';
 import defaultSeo from 'next-seo.config';
 import type { AppProps } from 'next/app';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
 export const interFont = Inter({
@@ -43,6 +45,8 @@ function MyApp({ Component, pageProps }: AppProps) {
 		key: 'accessToken',
 		defaultValue: '',
 	});
+	const router = useRouter();
+	const session = pageProps.session;
 
 	useEffect(() => {
 		//@ts-ignore
@@ -66,7 +70,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 					--font-minecraft: ${minecraftFont.style.fontFamily};
 				}
 			`}</style>
-			<SessionProvider session={pageProps.session}>
+			<SessionProvider session={session}>
 				<DefaultSeo {...defaultSeo} />
 				<MantineProvider defaultColorScheme="dark" theme={theme}>
 					<ModalsProvider>
