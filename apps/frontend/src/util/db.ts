@@ -1,7 +1,8 @@
-import { PrismaClient } from '@repo/db';
+import { PrismaClient, PrismaPg } from '@repo/db';
 
 const prismaClientSingleton = () => {
-	return new PrismaClient({ datasourceUrl: process.env.DATABASE_URL }).$extends({
+	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+	return new PrismaClient({ adapter }).$extends({
 		name: 'uploadSrc',
 		result: {
 			upload: {
@@ -16,9 +17,7 @@ const prismaClientSingleton = () => {
 	});
 };
 
-declare const globalThis: {
-	prismaGlobal: ReturnType<typeof prismaClientSingleton>;
-} & typeof global;
+declare const globalThis: { prismaGlobal: ReturnType<typeof prismaClientSingleton> } & typeof global;
 
 const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
