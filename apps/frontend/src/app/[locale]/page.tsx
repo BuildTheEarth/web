@@ -53,10 +53,21 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	});
 	const statUsers = await prisma.user.count({ where: { ssoId: { not: { contains: 'o_' } } } });
 
+	const showcaseImages = await prisma.showcase.findMany({
+		where: { approved: true },
+		take: 9,
+		orderBy: { createdAt: 'desc' },
+		include: { image: { select: { name: true } } },
+	});
+	console.log('Showcase images:', showcaseImages[0].id);
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
-				src="/thumbs/home.webp"
+				src={
+					showcaseImages.length > 0
+						? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[0].image.name
+						: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+				}
 				aria-label={t('landing.image.alt')}
 				w="100%"
 				h="100%"
@@ -119,7 +130,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						>
 							<Image
 								style={{ aspectRatio: '16 / 9', position: 'relative', top: '35%' }}
-								src="/thumbs/wasserturm_mannheim.webp"
+								src={
+									showcaseImages.length > 0
+										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[1].image.name
+										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+								}
 								w="100%"
 								alt="Water tower in Mannheim, Germany built in Minecraft"
 							/>
@@ -127,7 +142,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						<GridCol span={{ base: 10, xs: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 2 }} style={{ zIndex: 1 }}>
 							<Image
 								style={{ aspectRatio: '17 / 9' }}
-								src="/thumbs/new_york.webp"
+								src={
+									showcaseImages.length > 0
+										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[2].image.name
+										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+								}
 								h="100%"
 								alt="The New York skyline, in the foreground a pier, built in Minecraft"
 							/>
@@ -233,7 +252,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						<GridCol span={{ base: 12, xs: 9, sm: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 1 }}>
 							<Image
 								style={{ aspectRatio: '5 / 3' }}
-								src="/thumbs/rio_niteroi_bridge.webp"
+								src={
+									showcaseImages.length > 0
+										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[3].image.name
+										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+								}
 								w="100%"
 								h="100%"
 								mt="xl"
@@ -243,7 +266,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						<GridCol span={{ base: 9, xs: 7, sm: 5, xl: 5 }} offset={{ base: 2, xs: 4, sm: 0 }}>
 							<Image
 								style={{ aspectRatio: '16 / 9' }}
-								src="/thumbs/saldias_area.webp"
+								src={
+									showcaseImages.length > 0
+										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[4].image.name
+										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+								}
 								alt="A industrial area in Argentina with many vehicles and large storage facilities"
 							/>
 						</GridCol>
@@ -289,27 +316,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								style={{ aspectRatio: '16 / 9' }}
 								aria-label={t('gallery.alt')}
 							>
-								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image
-										style={{ aspectRatio: '16 / 9', height: '100%' }}
-										src="/thumbs/shimen_reservoir.webp"
-										alt="Taiwanese water reservoir"
-									/>
-								</CarouselSlide>
-								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image
-										style={{ aspectRatio: '16 / 9', height: '100%' }}
-										src="/thumbs/chernobyl.webp"
-										alt="Top of the chernobyl nuclear plant with a crane and the protective structure"
-									/>
-								</CarouselSlide>
-								<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }}>
-									<Image
-										style={{ aspectRatio: '16 / 9', height: '100%' }}
-										src="/thumbs/belgian_street.webp"
-										alt="A generic street in a belgian city with trees, small houses and a waterside"
-									/>
-								</CarouselSlide>
+								{showcaseImages.slice(5, 9).map((image) => (
+									<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }} key={`showcase-image-${image.id}`}>
+										<Image
+											style={{ aspectRatio: '16 / 9', height: '100%' }}
+											src={'https://cdn.buildtheearth.net/uploads/' + image.image.name}
+											alt={image.title}
+										/>
+									</CarouselSlide>
+								))}
 							</Carousel>
 							<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
 								{t('gallery.cta')}
