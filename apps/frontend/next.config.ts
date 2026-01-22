@@ -6,17 +6,11 @@ const nextConfig: NextConfig = {
 	output: 'standalone',
 	poweredByHeader: false,
 	outputFileTracingRoot: path.join(__dirname, '../../'),
-	images: {
-		domains: ['cdn.buildtheearth.net'],
-	},
-	experimental: {
-		optimizePackageImports: ['@tabler/icons-react'],
-	},
+	images: { remotePatterns: [{ protocol: 'https', hostname: 'cdn.buildtheearth.net', pathname: '/**' }] },
+	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
 };
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-	enabled: process.env.ANALYZE === 'true',
-});
+const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: process.env.ANALYZE === 'true' });
 
 const withNextIntl = createNextIntlPlugin();
 export default withBundleAnalyzer(withNextIntl(nextConfig));
