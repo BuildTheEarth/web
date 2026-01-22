@@ -2,20 +2,19 @@ import { PrismaClient, PrismaPg } from '@repo/db';
 
 const prismaClientSingleton = () => {
 	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-	return new PrismaClient({ adapter });
-	// .$extends({
-	// 	name: 'uploadSrc',
-	// 	result: {
-	// 		upload: {
-	// 			src: {
-	// 				needs: { name: true },
-	// 				compute: (upload) => {
-	// 					return `https://cdn.buildtheearth.net/uploads/${upload.name}`;
-	// 				},
-	// 			},
-	// 		},
-	// 	},
-	// });
+	return new PrismaClient({ adapter }).$extends({
+		name: 'uploadSrc',
+		result: {
+			upload: {
+				src: {
+					needs: { name: true },
+					compute: (upload) => {
+						return `https://cdn.buildtheearth.net/uploads/${upload.name}`;
+					},
+				},
+			},
+		},
+	});
 };
 
 declare const globalThis: { prismaGlobal: ReturnType<typeof prismaClientSingleton> } & typeof global;

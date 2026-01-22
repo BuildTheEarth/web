@@ -15,11 +15,11 @@ import {
 	CardSection,
 	Center,
 	Container,
+	Flex,
 	Grid,
 	GridCol,
 	Group,
 	Image,
-	NumberFormatter,
 	SimpleGrid,
 	Stepper,
 	StepperStep,
@@ -29,13 +29,13 @@ import {
 import {
 	IconBuildingSkyscraper,
 	IconChevronRight,
+	IconCornerRightUp,
 	IconCrane,
 	IconMap,
 	IconMapPin,
 	IconMapSearch,
 	IconUsersGroup,
 } from '@tabler/icons-react';
-import { stat } from 'fs';
 import * as motion from 'motion/react-client';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
@@ -93,8 +93,28 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						</AppearAnimation>
 					</div>
 				</Center>
+				<div
+					style={{
+						position: 'absolute',
+						bottom: 'var(--mantine-spacing-sm)',
+						right: 'var(--mantine-spacing-xl)',
+						transform: 'translateX(-50%)',
+						paddingBottom: '1vh',
+					}}
+					className="mantine-visible-from-sm"
+				>
+					<Text fw="bold" fz="sm" style={{ color: 'white', textShadow: '0px 0px 28px #000' }}>
+						<SplitTextAnimation delay={2}>{`${showcaseImages[0].title}, ${showcaseImages[0].city}`}</SplitTextAnimation>
+					</Text>
+				</div>
 				<motion.a
-					style={{ position: 'absolute', bottom: '0', left: '50vw', translateX: '-50%', paddingBottom: '1vh' }}
+					style={{
+						position: 'absolute',
+						bottom: '0',
+						left: '50vw',
+						transform: 'translateX(-50%)',
+						paddingBottom: '1vh',
+					}}
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					transition={{ delay: 0.3, duration: 1 }}
@@ -136,10 +156,27 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 								}
 								w="100%"
-								alt="Water tower in Mannheim, Germany built in Minecraft"
+								alt={`${showcaseImages[1].title}, ${showcaseImages[1].city}`}
 							/>
+							<Flex
+								style={{ position: 'absolute', bottom: 'calc(-35% - 16px)', right: 'var(--mantine-spacing-sm)' }}
+								align="flex-end"
+							>
+								<Text
+									fw="bold"
+									fz="sm"
+									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+								>
+									{`${showcaseImages[1].title}, ${showcaseImages[1].city}`}
+								</Text>
+								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+							</Flex>
 						</GridCol>
-						<GridCol span={{ base: 10, xs: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 2 }} style={{ zIndex: 1 }}>
+						<GridCol
+							span={{ base: 10, xs: 7, md: 6, xl: 5 }}
+							offset={{ base: 0, md: 2, xl: 2 }}
+							style={{ zIndex: 1, position: 'relative' }}
+						>
 							<Image
 								style={{ aspectRatio: '17 / 9' }}
 								src={
@@ -148,8 +185,21 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 								}
 								h="100%"
-								alt="The New York skyline, in the foreground a pier, built in Minecraft"
+								alt={`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
 							/>
+							<Flex
+								style={{ position: 'absolute', bottom: 'calc(-2% - 16px)', right: 'var(--mantine-spacing-sm)' }}
+								align="flex-end"
+							>
+								<Text
+									fw="bold"
+									fz="sm"
+									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+								>
+									{`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
+								</Text>
+								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+							</Flex>
 						</GridCol>
 					</Grid>
 					<Grid
@@ -249,7 +299,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								</Button>
 							</Box>
 						</GridCol>
-						<GridCol span={{ base: 12, xs: 9, sm: 7, md: 6, xl: 5 }} offset={{ base: 0, md: 2, xl: 1 }}>
+						<GridCol
+							span={{ base: 12, xs: 9, sm: 7, md: 6, xl: 5 }}
+							offset={{ base: 0, md: 2, xl: 1 }}
+							style={{ position: 'relative', zIndex: 0 }}
+						>
 							<Image
 								style={{ aspectRatio: '5 / 3' }}
 								src={
@@ -260,10 +314,27 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								w="100%"
 								h="100%"
 								mt="xl"
-								alt="Rio–Niterói Bridge in Brazil, going into the distance, built in Minecraft"
+								alt={`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
 							/>
+							<Flex
+								style={{ position: 'absolute', bottom: 'calc(-9% - 16px)', right: 'var(--mantine-spacing-sm)' }}
+								align="flex-end"
+							>
+								<Text
+									fw="bold"
+									fz="sm"
+									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+								>
+									{`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
+								</Text>
+								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+							</Flex>
 						</GridCol>
-						<GridCol span={{ base: 9, xs: 7, sm: 5, xl: 5 }} offset={{ base: 2, xs: 4, sm: 0 }}>
+						<GridCol
+							span={{ base: 9, xs: 7, sm: 5, xl: 5 }}
+							offset={{ base: 2, xs: 4, sm: 0 }}
+							style={{ zIndex: 1, position: 'relative' }}
+						>
 							<Image
 								style={{ aspectRatio: '16 / 9' }}
 								src={
@@ -271,8 +342,21 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[4].image.name
 										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 								}
-								alt="A industrial area in Argentina with many vehicles and large storage facilities"
+								alt={`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
 							/>
+							<Flex
+								style={{ position: 'absolute', bottom: '-16px', right: 'var(--mantine-spacing-sm)' }}
+								align="flex-end"
+							>
+								<Text
+									fw="bold"
+									fz="sm"
+									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+								>
+									{`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
+								</Text>
+								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+							</Flex>
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
