@@ -16,6 +16,7 @@ import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import SWRSetup from '@/components/core/SWRSetup';
 import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck';
 import AppLayout from '@/components/layout';
+import { routing } from '@/i18n/routing';
 import { theme } from '@/util/theme';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
@@ -23,10 +24,8 @@ import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { Inter } from 'next/font/google';
 import localFont from 'next/font/local';
-const interFont = Inter({
-	subsets: ['latin'],
-	variable: '--font-inter',
-});
+
+const interFont = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const minecraftFont = localFont({
 	src: '../../public/fonts/Minecraft.ttf',
 	weight: '100 900',
@@ -35,13 +34,14 @@ const minecraftFont = localFont({
 	variable: '--font-minecraft',
 });
 
+export async function generateStaticParams() {
+	return routing.locales.map((locale) => ({ locale }));
+}
+
 export async function generateMetadata(): Promise<Metadata> {
 	return {
 		metadataBase: new URL('https://buildtheearth.net'),
-		title: {
-			default: 'BuildTheEarth - Builiding the Earth in Minecraft 1:1',
-			template: '%s | BuildTheEarth',
-		},
+		title: { default: 'BuildTheEarth - Builiding the Earth in Minecraft 1:1', template: '%s | BuildTheEarth' },
 		description:
 			"Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
 		generator: 'BuildTheEarth',

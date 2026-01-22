@@ -49,14 +49,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 	const statClaims = await prisma.claim.aggregate({
 		_sum: { buildings: true, size: true },
-		where: {
-			active: true,
-			finished: true,
-		},
+		where: { active: true, finished: true },
 	});
-	const statUsers = await prisma.user.count({
-		where: { ssoId: { not: { contains: 'o_' } } },
-	});
+	const statUsers = await prisma.user.count({ where: { ssoId: { not: { contains: 'o_' } } } });
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -91,10 +86,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					style={{ position: 'absolute', bottom: '0', left: '50vw', translateX: '-50%', paddingBottom: '1vh' }}
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
-					transition={{
-						delay: 0.3,
-						duration: 1,
-					}}
+					transition={{ delay: 0.3, duration: 1 }}
 					className="mantine-visible-from-sm"
 					href="#more"
 					aria-label={t('landing.arrowDown.alt')}

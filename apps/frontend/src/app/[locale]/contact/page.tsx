@@ -44,24 +44,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							color: 'orange',
 							link: 'https://www.instagram.com/buildtheearth_',
 						},
-						{
-							name: 'tiktok',
-							icon: IconBrandTiktok,
-							color: 'grape',
-							link: 'https://www.tiktok.com/@buildtheearth',
-						},
-						{
-							name: 'x',
-							icon: IconBrandX,
-							color: 'gray',
-							link: 'https://x.com/buildtheearth_',
-						},
-						{
-							name: 'twitch',
-							icon: IconBrandTwitch,
-							color: 'grape',
-							link: 'https://www.twitch.tv/buildtheearth',
-						},
+						{ name: 'tiktok', icon: IconBrandTiktok, color: 'grape', link: 'https://www.tiktok.com/@buildtheearth' },
+						{ name: 'x', icon: IconBrandX, color: 'gray', link: 'https://x.com/buildtheearth_' },
+						{ name: 'twitch', icon: IconBrandTwitch, color: 'grape', link: 'https://www.twitch.tv/buildtheearth' },
 						{
 							name: 'linkedin',
 							icon: IconBrandLinkedin,
