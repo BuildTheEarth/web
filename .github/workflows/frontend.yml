@@ -2,7 +2,7 @@ name: Docker Publish Frontend
 
 on:
   push:
-    branches: [main]
+    branches: [main,frontend/v2]
 
 jobs:
   check:
@@ -30,26 +30,28 @@ jobs:
         with:
           fetch-depth: 3
       - name: Install turbo
-        run: npm install -g turbo@2.4.4
+        run: npm install -g turbo@^2
       - name: Login to Docker
         run: |
           echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
       - name: Create env file
         run: |
           touch apps/frontend/.env
-          echo KEYCLOAK_URL="https://auth.buildtheearth.net/realms/website" >> apps/frontend/.env
-          echo KEYCLOAK_ID="frontend" >> .env
+          echo NEXT_PUBLIC_KEYCLOAK_URL="https://auth.buildtheearth.net/realms/website" >> apps/frontend/.env
+          echo NEXT_PUBLIC_KEYCLOAK_ID="frontend" >> .env
           echo KEYCLOAK_SECRET="${{ secrets.KEYCLOAK_SECRET }}" >> apps/frontend/.env
           echo NEXTAUTH_URL="https://buildtheearth.net" >> apps/frontend/.env
           echo NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" >> apps/frontend/.env
           echo NEXT_PUBLIC_API_URL="https://api.buildtheearth.net/api/v1" >> apps/frontend/.env
+          echo NEXT_PUBLIC_FRONTEND_URL="https://buildtheearth.net" >> apps/frontend/.env
+          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> apps/frontend/.env
           echo NEXT_PUBLIC_MAPBOX_TOKEN="${{ secrets.MAPBOX_TOKEN }}" >> apps/frontend/.env
           echo PORT=3000 >> apps/frontend/.env
       - name: Check env
         run: cat apps/frontend/.env
       - name: Build the Docker image
-        run: docker build . --file apps/frontend/Dockerfile --tag ghcr.io/buildtheearth/website-frontend:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/website-frontend:latest
+        run: docker build . --file apps/frontend/Dockerfile --tag ghcr.io/buildtheearth/website-frontend:v2-$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/website-frontend:v2-latest
       - name: Docker push tag
-        run: docker push ghcr.io/buildtheearth/website-frontend:$(git rev-parse --short HEAD)
+        run: docker push ghcr.io/buildtheearth/website-frontend:v2-$(git rev-parse --short HEAD)
       - name: Docker push latest
-        run: docker push ghcr.io/buildtheearth/website-frontend:latest
+        run: docker push ghcr.io/buildtheearth/website-frontend:v2-latest

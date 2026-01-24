@@ -41,6 +41,8 @@ import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Fragment } from 'react';
 
+export const dynamic = 'force-static';
+
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;
 	setRequestLocale(locale);
@@ -294,9 +296,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<Title order={2}>{t('globalCommunity.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('globalCommunity.description')}</Text>
-								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
+								<LinkButton
+									variant="filled"
+									href="/get-started#build"
+									color="buildtheearth"
+									rightSection={<IconChevronRight size={12} />}
+									mt="md"
+								>
 									{t('globalCommunity.cta')}
-								</Button>
+								</LinkButton>
 							</Box>
 						</GridCol>
 						<GridCol
@@ -363,9 +371,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<Title order={2}>{t('explore.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('explore.description')}</Text>
-								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
+								<LinkButton
+									href="/get-started#explore"
+									variant="filled"
+									color="buildtheearth"
+									rightSection={<IconChevronRight size={12} />}
+									mt="md"
+								>
 									{t('explore.cta')}
-								</Button>
+								</LinkButton>
 							</Box>
 						</GridCol>
 					</Grid>
@@ -410,9 +424,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									</CarouselSlide>
 								))}
 							</Carousel>
-							<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
+							<LinkButton
+								href="/gallery"
+								variant="filled"
+								color="buildtheearth"
+								rightSection={<IconChevronRight size={12} />}
+								mt="md"
+							>
 								{t('gallery.cta')}
-							</Button>
+							</LinkButton>
 						</GridCol>
 					</Grid>
 					<Grid
