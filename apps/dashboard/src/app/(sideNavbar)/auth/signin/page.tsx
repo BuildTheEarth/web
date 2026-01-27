@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@mantine/core';
 import { signIn, useSession } from 'next-auth/react';
 
 import { useRouter } from 'next/navigation';
@@ -19,5 +20,7 @@ export default function SigninPage() {
 		}
 	}, [status, router]);
 
-	return <p>Redirecting...</p>;
+	return (
+		<Button onClick={() => void signIn('keycloak', { callbackUrl: '/', redirect: true })}>Sign In with Keycloak</Button>
+	); // TODO: Add button to trigger sign-in manually
 }

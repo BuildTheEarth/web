@@ -2,18 +2,18 @@
 
 import type { Session } from 'next-auth';
 import { SessionProvider, signOut } from 'next-auth/react';
-import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function AuthProvider({ session, children }: { session: Session | null; children: React.ReactNode }) {
-	const pathname = usePathname();
-
 	useEffect(() => {
-		if (session?.error === 'ForceLogout' || (!session && !pathname?.startsWith('/auth'))) {
-			signOut();
+		// Force logout if session has error or no user data when it should
+		if (session?.error === 'ForceLogout' || (session && !session.user)) {
+			console.log('AuthProvider: Forcing logout due to invalid session');
+			signOut({ callbackUrl: '/auth/signin', redirect: true });
 		}
 	}, [session]);
-	if (session?.error === 'ForceLogout') {
+
+	if (session?.error === 'ForceLogout' || (session && !session.user)) {
 		return null;
 	}
 

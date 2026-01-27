@@ -2,6 +2,7 @@ import { AuthOptions, Session, getServerSession } from 'next-auth';
 
 import { JWT } from 'next-auth/jwt';
 import KeycloakProvider from 'next-auth/providers/keycloak';
+import { isSessionInvalidated, markSessionAsChecked } from './invalidatedSessions';
 
 /**
  * Refreshes access token to continue the session after token expiration
@@ -55,7 +56,7 @@ const refreshAccessToken = async (token: JWT) => {
 			refreshTokenExpired: nextRefreshExpiry,
 		};
 	} catch (error) {
-		console.error('Failed to refresh access token', error);
+		console.log('Failed to refresh access token', error);
 		return {
 			...token,
 			error: 'RefreshAccessTokenError',
@@ -73,6 +74,11 @@ export const authOptions: AuthOptions = {
 			clientId: process.env.NEXT_PUBLIC_KEYCLOAK_ID || '',
 			clientSecret: process.env.KEYCLOAK_SECRET || '',
 			issuer: process.env.NEXT_PUBLIC_KEYCLOAK_URL || '',
+			authorization: {
+				params: {
+					scope: 'openid email profile',
+				},
+			},
 			profile: (profile) => {
 				return {
 					...profile,
@@ -103,9 +109,24 @@ export const authOptions: AuthOptions = {
 				token.refreshToken = account.refresh_token;
 				token.accessTokenExpired = Date.now() + (accessExpiresIn - 15) * 1000;
 				token.refreshTokenExpired = refreshExpiresIn ? Date.now() + (refreshExpiresIn - 15) * 1000 : undefined;
+				token.sessionId = account.session_state;
 				token.user = user;
 				return token;
 			}
+
+			// If token already has an error (from previous check), return it immediately
+			if (token.error) {
+				return token;
+			}
+
+			// Check if this session was invalidated via back-channel logout
+			const sessionId = token.sessionId as string | undefined;
+			const userId = token.sub;
+			if (isSessionInvalidated(sessionId, userId)) {
+				markSessionAsChecked(sessionId, userId);
+				return { ...token, error: 'TokenInvalidated' };
+			}
+
 			// Return previous token if the access token has not expired yet
 			if (Date.now() < token.accessTokenExpired || token.accessTokenExpired == null) return token;
 
@@ -116,10 +137,14 @@ export const authOptions: AuthOptions = {
 		},
 		session: async ({ session, token }: { session: Session; token: JWT }) => {
 			if (token) {
-				// If refresh token failed, end the session by returning null
-				if (token.error === 'RefreshAccessTokenError') {
-					console.error('Refresh token expired or invalid - ending session');
-					return { ...session, error: 'ForceLogout' };
+				// If refresh token failed or token was invalidated, end the session
+				if (token.error === 'RefreshAccessTokenError' || token.error === 'TokenInvalidated') {
+					// Return a minimal session with only the error flag and no user data
+					console.log('Ending session due to token error:', token.error);
+					return {
+						expires: session.expires,
+						error: 'ForceLogout',
+					} as Session;
 				}
 
 				// @ts-expect-error shut up typescript

@@ -36,7 +36,7 @@ const HeaderProfile = () => {
 		}
 		return null;
 	}
-	if (!session.data) return null;
+	if (!session.data || !session.data.user || !session.data.user.username) return null;
 
 	return (
 		<Menu>
