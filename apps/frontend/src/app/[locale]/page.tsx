@@ -21,6 +21,7 @@ import {
 	Group,
 	Image,
 	SimpleGrid,
+	Space,
 	Stepper,
 	StepperStep,
 	Text,
@@ -131,11 +132,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			<div style={{ width: '100%' }} id="more">
 				<Container
 					style={{ border: 'var(--debug-border) solid red' }}
-					mt="calc(var(--mantine-spacing-xl) * 5)"
+					my="calc(var(--mantine-spacing-xl) * 5)"
 					size="responsive"
 				>
 					<Grid w="100%" styles={{ col: { border: 'var(--debug-border) solid green' } }}>
-						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 5 }}>
+						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 5 }} offset={0}>
 							<Box>
 								<Title order={2}>{t('whoWeAre.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
@@ -150,7 +151,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							offset={{ base: 0, xs: 1, sm: 0, xl: 1 }}
 							style={{ position: 'relative', zIndex: 0 }}
 						>
-							<Box style={{ marginTop: '35%' }}>
+							<Box style={{ position: 'relative', top: '35%' }}>
 								<Image
 									style={{ aspectRatio: '16 / 9' }}
 									src={
@@ -177,8 +178,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							span={{ base: 10, xs: 7, md: 6, xl: 5 }}
 							offset={{ base: 0, md: 2, xl: 2 }}
 							style={{ zIndex: 1, position: 'relative' }}
+							visibleFrom="sm"
 						>
-							<Box>
+							<Box style={{ position: 'relative' }}>
 								<Image
 									style={{ aspectRatio: '17 / 9' }}
 									src={
@@ -186,7 +188,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[2].image.name
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
-									h="100%"
+									w="100%"
 									alt={`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
 								/>
 								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
@@ -207,13 +209,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						styles={{ col: { border: 'var(--debug-border) solid green' } }}
 						mt="calc(var(--mantine-spacing-xl) * 4)"
 					>
-						<GridCol>
+						<GridCol offset={{ base: 0, sm: 1 }}>
 							<Box>
 								<Title order={2}>{t('whatWeHaveDone.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 							</Box>
 						</GridCol>
-						<GridCol span={{ base: 12, md: 11, xl: 11 }} offset={{ base: 0, md: 1 }}>
+						<GridCol span={{ base: 12, sm: 10, md: 11, xl: 11 }} offset={{ base: 0, sm: 1 }}>
 							<Box
 								style={{
 									display: 'flex',
@@ -232,7 +234,12 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										icon: IconBuildingSkyscraper,
 										suffix: ' ',
 									},
-									{ count: statClaims._sum.size, title: t('whatWeHaveDone.area'), icon: IconMap, suffix: 'm² ' },
+									{
+										count: (statClaims._sum.size || 1) / 1_000_000,
+										title: t('whatWeHaveDone.area'),
+										icon: IconMap,
+										suffix: 'km² ',
+									},
 									{ count: statUsers, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
@@ -267,7 +274,12 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										icon: IconBuildingSkyscraper,
 										suffix: ' ',
 									},
-									{ count: statClaims._sum.size, title: t('whatWeHaveDone.area'), icon: IconMap, suffix: 'm² ' },
+									{
+										count: (statClaims._sum.size || 1) / 1_000_000,
+										title: t('whatWeHaveDone.area'),
+										icon: IconMap,
+										suffix: 'km² ',
+									},
 									{ count: statUsers, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
@@ -289,8 +301,8 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						styles={{ col: { border: 'var(--debug-border) solid green' } }}
 						mt="calc(var(--mantine-spacing-xl) * 5)"
 					>
-						<GridCol span={{ base: 12, sm: 11, md: 9, xl: 6 }}>
-							<Box ml={{ base: 'xs', xs: 'xl' }} pl={{ base: 'xs', xs: 'xl' }}>
+						<GridCol span={{ base: 12, sm: 11, md: 9, xl: 6 }} offset={{ base: 0, sm: 1, md: 0 }}>
+							<Box>
 								<Title order={2}>{t('globalCommunity.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('globalCommunity.description')}</Text>
@@ -304,13 +316,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{t('globalCommunity.cta')}
 								</LinkButton>
 							</Box>
+							<Space h="xl" />
 						</GridCol>
 						<GridCol
-							span={{ base: 12, xs: 9, sm: 7, md: 6, xl: 5 }}
-							offset={{ base: 0, md: 2, xl: 1 }}
+							span={{ base: 12, xs: 9, sm: 8, md: 7, xl: 5 }}
+							offset={{ base: 0, sm: 2, md: 2, lg: 3, xl: 1 }}
 							style={{ position: 'relative', zIndex: 0 }}
 						>
-							<Box mt="xl">
+							<Box style={{ position: 'relative' }}>
 								<Image
 									style={{ aspectRatio: '5 / 3' }}
 									src={
@@ -319,7 +332,6 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
 									w="100%"
-									h="100%"
 									alt={`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
 								/>
 								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
@@ -335,11 +347,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							</Box>
 						</GridCol>
 						<GridCol
-							span={{ base: 9, xs: 7, sm: 5, xl: 5 }}
-							offset={{ base: 2, xs: 4, sm: 0 }}
+							span={{ base: 12, xs: 7, sm: 7, xl: 5 }}
+							offset={{ base: 0, xs: 4, sm: 1, md: 0 }}
 							style={{ zIndex: 1, position: 'relative' }}
 						>
-							<Box>
+							<Box style={{ position: 'relative' }}>
 								<Image
 									style={{ aspectRatio: '16 / 9' }}
 									src={
@@ -347,6 +359,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[4].image.name
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
+									w="100%"
 									alt={`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
 								/>
 								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
@@ -383,14 +396,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						styles={{ col: { border: 'var(--debug-border) solid green' } }}
 						mt="calc(var(--mantine-spacing-xl) * 6)"
 					>
-						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 6 }}>
+						<GridCol span={{ base: 12, sm: 9, md: 7, xl: 6 }} offset={{ base: 0, md: 0 }}>
 							<Box>
 								<Title order={2}>{t('howToHelp.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('howToHelp.description')}</Text>
 							</Box>
 						</GridCol>
-						<GridCol span={{ base: 10, sm: 7, md: 5 }} offset={{ base: 1, sm: 2, md: 0, xl: 1 }}>
+						<GridCol span={{ base: 10, sm: 7, md: 5 }} offset={{ base: 0, sm: 1, md: 0, xl: 1 }}>
+							<Space h="xl" hiddenFrom="md" />
 							<Box>
 								<Stepper active={0} size="xl" orientation="vertical">
 									<StepperStep label={t('howToHelp.step1')} icon={<IconMapSearch size={20} />}></StepperStep>
@@ -399,7 +413,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								</Stepper>
 							</Box>
 						</GridCol>
-						<GridCol offset={1} span={10}>
+						<GridCol span={{ base: 13, md: 10 }} offset={{ base: 0, md: 1 }}>
 							<Carousel
 								withIndicators
 								w="90%"
@@ -428,113 +442,6 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							>
 								{t('gallery.cta')}
 							</LinkButton>
-						</GridCol>
-					</Grid>
-					<Grid
-						w="100%"
-						styles={{ col: { border: 'var(--debug-border) solid green' } }}
-						my="calc(var(--mantine-spacing-xl) * 4)"
-					>
-						<GridCol>
-							<Box>
-								<Title order={2}>{t('mediaList.title')}</Title>
-								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-							</Box>
-						</GridCol>
-						<GridCol>
-							<Group justify="center" w="100%">
-								<SimpleGrid cols={{ base: 1, xs: 3 }}>
-									{[
-										{
-											title: "Someone's built the Earth in Minecraft - to scale",
-											description:
-												'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren.',
-											image: '/home.png',
-										},
-										{
-											title: 'Global Minecraft Team building New York City',
-											description:
-												'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren.',
-											image: '/home.png',
-										},
-										{
-											title: 'Is it possible to build the Earth in Minecraft? This team thinks so',
-											description:
-												'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren.',
-											image: '/home.png',
-										},
-									].map((item) => (
-										<Fragment key={item.title}>
-											<Card key={item.title + '-lg'} withBorder maw="20vw" radius={0} visibleFrom="lg">
-												<CardSection>
-													<Image src={item.image} height={160} alt="Norway" />
-												</CardSection>
-
-												<Text fw={700} fz="xl" p="sm" mt="md">
-													{item.title}
-												</Text>
-
-												<Text size="sm" c="dimmed" p="sm">
-													{item.description}
-												</Text>
-
-												<Button
-													variant="transparent"
-													color="blue"
-													rightSection={<IconChevronRight size={12} />}
-													mt="md"
-												>
-													{t('mediaList.cta')}
-												</Button>
-											</Card>
-											<Card key={item.title + '-sm'} withBorder maw="30vw" radius={0} visibleFrom="sm" hiddenFrom="lg">
-												<CardSection>
-													<Image src={item.image} height={160} alt="Norway" />
-												</CardSection>
-
-												<Text fw={700} fz="xl" p="sm" mt="md">
-													{item.title}
-												</Text>
-
-												<Text size="sm" c="dimmed" p="sm">
-													{item.description}
-												</Text>
-
-												<Button
-													variant="transparent"
-													color="blue"
-													rightSection={<IconChevronRight size={12} />}
-													mt="md"
-												>
-													{t('mediaList.cta')}
-												</Button>
-											</Card>
-											<Card key={item.title + '-xs'} withBorder maw="75vw" radius={0} hiddenFrom="sm">
-												<CardSection>
-													<Image src={item.image} height={160} alt="Norway" />
-												</CardSection>
-
-												<Text fw={700} fz="xl" p="sm" mt="md">
-													{item.title}
-												</Text>
-
-												<Text size="sm" c="dimmed" p="sm">
-													{item.description}
-												</Text>
-
-												<Button
-													variant="transparent"
-													color="blue"
-													rightSection={<IconChevronRight size={12} />}
-													mt="md"
-												>
-													{t('mediaList.cta')}
-												</Button>
-											</Card>
-										</Fragment>
-									))}
-								</SimpleGrid>
-							</Group>
 						</GridCol>
 					</Grid>
 				</Container>
