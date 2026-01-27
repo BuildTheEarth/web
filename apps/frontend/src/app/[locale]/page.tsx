@@ -150,58 +150,56 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							offset={{ base: 0, xs: 1, sm: 0, xl: 1 }}
 							style={{ position: 'relative', zIndex: 0 }}
 						>
-							<Image
-								style={{ aspectRatio: '16 / 9', position: 'relative', top: '35%' }}
-								src={
-									showcaseImages.length > 0
-										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[1].image.name
-										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
-								}
-								w="100%"
-								alt={`${showcaseImages[1].title}, ${showcaseImages[1].city}`}
-							/>
-							<Flex
-								style={{ position: 'absolute', bottom: 'calc(-35% - 16px)', right: 'var(--mantine-spacing-sm)' }}
-								align="flex-end"
-							>
-								<Text
-									fw="bold"
-									fz="sm"
-									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
-								>
-									{`${showcaseImages[1].title}, ${showcaseImages[1].city}`}
-								</Text>
-								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
-							</Flex>
+							<Box style={{ marginTop: '35%' }}>
+								<Image
+									style={{ aspectRatio: '16 / 9' }}
+									src={
+										showcaseImages.length > 0
+											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[1].image.name
+											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+									}
+									w="100%"
+									alt={`${showcaseImages[1].title}, ${showcaseImages[1].city}`}
+								/>
+								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
+									<Text
+										fw="bold"
+										fz="sm"
+										style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+									>
+										{`${showcaseImages[1].title}, ${showcaseImages[1].city}`}
+									</Text>
+									<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+								</Flex>
+							</Box>
 						</GridCol>
 						<GridCol
 							span={{ base: 10, xs: 7, md: 6, xl: 5 }}
 							offset={{ base: 0, md: 2, xl: 2 }}
 							style={{ zIndex: 1, position: 'relative' }}
 						>
-							<Image
-								style={{ aspectRatio: '17 / 9' }}
-								src={
-									showcaseImages.length > 0
-										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[2].image.name
-										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
-								}
-								h="100%"
-								alt={`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
-							/>
-							<Flex
-								style={{ position: 'absolute', bottom: 'calc(-2% - 16px)', right: 'var(--mantine-spacing-sm)' }}
-								align="flex-end"
-							>
-								<Text
-									fw="bold"
-									fz="sm"
-									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
-								>
-									{`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
-								</Text>
-								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
-							</Flex>
+							<Box>
+								<Image
+									style={{ aspectRatio: '17 / 9' }}
+									src={
+										showcaseImages.length > 0
+											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[2].image.name
+											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+									}
+									h="100%"
+									alt={`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
+								/>
+								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
+									<Text
+										fw="bold"
+										fz="sm"
+										style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+									>
+										{`${showcaseImages[2].title}, ${showcaseImages[2].city}`}
+									</Text>
+									<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+								</Flex>
+							</Box>
 						</GridCol>
 					</Grid>
 					<Grid
@@ -312,59 +310,56 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							offset={{ base: 0, md: 2, xl: 1 }}
 							style={{ position: 'relative', zIndex: 0 }}
 						>
-							<Image
-								style={{ aspectRatio: '5 / 3' }}
-								src={
-									showcaseImages.length > 0
-										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[3].image.name
-										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
-								}
-								w="100%"
-								h="100%"
-								mt="xl"
-								alt={`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
-							/>
-							<Flex
-								style={{ position: 'absolute', bottom: 'calc(-9% - 16px)', right: 'var(--mantine-spacing-sm)' }}
-								align="flex-end"
-							>
-								<Text
-									fw="bold"
-									fz="sm"
-									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
-								>
-									{`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
-								</Text>
-								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
-							</Flex>
+							<Box mt="xl">
+								<Image
+									style={{ aspectRatio: '5 / 3' }}
+									src={
+										showcaseImages.length > 0
+											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[3].image.name
+											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+									}
+									w="100%"
+									h="100%"
+									alt={`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
+								/>
+								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
+									<Text
+										fw="bold"
+										fz="sm"
+										style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+									>
+										{`${showcaseImages[3].title}, ${showcaseImages[3].city}`}
+									</Text>
+									<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+								</Flex>
+							</Box>
 						</GridCol>
 						<GridCol
 							span={{ base: 9, xs: 7, sm: 5, xl: 5 }}
 							offset={{ base: 2, xs: 4, sm: 0 }}
 							style={{ zIndex: 1, position: 'relative' }}
 						>
-							<Image
-								style={{ aspectRatio: '16 / 9' }}
-								src={
-									showcaseImages.length > 0
-										? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[4].image.name
-										: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
-								}
-								alt={`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
-							/>
-							<Flex
-								style={{ position: 'absolute', bottom: '-16px', right: 'var(--mantine-spacing-sm)' }}
-								align="flex-end"
-							>
-								<Text
-									fw="bold"
-									fz="sm"
-									style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
-								>
-									{`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
-								</Text>
-								<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
-							</Flex>
+							<Box>
+								<Image
+									style={{ aspectRatio: '16 / 9' }}
+									src={
+										showcaseImages.length > 0
+											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[4].image.name
+											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
+									}
+									alt={`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
+								/>
+								<Flex justify="flex-end" align="center" mt="xs" mr="xs">
+									<Text
+										fw="bold"
+										fz="sm"
+										style={{ color: 'var(--mantine-color-dimmed)', textShadow: '0px 0px 28px #000' }}
+									>
+										{`${showcaseImages[4].title}, ${showcaseImages[4].city}`}
+									</Text>
+									<IconCornerRightUp size={24} color="var(--mantine-color-dimmed)" style={{ paddingBottom: '4px' }} />
+								</Flex>
+							</Box>
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 11, md: 6, xl: 6 }} offset={{ base: 0, sm: 1, xl: 1 }}>
 							<Box mt="calc(var(--mantine-spacing-xl) * 4)">
