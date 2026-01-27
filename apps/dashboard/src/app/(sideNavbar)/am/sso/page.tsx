@@ -101,7 +101,7 @@ export default async function Page() {
 											<Badge variant="gradient">{event.resourceType}</Badge>
 										</TableTd>
 										<TableTd>
-											<Anchor href={`/am/${event.resourcePath.split('/').slice(0, 2).join('/')}`}>
+											<Anchor href={`/am/${event.resourcePath?.split('/').slice(0, 2).join('/')}`}>
 												{event.resourcePath}
 											</Anchor>
 										</TableTd>
@@ -128,7 +128,9 @@ export default async function Page() {
 										<TableTd>
 											<Badge variant="gradient">{event.clientId}</Badge>
 										</TableTd>
-										<TableTd>{event.userId}</TableTd>
+										<TableTd>
+											<Anchor href={`/am/users/${event.userId}`}>users/{event.userId}</Anchor>
+										</TableTd>
 									</TableTr>
 								))}
 							</TableTbody>
