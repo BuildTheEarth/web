@@ -14,6 +14,8 @@
 		"db:migrate": "prisma migrate deploy",
 		"db:studio": "prisma studio",
 		"db:pull": "prisma db pull",
+		"up": "docker compose up -d",
+		"wait": "docker compose up wait-for-postgres",
 		"env:copy": "cp .env.example .env",
 		"build": "tsc"
 	},
