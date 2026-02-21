@@ -60,7 +60,7 @@ export default function JoinServerGuide(props: { ip: string; version: string; na
 			p="lg"
 			mt="calc(var(--mantine-spacing-xl) * 2)"
 		>
-			<SimpleGrid cols={2}>
+			<SimpleGrid cols={{ base: 1, md: 2 }}>
 				<Box h="100%" w="100%" mx="auto">
 					<Title order={3} mb="xl">
 						{t('step1.0')}

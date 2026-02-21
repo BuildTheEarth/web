@@ -1,4 +1,5 @@
 import AppearAnimation from '@/components/animations/AppearAnimation';
+import LottieAnimation from '@/components/animations/LottieAnimation';
 import SplitTextAnimation from '@/components/animations/SplitText';
 import LinkButton from '@/components/core/LinkButton';
 import { QuerySearchInput } from '@/components/core/SearchInput';
@@ -6,6 +7,7 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import EarthBackground from '@/components/layout/EarthBackground';
 import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
+import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
 import getCountryName, { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
 import {
@@ -33,6 +35,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import ReactCountryFlag from 'react-country-flag';
 import JoinServerGuide from '../teams/[slug]/interactivity';
 
+import * as motion from 'motion/react-client';
 export const metadata: Metadata = {
 	title: 'Get Started',
 	description: 'Explore our servers, build your country, and contribute to the largest Minecraft project to date!',
@@ -130,12 +133,31 @@ export default async function Page({
 						>
 							<SplitTextAnimation>{t('title')}</SplitTextAnimation>
 						</Title>
+						<motion.a
+							style={{
+								position: 'absolute',
+								bottom: '0',
+								left: '50vw',
+								transform: 'translateX(-50%)',
+								paddingBottom: '1vh',
+							}}
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 0.3, duration: 1 }}
+							className="mantine-hidden-from-md"
+							href="#explore"
+							aria-label={t('arrowDown.alt')}
+							// alt="Scroll down to learn more"
+						>
+							<LottieAnimation animationData={chevronBounceLottie} loop={true} style={{ height: '54px' }} />
+						</motion.a>
 						<SimpleGrid
 							cols={2}
 							spacing="calc(var(--mantine-spacing-xl) * 3)"
 							style={{ margin: '0 auto' }}
 							maw="55%"
 							pt="md"
+							visibleFrom="md"
 						>
 							<AppearAnimation component="div" delay={0.2} duration={1}>
 								<Card padding="lg" style={{ boxShadow: 'var(--mantine-shadow-block)', height: '100%' }} h="100%">
@@ -209,6 +231,7 @@ export default async function Page({
 						width: '300px',
 						height: '300px',
 					}}
+					className="mantine-visible-from-sm"
 				/>
 				<Container
 					style={{ border: 'var(--debug-border) solid red' }}
@@ -220,7 +243,9 @@ export default async function Page({
 						<GridCol span={10} offset={1} id="explore" style={{ scrollMargin: '10vh' }}>
 							<Title order={2}>{t('explore.title')}</Title>
 							<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-							<Text maw="50%">{t.rich('explore.content.text', { br: () => <br /> })}</Text>
+							<Text maw={{ base: '100%', sm: '75%', md: '50%' }}>
+								{t.rich('explore.content.text', { br: () => <br /> })}
+							</Text>
 							<Button
 								component={Link}
 								rightSection={<IconChevronRight size={12} />}
@@ -242,7 +267,7 @@ export default async function Page({
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
 							<QuerySearchInput paramName="qex" id="explore" my="xl" placeholder={t('explore.searchCountries')} />
-							<SimpleGrid cols={2} spacing="xl" mb="xl">
+							<SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl" mb="xl">
 								{locations
 									?.filter((element) => !element.location.includes('Globe'))
 									?.filter(
@@ -303,7 +328,7 @@ export default async function Page({
 							>
 								<Title order={2}>{t('explore.joinServer.title', { country: selectedEx?.name })}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-								<Text maw="50%">
+								<Text maw={{ base: '80%', md: '50%' }}>
 									{t.rich('explore.joinServer.description', { name: selectedEx?.name, br: () => <br /> })}
 								</Text>
 
@@ -342,7 +367,7 @@ export default async function Page({
 						>
 							<Title order={2}>{t('build.title')}</Title>
 							<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-							<Text maw="50%">
+							<Text maw={{ base: '100%', sm: '85%', md: '70%' }}>
 								{t.rich('build.content.text', {
 									br: () => <br />,
 									b: (chunks: string) => <b>{chunks}</b>,
@@ -360,7 +385,7 @@ export default async function Page({
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
 							<QuerySearchInput paramName="qbu" id="build" my="xl" placeholder={t('explore.searchCountries')} />
-							<SimpleGrid cols={2} spacing="xl" mb="xl">
+							<SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl" mb="xl">
 								{locations
 									?.filter((element) => !element.location.includes('Globe'))
 									?.filter(
@@ -419,17 +444,9 @@ export default async function Page({
 								style={{ scrollMargin: '-2vh', position: 'relative' }}
 								mt="calc(var(--mantine-spacing-xl) * 3)"
 							>
-								<Title order={2}>
-									{t('build.joinServer.title', {
-										country:
-											getCountryNames(selectedBu?.location.split(', ')).slice(0, 4).join(', ') +
-											(selectedBu?.location.split(', ').length > 4
-												? `+${selectedBu?.location.split(', ').length - 4}`
-												: ''),
-									})}
-								</Title>
+								<Title order={2}>{t('build.joinServer.title', { country: selectedBu?.name })}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-								<Text maw="50%">
+								<Text maw={{ base: '80%', md: '50%' }}>
 									{t.rich('build.joinServer.description', { name: selectedBu?.name, br: () => <br /> })}
 								</Text>
 

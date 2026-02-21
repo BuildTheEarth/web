@@ -151,6 +151,9 @@
 	},
 	"get-started": {
 		"title": "Get Started with Building",
+		"arrowDown": {
+			"alt": "Scroll down to learn more about how to get started"
+		},
 		"explore": {
 			"title": "Explore BuildTheEarth",
 			"description": "Discover the incredible progress made by our global community as they recreate the world.",
