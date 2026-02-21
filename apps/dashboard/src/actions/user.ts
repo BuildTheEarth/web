@@ -62,3 +62,21 @@ export const adminRemoveFromTeam = async (prevState: any, data: { ssoId: string;
 		return { status: 'error', error: 'Failed to remove user from team' };
 	}
 };
+
+export const adminInvalidateUserSessions = async (prevState: any, ssoId: string): Promise<any> => {
+	try {
+		const user = await prisma.user.findUnique({
+			where: { ssoId },
+		});
+
+		if (!user) {
+			return { status: 'error', error: 'User not found' };
+		}
+
+		await keycloakAdmin.users.logout({ id: user.ssoId });
+		return { status: 'success', message: 'User sessions invalidated successfully' };
+	} catch (error) {
+		console.error('Error invalidating user sessions:', error);
+		return { status: 'error', error: 'Failed to invalidate user sessions' };
+	}
+};

@@ -9,7 +9,6 @@ import {
 } from '@/types/Keycloak';
 import { capitalize, snakeCaseToStartCase } from '@/util/string';
 import {
-	ActionIcon,
 	Alert,
 	Badge,
 	Button,
@@ -20,37 +19,24 @@ import {
 	Grid,
 	GridCol,
 	Group,
-	Menu,
-	MenuDropdown,
-	MenuItem,
-	MenuLabel,
-	MenuTarget,
 	ScrollArea,
 	SimpleGrid,
 	Table,
 	Text,
 	Title,
 	Tooltip,
-	rem,
 } from '@mantine/core';
 import {
-	IconBrandDiscord,
 	IconCalendar,
 	IconClockExclamation,
 	IconDatabaseExclamation,
 	IconDevices,
-	IconDots,
 	IconExternalLink,
 	IconFileCheck,
 	IconFiles,
-	IconId,
 	IconInfoCircle,
-	IconKarate,
 	IconLink,
-	IconMail,
-	IconMessage2,
 	IconPolygon,
-	IconRowRemove,
 	IconShieldLock,
 	IconSwipe,
 	IconUser,
@@ -60,7 +46,6 @@ import {
 	IconWorldExclamation,
 } from '@tabler/icons-react';
 
-import { adminRemoveFromTeam } from '@/actions/user';
 import Anchor from '@/components/core/Anchor';
 import { TextCard } from '@/components/core/card/TextCard';
 import ContentWrapper from '@/components/core/ContentWrapper';
@@ -450,7 +435,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 								<Table
 									highlightOnHover
 									data={{
-										head: ['Build Team', 'Applications'],
+										head: ['Build Team', 'Applications', ''],
 										body: Array.from(
 											new Set(
 												websiteData.createdBuildTeams
@@ -483,6 +468,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 															</Badge>
 														))
 												),
+												<BuildTeamMenu key={team.slug} team={team} ssoId={ssoId} />,
 											];
 										}),
 									}}

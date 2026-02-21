@@ -1,10 +1,10 @@
 'use client';
 
 import { ActionIcon, Loader, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core';
-import { IconDots, IconId, IconKarate } from '@tabler/icons-react';
+import { IconCopy, IconDots, IconId, IconKarate } from '@tabler/icons-react';
 import { startTransition, useActionState } from 'react';
 
-import { adminRemoveFromTeam } from '@/actions/user';
+import { adminInvalidateUserSessions, adminRemoveFromTeam } from '@/actions/user';
 import { openConfirmModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { User } from '@repo/db';
@@ -49,7 +49,7 @@ export function BuildTeamMenu(props: { team: { slug: string; name: string }; sso
 
 								showNotification({
 									title: 'Success',
-									message: `Successfully removed ${props.ssoId} from ${props.team.name}`,
+									message: `Successfully removed from ${props.team.name}`,
 									color: 'green',
 								});
 							},
@@ -64,6 +64,8 @@ export function BuildTeamMenu(props: { team: { slug: string; name: string }; sso
 }
 
 export function UserMenu({ user }: { user: User }) {
+	const [__, invalidateSessionsAction, _] = useActionState(adminInvalidateUserSessions, {});
+
 	return (
 		<Menu>
 			<MenuTarget>
@@ -74,20 +76,48 @@ export function UserMenu({ user }: { user: User }) {
 			<MenuDropdown>
 				<Menu.Sub position="left-start">
 					<Menu.Sub.Target>
-						<Menu.Sub.Item>Products</Menu.Sub.Item>
+						<Menu.Sub.Item leftSection={<IconCopy style={{ width: rem(14), height: rem(14) }} />}>Copy</Menu.Sub.Item>
 					</Menu.Sub.Target>
 
 					<Menu.Sub.Dropdown>
-						<Menu.Item>All products</Menu.Item>
-						<Menu.Item>Categories</Menu.Item>
-						<Menu.Item>Tags</Menu.Item>
-						<Menu.Item>Attributes</Menu.Item>
-						<Menu.Item>Shipping classes</Menu.Item>
+						<MenuItem aria-label="SSO ID" onClick={() => window.navigator.clipboard.writeText(user.ssoId)}>
+							SSO ID
+						</MenuItem>
+						<MenuItem aria-label="Website ID" onClick={() => window.navigator.clipboard.writeText(user.id)}>
+							Website ID
+						</MenuItem>
+						<MenuItem aria-label="Website ID" onClick={() => window.navigator.clipboard.writeText(user.username || '')}>
+							Username
+						</MenuItem>
+						<MenuItem
+							aria-label="Website ID"
+							onClick={() => window.navigator.clipboard.writeText(user.discordId || '')}
+						>
+							Discord ID
+						</MenuItem>
 					</Menu.Sub.Dropdown>
 				</Menu.Sub>
 				<MenuLabel>Sessions</MenuLabel>
-				<MenuItem>Close session...</MenuItem>
-				<MenuItem>Close all sessions</MenuItem>
+				<MenuItem
+					onClick={async () => {
+						if (!user.ssoId) return;
+
+						await new Promise<void>((resolve) => {
+							startTransition(() => {
+								invalidateSessionsAction(user.ssoId);
+								resolve();
+							});
+						});
+
+						showNotification({
+							title: 'Success',
+							message: `Successfully invalidated all sessions for ${user.username || user.ssoId}`,
+							color: 'green',
+						});
+					}}
+				>
+					Invalidate all session...
+				</MenuItem>
 				<MenuLabel>Teams</MenuLabel>
 				<MenuItem>Add to team...</MenuItem>
 				<MenuItem>Remove from team...</MenuItem>
@@ -104,20 +134,6 @@ export function UserMenu({ user }: { user: User }) {
 				<MenuLabel>Other</MenuLabel>
 				<MenuItem>Send message/notification</MenuItem>
 				<MenuItem>View/clear consents</MenuItem>
-				<MenuItem
-					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy ID"
-					onClick={() => window.navigator.clipboard.writeText(user.id)}
-				>
-					Copy ID
-				</MenuItem>
-				<MenuItem
-					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy SSO ID"
-					onClick={() => window.navigator.clipboard.writeText(user.ssoId)}
-				>
-					Copy SSO ID
-				</MenuItem>
 			</MenuDropdown>
 			{/* <MenuDropdown>
 								<MenuLabel>Message</MenuLabel>
