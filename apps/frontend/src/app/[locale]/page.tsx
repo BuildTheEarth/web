@@ -11,16 +11,12 @@ import {
 	BackgroundImage,
 	Box,
 	Button,
-	Card,
-	CardSection,
 	Center,
 	Container,
 	Flex,
 	Grid,
 	GridCol,
-	Group,
 	Image,
-	SimpleGrid,
 	Space,
 	Stepper,
 	StepperStep,
@@ -40,7 +36,6 @@ import {
 import * as motion from 'motion/react-client';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
-import { Fragment } from 'react';
 
 export const dynamic = 'force-static';
 
