@@ -103,7 +103,7 @@ export default async function Page({
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
-				src="/thumbs/home.webp"
+				src="/thumbs/get-started/home.webp"
 				aria-label={t('title')}
 				w="100%"
 				h="100%"
@@ -140,7 +140,7 @@ export default async function Page({
 							<AppearAnimation component="div" delay={0.2} duration={1}>
 								<Card padding="lg" style={{ boxShadow: 'var(--mantine-shadow-block)', height: '100%' }} h="100%">
 									<CardSection>
-										<Image src="/thumbs/home.webp" height={160} alt="Norway" />
+										<Image src="/thumbs/get-started/explore.webp" height={160} alt="Norway" />
 									</CardSection>
 									<Stack justify="space-between" h="100%">
 										<div>
@@ -168,7 +168,7 @@ export default async function Page({
 							<AppearAnimation component="div" delay={0.4} duration={1}>
 								<Card padding="lg" style={{ boxShadow: 'var(--mantine-shadow-block)', height: '100%' }} h="100%">
 									<CardSection>
-										<Image src="/thumbs/home.webp" height={160} alt="Norway" />
+										<Image src="/thumbs/get-started/start-building.webp" height={160} alt="Norway" />
 									</CardSection>
 									<Stack justify="space-between" h="100%">
 										<div>
@@ -220,13 +220,7 @@ export default async function Page({
 						<GridCol span={10} offset={1} id="explore" style={{ scrollMargin: '10vh' }}>
 							<Title order={2}>{t('explore.title')}</Title>
 							<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
-							<Text maw="50%">
-								Depending on the country which you would like to visit, there are multiple servers available. You can
-								search for a country in the box below.
-								<br />
-								<br />
-								Otherwise, you can also explore our progress by checking out the gallery or visiting our map page.
-							</Text>
+							<Text maw="50%">{t.rich('explore.content.text', { br: () => <br /> })}</Text>
 							<Button
 								component={Link}
 								rightSection={<IconChevronRight size={12} />}
@@ -234,7 +228,7 @@ export default async function Page({
 								mt="md"
 								variant="transparent"
 							>
-								View Gallery
+								{t('explore.content.ctaGallery')}
 							</Button>
 							<Button
 								component={Link}
@@ -243,11 +237,11 @@ export default async function Page({
 								mt="md"
 								variant="transparent"
 							>
-								Explore Map Page
+								{t('explore.content.ctaMap')}
 							</Button>
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
-							<QuerySearchInput paramName="qex" id="explore" my="xl" placeholder="Search Countries..." />
+							<QuerySearchInput paramName="qex" id="explore" my="xl" placeholder={t('explore.searchCountries')} />
 							<SimpleGrid cols={2} spacing="xl" mb="xl">
 								{locations
 									?.filter((element) => !element.location.includes('Globe'))
@@ -310,10 +304,7 @@ export default async function Page({
 								<Title order={2}>{t('explore.joinServer.title', { country: selectedEx?.name })}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw="50%">
-									{t.rich('explore.joinServer.description', {
-										name: selectedEx?.name,
-										br: () => <br />,
-									})}
+									{t.rich('explore.joinServer.description', { name: selectedEx?.name, br: () => <br /> })}
 								</Text>
 
 								<JoinServerGuide
@@ -329,7 +320,7 @@ export default async function Page({
 										target="_blank"
 										mt="md"
 									>
-										Join Discord Server
+										{t('explore.joinServer.ctaDiscord')}
 									</LinkButton>
 									<LinkButton
 										rightSection={<IconChevronRight size={12} />}
@@ -337,7 +328,7 @@ export default async function Page({
 										mt="md"
 										variant="transparent"
 									>
-										More Information
+										{t('explore.joinServer.moreInformation')}
 									</LinkButton>
 								</Box>
 							</GridCol>
@@ -352,34 +343,23 @@ export default async function Page({
 							<Title order={2}>{t('build.title')}</Title>
 							<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 							<Text maw="50%">
-								BuildTheEarth is organized into multiple <b>Build Teams</b>, each responsible for recreating different
-								regions of the world. Build Teams often focus on specific <b>countries or continents</b>, allowing you
-								to contribute to areas you are passionate about.
-								<br />
-								<br />
-								There are no restrictions on which or how many Build Teams you can join, so feel free to explore how
-								many as you like!
-								<br />
-								<br />
-								Each Build Team has its own server where you can collaborate with other builders, participate in events,
-								and get support. Due to this, there is no single "application process".
-								<br />
-								Instead, simply <b>join the Discord server</b> of the Build Team you are interested in and follow their
-								simple instructions to get started.
-								<br />
-								<br />
-								You can also join our Hub Server (Minecraft: <Code>buildtheearth.net</Code>,{' '}
-								<Link
-									href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
-									target="_blank"
-								>
-									Discord
-								</Link>
-								) to get help and meet other builders from around the world!
+								{t.rich('build.content.text', {
+									br: () => <br />,
+									b: (chunks: string) => <b>{chunks}</b>,
+									discord: (chunks: string) => (
+										<Link
+											href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
+											target="_blank"
+										>
+											{chunks}
+										</Link>
+									),
+									ip: (chunks: string) => <Code>{chunks}</Code>,
+								})}
 							</Text>
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
-							<QuerySearchInput paramName="qbu" id="build" my="xl" placeholder="Search Countries..." />
+							<QuerySearchInput paramName="qbu" id="build" my="xl" placeholder={t('explore.searchCountries')} />
 							<SimpleGrid cols={2} spacing="xl" mb="xl">
 								{locations
 									?.filter((element) => !element.location.includes('Globe'))
@@ -450,19 +430,23 @@ export default async function Page({
 								</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw="50%">
-									{t.rich('build.joinServer.description', {
-										name: selectedBu?.name,
-										br: () => <br />,
-									})}
+									{t.rich('build.joinServer.description', { name: selectedBu?.name, br: () => <br /> })}
 								</Text>
-								<Box>
+
+								<JoinServerGuide
+									ip={selectedBu.ip}
+									version={selectedBu?.version}
+									name={selectedBu.name}
+									slug={selectedBu.slug}
+								/>
+								<Box mt="xl">
 									<LinkButton
 										rightSection={<IconBrandDiscord size={12} />}
 										href={selectedEx?.invite}
 										target="_blank"
 										mt="md"
 									>
-										{selectedBu?.name} Discord Server
+										{t('build.joinServer.ctaDiscord', { name: selectedBu.name })}
 									</LinkButton>
 									<LinkButton
 										rightSection={<IconBrandDiscord size={12} />}
@@ -471,15 +455,17 @@ export default async function Page({
 										mt="md"
 										ml="md"
 									>
-										Hub Discord Server
+										{t('build.joinServer.ctaDiscord', { name: 'Hub' })}
+									</LinkButton>
+									<LinkButton
+										rightSection={<IconChevronRight size={12} />}
+										href={`/teams/${selectedBu.slug}`}
+										mt="md"
+										variant="transparent"
+									>
+										{t('explore.joinServer.moreInformation')}
 									</LinkButton>
 								</Box>
-								<JoinServerGuide
-									ip={selectedBu.ip}
-									version={selectedBu?.version}
-									name={selectedBu.name}
-									slug={selectedBu.slug}
-								/>
 							</GridCol>
 						)}
 					</Grid>
