@@ -15,6 +15,7 @@
 		"clean": "turbo clean",
 		"start": "turbo start",
 		"dev": "turbo dev",
+		"dev:frontend": "turbo dev --filter=frontend...",
 		"lint": "turbo lint",
 		"prettier": "turbo prettier --ui=stream",
 		"db:generate": "turbo db:generate",
