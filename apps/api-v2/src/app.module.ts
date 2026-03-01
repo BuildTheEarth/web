@@ -5,6 +5,7 @@ import { PrismaService } from "./common/db/prisma.service";
 import { AuthGuard } from "./common/guards/auth.guard";
 import { ApplicationsModule } from "./sections/applications/applications.module";
 import { AuthModule } from "./sections/auth/auth.module";
+import { MembersModule } from "./sections/members/members.module";
 import { StatusModule } from "./sections/status/status.module";
 import { UtilityModule } from "./sections/utility/utility.module";
 
@@ -14,6 +15,7 @@ import { UtilityModule } from "./sections/utility/utility.module";
     AuthModule,
     ApplicationsModule,
     StatusModule,
+    MembersModule,
     ConfigModule.forRoot({ isGlobal: true, cache: true }),
   ],
   providers: [PrismaService, { provide: APP_GUARD, useClass: AuthGuard }],
