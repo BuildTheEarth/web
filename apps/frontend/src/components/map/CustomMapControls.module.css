@@ -1,0 +1,82 @@
+.controlsContainer {
+	position: absolute;
+	z-index: 10;
+	margin: var(--mantine-spacing-sm);
+}
+
+.controlsContainer[data-position='top-right'] {
+	top: var(--root-header-height);
+	right: 0;
+}
+
+.controlsContainer[data-position='top-left'] {
+	top: 0;
+	left: 0;
+}
+
+.controlsContainer[data-position='bottom-right'] {
+	bottom: 0;
+	right: 0;
+}
+
+.controlsContainer[data-position='bottom-left'] {
+	bottom: 0;
+	left: 0;
+}
+
+.controlGroup {
+	display: flex;
+	flex-direction: column;
+	background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+	border-radius: var(--mantine-radius-xs);
+	box-shadow: var(--mantine-shadow-md);
+	overflow: hidden;
+}
+
+.controlGroup .controlButton:not(:last-child) {
+	border-bottom: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+	border-radius: 0;
+}
+
+.controlGroup .controlButton:first-child {
+	border-top-left-radius: var(--mantine-radius-xs);
+	border-top-right-radius: var(--mantine-radius-xs);
+}
+
+.controlGroup .controlButton:last-child {
+	border-bottom-left-radius: var(--mantine-radius-xs);
+	border-bottom-right-radius: var(--mantine-radius-xs);
+}
+
+.controlButton {
+	box-shadow: var(--mantine-shadow-md);
+	border-radius: var(--mantine-radius-xs);
+}
+
+.controlButton:hover {
+	background: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-6));
+}
+
+.controlGroup .controlButtonPrimary:not(:last-child) {
+	border-bottom: 1px solid light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+	border-radius: 0;
+}
+
+.controlGroup .controlButtonPrimary:first-child {
+	border-top-left-radius: var(--mantine-radius-xs);
+	border-top-right-radius: var(--mantine-radius-xs);
+}
+
+.controlGroup .controlButtonPrimary:last-child {
+	border-bottom-left-radius: var(--mantine-radius-xs);
+	border-bottom-right-radius: var(--mantine-radius-xs);
+}
+
+.controlButtonPrimary {
+	box-shadow: var(--mantine-shadow-md);
+	border-radius: var(--mantine-radius-xs);
+}
+
+.controlButtonPrimary:hover {
+	background: var(--mantine-color-buildtheearth-7);
+}

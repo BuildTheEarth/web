@@ -80,8 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						<SWRSetup>
 							<ModalsProvider>
 								<Notifications limit={3} />
-								<DEBUG_ScreenSizeCheck />
-
+								{/* <DEBUG_ScreenSizeCheck /> */}
 								<AppLayout>{children}</AppLayout>
 							</ModalsProvider>
 						</SWRSetup>

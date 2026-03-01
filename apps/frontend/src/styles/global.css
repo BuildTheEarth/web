@@ -1,5 +1,7 @@
 :root {
 	--mantine-navbar-width: 300;
+	--root-footer-height: 43px;
+	--root-header-height: 56px;
 	--mantine-shadow-block: 14px 14px 0px 0px rgba(0, 0, 0, 0.45);
 	--map-color-filter: invert(77%) sepia(8%) saturate(271%) hue-rotate(169deg) brightness(93%) contrast(90%);
 
