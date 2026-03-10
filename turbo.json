@@ -18,27 +18,18 @@
 		},
 		"dev": {
 			"persistent": true,
+			"dependsOn": ["migrate:db"],
 			"cache": false
 		},
-		"api#dev": {
-			"persistent": true,
-			"dependsOn": ["@repo/db#migrate:db"],
+		"migrate:db": {
+			"dependsOn": ["wait"],
 			"cache": false
 		},
-		"api-v2#dev": {
-			"persistent": true,
-			"dependsOn": ["@repo/db#migrate:db"],
+		"wait": {
+			"dependsOn": ["up"],
 			"cache": false
 		},
-		"@repo/db#migrate:db": {
-			"dependsOn": ["@repo/db#wait"],
-			"cache": false
-		},
-		"@repo/db#wait": {
-			"dependsOn": ["@repo/db#up"],
-			"cache": false
-		},
-		"@repo/db#up": {
+		"up": {
 			"cache": false
 		},
 		"lint": {
