@@ -18,10 +18,10 @@
 		"dev:frontend": "turbo dev --filter=frontend...",
 		"lint": "turbo lint",
 		"prettier": "turbo prettier --ui=stream",
-		"db:generate": "turbo db:generate",
-		"db:studio": "yarn workspace @repo/db db:studio",
-		"db:migrate": "yarn workspace api db:migrate",
-		"git:pull": "git pull && yarn install && yarn run db:generate",
+		"generate:db": "turbo generate:db",
+		"studio:db": "yarn workspace @repo/db studio:db",
+		"migrate:db": "yarn workspace api migrate:db",
+		"git:pull": "git pull && yarn install && yarn run generate:db",
 		"ws": "yarn workspace"
 	},
 	"devDependencies": {

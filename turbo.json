@@ -3,7 +3,7 @@
 	"ui": "tui",
 	"tasks": {
 		"build": {
-			"dependsOn": ["db:generate", "^build"],
+			"dependsOn": ["generate:db", "^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": [".next/**", "!.next/cache/**", "dist/**"]
 		},
@@ -22,15 +22,15 @@
 		},
 		"api#dev": {
 			"persistent": true,
-			"dependsOn": ["@repo/db#db:migrate"],
+			"dependsOn": ["@repo/db#migrate:db"],
 			"cache": false
 		},
 		"api-v2#dev": {
 			"persistent": true,
-			"dependsOn": ["@repo/db#db:migrate"],
+			"dependsOn": ["@repo/db#migrate:db"],
 			"cache": false
 		},
-		"@repo/db#db:migrate": {
+		"@repo/db#migrate:db": {
 			"dependsOn": ["@repo/db#wait"],
 			"cache": false
 		},
@@ -47,10 +47,10 @@
 		"prettier": {
 			"dependsOn": ["^prettier"]
 		},
-		"db:generate": {
+		"generate:db": {
 			"cache": false
 		},
-		"db:studio": {
+		"studio:db": {
 			"persistent": true,
 			"cache": false
 		}

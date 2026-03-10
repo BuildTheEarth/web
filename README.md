@@ -57,7 +57,7 @@ To install all dependencies, run:
 ```bash
 yarn install
 # and optionally
-yarn db:generate
+yarn generate:db
 ```
 Now, copy the example `.env` file and change all its options:
 
