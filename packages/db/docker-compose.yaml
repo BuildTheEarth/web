@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=website
+      - POSTGRES_DATABASE=database
+    ports:
+      - '5432:5432'
+
+  wait-for-postgres:
+    image: postgres:18
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=website
+      - POSTGRES_DATABASE=database
+    depends_on:
+      - postgres
+    command: sh -c "until pg_isready -h postgres -U $$POSTGRES_USER; do echo waiting for postgres; sleep 2; done;"

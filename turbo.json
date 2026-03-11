@@ -1,9 +1,9 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "ui": "tui",
-  "tasks": {
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"tasks": {
 		"build": {
-			"dependsOn": ["db:generate", "^build"],
+			"dependsOn": ["generate:db", "^build"],
 			"inputs": ["$TURBO_DEFAULT$", ".env*"],
 			"outputs": [".next/**", "!.next/cache/**", "dist/**"]
 		},
@@ -18,6 +18,18 @@
 		},
 		"dev": {
 			"persistent": true,
+			"dependsOn": ["migrate:db"],
+			"cache": false
+		},
+		"migrate:db": {
+			"dependsOn": ["wait"],
+			"cache": false
+		},
+		"wait": {
+			"dependsOn": ["up"],
+			"cache": false
+		},
+		"up": {
 			"cache": false
 		},
 		"lint": {
@@ -26,10 +38,10 @@
 		"prettier": {
 			"dependsOn": ["^prettier"]
 		},
-		"db:generate": {
+		"generate:db": {
 			"cache": false
 		},
-		"db:studio": {
+		"studio:db": {
 			"persistent": true,
 			"cache": false
 		}

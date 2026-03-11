@@ -15,12 +15,13 @@
 		"clean": "turbo clean",
 		"start": "turbo start",
 		"dev": "turbo dev",
+		"dev:frontend": "turbo dev --filter=frontend...",
 		"lint": "turbo lint",
 		"prettier": "turbo prettier --ui=stream",
-		"db:generate": "turbo @repo/db#db:generate",
-		"db:studio": "turbo @repo/db#db:studio",
-		"db:migrate": "turbo @repo/db#db:migrate",
-		"git:pull": "git pull && yarn install && yarn run db:generate",
+		"generate:db": "turbo generate:db",
+		"studio:db": "yarn workspace @repo/db studio:db",
+		"migrate:db": "yarn workspace api migrate:db",
+		"git:pull": "git pull && yarn install && yarn run generate:db",
 		"ws": "yarn workspace"
 	},
 	"devDependencies": {
