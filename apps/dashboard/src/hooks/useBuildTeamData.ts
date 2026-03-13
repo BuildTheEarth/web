@@ -3,7 +3,7 @@
 import { getUserBuildTeams } from '@/actions/user';
 import { useLocalStorage } from '@mantine/hooks';
 import { useSession } from 'next-auth/react';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback } from 'react';
 import useSWR from 'swr';
 
 type BuildTeam = {
@@ -17,9 +17,8 @@ export default function useSelectableBuildTeams() {
 	const { data: session } = useSession();
 	const userId = session?.user.id;
 
-	const [activeBuildTeamId, setActiveBuildTeamId] = useLocalStorage<string>({
+	const [activeBuildTeam, setActiveBuildTeam] = useLocalStorage<BuildTeam>({
 		key: 'bte-active-build-team',
-		defaultValue: '',
 	});
 
 	const { data: buildteams = [] } = useSWR<BuildTeam[], Error, readonly [string, string] | null>(
@@ -32,33 +31,25 @@ export default function useSelectableBuildTeams() {
 		},
 	);
 
-	useEffect(() => {
-		if (buildteams.length === 0) {
-			if (activeBuildTeamId !== '') {
-				setActiveBuildTeamId('');
-			}
-			return;
-		}
-
-		const isActiveValid = buildteams.some((team) => team.id === activeBuildTeamId);
-		if (!isActiveValid) {
-			setActiveBuildTeamId(buildteams[0].id);
-		}
-	}, [buildteams, activeBuildTeamId, setActiveBuildTeamId]);
-
-	const activeBuildTeam = useMemo(
-		() => buildteams.find((team) => team.id === activeBuildTeamId),
-		[buildteams, activeBuildTeamId],
-	);
-
 	const selectBuildTeam = useCallback(
 		(id: string) => {
-			if (id !== activeBuildTeamId && buildteams.some((team) => team.id === id)) {
-				setActiveBuildTeamId(id);
+			if (id !== activeBuildTeam.id) {
+				const team = buildteams.find((buildTeam) => buildTeam.id === id);
+				if (team) {
+					setActiveBuildTeam(team);
+				}
 			}
 		},
-		[buildteams, activeBuildTeamId, setActiveBuildTeamId],
+		[buildteams, activeBuildTeam, setActiveBuildTeam],
 	);
 
 	return [buildteams, activeBuildTeam, selectBuildTeam] as const;
+}
+
+export function useActiveBuildTeam() {
+	const [activeBuildTeam] = useLocalStorage<BuildTeam>({
+		key: 'bte-active-build-team',
+	});
+
+	return activeBuildTeam;
 }
