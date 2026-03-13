@@ -18,7 +18,7 @@ import { ResponseDto } from "../dto/response.dto";
  */
 export function ApiDefaultResponse<TModel extends Type<any>>(
   model: TModel,
-  options: ApiResponseOptions = {},
+  { isArray, ...options }: ApiResponseOptions & { isArray?: boolean } = {},
 ) {
   return applyDecorators(
     ApiExtraModels(ResponseDto, model),
@@ -30,7 +30,9 @@ export function ApiDefaultResponse<TModel extends Type<any>>(
           { $ref: getSchemaPath(ResponseDto) },
           {
             properties: {
-              data: { $ref: getSchemaPath(model) },
+              data: isArray
+                ? { type: "array", items: { $ref: getSchemaPath(model) } }
+                : { $ref: getSchemaPath(model) },
             },
           },
         ],
