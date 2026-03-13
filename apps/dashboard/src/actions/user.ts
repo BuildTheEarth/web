@@ -3,6 +3,45 @@ import prisma from '@/util/db';
 import keycloakAdmin from '@/util/keycloak';
 import { revalidatePath } from 'next/cache';
 
+export const getUserBuildTeams = async (ssoId: string) => {
+	const buildteams = await prisma.buildTeam.findMany({
+		where: {
+			OR: [
+				{ creator: { ssoId } },
+				{
+					UserPermission: {
+						some: {
+							user: {
+								ssoId,
+							},
+						},
+					},
+				},
+			],
+		},
+		select: {
+			id: true,
+			name: true,
+			slug: true,
+			creatorId: true,
+			icon: true,
+			UserPermission: {
+				where: { user: { ssoId } },
+				select: {
+					permission: {
+						select: {
+							id: true,
+						},
+					},
+					id: true,
+				},
+			},
+		},
+	});
+
+	return buildteams;
+};
+
 export const editOwnProfile = async (
 	prevState: any,
 	data: { email: string; username: string; ssoId: string },

@@ -17,7 +17,7 @@ export function BuildTeamDisplay({
 			};
 
 	return (
-		<Group gap="sm" key={team.id || team.slug} {...groupProps} c="gray" td="none">
+		<Group gap="sm" key={team.id || team.slug} {...groupProps} c="gray" td="none" wrap="nowrap">
 			<Avatar size={30} src={team.icon} />
 			<Text fz="sm" fw={500}>
 				{team.name}
