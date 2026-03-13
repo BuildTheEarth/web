@@ -169,7 +169,6 @@ export const authOptions: AuthOptions = {
 			// Return previous token if the access token has not expired yet
 			if (Date.now() < token.accessTokenExpired || token.accessTokenExpired == null) return token;
 
-			console.log('Access token has expired, trying to refresh it');
 			// Access token has expired, try to update it
 			return refreshAccessToken(token);
 		},

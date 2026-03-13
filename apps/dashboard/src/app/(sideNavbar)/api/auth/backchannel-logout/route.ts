@@ -33,6 +33,7 @@ type LogoutTokenPayload = JsonObject & {
 	iat?: number;
 	exp?: number;
 	nbf?: number;
+	jti?: string;
 	events?: {
 		'http://schemas.openid.net/event/backchannel-logout'?: Record<string, never>;
 	};
@@ -113,8 +114,20 @@ const hasExpectedAudience = (aud: string | string[] | undefined, clientId: strin
 	return aud.includes(clientId);
 };
 
+const MAX_LOGOUT_TOKEN_AGE_SECONDS = 300;
+
 const isTokenTimeValid = (payload: LogoutTokenPayload) => {
 	const now = Math.floor(Date.now() / 1000);
+
+	// iat is REQUIRED per OIDC Back-Channel Logout spec
+	if (typeof payload.iat !== 'number') {
+		return false;
+	}
+
+	// Reject tokens with a future iat or issued too far in the past
+	if (payload.iat > now || now - payload.iat > MAX_LOGOUT_TOKEN_AGE_SECONDS) {
+		return false;
+	}
 
 	if (typeof payload.exp === 'number' && now >= payload.exp) {
 		return false;
@@ -203,6 +216,10 @@ const verifyLogoutToken = async (logoutToken: string) => {
 		throw new Error('Invalid logout token: missing sid/sub');
 	}
 
+	if (!logoutPayload.jti) {
+		throw new Error('Invalid logout token: missing jti');
+	}
+
 	return logoutPayload;
 };
 
@@ -232,8 +249,6 @@ export async function POST(request: NextRequest) {
 		if (sub) {
 			globalThis.invalidatedSessions.add(sub);
 		}
-
-		console.log('Back-channel logout received and verified');
 
 		return NextResponse.json({ success: true }, { status: 200 });
 	} catch (error) {

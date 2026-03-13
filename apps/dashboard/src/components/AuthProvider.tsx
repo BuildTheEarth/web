@@ -8,8 +8,7 @@ export default function AuthProvider({ session, children }: { session: Session |
 	useEffect(() => {
 		// Force logout if session has error or no user data when it should
 		if (session?.error === 'ForceLogout' || (session && !session.user)) {
-			console.log('AuthProvider: Forcing logout due to invalid session');
-			signOut({ callbackUrl: '/auth/signin', redirect: true });
+			void signOut({ callbackUrl: '/auth/signin', redirect: true });
 		}
 	}, [session]);
 
