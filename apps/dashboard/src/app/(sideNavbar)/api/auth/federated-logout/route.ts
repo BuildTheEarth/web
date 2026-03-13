@@ -30,6 +30,6 @@ export async function POST(request: NextRequest) {
 		return NextResponse.json({ ok: true }, { status: 200 });
 	} catch (error) {
 		console.error('Federated logout failed:', error);
-		return NextResponse.json({ ok: false }, { status: 200 });
+		return NextResponse.json({ ok: false }, { status: 500 });
 	}
 }

@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createPublicKey, createVerify } from 'node:crypto';
-
-declare global {
-	// eslint-disable-next-line no-var
-	var invalidatedSessions: Set<string> | undefined;
-}
+import '../../../../util/invalidatedSessions';
 
 type JsonObject = Record<string, unknown>;
 
@@ -42,7 +38,7 @@ type LogoutTokenPayload = JsonObject & {
 	};
 };
 
-const JWKS_CACHE_TTL_MS = 5 * 60 * 60 * 1000;
+const JWKS_CACHE_TTL_MS = 10 * 60 * 1000;
 
 let cachedJwks: JwksResponse | null = null;
 let cachedJwksIssuer: string | null = null;
@@ -225,10 +221,6 @@ export async function POST(request: NextRequest) {
 		const decodedPayload = await verifyLogoutToken(logoutToken);
 		const sid = decodedPayload.sid;
 		const sub = decodedPayload.sub;
-
-		if (!sid && !sub) {
-			return NextResponse.json({ error: 'Invalid logout_token' }, { status: 400 });
-		}
 
 		// Store the invalidated session/user in a cache
 		if (typeof globalThis.invalidatedSessions === 'undefined') {
