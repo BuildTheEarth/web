@@ -21,6 +21,7 @@ import {
 } from '@tabler/icons-react';
 import { signOut, useSession } from 'next-auth/react';
 import { redirect, usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 import Link from 'next/link';
 
@@ -28,6 +29,7 @@ const HeaderProfile = () => {
 	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 	const pathname = usePathname();
 	const session = useSession();
+	const [isLoggingOut, setIsLoggingOut] = useState(false);
 
 	if (session.status === 'loading') return null;
 	if (session.status === 'unauthenticated') {
@@ -36,7 +38,19 @@ const HeaderProfile = () => {
 		}
 		return null;
 	}
-	if (!session.data) return null;
+	if (!session.data || !session.data.user || !session.data.user.username) return null;
+
+	const handleSignOut = async () => {
+		setIsLoggingOut(true);
+
+		try {
+			await fetch('/api/auth/federated-logout', { method: 'POST' });
+		} catch {
+			// Always continue with local sign-out even if federated logout fails.
+		}
+
+		await signOut({ redirect: true, callbackUrl: '/auth/signin' });
+	};
 
 	return (
 		<Menu>
@@ -90,13 +104,7 @@ const HeaderProfile = () => {
 				>
 					{colorScheme === 'dark' ? 'Light Mode' : 'Dark Mode'}
 				</Menu.Item>
-				<Menu.Item
-					leftSection={<IconLogout size={14} />}
-					color="red"
-					onClick={() => {
-						signOut({ redirect: true, callbackUrl: '/' });
-					}}
-				>
+				<Menu.Item leftSection={<IconLogout size={14} />} color="red" disabled={isLoggingOut} onClick={handleSignOut}>
 					Sign out
 				</Menu.Item>
 			</MenuDropdown>
