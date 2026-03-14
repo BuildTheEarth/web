@@ -1,6 +1,6 @@
+import '@/app/util/invalidatedSessions';
 import { NextRequest, NextResponse } from 'next/server';
 import { createPublicKey, createVerify } from 'node:crypto';
-import '../../../../util/invalidatedSessions';
 
 type JsonObject = Record<string, unknown>;
 
