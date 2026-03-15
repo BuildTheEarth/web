@@ -15,21 +15,37 @@ export default class Router {
 	}
 
 	public addRoute(requestMethod: RequestMethods, endpoint: String, executor: Executor, ...middlewares: any) {
-		this.web
-			.getCore()
-			.getLogger()
-			.debug(`Registering endpoint "${requestMethod.toString()} api/${this.version}${endpoint}"`);
-		this.web.getApp().all(`/api/${this.version}${endpoint}`, middlewares, (rq: Request, rs: Response, next: any) => {
-			if (rq.method === requestMethod.valueOf()) {
-				try {
-					executor(rq, rs);
-				} catch (e) {
-					ERROR_GENERIC(rq, rs, 500, 'Internal Server Error. Please try again and report this bug.');
-				}
+		const fullEndpoint = `/api/${this.version}${endpoint}`;
+		const app = this.web.getApp();
 
-				return;
+		this.web.getCore().getLogger().debug(`Registering endpoint "${requestMethod.toString()} ${fullEndpoint}"`);
+
+		const methodHandler = (rq: Request, rs: Response) => {
+			try {
+				executor(rq, rs);
+			} catch (e) {
+				ERROR_GENERIC(rq, rs, 500, 'Internal Server Error. Please try again and report this bug.');
 			}
-			next();
-		});
+		};
+
+		switch (requestMethod) {
+			case RequestMethods.GET:
+				app.get(fullEndpoint, ...middlewares, methodHandler);
+				break;
+			case RequestMethods.POST:
+				app.post(fullEndpoint, ...middlewares, methodHandler);
+				break;
+			case RequestMethods.PUT:
+				app.put(fullEndpoint, ...middlewares, methodHandler);
+				break;
+			case RequestMethods.DELETE:
+				app.delete(fullEndpoint, ...middlewares, methodHandler);
+				break;
+			case RequestMethods.HEAD:
+				app.head(fullEndpoint, ...middlewares, methodHandler);
+				break;
+			default:
+				app.all(fullEndpoint, ...middlewares, methodHandler);
+		}
 	}
 }
