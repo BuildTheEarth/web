@@ -264,7 +264,7 @@ class TokenRouteContoller {
 		});
 
 		if (!claim || !claim.id) {
-			ERROR_GENERIC(req, res, 404, 'Claim does not exist.');
+			return ERROR_GENERIC(req, res, 404, 'Claim does not exist.');
 		}
 
 		await this.core.getPrisma().claim.delete({ where: { id: claim.id } });
