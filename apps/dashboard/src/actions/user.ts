@@ -1,7 +1,18 @@
 'use server';
+import { getSession, hasRole } from '@/util/auth';
 import prisma from '@/util/db';
 import keycloakAdmin from '@/util/keycloak';
 import { revalidatePath } from 'next/cache';
+
+const requireEditUsersPermission = async () => {
+	const session = await getSession();
+
+	if (!hasRole(session, 'edit-users')) {
+		return { status: 'error', error: 'Unauthorized' };
+	}
+
+	return null;
+};
 
 export const getUserBuildTeams = async (ssoId: string) => {
 	const buildteams = await prisma.buildTeam.findMany({
@@ -62,6 +73,9 @@ export const editOwnProfile = async (
 
 export const adminRemoveFromTeam = async (prevState: any, data: { ssoId: string; slug: string }): Promise<any> => {
 	try {
+		const authorizationError = await requireEditUsersPermission();
+		if (authorizationError) return authorizationError;
+
 		const user = await prisma.user.findUnique({
 			where: { ssoId: data.ssoId },
 			include: { joinedBuildTeams: true },
@@ -102,8 +116,137 @@ export const adminRemoveFromTeam = async (prevState: any, data: { ssoId: string;
 	}
 };
 
+export const adminAddToTeam = async (prevState: any, data: { ssoId: string; slug: string }): Promise<any> => {
+	try {
+		const authorizationError = await requireEditUsersPermission();
+		if (authorizationError) return authorizationError;
+
+		const user = await prisma.user.findUnique({
+			where: { ssoId: data.ssoId },
+			include: { joinedBuildTeams: true },
+		});
+		if (!user) {
+			return { status: 'error', error: 'User not found' };
+		}
+
+		const team = await prisma.buildTeam.findUnique({
+			where: { slug: data.slug },
+		});
+		if (!team) {
+			return { status: 'error', error: 'Team not found' };
+		}
+
+		await prisma.buildTeam.update({
+			where: { id: team.id },
+			data: {
+				members: {
+					connect: { id: user.id },
+				},
+			},
+		});
+
+		revalidatePath(`/am/users/${data.ssoId}`);
+		return {
+			status: 'success',
+			message: 'User added to team successfully',
+			team: { name: team.name, slug: team.slug },
+		};
+	} catch (error) {
+		console.error('Error adding user to team:', error);
+		return { status: 'error', error: 'Failed to add user to team' };
+	}
+};
+
+export const adminAddPermissions = async (
+	prevState: any,
+	data: { ssoId: string; permissions: string[]; team?: string },
+): Promise<any> => {
+	try {
+		const authorizationError = await requireEditUsersPermission();
+		if (authorizationError) return authorizationError;
+
+		const user = await prisma.user.findUnique({
+			where: { ssoId: data.ssoId },
+			include: { joinedBuildTeams: true },
+		});
+		if (!user) {
+			return { status: 'error', error: 'User not found' };
+		}
+
+		let team: string | undefined = undefined;
+
+		if (data.team) {
+			team = (
+				await prisma.buildTeam.findUnique({
+					where: { slug: data.team },
+					select: { id: true },
+				})
+			)?.id;
+
+			if (!team) {
+				return { status: 'error', error: 'BuildTeam not found' };
+			}
+		}
+
+		await prisma.userPermission.createMany({
+			data: data.permissions.map((permission) => ({
+				userId: user.id,
+				permissionId: permission,
+				buildTeamId: team ? team : null,
+			})),
+		});
+
+		revalidatePath(`/am/users/${data.ssoId}`);
+		return {
+			status: 'success',
+			message: 'Permissions added to user successfully',
+		};
+	} catch (error) {
+		console.error('Error adding permissions to user:', error);
+		return { status: 'error', error: 'Failed to add permissions to user' };
+	}
+};
+
+export const adminRemovePermission = async (
+	prevState: any,
+	data: { ssoId: string; userPermission: string },
+): Promise<any> => {
+	try {
+		const authorizationError = await requireEditUsersPermission();
+		if (authorizationError) return authorizationError;
+
+		const user = await prisma.user.findUnique({
+			where: { ssoId: data.ssoId },
+			include: { joinedBuildTeams: true },
+		});
+		if (!user) {
+			return { status: 'error', error: 'User not found' };
+		}
+
+		const team: string | undefined = undefined;
+
+		await prisma.userPermission.delete({
+			where: {
+				id: data.userPermission,
+			},
+		});
+
+		revalidatePath(`/am/users/${data.ssoId}`);
+		return {
+			status: 'success',
+			message: 'Permissions removed successfully',
+		};
+	} catch (error) {
+		console.error('Error removing permission from user:', error);
+		return { status: 'error', error: 'Failed to remove permission from user' };
+	}
+};
+
 export const adminInvalidateUserSessions = async (prevState: any, ssoId: string): Promise<any> => {
 	try {
+		const authorizationError = await requireEditUsersPermission();
+		if (authorizationError) return authorizationError;
+
 		const user = await prisma.user.findUnique({
 			where: { ssoId },
 		});

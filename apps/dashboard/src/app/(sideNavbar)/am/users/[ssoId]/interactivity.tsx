@@ -1,15 +1,46 @@
 'use client';
 
-import { ActionIcon, Loader, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core';
-import { IconCopy, IconDots, IconId, IconKarate } from '@tabler/icons-react';
+import {
+	ActionIcon,
+	Button,
+	Loader,
+	Menu,
+	MenuDropdown,
+	MenuItem,
+	MenuLabel,
+	MenuTarget,
+	MultiSelect,
+	rem,
+	Text,
+	TextInput,
+} from '@mantine/core';
+import {
+	IconCopy,
+	IconDevices,
+	IconDots,
+	IconFileMinus,
+	IconFilePlus,
+	IconFiles,
+	IconKarate,
+	IconTrash,
+	IconUsersMinus,
+	IconUsersPlus,
+} from '@tabler/icons-react';
 import { startTransition, useActionState } from 'react';
 
-import { adminInvalidateUserSessions, adminRemoveFromTeam } from '@/actions/user';
-import { openConfirmModal } from '@mantine/modals';
+import {
+	adminAddPermissions,
+	adminAddToTeam,
+	adminInvalidateUserSessions,
+	adminRemoveFromTeam,
+	adminRemovePermission,
+} from '@/actions/user';
+import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { User } from '@repo/db';
+import { Permisision, User } from '@repo/db';
+import Link from 'next/link';
 
-export function BuildTeamMenu(props: { team: { slug: string; name: string }; ssoId: string }) {
+export function BuildTeamMenu(props: { team: { slug: string; name: string }; ssoId: string; canEdit: boolean }) {
 	const [curentState, removeFromTeamAction, isLoading] = useActionState(adminRemoveFromTeam, {});
 
 	return (
@@ -23,6 +54,7 @@ export function BuildTeamMenu(props: { team: { slug: string; name: string }; sso
 				<MenuItem
 					leftSection={isLoading ? <Loader color="red" /> : <IconKarate style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
+					disabled={!props.canEdit}
 					aria-label="Remove from this Team"
 					rel="noopener"
 					onClick={() => {
@@ -63,7 +95,70 @@ export function BuildTeamMenu(props: { team: { slug: string; name: string }; sso
 	);
 }
 
-export function UserMenu({ user }: { user: User }) {
+export function PermissionMenu(props: { permission: { id: string; key: string }; ssoId: string; canEdit: boolean }) {
+	const [curentState, removePermissionAction, isLoading] = useActionState(adminRemovePermission, {});
+
+	return (
+		<Menu key={props.permission.id} position="bottom-end">
+			<MenuTarget>
+				<ActionIcon size="sm" variant="subtle" color="gray" aria-label="More Actions">
+					<IconDots size={16} />
+				</ActionIcon>
+			</MenuTarget>
+			<MenuDropdown>
+				<MenuItem
+					leftSection={isLoading ? <Loader color="red" /> : <IconTrash style={{ width: rem(14), height: rem(14) }} />}
+					color="red"
+					disabled={!props.canEdit}
+					aria-label="Remove this permission"
+					rel="noopener"
+					onClick={() => {
+						openConfirmModal({
+							title: 'Confirm Action',
+							centered: true,
+							confirmProps: { color: 'red' },
+							children: (
+								<Text size="sm">
+									Are you sure you want to perform this action? This action is irreversible and will cause heavy data
+									mutations.
+								</Text>
+							),
+							labels: { confirm: 'Confirm', cancel: 'Cancel' },
+							onConfirm: async () => {
+								if (!props.permission.id || !props.ssoId) return;
+
+								await new Promise<void>((resolve) => {
+									startTransition(() => {
+										removePermissionAction({ userPermission: props.permission.id, ssoId: props.ssoId });
+										resolve();
+									});
+								});
+
+								showNotification({
+									title: 'Success',
+									message: `Successfully removed permission ${props.permission.key}`,
+									color: 'green',
+								});
+							},
+						});
+					}}
+				>
+					Remove Permission
+				</MenuItem>
+			</MenuDropdown>
+		</Menu>
+	);
+}
+
+export function UserMenu({
+	user,
+	availablePermissions,
+	canEdit,
+}: {
+	user: User;
+	availablePermissions: Permisision[];
+	canEdit: boolean;
+}) {
 	const [__, invalidateSessionsAction, _] = useActionState(adminInvalidateUserSessions, {});
 
 	return (
@@ -99,72 +194,223 @@ export function UserMenu({ user }: { user: User }) {
 				</Menu.Sub>
 				<MenuLabel>Sessions</MenuLabel>
 				<MenuItem
+					leftSection={<IconDevices style={{ width: rem(14), height: rem(14) }} />}
+					color="red"
+					disabled={!canEdit}
 					onClick={async () => {
 						if (!user.ssoId) return;
 
-						await new Promise<void>((resolve) => {
-							startTransition(() => {
-								invalidateSessionsAction(user.ssoId);
-								resolve();
-							});
-						});
+						openConfirmModal({
+							title: 'Confirm Action',
+							centered: true,
+							confirmProps: { color: 'red' },
+							children: (
+								<Text size="sm">
+									Are you sure you want to perform this action? The user will be logged out of all session and will be
+									forced to log in again.
+								</Text>
+							),
+							labels: { confirm: 'Confirm', cancel: 'Cancel' },
+							onConfirm: async () => {
+								await new Promise<void>((resolve) => {
+									startTransition(() => {
+										invalidateSessionsAction(user.ssoId);
+										resolve();
+									});
+								});
 
-						showNotification({
-							title: 'Success',
-							message: `Successfully invalidated all sessions for ${user.username || user.ssoId}`,
-							color: 'green',
+								showNotification({
+									title: 'Success',
+									message: `Successfully invalidated all sessions for ${user.username || user.ssoId}`,
+									color: 'green',
+								});
+							},
 						});
 					}}
 				>
-					Invalidate all session...
+					Log out of all sessions
 				</MenuItem>
+
 				<MenuLabel>Teams</MenuLabel>
-				<MenuItem>Add to team...</MenuItem>
-				<MenuItem>Remove from team...</MenuItem>
-				<MenuItem>Remove from all teams</MenuItem>
+				<MenuItem
+					leftSection={<IconUsersPlus style={{ width: rem(14), height: rem(14) }} />}
+					disabled={!canEdit}
+					onClick={() => {
+						let teamSlug = '';
+						openModal({
+							title: 'Add to Build Team',
+							centered: true,
+							withCloseButton: true,
+							children: (
+								<>
+									<Text size="sm" mb="md">
+										Enter the slug of the Build Team you want to add this user to. You can find the slug on the Build
+										Team&apos;s page in the dashboard.
+									</Text>
+									<TextInput placeholder="BuildTeam Slug..." mb="md" onChange={(e) => (teamSlug = e.target.value)} />
+									<Button fullWidth onClick={() => confirmAddToTeam()}>
+										Add to Build Team
+									</Button>
+								</>
+							),
+						});
+
+						const confirmAddToTeam = async () => {
+							if (!teamSlug) return;
+							await new Promise<void>((resolve) => {
+								startTransition(() => {
+									adminAddToTeam({}, { ssoId: user.ssoId, slug: teamSlug });
+									resolve();
+								});
+							});
+
+							showNotification({
+								title: 'Success',
+								message: `Successfully added user to BuildTeam`,
+								color: 'green',
+							});
+
+							closeAllModals();
+						};
+					}}
+				>
+					Add to BuildTeam
+				</MenuItem>
+				<MenuItem
+					leftSection={<IconUsersMinus style={{ width: rem(14), height: rem(14) }} />}
+					disabled={!canEdit}
+					onClick={() => {
+						let teamSlug = '';
+						openModal({
+							title: 'Remove from Build Team',
+							centered: true,
+							withCloseButton: true,
+							children: (
+								<>
+									<Text size="sm" mb="md">
+										Enter the slug of the Build Team you want to remove this user from. You can find the slug on the
+										Build Team&apos;s page in the dashboard.
+									</Text>
+									<TextInput placeholder="BuildTeam Slug..." mb="md" onChange={(e) => (teamSlug = e.target.value)} />
+									<Button fullWidth onClick={() => confirmRemoveFromTeam()}>
+										Remove from Build Team
+									</Button>
+								</>
+							),
+						});
+
+						const confirmRemoveFromTeam = async () => {
+							if (!teamSlug) return;
+							await new Promise<void>((resolve) => {
+								startTransition(() => {
+									adminRemoveFromTeam({}, { ssoId: user.ssoId, slug: teamSlug });
+									resolve();
+								});
+							});
+
+							showNotification({
+								title: 'Success',
+								message: `Successfully removed user from BuildTeam`,
+								color: 'green',
+							});
+
+							closeAllModals();
+						};
+					}}
+				>
+					Remove from BuildTeam
+				</MenuItem>
+
 				<MenuLabel>Applications</MenuLabel>
-				<MenuItem>Delete application...</MenuItem>
-				<MenuItem>Delete all applications</MenuItem>
+				<MenuItem
+					leftSection={<IconFiles style={{ width: rem(14), height: rem(14) }} />}
+					component={Link}
+					href={`/am/applications?query=${user.ssoId}&searchType=applicant&onlyPending=false&page=1`}
+				>
+					View all applications
+				</MenuItem>
 				<MenuLabel>Permissions</MenuLabel>
-				<MenuItem>Add permission...</MenuItem>
-				<MenuItem>Remove permission...</MenuItem>
-				<MenuLabel>Claims</MenuLabel>
-				<MenuItem>Remove from claim...</MenuItem>
-				<MenuItem>Remove from all claims</MenuItem>
-				<MenuLabel>Other</MenuLabel>
-				<MenuItem>Send message/notification</MenuItem>
-				<MenuItem>View/clear consents</MenuItem>
+				<MenuItem
+					leftSection={<IconFilePlus style={{ width: rem(14), height: rem(14) }} />}
+					disabled={!canEdit}
+					onClick={() => {
+						let teamSlug = '';
+						let permissions: string[] = [];
+						openModal({
+							title: 'Add Permissions',
+							centered: true,
+							withCloseButton: true,
+							children: (
+								<>
+									<Text size="sm" mb="md">
+										Select the permissions you want to add to this user. You can optionally restrict the permissions to
+										a specific Build Team by entering the team slug. If no team is specified, the permissions will be
+										added globally.
+									</Text>
+									<MultiSelect
+										label="Permissions"
+										data={availablePermissions.map((p) => ({ label: p.description, value: p.id }))}
+										onChange={(v) => (permissions = v)}
+										mb="sm"
+										clearable
+										searchable
+										hidePickedOptions
+										required
+									/>
+									<TextInput
+										label="(Optional) BuildTeam"
+										placeholder="BuildTeam Slug..."
+										mb="md"
+										onChange={(e) => (teamSlug = e.target.value)}
+									/>
+									<Button fullWidth onClick={() => confirmAddPermissions()}>
+										Add Permissions
+									</Button>
+								</>
+							),
+						});
+
+						const confirmAddPermissions = async () => {
+							if (permissions.length == 0) return;
+							await new Promise<void>((resolve) => {
+								startTransition(() => {
+									adminAddPermissions({}, { ssoId: user.ssoId, team: teamSlug, permissions });
+									resolve();
+								});
+							});
+
+							showNotification({
+								title: 'Success',
+								message: `Successfully added permissions to user`,
+								color: 'green',
+							});
+
+							closeAllModals();
+						};
+					}}
+				>
+					Add permissions
+				</MenuItem>
+				<MenuItem
+					leftSection={<IconFileMinus style={{ width: rem(14), height: rem(14) }} />}
+					disabled={!canEdit}
+					onClick={() => {
+						openConfirmModal({
+							title: 'Information',
+							centered: true,
+							children: (
+								<Text size="sm">
+									To remove a specific permission, please scroll down to the permissions section and delete the
+									permission from there (... {'-->'} Remove Permission).
+								</Text>
+							),
+							labels: { confirm: 'Okay', cancel: 'Cancel' },
+						});
+					}}
+				>
+					Remove permission
+				</MenuItem>
 			</MenuDropdown>
-			{/* <MenuDropdown>
-								<MenuLabel>Message</MenuLabel>
-								<MenuItem
-									leftSection={<IconMessage2 style={{ width: rem(14), height: rem(14) }} />}
-									aria-label="Send Bot Message"
-									component={Link}
-									href={`/am/bot/msg?user=${websiteData?.discordId}`}
-									rel="noopener"
-									disabled={!websiteData?.discordId}
-								>
-									Send via Bot
-								</MenuItem>
-								<MenuItem
-									leftSection={<IconBrandDiscord style={{ width: rem(14), height: rem(14) }} />}
-									component={Link}
-									target="_blank"
-									href={`https://discord.com/channels/@me/${websiteData.discordId}`}
-								>
-									Open DMs
-								</MenuItem>
-								<MenuItem
-									leftSection={<IconMail style={{ width: rem(14), height: rem(14) }} />}
-									component={Link}
-									target="_blank"
-									href={`mailto:${keycloakData?.email}`}
-									disabled={!keycloakData?.email}
-								>
-									Send Email
-								</MenuItem>
-							</MenuDropdown> */}
 		</Menu>
 	);
 }
