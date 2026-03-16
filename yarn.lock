@@ -1203,12 +1203,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@icons-pack/react-simple-icons@npm:^12.6.0":
-  version: 12.6.0
-  resolution: "@icons-pack/react-simple-icons@npm:12.6.0"
+"@icons-pack/react-simple-icons@npm:^13.12.0":
+  version: 13.12.0
+  resolution: "@icons-pack/react-simple-icons@npm:13.12.0"
   peerDependencies:
     react: ^16.13 || ^17 || ^18 || ^19
-  checksum: 10c0/2b3077003196f798325fa0e90bdf28780bf5957114f7823e45c87460a30cf6b2a83f5d6b22f01038fd14969a0f72f55120c9eb63cc145a700c63a1304d463b75
+  checksum: 10c0/73f931c66bca09331cd410f608026e7a3ec1bc5262fcdf261c1e0cbef4fef3db843c6253accca306b97b58ded83cc92aa281e75da641e9b1eb2d10fbdfa51830
   languageName: node
   linkType: hard
 
@@ -11004,7 +11004,7 @@ __metadata:
     "@bte-germany/terraconvert": "npm:^1.1.2"
     "@emotion/react": "npm:^11.10.4"
     "@emotion/server": "npm:^11.10.0"
-    "@icons-pack/react-simple-icons": "npm:^12.6.0"
+    "@icons-pack/react-simple-icons": "npm:^13.12.0"
     "@mantine/carousel": "npm:^8.2.3"
     "@mantine/core": "npm:^8.2.3"
     "@mantine/dates": "npm:^8.2.3"
