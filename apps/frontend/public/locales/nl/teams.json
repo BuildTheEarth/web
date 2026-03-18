@@ -3,6 +3,7 @@
 		"title": "Build Teams"
 	},
 	"description": "Build Teams zijn de eenvoudigste manier om mee te doen aan Build The Earth. Deze groepen werken samen op een multiplayer server om steden, regio's en soms zelfs hele landen na te bouwen. Je hoeft alleen maar op 'Meld je aan om mee te doen' te klikken om in no time mee te kunnen helpen!",
+	"viewOnMap": "Bekijk teams op de kaart",
 	"joining": "Om in een Build Team mee te kunnen bouwen moet je Minecraft Java editie of Minecraft Bedrock editie hebben gekocht, afhankelijk van het team. In de meeste gevallen moet je ook de Build The Earth Modpack geïnstalleerd hebben.",
 	"members": "{{num}} Leden",
 	"team": {
