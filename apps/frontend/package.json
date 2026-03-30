@@ -55,7 +55,7 @@
 		"geolib": "^3.3.4",
 		"highlight.js": "^11.10.0",
 		"i18next": "^22.0.6",
-		"keycloak-js": "^19.0.1",
+		"keycloak-js": "^26.2.3",
 		"mantine-contextmenu": "^7.3.3",
 		"mapbox-gl": "2.13.0",
 		"mapbox-gl-draw-snap-mode": "^0.2.0",
