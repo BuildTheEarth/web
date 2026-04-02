@@ -38,12 +38,7 @@ export default async function Page({
 			color: true,
 			icon: true,
 			ip: true,
-			_count: {
-				select: {
-					claims: true,
-					members: true,
-				},
-			},
+			_count: { select: { claims: true, members: true } },
 		},
 	});
 
@@ -94,7 +89,7 @@ export default async function Page({
 										size={90}
 										radius={'50%'}
 										mr="sm"
-										color="buildtheearth"
+										color="indigo"
 										alt={'Logo of ' + element.name}
 									>
 										<IconWorld size={80} strokeWidth={1.2} />

@@ -53,7 +53,7 @@ export async function Header() {
 				<Group>
 					<Button
 						variant="filled"
-						color="buildtheearth"
+						color="indigo"
 						visibleFrom="xs"
 						rightSection={<IconChevronRight size={12} />}
 						component={Link}

@@ -136,7 +136,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<Title order={2}>{t('whoWeAre.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('whoWeAre.description')}</Text>
-								<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />} mt="md">
+								<Button variant="filled" color="indigo" rightSection={<IconChevronRight size={12} />} mt="md">
 									{t('whoWeAre.cta')}
 								</Button>
 							</Box>
@@ -215,7 +215,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								style={{
 									display: 'flex',
 									background:
-										'linear-gradient(110deg,var(--mantine-color-buildtheearth-7) 20%, var(--mantine-color-buildtheearth-6) 100%)',
+										'linear-gradient(60deg,var(--mantine-color-indigo-6) 0%, var(--mantine-color-cyan-6) 100%)',
 									padding: 'var(--mantine-spacing-md)',
 									width: '100%',
 									flexDirection: 'column',
@@ -253,7 +253,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								style={{
 									display: 'flex',
 									background:
-										'linear-gradient(110deg,var(--mantine-color-buildtheearth-7) 20%, var(--mantine-color-buildtheearth-6) 100%)',
+										'linear-gradient(60deg,var(--mantine-color-indigo-6) 0%, var(--mantine-color-cyan-6) 100%)',
 									padding: 'calc(var(--mantine-spacing-xl) * 1.5)',
 									width: '100%',
 									textDecoration: 'none',
@@ -304,7 +304,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<LinkButton
 									variant="filled"
 									href="/get-started#build"
-									color="buildtheearth"
+									color="indigo"
 									rightSection={<IconChevronRight size={12} />}
 									mt="md"
 								>
@@ -377,7 +377,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<LinkButton
 									href="/get-started#explore"
 									variant="filled"
-									color="buildtheearth"
+									color="indigo"
 									rightSection={<IconChevronRight size={12} />}
 									mt="md"
 								>
@@ -431,7 +431,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							<LinkButton
 								href="/gallery"
 								variant="filled"
-								color="buildtheearth"
+								color="indigo"
 								rightSection={<IconChevronRight size={12} />}
 								mt="md"
 							>

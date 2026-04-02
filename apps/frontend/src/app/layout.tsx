@@ -22,10 +22,11 @@ import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
-import { Inter } from 'next/font/google';
+import { Cairo, Catamaran, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
-const interFont = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const cairoFont = Cairo({ subsets: ['latin'], variable: '--font-cairo' });
+const catamaranFont = Inter({ subsets: ['latin'], variable: '--font-catamaran' });
 const minecraftFont = localFont({
 	src: '../../public/fonts/Minecraft.ttf',
 	weight: '100 900',
@@ -67,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	return (
 		<html
 			lang="en"
-			className={`${interFont.variable} ${minecraftFont.variable}`}
+			className={`${catamaranFont.variable} ${cairoFont.variable} ${minecraftFont.variable}`}
 			suppressHydrationWarning
 			style={{ overflowX: 'hidden', width: '100vw' }}
 		>

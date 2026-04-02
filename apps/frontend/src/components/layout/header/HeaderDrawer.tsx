@@ -39,7 +39,7 @@ export function HeaderDrawer() {
 				</ScrollArea>
 
 				<Group mt="lg" mx="xl" mb="xl" grow style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-					<Button variant="filled" color="buildtheearth" rightSection={<IconChevronRight size={12} />}>
+					<Button variant="filled" color="indigo" rightSection={<IconChevronRight size={12} />}>
 						{t('cta')}
 					</Button>
 				</Group>

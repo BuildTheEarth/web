@@ -54,18 +54,8 @@ export default async function Page({
 	const buildTeam = await prisma.buildTeam.findUnique({
 		where: { slug: (await params).slug },
 		include: {
-			_count: {
-				select: {
-					members: true,
-					claims: true,
-				},
-			},
-			showcases: {
-				take: 2,
-				include: {
-					image: { select: { name: true, src: true } },
-				},
-			},
+			_count: { select: { members: true, claims: true } },
+			showcases: { take: 2, include: { image: { select: { name: true, src: true } } } },
 		},
 	});
 	if (!buildTeam)
@@ -79,10 +69,7 @@ export default async function Page({
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
 				src={buildTeam.backgroundImage || '/placeholders/home.png'}
-				rootStyle={{
-					minHeight: '45vh',
-					zIndex: 1,
-				}}
+				rootStyle={{ minHeight: '45vh', zIndex: 1 }}
 				priority
 				fetchpriority="high"
 			/>
@@ -98,12 +85,7 @@ export default async function Page({
 					top: 0,
 				}}
 			>
-				<Group
-					justify="space-between"
-					style={{
-						width: '80%',
-					}}
-				>
+				<Group justify="space-between" style={{ width: '80%' }}>
 					<Group>
 						<Avatar
 							src={buildTeam.icon}
@@ -166,8 +148,8 @@ export default async function Page({
 										component={Link}
 										href="#join-server"
 									>
-										<Text c="buildtheearth">{buildTeam.ip} </Text>
-										<IconChevronRight size={20} stroke={2} color="var(--mantine-color-buildtheearth-4)" />
+										<Text c="indigo">{buildTeam.ip} </Text>
+										<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
 									</Flex>
 								</Group>
 								<Divider style={{ margin: '0' }} my="xs" />
@@ -193,13 +175,13 @@ export default async function Page({
 											component={Link}
 											href="#locations"
 										>
-											<Text c="buildtheearth">
+											<Text c="indigo">
 												{t('moreLocations', {
 													count: buildTeam.location.split(', ').length - 2,
 													list: getCountryNames(buildTeam.location.split(', ').slice(0, 2)).join(', '),
 												})}
 											</Text>
-											<IconChevronRight size={20} stroke={2} color="var(--mantine-color-buildtheearth-4)" />
+											<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
 										</Flex>
 									) : (
 										<Text>{getCountryNames(buildTeam.location.split(', ').slice(0, 2)).join(', ')}</Text>
@@ -226,15 +208,7 @@ export default async function Page({
 						) : (
 							<SimpleGrid cols={2} spacing="calc(var(--mantine-spacing-lg) * 3)">
 								{buildTeam.showcases.map((showcase) => (
-									<Box
-										key={showcase.id}
-										style={{
-											borderRadius: 0,
-											position: 'relative',
-											cursor: 'pointer',
-										}}
-										mb="md"
-									>
+									<Box key={showcase.id} style={{ borderRadius: 0, position: 'relative', cursor: 'pointer' }} mb="md">
 										<img
 											style={{
 												objectFit: 'cover',
