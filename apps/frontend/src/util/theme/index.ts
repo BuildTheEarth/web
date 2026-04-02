@@ -13,7 +13,7 @@ export const theme = createTheme({
 	primaryColor: 'indigo',
 	cursorType: 'pointer',
 	defaultGradient: { from: 'indigo', to: 'cyan', deg: 60 },
-	fontWeights: { regular: 400, medium: 600, bold: 900 },
+	// fontWeights: { regular: 400, medium: 600, bold: 900 },
 	primaryShade: 6,
 	colors: {
 		dark: [
