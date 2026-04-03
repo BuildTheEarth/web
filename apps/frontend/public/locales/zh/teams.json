@@ -3,6 +3,7 @@
 		"title": "建築團隊"
 	},
 	"description": "加入建築團隊是參與Build The Earth最簡單的方式。這些團體在多人伺服器上合作建造城市、區域，有時甚至是整個國家。您只需要點擊「申請加入」，然後就可以立即展開協助！",
+	"viewOnMap": "在地圖上查看團隊",
 	"joining": "要加入建築團隊，您需要購買Minecraft Java版或Minecraft 基岩版，具體取決於團隊。在大多數情況下，您還需要安裝Build The Earth模組包。",
 	"members": "{{num}} 名成員",
 	"team": {
