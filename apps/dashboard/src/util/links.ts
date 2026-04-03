@@ -55,7 +55,7 @@ export const meNavLinks: NavLink[] = [
 		permission: 'get-team-questions',
 	},
 	{
-		link: '/team/[team_slug]/review',
+		link: '/team/[team_slug]/applications',
 		label: 'Review',
 		icon: 'Search',
 		permission: 'review-team',

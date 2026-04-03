@@ -92,23 +92,7 @@ export default async function Page({
 					<Title order={1} mt="xl" mb="md">
 						BuildTeam Applications
 					</Title>
-					{/* <AddMemberButton
-						slug={slug}
-						userId={session?.user.id!}
-						disabled={
-							!userPermissions.some(
-								(p) => (p.buildTeam?.slug == slug || p.buildTeam == null) && p.permissionId == 'permission.remove',
-							)
-						}
-					/> */}
 				</Group>
-				<pre>
-					{JSON.stringify(
-						userPermissions.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null).map((p) => p.permission.id),
-						null,
-						3,
-					)}
-				</pre>
 				<SearchApplications mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<ApplicationsDatatable
 					applications={applications}

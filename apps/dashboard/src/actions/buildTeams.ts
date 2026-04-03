@@ -2,6 +2,8 @@
 import { revalidateWebsitePaths } from '@/util/data';
 import prisma from '@/util/db';
 import { sendBotMessage } from '@/util/discordIntegration';
+import { sendBtWebhook, WebhookType } from '@/util/webhooks';
+import { Application, ApplicationStatus } from '@repo/db';
 import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -388,7 +390,6 @@ export const addMember = async ({
 	});
 
 	if (notifyUser) {
-		console.log(buildTeam.name, memberToAdd?.discordId);
 		sendBotMessage(
 			`## <:approved:1441532214562128034> You have been added to ${buildTeam.name}` +
 				`\n\nThe Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
@@ -396,8 +397,196 @@ export const addMember = async ({
 				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
 			[memberToAdd?.discordId!],
 		);
+		// TODO: possibly add discord role if this is the first BT the user joins
 	}
 
 	revalidatePath(`/am/users/${addId}`);
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
+
+export const addApplicationResponseTemplate = async ({
+	userId,
+	buildTeamSlug,
+	content,
+	name,
+}: {
+	userId: string;
+	buildTeamSlug?: string;
+	content: string;
+	name: string;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to add a response template to this Build Team');
+	}
+
+	const template = await prisma.applicationResponseTemplate.create({
+		data: {
+			name,
+			content,
+			buildteam: { connect: { slug: buildTeamSlug } },
+		},
+	});
+
+	revalidatePath(`/team/${buildTeamSlug}/applications`);
+	return template;
+};
+
+export const reviewApplication = async ({
+	userId,
+	buildTeamSlug,
+	applicationId,
+	reason,
+	status,
+}: {
+	userId: string;
+	buildTeamSlug?: string;
+	applicationId: string;
+	reason?: string;
+	status: ApplicationStatus;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.review',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.review',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to review an application to this Build Team');
+	}
+
+	const applicationOld = await prisma.application.findUnique({
+		where: { id: applicationId, buildteam: { slug: buildTeamSlug } },
+	});
+
+	if (!applicationOld) {
+		throw Error('Application not found');
+	}
+
+	const application = await prisma.application.update({
+		where: { id: applicationOld.id, buildteam: { slug: buildTeamSlug } },
+		data: {
+			status,
+			reviewer: { connect: { ssoId: userId } },
+			reviewedAt: new Date(),
+			reason,
+		},
+		include: { user: true, buildteam: true },
+	});
+
+	if (status === ApplicationStatus.ACCEPTED || status === ApplicationStatus.TRIAL) {
+		await prisma.buildTeam.update({
+			where: { slug: buildTeamSlug },
+			data: {
+				members: { connect: { ssoId: application.user.ssoId } },
+			},
+		});
+
+		sendBotMessage(
+			parseApplicationMessage(
+				application.buildteam.acceptionMessage,
+				application,
+				application.user,
+				application.buildteam,
+			),
+			[application.user.discordId!],
+		);
+
+		// TODO: possibly add discord role if this is the first BT the user joins and they got accepted to it
+	}
+
+	if (status === ApplicationStatus.DECLINED) {
+		await prisma.buildTeam.update({
+			where: { slug: buildTeamSlug },
+			data: {
+				members: { disconnect: { ssoId: application.user.ssoId } },
+			},
+		});
+
+		sendBotMessage(
+			parseApplicationMessage(
+				application.buildteam.rejectionMessage,
+				application,
+				application.user,
+				application.buildteam,
+			),
+			[application.user.discordId!],
+		);
+
+		//TODO: remove discord role if this is the only BT the user is in and they got declined from it
+	}
+
+	// TODO: send webhook to staff dc
+
+	if (application.buildteam.webhook) {
+		sendBtWebhook(application.buildteam.webhook, WebhookType.APPLICATION, application);
+	}
+
+	revalidatePath(`/team/${buildTeamSlug}/applications`);
+	return application;
+};
+
+/**
+ * Replaces placeholders to actual data in discord messages to users
+ * @param message Message with placeholders
+ * @param application Application Information
+ * @param user User Information
+ * @param team Team Information
+ * @returns Replaced Message
+ */
+function parseApplicationMessage(
+	message: string,
+	application: Application,
+	user: { discordId: string | null },
+	team: { slug: string; name: string },
+): string {
+	return message
+		.replace('{user}', `<@${user.discordId!}>`)
+		.replace('{team}', team.name)
+		.replace('{url}', process.env.FRONTEND_URL + `/teams/${team.slug}`)
+		.replace('{reason}', application.reason!)
+		.replace(
+			'{reviewedAt}',
+			new Date(application.reviewedAt!).toLocaleDateString('en-GB', {
+				year: 'numeric',
+				month: 'numeric',
+				day: 'numeric',
+			}),
+		)
+		.replace(
+			'{createdAt}',
+			new Date(application.createdAt).toLocaleDateString('en-GB', {
+				year: 'numeric',
+				month: 'numeric',
+				day: 'numeric',
+			}),
+		)
+		.replace('{id}', application.id.toString().split('-')[0]);
+}
