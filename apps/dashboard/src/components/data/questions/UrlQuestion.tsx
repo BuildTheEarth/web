@@ -27,6 +27,7 @@ const UrlQuestion = (props: UrlQuestionProps) => {
 			description={props.subtitle}
 			placeholder={props.placeholder}
 			label={props.title}
+			name={props.id}
 			style={props.style}
 			onChange={(e) => props.onChange && props.onChange(e.target.value)}
 			error={props.error}
@@ -40,6 +41,7 @@ const UrlQuestion = (props: UrlQuestionProps) => {
 					</ActionIcon>
 				)
 			}
+			id={props.id}
 		/>
 	);
 };

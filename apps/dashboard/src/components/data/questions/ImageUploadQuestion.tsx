@@ -21,12 +21,14 @@ const ImageUploadQuestion = (props: ImageUploadQuestionProps) => {
 			required={props.required}
 			description={props.subtitle}
 			label={props.title}
+			name={props.id}
 			style={props.style}
 			onChange={(e) => props.onChange && props.onChange(e.target.value)}
 			error={props.error}
 			disabled={props.disabled}
 			readOnly={props.readonly}
 			value={props.value}
+			id={props.id}
 		/>
 	);
 };

@@ -26,6 +26,7 @@ const TextQuestion = (props: TextQuestionProps) => {
 			description={props.subtitle}
 			placeholder={props.placeholder}
 			label={props.title}
+			name={props.id}
 			style={props.style}
 			onChange={(e) => props.onChange && props.onChange(e.target.value)}
 			error={props.error}
@@ -35,6 +36,7 @@ const TextQuestion = (props: TextQuestionProps) => {
 			disabled={props.disabled}
 			readOnly={props.readonly}
 			value={props.value}
+			id={props.id}
 		/>
 	);
 };

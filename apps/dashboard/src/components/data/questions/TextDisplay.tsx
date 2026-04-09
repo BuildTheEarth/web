@@ -17,7 +17,9 @@ function validation(props: TextDisplayProps): (value: string) => void {
 const TextDisplay = (props: TextDisplayProps) => {
 	return (
 		<>
-			<Text style={props.style}>{props.title}</Text>
+			<Text style={props.style} id={props.id}>
+				{props.title}
+			</Text>
 			{props.subtitle && (
 				<Text c="dimmed" size="sm">
 					{props.subtitle}

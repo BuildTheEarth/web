@@ -3,9 +3,10 @@ import { revalidateWebsitePaths } from '@/util/data';
 import prisma from '@/util/db';
 import { sendBotMessage } from '@/util/discordIntegration';
 import { sendBtWebhook, WebhookType } from '@/util/webhooks';
-import { Application, ApplicationStatus } from '@repo/db';
+import { Application, ApplicationQuestionType, ApplicationStatus, Prisma } from '@repo/db';
 import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
+import build from 'next/dist/build';
 import { redirect } from 'next/navigation';
 export const adminTransferTeam = async (
 	prevState: any,
@@ -551,6 +552,165 @@ export const reviewApplication = async ({
 
 	revalidatePath(`/team/${buildTeamSlug}/applications`);
 	return application;
+};
+
+export const applyToBuildTeam = async (
+	data: { userId: string; buildTeamSlug: string },
+	formData: FormData,
+): Promise<void> => {
+	console.log(Object.fromEntries(formData));
+	console.log(data);
+
+	let buildteam = await prisma.buildTeam.findUnique({
+		where: { slug: data.buildTeamSlug },
+		select: {
+			instantAccept: true,
+			applicationQuestions: true,
+			id: true,
+			slug: true,
+			name: true,
+			acceptionMessage: true,
+			token: false,
+			allowApplications: true,
+			webhook: true,
+		},
+	});
+
+	const user = await prisma.user.findUnique({
+		where: { ssoId: data.userId },
+		select: { id: true, discordId: true, ssoId: true, username: true },
+	});
+
+	if (!buildteam) {
+		throw Error('Build Team not found');
+	}
+
+	if (!user) {
+		throw Error('User not found');
+	}
+
+	// TODO: check if user is on BTE.net discord
+
+	const pastApplications = await prisma.application.findMany({
+		where: { userId: user.id, buildteamId: buildteam.id },
+		orderBy: { createdAt: 'desc' },
+	});
+
+	if (pastApplications[0]?.status === ApplicationStatus.ACCEPTED) {
+		throw Error('You have already been accepted to this Build Team in the past, you cannot apply again');
+	}
+
+	if (!buildteam.allowApplications) {
+		throw Error('This Build Team is not accepting applications at the moment');
+	}
+
+	if (pastApplications.some((app) => app.status === ApplicationStatus.SEND)) {
+		throw Error(
+			'You already have a pending application to this Build Team, please wait for it to be reviewed before applying again',
+		);
+	}
+
+	// Handle Instant-Accept
+	if (buildteam.instantAccept) {
+		const application = await prisma.application.create({
+			data: {
+				buildteam: { connect: { id: buildteam.id } },
+				user: { connect: user },
+				status: ApplicationStatus.ACCEPTED,
+				createdAt: new Date(),
+				reviewedAt: new Date(),
+				trial: false,
+			},
+		});
+
+		sendBotMessage(parseApplicationMessage(buildteam.acceptionMessage, application, user, buildteam), [
+			user.discordId!,
+		]);
+
+		// TODO: possibly add discord role if this is the first BT the user joins
+
+		revalidatePath(`/team/${buildteam.slug}/applications`);
+		return;
+	}
+
+	const validatedAnswers = [];
+
+	for (const question of buildteam.applicationQuestions) {
+		// Filter by correct questions
+		if (question.trial == false) {
+			if (formData.has(question.id)) {
+				let answer: any = formData.get(question.id);
+				const type = question.type;
+
+				if (typeof answer != 'string') {
+					if (typeof answer == 'number') {
+						answer = answer.toString();
+					} else {
+						try {
+							answer = JSON.stringify(answer);
+						} catch (e) {}
+					}
+				}
+				validatedAnswers.push({ id: question.id, answer: answer });
+
+				// If Type is minecraft, populate the minecraft name of the user
+				// TODO: verify account
+				if (type == ApplicationQuestionType.MINECRAFT) {
+					// TODO: update minecraft account name / check if account name is the same as verified name
+				}
+			} else if (question.required && question.sort >= 0) {
+				throw Error('Required Questions are missing');
+			}
+		}
+	}
+
+	// Save answers
+	if (validatedAnswers.length <= 0) {
+		throw Error('No valid answers provided');
+	}
+	const application = await prisma.application.create({
+		data: {
+			buildteam: { connect: { id: buildteam.id } },
+			user: { connect: user },
+			status: ApplicationStatus.SEND,
+			createdAt: new Date(),
+			trial: false,
+			ApplicationAnswer: {
+				createMany: {
+					data: validatedAnswers.map((a) => ({
+						answer: a.answer,
+						questionId: a.id,
+					})),
+				},
+			},
+		},
+		include: {
+			reviewer: true,
+			user: true,
+		},
+	});
+
+	// Send Review Notification to Discord
+	const reviewers = await prisma.userPermission.findMany({
+		where: {
+			permissionId: 'team.application.notify',
+			buildTeamId: buildteam.id,
+		},
+		select: { user: { select: { id: true, discordId: true } } },
+	});
+
+	await sendBotMessage(
+		`**${buildteam.name}** \\nNew Application from <@${user.discordId}> (${user.username}). Review it [here](${process.env.FRONTEND_URL}/team/${buildteam.slug}/applications/${application.id})`,
+		reviewers.map((r) => r.user.discordId!),
+	);
+
+	// Send Webhook to BuildTeam
+	if (buildteam.webhook) {
+		sendBtWebhook(buildteam.webhook, WebhookType.APPLICATION_SEND, application);
+	}
+
+	revalidatePath(`/team/${buildteam.slug}/applications`);
+	return;
 };
 
 /**
