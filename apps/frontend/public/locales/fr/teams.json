@@ -3,6 +3,7 @@
 		"title": "Teams de build"
 	},
 	"description": "Les équipes de construction sont le moyen le plus simple de rejoindre BuildTheEarth. Ces groupes travaillent ensemble sur un serveur multijoueur pour construire des villes, des régions et parfois des pays entiers. Tout ce que vous avez à faire est de cliquer sur \"Postuler pour rejoindre\" et en un rien de temps vous pourrez commencer à nous aider !",
+	"viewOnMap": "Voir les équipes sur la carte",
 	"joining": "Pour participer à une équipe de construction, vous devez avoir acheté Minecraft Java Edition ou Minecraft Bedrock Edition, selon l'équipe. Dans la plupart des cas, vous devrez également avoir le modpack BuildTheEarth installé.",
 	"members": "{{num}} Membres",
 	"team": {
