@@ -46,6 +46,7 @@ jobs:
           echo NEXT_PUBLIC_FRONTEND_URL="https://buildtheearth.net" >> apps/frontend/.env
           echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> apps/frontend/.env
           echo NEXT_PUBLIC_MAPBOX_TOKEN="${{ secrets.MAPBOX_TOKEN }}" >> apps/frontend/.env
+          echo CMS_URL="https://cms.buildtheearth.net" >> apps/frontend/.env
           echo PORT=3000 >> apps/frontend/.env
       - name: Check env
         run: cat apps/frontend/.env
