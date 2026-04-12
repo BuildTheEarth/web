@@ -8988,6 +8988,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"baseline-browser-mapping@npm:^2.10.18":
+  version: 2.10.18
+  resolution: "baseline-browser-mapping@npm:2.10.18"
+  bin:
+    baseline-browser-mapping: dist/cli.cjs
+  checksum: 10c0/cab0138dd70b3aefe83e27cd03013bfdea772d2329e6458178cceed34b7e3fde72b697c9e4c21fb3c796bcfb831d348bc947b017d8b64417045a34bf014c87b7
+  languageName: node
+  linkType: hard
+
 "baseline-browser-mapping@npm:^2.9.0":
   version: 2.9.7
   resolution: "baseline-browser-mapping@npm:2.9.7"
@@ -11959,6 +11968,7 @@ __metadata:
     "@types/node": "npm:^22"
     "@types/react": "npm:19.2.7"
     "@types/react-dom": "npm:19.2.3"
+    baseline-browser-mapping: "npm:^2.10.18"
     clsx: "npm:^2.1.1"
     dayjs: "npm:^1.11.19"
     embla-carousel: "npm:^8.5.2"
