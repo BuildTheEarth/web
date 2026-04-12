@@ -48,6 +48,7 @@ import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/serve
 import { Fragment } from 'react';
 
 export const dynamic = 'force-static';
+export const revalidate = 7200;
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;
@@ -479,7 +480,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							</Group>
 							<Group justify="flex-end">
 								<LinkButton
-									href="/gallery"
+									href="/about-us/outreach"
 									variant="filled"
 									color="indigo"
 									rightSection={<IconChevronRight size={12} />}

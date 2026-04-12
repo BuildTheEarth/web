@@ -186,5 +186,13 @@
 				"moreInformation": "More Information"
 			}
 		}
+	},
+	"outreach": {
+		"title": "Outreach",
+		"articles": "Articles & Media",
+		"contact": {
+			"title": "Media Inquiries",
+			"description": "For media inquiries, partnership opportunities, or any other outreach-related questions, please contact us at <mail></mail>. We look forward to hearing from you! You can find us on various <contact>social media platforms</contact> as well."
+		}
 	}
 }
