@@ -45,6 +45,15 @@
 	}
 }
 
+.gallery-card:hover .gallery-overlay {
+	opacity: 1;
+}
+
+.gallery-overlay {
+	opacity: 0;
+	transition: opacity 0.3s ease-in-out;
+}
+
 /* Map Styles */
 
 .mapboxgl-popup-content {
