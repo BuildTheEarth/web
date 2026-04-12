@@ -1,0 +1,74 @@
+import Wrapper from '@/components/layout/Wrapper';
+import styles from '@/styles/Blog.module.css';
+import directus from '@/util/directus';
+import { readItem } from '@directus/sdk';
+import { Box, Group, Text, Tooltip } from '@mantine/core';
+import { IconCalendar } from '@tabler/icons-react';
+import { Metadata, ResolvingMetadata } from 'next';
+import { Locale } from 'next-intl';
+import { getFormatter, setRequestLocale } from 'next-intl/server';
+import { notFound } from 'next/navigation';
+export const dynamic = 'force-static';
+export const revalidate = 86400; // 24h minutes
+
+async function getPost(slug: string): Promise<{
+	slug: string;
+	status: 'published';
+	user_created: { display_name?: string };
+	title: string;
+	content: string;
+	thumbnail: string;
+	summary: string;
+	hero_image: string;
+	published_at: string;
+}> {
+	try {
+		const post = await directus.request(
+			readItem('blog', slug, { fields: ['*', { slug, user_created: ['display_name'] }] }),
+		);
+
+		return post as any;
+	} catch (error) {
+		notFound();
+	}
+}
+
+export async function generateMetadata(
+	{ params }: { params: Promise<{ locale: Locale; slug: string }> },
+	parent: ResolvingMetadata,
+): Promise<Metadata> {
+	const { slug } = await params;
+
+	const post = await getPost(slug);
+
+	return {
+		title: post.title,
+		description: post.summary,
+		authors: [{ name: post.user_created.display_name || 'BuildTheEarth' }],
+		openGraph: { images: [`${directus.url}assets/${post.thumbnail}`] },
+	};
+}
+
+export default async function Page({ params }: { params: Promise<{ locale: Locale; slug: string }> }) {
+	const locale = (await params).locale;
+	setRequestLocale(locale);
+	const formatter = await getFormatter();
+
+	const post = await getPost((await params).slug);
+
+	return (
+		<Wrapper offsetHeader={false} head={{ title: post.title, src: `${directus.url}assets/${post.hero_image}` }}>
+			<Box dangerouslySetInnerHTML={{ __html: post.content }} className={styles.blogContent} />
+
+			<Group wrap="nowrap" gap={10} mt="xs" mb="md" justify="flex-end">
+				<Tooltip label={'Published on ' + formatter.dateTime(new Date(post.published_at), { dateStyle: 'medium' })}>
+					<IconCalendar size={16} />
+				</Tooltip>
+				<Text size="sm" c="dimmed">
+					{formatter.dateTime(new Date(post.published_at), { dateStyle: 'medium' })} /{' '}
+					{post.user_created.display_name || 'BuildTheEarth'}
+				</Text>
+			</Group>
+		</Wrapper>
+	);
+}
