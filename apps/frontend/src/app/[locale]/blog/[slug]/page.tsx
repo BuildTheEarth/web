@@ -1,7 +1,7 @@
 import Wrapper from '@/components/layout/Wrapper';
 import styles from '@/styles/Blog.module.css';
 import directus from '@/util/directus';
-import { readItem } from '@directus/sdk';
+import { readItem, readItems } from '@directus/sdk';
 import { Box, Group, Text, Tooltip } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
 import { Metadata, ResolvingMetadata } from 'next';
@@ -31,6 +31,11 @@ async function getPost(slug: string): Promise<{
 	} catch (error) {
 		notFound();
 	}
+}
+
+export async function generateStaticParams() {
+	const posts = await directus.request(readItems('blog', { fields: ['slug'], limit: 25 }));
+	return posts;
 }
 
 export async function generateMetadata(
