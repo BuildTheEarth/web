@@ -2,29 +2,38 @@ import AppearAnimation from '@/components/animations/AppearAnimation';
 import LottieAnimation from '@/components/animations/LottieAnimation';
 import SplitTextAnimation from '@/components/animations/SplitText';
 import LinkButton from '@/components/core/LinkButton';
+import { OutreachArticle, OutreachArticleCard } from '@/components/data/OutreachArticle';
 import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
 import prisma from '@/util/db';
+import directus from '@/util/directus';
+import { readItems } from '@directus/sdk';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import {
 	BackgroundImage,
 	Box,
 	Button,
+	Card,
+	CardSection,
 	Center,
 	Container,
 	Flex,
 	Grid,
 	GridCol,
+	Group,
 	Image,
+	SimpleGrid,
 	Space,
 	Stepper,
 	StepperStep,
 	Text,
 	Title,
+	Tooltip,
 } from '@mantine/core';
 import {
 	IconBuildingSkyscraper,
+	IconCalendar,
 	IconChevronRight,
 	IconCornerRightUp,
 	IconCrane,
@@ -36,6 +45,7 @@ import {
 import * as motion from 'motion/react-client';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
+import { Fragment } from 'react';
 
 export const dynamic = 'force-static';
 
@@ -57,7 +67,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 		orderBy: { createdAt: 'desc' },
 		include: { image: { select: { name: true } } },
 	});
-	console.log('Showcase images:', showcaseImages[0].id);
+
+	const outreachArticles: OutreachArticle[] = (await directus.request(
+		readItems('outreach', { limit: 4, sort: '-date', fields: ['*'] }),
+	)) as unknown as OutreachArticle[];
+
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
@@ -408,7 +422,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								</Stepper>
 							</Box>
 						</GridCol>
-						<GridCol span={{ base: 13, md: 10 }} offset={{ base: 0, md: 1 }}>
+					</Grid>
+					<Grid>
+						<GridCol span={12}>
 							<Carousel
 								withIndicators
 								w="90%"
@@ -437,6 +453,41 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							>
 								{t('gallery.cta')}
 							</LinkButton>
+						</GridCol>
+						<GridCol>
+							<Box mt="calc(var(--mantine-spacing-xl) * 3)">
+								<Title order={2}>{t('mediaList.title')}</Title>
+								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
+							</Box>
+						</GridCol>
+						<GridCol>
+							<Group justify="center" w="100%">
+								<SimpleGrid cols={2} hiddenFrom="lg" id="outreach-2">
+									{outreachArticles.slice(0, 2).map((item) => (
+										<Fragment key={item.id}>
+											<OutreachArticleCard article={item} formatter={formatter} ctaText={t('mediaList.cta')} />
+										</Fragment>
+									))}
+								</SimpleGrid>
+								<SimpleGrid cols={3} visibleFrom="lg" id="outreach-3">
+									{outreachArticles.slice(0, 3).map((item) => (
+										<Fragment key={item.id}>
+											<OutreachArticleCard article={item} formatter={formatter} ctaText={t('mediaList.cta')} />
+										</Fragment>
+									))}
+								</SimpleGrid>
+							</Group>
+							<Group justify="flex-end">
+								<LinkButton
+									href="/gallery"
+									variant="filled"
+									color="indigo"
+									rightSection={<IconChevronRight size={12} />}
+									mt="md"
+								>
+									{t('mediaList.mainCta')}
+								</LinkButton>
+							</Group>
 						</GridCol>
 					</Grid>
 				</Container>

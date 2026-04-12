@@ -14,6 +14,7 @@
 	},
 	"dependencies": {
 		"@bte-germany/terraconvert": "^1.1.2",
+		"@directus/sdk": "^21.2.2",
 		"@mantine/carousel": "^8.3.10",
 		"@mantine/charts": "^8.3.10",
 		"@mantine/code-highlight": "^8.3.10",

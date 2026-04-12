@@ -905,6 +905,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@directus/sdk@npm:^21.2.2":
+  version: 21.2.2
+  resolution: "@directus/sdk@npm:21.2.2"
+  checksum: 10c0/ba31bf272cbceaa3a3d203354d90c4cba1d891d4e9a9cf915c57a4e7323dcee2d772fe50e20dab9ddbe6087b64974da0dbce4c860cd1787b378a14fc30f9a566
+  languageName: node
+  linkType: hard
+
 "@discoveryjs/json-ext@npm:0.5.7":
   version: 0.5.7
   resolution: "@discoveryjs/json-ext@npm:0.5.7"
@@ -11918,6 +11925,7 @@ __metadata:
   resolution: "frontend@workspace:apps/frontend"
   dependencies:
     "@bte-germany/terraconvert": "npm:^1.1.2"
+    "@directus/sdk": "npm:^21.2.2"
     "@mantine/carousel": "npm:^8.3.10"
     "@mantine/charts": "npm:^8.3.10"
     "@mantine/code-highlight": "npm:^8.3.10"

@@ -35,3 +35,4 @@ See the global Readme file.
 | NEXT_PUBLIC_FRONTEND_URL   | https://yourserver.net                    | The URL to your local or deployed BuildTheEarth Website           |
 | FRONTEND_KEY               | thirdtopsecret                            | The Key used to Authenticate against the BuildTheEarth Website    |
 | REPORTS_WEBHOOK            | https://discord.com/api/webhooks/...      | A discord webhook to send reports to                              |
+| CMS_URL                    | https://cms.yoursever.net                 | URL pointing to your directus cms                                 |

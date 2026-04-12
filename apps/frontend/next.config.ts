@@ -6,7 +6,12 @@ const nextConfig: NextConfig = {
 	output: 'standalone',
 	poweredByHeader: false,
 	outputFileTracingRoot: path.join(__dirname, '../../'),
-	images: { remotePatterns: [{ protocol: 'https', hostname: 'cdn.buildtheearth.net', pathname: '/**' }] },
+	images: {
+		remotePatterns: [
+			{ protocol: 'https', hostname: 'cdn.buildtheearth.net', pathname: '/**' },
+			{ protocol: 'https', hostname: 'cms.buildtheearth.net', pathname: '/assets/**' },
+		],
+	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
 };
 

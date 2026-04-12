@@ -74,7 +74,8 @@
 		},
 		"mediaList": {
 			"title": "You might have seen",
-			"cta": "Continue reading"
+			"cta": "Continue reading",
+			"mainCta": "View all"
 		}
 	},
 	"notfound": {
