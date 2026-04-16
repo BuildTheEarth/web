@@ -71,6 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			className={`${catamaranFont.variable} ${cairoFont.variable} ${minecraftFont.variable}`}
 			suppressHydrationWarning
 			style={{ overflowX: 'hidden', width: '100vw' }}
+			data-scroll-behavior="smooth"
 		>
 			<head>
 				<ColorSchemeScript />

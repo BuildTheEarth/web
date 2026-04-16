@@ -65,7 +65,8 @@
 		"react-dom": "19.2.5",
 		"react-map-gl": "^8.1.0",
 		"recharts": "^3.5.1",
-		"swr": "^2.3.3"
+		"swr": "^2.3.3",
+		"tiptap-markdown": "^0.9.0"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "*",
