@@ -40,8 +40,9 @@ export default function GalleryClient({
 	const pagedShowcases = visibleShowcases.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 	const eagerImageCount = 6;
 	const formatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
-	const blocks = Array.from({ length: Math.ceil(pagedShowcases.length / 6) }, (_, blockIndex) =>
-		pagedShowcases.slice(blockIndex * 6, blockIndex * 6 + 6),
+	const [firstShowcase, ...remainingShowcases] = pagedShowcases;
+	const blocks = Array.from({ length: Math.ceil(remainingShowcases.length / 6) }, (_, blockIndex) =>
+		remainingShowcases.slice(blockIndex * 6, blockIndex * 6 + 6),
 	);
 
 	const params = new URLSearchParams(searchParams.toString());
@@ -58,7 +59,7 @@ export default function GalleryClient({
 			initial={{ opacity: 0 }}
 			whileInView={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
-			transition={{ duration: 0.35, delay: Math.min(index * 0.02, 0.15) }}
+			transition={{ duration: 0.2, delay: Math.min(index * 0.02, 0.15) }}
 			viewport={{ once: true, margin: '200px' }}
 			style={fillHeight ? { display: 'flex', height: '100%', width: '100%' } : undefined}
 		>
@@ -82,9 +83,10 @@ export default function GalleryClient({
 				{fillHeight ? (
 					<Box pos="relative" w="100%" h="100%" mih={0} style={{ flex: 1, minHeight: 0, zIndex: 0 }}>
 						<Image
-							src={showcase.imageSrc}
 							alt={`${showcase.title}, ${showcase.city}`}
+							src={showcase.imageSrc}
 							fill
+							unoptimized
 							sizes={sizes}
 							loading={index < eagerImageCount ? 'eager' : 'lazy'}
 							fetchPriority={index < eagerImageCount ? 'high' : 'auto'}
@@ -102,6 +104,7 @@ export default function GalleryClient({
 								alt={`${showcase.title}, ${showcase.city}`}
 								width={showcase.imageWidth || 1920}
 								height={showcase.imageHeight || 1080}
+								unoptimized
 								sizes={sizes}
 								loading={index < eagerImageCount ? 'eager' : 'lazy'}
 								fetchPriority={index < eagerImageCount ? 'high' : 'auto'}
@@ -166,13 +169,18 @@ export default function GalleryClient({
 				</Button>
 			</Group>
 
+			{firstShowcase && (
+				<Box mb="lg" visibleFrom="lg">
+					{renderShowcaseCard(firstShowcase, 0, '(min-width: 75em) 90vw, (min-width: 48em) 90vw, 100vw')}
+				</Box>
+			)}
 			<Stack gap="lg" visibleFrom="lg">
 				{blocks.map((block, blockIndex) => {
 					const [featured, sideTop, sideBottom, ...rowItems] = block;
 					if (!featured) return null;
 
 					const featuredOnRight = blockIndex % 2 === 1;
-					const blockStart = blockIndex * 6;
+					const blockStart = blockIndex * 6 + 1;
 
 					return (
 						<Box key={`gallery-block-${featured.id}`}>
@@ -235,7 +243,7 @@ export default function GalleryClient({
 
 			<Grid gutter="lg" hiddenFrom="lg">
 				{pagedShowcases.map((showcase, index) => (
-					<GridCol key={showcase.id} span={{ base: 12, sm: 6 }}>
+					<GridCol key={showcase.id} span={{ base: 12, sm: index === 0 ? 12 : 6 }}>
 						{renderShowcaseCard(showcase, index, '(min-width: 48em) 50vw, 100vw')}
 					</GridCol>
 				))}
