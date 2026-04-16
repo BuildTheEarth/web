@@ -20,7 +20,7 @@ export function BuildTeamDisplay({
 			};
 
 	return (
-		<Group gap="sm" key={team.id || team.slug} {...groupProps} c="gray" td="none">
+		<Group gap="sm" key={team.id || team.slug} {...groupProps} c="dark.0" td="none">
 			<Avatar size={30} src={team.icon} color={'buildtheearth'}>
 				{team.slug.toUpperCase().substring(0, 2)}
 			</Avatar>

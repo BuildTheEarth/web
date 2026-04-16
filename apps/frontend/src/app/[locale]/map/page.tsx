@@ -1,5 +1,4 @@
 import Wrapper from '@/components/layout/Wrapper';
-import { Space } from '@mantine/core';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { MapClient } from './interactivity';
 
