@@ -28,7 +28,7 @@
 		"@mantine/spotlight": "^8.3.10",
 		"@mantine/tiptap": "^8.3.10",
 		"@mapbox/mapbox-gl-draw": "^1.4.3",
-		"@next/bundle-analyzer": "^16.0.10",
+		"@next/bundle-analyzer": "16.2.4",
 		"@repo/db": "*",
 		"@tabler/icons-react": "^3.31.0",
 		"@tiptap/core": "^2.11.7",
@@ -57,12 +57,12 @@
 		"moment": "^2.30.1",
 		"moment-timezone": "^0.5.45",
 		"motion": "^12.6.5",
-		"next": "16.0.10",
+		"next": "16.2.4",
 		"next-intl": "^4.3.5",
 		"next-transpile-modules": "^10.0.1",
-		"react": "19.2.3",
+		"react": "19.2.5",
 		"react-country-flag": "^3.1.0",
-		"react-dom": "19.2.3",
+		"react-dom": "19.2.5",
 		"react-map-gl": "^8.1.0",
 		"recharts": "^3.5.1",
 		"swr": "^2.3.3"
@@ -71,11 +71,11 @@
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
 		"@types/node": "^22",
-		"@types/react": "19.2.7",
+		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3",
 		"baseline-browser-mapping": "^2.10.18",
 		"eslint": "^9",
-		"eslint-config-next": "16.0.10",
+		"eslint-config-next": "16.2.4",
 		"eslint-plugin-storybook": "^0.12.0",
 		"postcss": "^8.5.3",
 		"postcss-preset-mantine": "^1.17.0",
@@ -87,7 +87,7 @@
 		"*": "prettier --write --ignore-unknown"
 	},
 	"resolutions": {
-		"@types/react": "19.2.7",
+		"@types/react": "19.2.14",
 		"@types/react-dom": "19.2.3"
 	}
 }
