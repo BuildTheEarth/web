@@ -194,5 +194,54 @@
 			"title": "Media Inquiries",
 			"description": "For media inquiries, partnership opportunities, or any other outreach-related questions, please contact us at <mail></mail>. We look forward to hearing from you! You can find us on various <contact>social media platforms</contact> as well."
 		}
+	},
+	"our-progress": {
+		"title": "Our Progress",
+		"meta": {
+			"title": "Our Progress",
+			"description": "Discover what Build The Earth has achieved so far and where we are headed next."
+		},
+		"sections": {
+			"achievements": {
+				"title": "What We Have Achieved So Far",
+				"description": "Our measured completion may look modest at first glance, but this project was never about speed-running a percentage. It is about building global collaboration, preserving local identity, and creating a lasting digital record of our world together."
+			},
+			"progress": {
+				"title": "Progress Estimates",
+				"description": "These metrics show our progress as a fraction of Earth's total area, a humbling reminder that the mission is about quality and community, not speed."
+			}
+		},
+		"stats": {
+			"builders": {
+				"label": "Builders",
+				"description": "People actively collaborating in teams, mentoring newcomers, and sharing techniques worldwide."
+			},
+			"buildings": {
+				"label": "Buildings Tracked",
+				"description": "A growing archive of real-world structures recreated with care, research, and local knowledge."
+			},
+			"area": {
+				"label": "Area Covered",
+				"description": "Large and small regions mapped into claims so teams can coordinate work across continents."
+			}
+		},
+		"cards": {
+			"claimCompletion": {
+				"title": "Claim Completion",
+				"description": "{finishedClaims} of {activeClaims} active claims are marked finished."
+			},
+			"landCoverage": {
+				"title": "Earth Land Mass Coverage",
+				"description": "Progress ({trackedAreaKm2} km²) of Earth's land surface."
+			},
+			"totalCoverage": {
+				"title": "Earth Total Area Coverage",
+				"description": "Progress ({trackedAreaKm2} km²) of Earth's total surface."
+			}
+		},
+		"impact": {
+			"title": "Low Percentages. Massive Impact.",
+			"description": "BTE is not a race to 100%. We are building cities with historical context, local detail, and thousands of volunteer hours. Even a single district done right can educate, inspire, and connect people across countries."
+		}
 	}
 }
