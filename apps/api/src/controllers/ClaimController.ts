@@ -460,9 +460,20 @@ class ClaimController {
 		const area = req.body.area;
 		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ');
 
-		const buildingCount = area && (await this.updateClaimBuildingCount({ area }, false));
+		let buildingCount;
 
-		if (buildingCount == undefined || buildingCount == null || typeof buildingCount != 'number') {
+		try {
+			buildingCount = area && (await this.updateClaimBuildingCount({ area }, false));
+			if (buildingCount == undefined || buildingCount == null || typeof buildingCount != 'number') {
+				this.core
+					.getLogger()
+					.error(`Failed to get building count for new claim (bt: ${buildteam.id}, name: ${req.body.name})`);
+				return ERROR_GENERIC(req, res, 500, 'Could not update building count');
+			}
+		} catch (e) {
+			this.core
+				.getLogger()
+				.error(`Error while getting building count for new claim (bt: ${buildteam.id}, name: ${req.body.name}): ${e}`);
 			return ERROR_GENERIC(req, res, 500, 'Could not update building count');
 		}
 
