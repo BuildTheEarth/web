@@ -21,7 +21,9 @@ import { theme } from '@/util/theme';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import { Metadata } from 'next';
-import { NextIntlClientProvider } from 'next-intl';
+import { Locale, NextIntlClientProvider } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
+import { parseMaxPostponedStateSize } from 'next/dist/server/config-shared';
 import { Cairo, Catamaran, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
@@ -39,35 +41,39 @@ export async function generateStaticParams() {
 	return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const { locale } = await params;
+	const t = (await getTranslations({ namespace: 'seo', locale })) as any;
+
 	return {
 		metadataBase: new URL('https://buildtheearth.net'),
-		title: { default: 'BuildTheEarth - Builiding the Earth in Minecraft 1:1', template: '%s | BuildTheEarth' },
-		description:
-			"Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
-		generator: 'BuildTheEarth',
-		applicationName: 'BuildTheEarth',
-		authors: [{ name: 'BuildTheEarth', url: 'https://buildtheearth.net' }],
+		title: { default: t('title.default'), template: t('title.template') },
+		description: t('description'),
+		generator: t('site_name'),
+		applicationName: t('site_name'),
 		referrer: 'origin-when-cross-origin',
-		keywords: [
-			'BuildTheEarth',
-			'Minecraft',
-			'BTE',
-			'Community',
-			'Earth',
-			'Map',
-			'Minecraft',
-			'Server',
-			'1:1',
-			'Global',
-		],
+		openGraph: {
+			type: 'website',
+			siteName: t('site_name'),
+			images: ['/opengraph-image.png'],
+			locale: t('locale_long'),
+			alternateLocale: routing.locales.filter((currentLocale) => currentLocale !== locale),
+		},
+		twitter: {
+			card: 'summary_large_image',
+			images: ['/opengraph-image.png'],
+		},
+		assets: ['/favicon.ico', '/opengraph-image.png'],
+		keywords: t.raw('keywords') as string[],
 	};
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+	const locale = await getLocale();
+
 	return (
 		<html
-			lang="en"
+			lang={locale}
 			className={`${catamaranFont.variable} ${cairoFont.variable} ${minecraftFont.variable}`}
 			suppressHydrationWarning
 			style={{ overflowX: 'hidden', width: '100vw' }}
@@ -82,7 +88,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 						<SWRSetup>
 							<ModalsProvider>
 								<Notifications limit={3} />
-								<DEBUG_ScreenSizeCheck />
+								{
+									//  Only in development
+									process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />
+								}
 								<AppLayout>{children}</AppLayout>
 							</ModalsProvider>
 						</SWRSetup>

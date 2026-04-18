@@ -1,12 +1,12 @@
 import { routing } from '@/i18n/routing';
 import prisma from '@/util/db';
 import directus from '@/util/directus';
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo';
 import { readItems } from '@directus/sdk';
 import type { MetadataRoute } from 'next';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-	const locales = routing.locales;
-	const baseUrl = 'https://buildtheearth.net';
+	const defaultLocale = routing.defaultLocale;
 	const links = [
 		'/',
 		'/contact',
@@ -19,29 +19,24 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		'/about-us/outreach',
 		'/blog',
 		'/blog/[slug]',
+		'/our-progress',
 		'/map',
 	];
 
 	const buildTeams = await prisma.buildTeam.findMany({
 		select: { slug: true },
 	});
-	const blogPosts = await directus.request(readItems('blog', { fields: ['slug'], limit: 25 }));
+	const blogPosts = await directus.request(readItems('blog', { fields: ['slug'] }));
 
 	return links.flatMap((link) => {
 		if (link === '/teams/[slug]') {
 			return buildTeams.map((team) => {
 				const teamLink = `/teams/${team.slug}`;
 				return {
-					url: `${baseUrl}${teamLink}`,
+					url: getLocalizedUrl(defaultLocale, teamLink),
 					lastModified: new Date(),
 					alternates: {
-						languages: locales.reduce(
-							(acc, locale) => {
-								acc[locale] = `${baseUrl}/${locale}${teamLink}`;
-								return acc;
-							},
-							{} as Record<string, string>,
-						),
+						languages: getLanguageAlternates(teamLink),
 					},
 				};
 			});
@@ -50,31 +45,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 			return blogPosts.map((post) => {
 				const blogLink = `/blog/${post.slug}`;
 				return {
-					url: `${baseUrl}${blogLink}`,
+					url: getLocalizedUrl(defaultLocale, blogLink),
 					lastModified: new Date(),
 					alternates: {
-						languages: locales.reduce(
-							(acc, locale) => {
-								acc[locale] = `${baseUrl}/${locale}${blogLink}`;
-								return acc;
-							},
-							{} as Record<string, string>,
-						),
+						languages: getLanguageAlternates(blogLink),
 					},
 				};
 			});
 		}
 		return {
-			url: `${baseUrl}${link}`,
+			url: getLocalizedUrl(defaultLocale, link),
 			lastModified: new Date(),
 			alternates: {
-				languages: locales.reduce(
-					(acc, locale) => {
-						acc[locale] = `${baseUrl}/${locale}${link}`;
-						return acc;
-					},
-					{} as Record<string, string>,
-				),
+				languages: getLanguageAlternates(link),
 			},
 		};
 	});

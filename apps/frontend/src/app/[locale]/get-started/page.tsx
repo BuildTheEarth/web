@@ -10,6 +10,7 @@ import { Link } from '@/i18n/navigation';
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
 import getCountryName, { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import {
 	BackgroundImage,
 	Box,
@@ -36,10 +37,25 @@ import ReactCountryFlag from 'react-country-flag';
 import JoinServerGuide from '../teams/[slug]/interactivity';
 
 import * as motion from 'motion/react-client';
-export const metadata: Metadata = {
-	title: 'Get Started',
-	description: 'Explore our servers, build your country, and contribute to the largest Minecraft project to date!',
-};
+
+export const dynamic = 'force-static';
+export const revalidate = 3600; // 60m
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'get-started.seo' })) as (
+		key: 'title' | 'description',
+	) => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/get-started'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({
 	params,
@@ -162,7 +178,7 @@ export default async function Page({
 							<AppearAnimation component="div" delay={0.2} duration={1}>
 								<Card padding="lg" style={{ boxShadow: 'var(--mantine-shadow-block)', height: '100%' }} h="100%">
 									<CardSection>
-										<Image src="/thumbs/get-started/explore.webp" height={160} alt="Norway" />
+										<Image src="/thumbs/get-started/explore.webp" height={160} alt={t('cards.imageAlt')} />
 									</CardSection>
 									<Stack justify="space-between" h="100%">
 										<div>
@@ -190,7 +206,7 @@ export default async function Page({
 							<AppearAnimation component="div" delay={0.4} duration={1}>
 								<Card padding="lg" style={{ boxShadow: 'var(--mantine-shadow-block)', height: '100%' }} h="100%">
 									<CardSection>
-										<Image src="/thumbs/get-started/start-building.webp" height={160} alt="Norway" />
+										<Image src="/thumbs/get-started/start-building.webp" height={160} alt={t('cards.imageAlt')} />
 									</CardSection>
 									<Stack justify="space-between" h="100%">
 										<div>

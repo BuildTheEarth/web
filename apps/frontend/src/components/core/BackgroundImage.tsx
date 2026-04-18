@@ -1,5 +1,5 @@
 import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import Image from 'next/image';
+import SmartImage from './SmartImage';
 
 export default function BackgroundImage({
 	src,
@@ -7,11 +7,13 @@ export default function BackgroundImage({
 	loading,
 	priority = false,
 	blurDataURL,
+	fetchPriority,
 	...props
 }: {
 	src: string | StaticImport;
 	loading?: 'eager' | 'lazy' | undefined;
 	priority?: boolean;
+	fetchPriority?: 'high' | 'low' | 'auto' | undefined;
 	children?: any;
 	blurDataURL?: any;
 	[k: string]: any;
@@ -19,9 +21,10 @@ export default function BackgroundImage({
 	return (
 		<>
 			<div style={{ position: 'relative', overflow: 'hidden', ...props.rootStyle }} onClick={props.onClick}>
-				<Image
+				<SmartImage
 					loading={loading}
 					priority={priority}
+					fetchPriority={fetchPriority}
 					alt="Background image"
 					src={src}
 					placeholder={blurDataURL ? 'blur' : undefined}

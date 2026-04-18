@@ -1,17 +1,29 @@
 import { QuerySearchInput } from '@/components/core/SearchInput';
 import Wrapper from '@/components/layout/Wrapper';
-import { routing } from '@/i18n/routing';
 import prisma from '@/util/db';
-import { Accordion, AccordionControl, AccordionItem, AccordionPanel, Alert, Box, Group, Title } from '@mantine/core';
+import { getLanguageAlternates } from '@/util/seo';
+import { Accordion, AccordionControl, AccordionItem, AccordionPanel, Alert, Group } from '@mantine/core';
 import { IconLanguage } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
-import { getLocale, getTranslations, setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const metadata: Metadata = {
-	title: 'Frequently Asked Questions',
-	description: "If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
-};
+export const dynamic = 'force-static';
+export const revalidate = 86400; // 24h
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'faq.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/faq'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({
 	searchParams,

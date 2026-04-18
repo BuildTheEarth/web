@@ -4,9 +4,9 @@ import { Button, Container, Group, Text } from '@mantine/core';
 
 import { Link } from '@/i18n/navigation';
 import classes from '@/styles/layout/Header.module.css';
+import SmartImage from '@/components/core/SmartImage';
 import { IconChevronRight } from '@tabler/icons-react';
 import { getTranslations } from 'next-intl/server';
-import Image from 'next/image';
 import HeaderDrawer from './HeaderDrawer';
 import { headerLinks } from './links';
 
@@ -24,7 +24,7 @@ export async function Header() {
 			<Container size="xl" className={classes.inner}>
 				<Link href="/" style={{ textDecoration: 'none' }} prefetch={true} aria-label="Go to home page">
 					<Group style={{ position: 'relative', top: 2, userSelect: 'none' }}>
-						<Image
+						<SmartImage
 							src={'/logo.png'}
 							alt="Logo"
 							height={40}

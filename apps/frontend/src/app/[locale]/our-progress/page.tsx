@@ -2,6 +2,7 @@ import Wrapper from '@/components/layout/Wrapper';
 import ProgressCard from '@/components/our-progress/ProgressCard';
 import StatCard from '@/components/our-progress/StatCard';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import { Box, Container, Grid, GridCol, SimpleGrid, Text, Title } from '@mantine/core';
 import { IconBuildingSkyscraper, IconMap, IconUsersGroup } from '@tabler/icons-react';
 import { Metadata } from 'next';
@@ -10,13 +11,16 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'our-progress.meta' })) as (
+	const t = (await getTranslations({ locale, namespace: 'our-progress.seo' })) as (
 		key: 'title' | 'description',
 	) => string;
 
 	return {
 		title: t('title'),
 		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/our-progress'),
+		},
 	};
 }
 

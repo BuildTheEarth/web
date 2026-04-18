@@ -1,6 +1,7 @@
 import Anchor from '@/components/core/Anchor';
 import Wrapper from '@/components/layout/Wrapper';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import { ActionIcon, Box, Group, Paper, SimpleGrid, Text, Title } from '@mantine/core';
 import {
 	IconAt,
@@ -16,10 +17,22 @@ import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const metadata: Metadata = {
-	title: 'Contact Us',
-	description: "If you have any questions, suggestions, or feedback, feel free to reach out to us. We're here to help!",
-};
+export const dynamic = 'force-static';
+export const revalidate = 86400;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'contact.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/contact'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;
@@ -111,7 +124,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					))}
 				</SimpleGrid>
 				<Title order={2} mb="md" mt="xl">
-					Ban Appeals
+					{t('appeals.title')}
 				</Title>
 				<Text maw={{ base: '100%', xs: '85%' }}>
 					{t.rich('appeals.description', {

@@ -4,17 +4,29 @@ import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
 import { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import { Avatar, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
 import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const metadata: Metadata = {
-	title: 'Build Teams',
-	description:
-		"Explore BuildTheEarth by choosing a Team and visiting it's Minecraft server. BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
-};
+export const dynamic = 'force-static';
+export const revalidate = 3600; // 60m
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'teams.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/teams'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({
 	searchParams,

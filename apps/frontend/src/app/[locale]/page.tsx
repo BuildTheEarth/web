@@ -8,14 +8,13 @@ import { Link } from '@/i18n/navigation';
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
 import prisma from '@/util/db';
 import directus from '@/util/directus';
+import { getLanguageAlternates } from '@/util/seo';
 import { readItems } from '@directus/sdk';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
 import {
 	BackgroundImage,
 	Box,
 	Button,
-	Card,
-	CardSection,
 	Center,
 	Container,
 	Flex,
@@ -29,11 +28,9 @@ import {
 	StepperStep,
 	Text,
 	Title,
-	Tooltip,
 } from '@mantine/core';
 import {
 	IconBuildingSkyscraper,
-	IconCalendar,
 	IconChevronRight,
 	IconCornerRightUp,
 	IconCrane,
@@ -43,12 +40,27 @@ import {
 	IconUsersGroup,
 } from '@tabler/icons-react';
 import * as motion from 'motion/react-client';
+import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { Fragment } from 'react';
 
 export const dynamic = 'force-static';
 export const revalidate = 7200;
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'home.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;

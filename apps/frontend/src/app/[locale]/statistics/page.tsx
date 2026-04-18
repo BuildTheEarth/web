@@ -1,5 +1,6 @@
 import Wrapper from '@/components/layout/Wrapper';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import { BarChart, PieChart } from '@mantine/charts';
 import { Badge, Box, Code, Container, Grid, GridCol, Text, Title } from '@mantine/core';
 // import { PrismaClient } from '@prisma/client';
@@ -7,11 +8,24 @@ import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 
-export const metadata: Metadata = {
-	title: 'Project Statistics',
-	description:
-		'Explore detailed statistics and insights about our projects, including progress, contributions, and more.',
-};
+export const dynamic = 'force-static';
+export const revalidate = 3600; // 60m
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'statistics.seo' })) as (
+		key: 'title' | 'description',
+	) => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/statistics'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;
@@ -75,7 +89,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			>
 				<Grid>
 					<GridCol span={12}>
-						<Title order={2}>At a Glance</Title>
+						<Title order={2}>{t('atAGlance')}</Title>
 						<div className="heading-underline" />
 					</GridCol>
 
@@ -100,10 +114,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(counts[0])}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Users
+									{t('users.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									are helping Building the Earth in Minecraft.
+									{t('users.description')}
 								</Text>
 							</Box>
 							<Box
@@ -115,10 +129,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(counts[2]._sum.buildings || 0, { maximumSignificantDigits: 4 })}+
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Buildings
+									{t('buildings.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									have already been constructed on the entire globe.
+									{t('buildings.description')}
 								</Text>
 							</Box>
 							<Box
@@ -131,10 +145,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(counts[1], { maximumSignificantDigits: 4 })}+
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Claims
+									{t('claims.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									are beeing build or are already finished.
+									{t('claims.description')}
 								</Text>
 							</Box>
 						</Box>
@@ -142,7 +156,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 					<GridCol span={12}>
 						<Title order={2} mt="calc(var(--mantine-spacing-xl) * 3)">
-							Claims
+							{t('claims.sectionTitle')}
 						</Title>
 						<div className="heading-underline" />
 					</GridCol>
@@ -167,10 +181,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(claims[4])}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Total Claims
+									{t('claims.total.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									haven been created.
+									{t('claims.total.description')}
 								</Text>
 							</Box>
 							<Box
@@ -183,10 +197,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(counts[1])}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Active Claims
+									{t('claims.active.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									are currently visible on our map.
+									{t('claims.active.description')}
 								</Text>
 							</Box>
 							<Box
@@ -198,10 +212,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(claims[0])}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Finished Claims
+									{t('claims.finished.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									have already been fully built.
+									{t('claims.finished.description')}
 								</Text>
 							</Box>
 							<Box
@@ -214,10 +228,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(counts[1] - claims[0])}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Unfinished Claims
+									{t('claims.unfinished.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									are still under construction.
+									{t('claims.unfinished.description')}
 								</Text>
 							</Box>
 						</Box>
@@ -238,14 +252,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Finished vs. Unfinished <br />
-										(Count)
+										{t('charts.finishedVsUnfinishedCount')}
 									</Title>
 									<Box style={{ width: '100%', height: '150px', overflow: 'hidden' }} mb="md">
 										<PieChart
 											data={[
-												{ name: 'Finished', value: finished, color: 'green.6' },
-												{ name: 'Unfinished', value: unfinished, color: 'gray.6' },
+												{ name: t('common.finished'), value: finished, color: 'green.6' },
+												{ name: t('common.unfinished'), value: unfinished, color: 'gray.6' },
 											]}
 											startAngle={180}
 											endAngle={0}
@@ -258,7 +271,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											<tr>
 												<td>
 													<Badge size="lg" color="green" variant="dot" bg="transparent" bd="none">
-														Finished
+														{t('common.finished')}
 													</Badge>
 												</td>
 												<td>
@@ -272,7 +285,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											<tr>
 												<td>
 													<Badge size="lg" color="gray" variant="dot" bg="transparent" bd="none">
-														Unfinished
+														{t('common.unfinished')}
 													</Badge>
 												</td>
 												<td>
@@ -309,14 +322,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Finished vs. Unfinished <br />
-										(Buildings)
+										{t('charts.finishedVsUnfinishedBuildings')}
 									</Title>
 									<Box style={{ width: '100%', height: '150px', overflow: 'hidden' }} mb="md">
 										<PieChart
 											data={[
-												{ name: 'Finished', value: finished, color: 'green.6' },
-												{ name: 'Unfinished', value: unfinished, color: 'gray.6' },
+												{ name: t('common.finished'), value: finished, color: 'green.6' },
+												{ name: t('common.unfinished'), value: unfinished, color: 'gray.6' },
 											]}
 											startAngle={180}
 											endAngle={0}
@@ -329,7 +341,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											<tr>
 												<td>
 													<Badge size="lg" color="green" variant="dot" bg="transparent" bd="none">
-														Finished
+														{t('common.finished')}
 													</Badge>
 												</td>
 												<td>
@@ -343,7 +355,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											<tr>
 												<td>
 													<Badge size="lg" color="gray" variant="dot" bg="transparent" bd="none">
-														Unfinished
+														{t('common.unfinished')}
 													</Badge>
 												</td>
 												<td>
@@ -380,14 +392,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Finished vs. Unfinished <br />
-										(Area)
+										{t('charts.finishedVsUnfinishedArea')}
 									</Title>
 									<Box style={{ width: '100%', height: '150px', overflow: 'hidden' }} mb="md">
 										<PieChart
 											data={[
-												{ name: 'Finished', value: finished, color: 'green.6' },
-												{ name: 'Unfinished', value: unfinished, color: 'gray.6' },
+												{ name: t('common.finished'), value: finished, color: 'green.6' },
+												{ name: t('common.unfinished'), value: unfinished, color: 'gray.6' },
 											]}
 											startAngle={180}
 											endAngle={0}
@@ -400,7 +411,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											<tr>
 												<td>
 													<Badge size="lg" color="green" variant="dot" bg="transparent" bd="none">
-														Finished
+														{t('common.finished')}
 													</Badge>
 												</td>
 												<td>
@@ -416,7 +427,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 											<tr>
 												<td>
 													<Badge size="lg" color="gray" variant="dot" bg="transparent" bd="none">
-														Unfinished
+														{t('common.unfinished')}
 													</Badge>
 												</td>
 												<td>
@@ -461,10 +472,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(claims[5]._sum.buildings || 0)}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Total Buildings
+									{t('buildings.total.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									haven been created.
+									{t('buildings.total.description')}
 								</Text>
 							</Box>
 							<Box
@@ -477,10 +488,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(claims[1]._sum.buildings || 0)}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Active Buildings
+									{t('buildings.active.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									are currently visible on our map.
+									{t('buildings.active.description')}
 								</Text>
 							</Box>
 							<Box
@@ -492,10 +503,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number(counts[2]._sum.buildings || 0)}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Finished Buildings
+									{t('buildings.finished.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									have already been fully built.
+									{t('buildings.finished.description')}
 								</Text>
 							</Box>
 							<Box
@@ -508,10 +519,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatter.number((claims[1]._sum.buildings || 0) - (counts[2]._sum.buildings || 0))}
 								</Text>
 								<Text tt="uppercase" fw={700}>
-									Unfinished Buildings
+									{t('buildings.unfinished.label')}
 								</Text>
 								<Text c="dimmed" fz="sm" mt={5}>
-									are still under construction.
+									{t('buildings.unfinished.description')}
 								</Text>
 							</Box>
 						</Box>
@@ -530,7 +541,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								{formatter.number((claims[6]._sum.size || 0) / 1000000, { maximumFractionDigits: 3 })} km<sup>2</sup>
 							</Text>
 							<Text tt="uppercase" fw={700}>
-								Total Area
+								{t('area.total')}
 							</Text>
 						</Box>
 					</GridCol>
@@ -547,7 +558,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								{formatter.number((claims[2]._sum.size || 0) / 1000000, { maximumFractionDigits: 3 })} km<sup>2</sup>
 							</Text>
 							<Text tt="uppercase" fw={700}>
-								Active Area
+								{t('area.active')}
 							</Text>
 						</Box>
 					</GridCol>
@@ -564,14 +575,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								{formatter.number((claims[3]._sum.size || 0) / 1000000, { maximumFractionDigits: 3 })} km<sup>2</sup>
 							</Text>
 							<Text tt="uppercase" fw={700}>
-								Finished Area
+								{t('area.finished')}
 							</Text>
 						</Box>
 					</GridCol>
 
 					<GridCol span={12}>
 						<Title order={3} mt="calc(var(--mantine-spacing-xl) * 2)">
-							Leaderboard
+							{t('leaderboard.title')}
 						</Title>
 					</GridCol>
 
@@ -594,8 +605,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Largest Finished Claim <br />
-										(By Buildings)
+										{t('leaderboard.largestFinishedByBuildings')}
 									</Title>
 									<BarChart
 										h={300}
@@ -648,8 +658,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Largest Finished Claim <br />
-										(By Area)
+										{t('leaderboard.largestFinishedByArea')}
 									</Title>
 									<BarChart
 										h={300}
@@ -708,8 +717,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Most Claims <br />
-										(By User)
+										{t('leaderboard.mostClaimsByUser')}
 									</Title>
 									<BarChart
 										h={400}
@@ -764,8 +772,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Most Claims <br />
-										(By BuildTeam)
+										{t('leaderboard.mostClaimsByBuildTeam')}
 									</Title>
 									<BarChart
 										h={400}
@@ -804,7 +811,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 					<GridCol span={12}>
 						<Title order={2} mt="calc(var(--mantine-spacing-xl) * 3)">
-							BuildTeams
+							{t('buildTeams.title')}
 						</Title>
 						<div className="heading-underline" />
 					</GridCol>
@@ -828,8 +835,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									p="xl"
 								>
 									<Title order={3} fz="md" tt="uppercase" mb="xl">
-										Most Builders <br />
-										(By BuildTeam)
+										{t('buildTeams.mostBuilders')}
 									</Title>
 									<BarChart
 										h={400}

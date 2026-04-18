@@ -1,18 +1,27 @@
 import GalleryClient, { type GalleryShowcase } from '@/components/gallery/GalleryClient';
 import Wrapper from '@/components/layout/Wrapper';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import { Container } from '@mantine/core';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
-import { setRequestLocale } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 export const dynamic = 'force-static';
 export const revalidate = 43400; // 12h
 
-export const metadata: Metadata = {
-	title: 'Showcase Gallery',
-	description:
-		'Explore our Showcase Gallery, where we feature the incredible creations of our community. From stunning landscapes to intricate builds, discover the talent and creativity that thrives within BuildTheEarth. Get inspired by the amazing projects our members have brought to life in Minecraft.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'gallery.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/gallery'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;

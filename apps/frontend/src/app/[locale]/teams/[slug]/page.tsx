@@ -3,6 +3,7 @@ import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
 import { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
+import { getLanguageAlternates } from '@/util/seo';
 import {
 	Avatar,
 	Badge,
@@ -26,12 +27,39 @@ import { Locale } from 'next-intl';
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import JoinServerGuide from './interactivity';
 
-export const metadata: Metadata = {
-	title: 'Build Teams',
-	description:
-		"Explore BuildTheEarth by choosing a Team and visiting it's Minecraft server. BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
-};
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ locale: Locale; slug: string }>;
+}): Promise<Metadata> {
+	const { locale, slug } = await params;
+	const t = (await getTranslations({ locale, namespace: 'teams.ownPage.seo' })) as (
+		key: 'notFoundTitle' | 'notFoundDescription' | 'defaultOgImage',
+	) => string;
 
+	const buildTeam = await prisma.buildTeam.findUnique({
+		where: { slug },
+		select: { name: true, about: true, backgroundImage: true },
+	});
+	if (!buildTeam) {
+		return {
+			title: t('notFoundTitle'),
+			description: t('notFoundDescription'),
+			alternates: {
+				languages: getLanguageAlternates(`/teams/${slug}`),
+			},
+		};
+	}
+
+	return {
+		title: buildTeam.name,
+		description: buildTeam.about,
+		alternates: {
+			languages: getLanguageAlternates(`/teams/${slug}`),
+		},
+		openGraph: { images: [buildTeam.backgroundImage || t('defaultOgImage')] },
+	};
+}
 export async function generateStaticParams() {
 	const teams = await prisma.buildTeam.findMany({ select: { slug: true } });
 	return teams;
@@ -61,7 +89,7 @@ export default async function Page({
 	if (!buildTeam)
 		return (
 			<Wrapper offsetHeader={false}>
-				<Paper p="md"> -/- </Paper>
+				<Paper p="md">{t('notFoundFallback')}</Paper>
 			</Wrapper>
 		);
 
@@ -217,7 +245,7 @@ export default async function Page({
 												boxShadow: 'var(--mantine-shadow-block)',
 											}}
 											src={showcase.image.src}
-											alt={showcase.image.name || 'Showcase Image'}
+											alt={showcase.image.name || t('showcaseImageAlt')}
 											loading="lazy"
 										/>
 										<Box
@@ -274,7 +302,7 @@ export default async function Page({
 									))}
 								</Group>
 								<Button component={Link} href="/map/teams" mt="md" rightSection={<IconChevronRight size={12} />}>
-									View on Map
+									{t('locationsList.viewOnMap')}
 								</Button>
 							</Box>
 						</GridCol>

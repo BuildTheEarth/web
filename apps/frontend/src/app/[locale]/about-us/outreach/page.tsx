@@ -1,6 +1,7 @@
 import { OutreachArticle, OutreachArticleCard } from '@/components/data/OutreachArticle';
 import Wrapper from '@/components/layout/Wrapper';
 import directus from '@/util/directus';
+import { getLanguageAlternates } from '@/util/seo';
 import { readItems } from '@directus/sdk';
 import { Accordion, AccordionControl, AccordionItem, AccordionPanel, SimpleGrid, Text, Title } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons-react';
@@ -12,11 +13,19 @@ import Link from 'next/link';
 export const dynamic = 'force-static';
 export const revalidate = 86400; // 24h
 
-export const metadata: Metadata = {
-	title: 'Outreach',
-	description:
-		"Discover the latest news, updates, and media coverage about BuildTheEarth. Explore our outreach efforts and see how we're making an impact in the Minecraft and gaming communities.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'outreach.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/about-us/outreach'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;

@@ -1,12 +1,13 @@
 import Wrapper from '@/components/layout/Wrapper';
 import styles from '@/styles/Blog.module.css';
 import directus from '@/util/directus';
+import { getLanguageAlternates } from '@/util/seo';
 import { readItem, readItems } from '@directus/sdk';
 import { Box, Group, Text, Tooltip } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
-import { Metadata, ResolvingMetadata } from 'next';
+import { Metadata } from 'next';
 import { Locale } from 'next-intl';
-import { getFormatter, setRequestLocale } from 'next-intl/server';
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 export const dynamic = 'force-static';
 export const revalidate = 86400; // 24h minutes
@@ -38,19 +39,25 @@ export async function generateStaticParams() {
 	return posts;
 }
 
-export async function generateMetadata(
-	{ params }: { params: Promise<{ locale: Locale; slug: string }> },
-	parent: ResolvingMetadata,
-): Promise<Metadata> {
-	const { slug } = await params;
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ locale: Locale; slug: string }>;
+}): Promise<Metadata> {
+	const { locale, slug } = await params;
+	const t = (await getTranslations({ locale, namespace: 'blog.seo' })) as (key: 'defaultOgImage') => string;
 
 	const post = await getPost(slug);
+	const ogImage = post.thumbnail ? `${directus.url}assets/${post.thumbnail}` : t('defaultOgImage');
 
 	return {
 		title: post.title,
 		description: post.summary,
 		authors: [{ name: post.user_created.display_name || 'BuildTheEarth' }],
-		openGraph: { images: [`${directus.url}assets/${post.thumbnail}`] },
+		alternates: {
+			languages: getLanguageAlternates(`/blog/${slug}`),
+		},
+		openGraph: { images: [ogImage] },
 	};
 }
 

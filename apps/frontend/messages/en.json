@@ -1,4 +1,27 @@
 {
+	"seo": {
+		"locale_long": "en_US",
+		"locale_short": "en",
+		"locale_name": "English",
+		"site_name": "BuildTheEarth",
+		"description": "Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
+		"title": {
+			"template": "%s | BuildTheEarth",
+			"default": "Builiding the Earth in Minecraft 1:1 | BuildTheEarth"
+		},
+		"keywords": [
+			"BuildTheEarth",
+			"Minecraft",
+			"BTE",
+			"Community",
+			"Earth",
+			"Map",
+			"Minecraft",
+			"Server",
+			"1:1",
+			"Global"
+		]
+	},
 	"common": {
 		"pagination": {
 			"page": "Page {page}",
@@ -27,6 +50,10 @@
 		}
 	},
 	"home": {
+		"seo": {
+			"title": "Building The Earth In Minecraft",
+			"description": "Join BuildTheEarth and help recreate the planet in Minecraft at 1:1 scale."
+		},
 		"landing": {
 			"image": {
 				"alt": "Roundabout in a french city, background image"
@@ -84,6 +111,10 @@
 		"cta": "Go back"
 	},
 	"teams": {
+		"seo": {
+			"title": "Build Teams",
+			"description": "Explore BuildTheEarth teams, find your region, and join a Minecraft server to start contributing."
+		},
 		"title": "Build Teams",
 		"description": [
 			"BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
@@ -95,6 +126,13 @@
 		},
 		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}",
 		"ownPage": {
+			"seo": {
+				"notFoundTitle": "Build Team Not Found",
+				"notFoundDescription": "The Build Team you are looking for does not exist.",
+				"defaultOgImage": "/opengraph-image.png"
+			},
+			"notFoundFallback": "Build team not found.",
+			"showcaseImageAlt": "Showcase image",
 			"overview": "Overview",
 			"details": "Details",
 			"ip": "Minecraft IP",
@@ -127,11 +165,16 @@
 			},
 			"locationsList": {
 				"label": "Locations",
-				"description": "{buildTeam} is building in multiple countires. You can find the full list of countries below. If you want to view this list on a map, click the button below."
+				"description": "{buildTeam} is building in multiple countires. You can find the full list of countries below. If you want to view this list on a map, click the button below.",
+				"viewOnMap": "View on Map"
 			}
 		}
 	},
 	"faq": {
+		"seo": {
+			"title": "Frequently Asked Questions",
+			"description": "Get answers to common BuildTheEarth questions, including joining teams, building rules, and community details."
+		},
 		"title": "Frequently Asked Questions",
 		"differentLanguageAlert": {
 			"title": "Translation of Frequently asked Questions",
@@ -139,6 +182,10 @@
 		}
 	},
 	"contact": {
+		"seo": {
+			"title": "Contact Us",
+			"description": "Reach BuildTheEarth through social channels, staff contacts, or appeals support."
+		},
 		"title": "Contact Us",
 		"socialMedia": "Social Media",
 		"staffContacts": "Project Management",
@@ -148,9 +195,91 @@
 		}
 	},
 	"statistics": {
+		"seo": {
+			"title": "Project Statistics",
+			"description": "Explore BuildTheEarth statistics for builders, claims, buildings, and project progress."
+		},
+		"atAGlance": "At a Glance",
+		"users": {
+			"label": "Users",
+			"description": "are helping Building the Earth in Minecraft."
+		},
+		"buildings": {
+			"label": "Buildings",
+			"description": "have already been constructed on the entire globe.",
+			"total": {
+				"label": "Total Buildings",
+				"description": "haven been created."
+			},
+			"active": {
+				"label": "Active Buildings",
+				"description": "are currently visible on our map."
+			},
+			"finished": {
+				"label": "Finished Buildings",
+				"description": "have already been fully built."
+			},
+			"unfinished": {
+				"label": "Unfinished Buildings",
+				"description": "are still under construction."
+			}
+		},
+		"claims": {
+			"label": "Claims",
+			"description": "are beeing build or are already finished.",
+			"sectionTitle": "Claims",
+			"total": {
+				"label": "Total Claims",
+				"description": "haven been created."
+			},
+			"active": {
+				"label": "Active Claims",
+				"description": "are currently visible on our map."
+			},
+			"finished": {
+				"label": "Finished Claims",
+				"description": "have already been fully built."
+			},
+			"unfinished": {
+				"label": "Unfinished Claims",
+				"description": "are still under construction."
+			}
+		},
+		"common": {
+			"finished": "Finished",
+			"unfinished": "Unfinished"
+		},
+		"charts": {
+			"finishedVsUnfinishedCount": "Finished vs. Unfinished (Count)",
+			"finishedVsUnfinishedBuildings": "Finished vs. Unfinished (Buildings)",
+			"finishedVsUnfinishedArea": "Finished vs. Unfinished (Area)"
+		},
+		"area": {
+			"total": "Total Area",
+			"active": "Active Area",
+			"finished": "Finished Area"
+		},
+		"leaderboard": {
+			"title": "Leaderboard",
+			"largestFinishedByBuildings": "Largest Finished Claim (By Buildings)",
+			"largestFinishedByArea": "Largest Finished Claim (By Area)",
+			"mostClaimsByUser": "Most Claims (By User)",
+			"mostClaimsByBuildTeam": "Most Claims (By BuildTeam)"
+		},
+		"buildTeams": {
+			"title": "BuildTeams",
+			"mostBuilders": "Most Builders (By BuildTeam)"
+		},
 		"title": "Project Statistics"
 	},
 	"get-started": {
+		"seo": {
+			"title": "Get Started",
+			"description": "Learn how to explore servers, find your team, and begin building with BuildTheEarth."
+		},
+		"cards": {
+			"imageAlt": "Get started card image"
+		},
 		"title": "Get Started with Building",
 		"arrowDown": {
 			"alt": "Scroll down to learn more about how to get started"
@@ -188,6 +317,10 @@
 		}
 	},
 	"outreach": {
+		"seo": {
+			"title": "Outreach",
+			"description": "Read media coverage, press features, and outreach stories about BuildTheEarth."
+		},
 		"title": "Outreach",
 		"articles": "Articles & Media",
 		"contact": {
@@ -197,6 +330,10 @@
 	},
 	"our-progress": {
 		"title": "Our Progress",
+		"seo": {
+			"title": "Our Progress",
+			"description": "Discover what Build The Earth has achieved so far and where we are headed next."
+		},
 		"meta": {
 			"title": "Our Progress",
 			"description": "Discover what Build The Earth has achieved so far and where we are headed next."
@@ -242,6 +379,31 @@
 		"impact": {
 			"title": "Low Percentages. Massive Impact.",
 			"description": "BTE is not a race to 100%. We are building cities with historical context, local detail, and thousands of volunteer hours. Even a single district done right can educate, inspire, and connect people across countries."
+		}
+	},
+	"gallery": {
+		"seo": {
+			"title": "Showcase Gallery",
+			"description": "Explore the BuildTheEarth showcase gallery with community builds from around the world."
+		}
+	},
+	"blog": {
+		"seo": {
+			"title": "Blog",
+			"description": "Read BuildTheEarth news, updates, and stories from the global community.",
+			"defaultOgImage": "/opengraph-image.png"
+		},
+		"intro": "Ever wonder how we build our projects, what goes on behind the scenes, or want to stay updated with our latest news? Then this is the place! Dive into a world of creativity, innovation, and community spirit as we share stories, updates, and insights from our journey to recreate Earth in Minecraft.",
+		"latestPosts": "Latest Posts",
+		"thumbnailAlt": "Thumbnail image",
+		"publishedOn": "Published on {date}",
+		"defaultAuthor": "BuildTheEarth",
+		"readMore": "Read more"
+	},
+	"map": {
+		"seo": {
+			"title": "Project Map",
+			"description": "Explore active and finished BuildTheEarth claims on the interactive world map."
 		}
 	}
 }

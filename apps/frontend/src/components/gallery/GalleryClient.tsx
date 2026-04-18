@@ -1,9 +1,9 @@
 'use client';
 
+import SmartImage from '@/components/core/SmartImage';
 import { QueryPagination } from '@/components/core/Pagination';
 import { AspectRatio, Avatar, Badge, Box, Button, Card, Grid, GridCol, Group, Stack, Text, Title } from '@mantine/core';
 import * as motion from 'motion/react-client';
-import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 
@@ -82,7 +82,7 @@ export default function GalleryClient({
 			>
 				{fillHeight ? (
 					<Box pos="relative" w="100%" h="100%" mih={0} style={{ flex: 1, minHeight: 0, zIndex: 0 }}>
-						<Image
+						<SmartImage
 							alt={`${showcase.title}, ${showcase.city}`}
 							src={showcase.imageSrc}
 							fill
@@ -99,7 +99,7 @@ export default function GalleryClient({
 				) : (
 					<AspectRatio ratio={16 / 9}>
 						<Box pos="relative" w="100%" h="100%">
-							<Image
+							<SmartImage
 								src={showcase.imageSrc}
 								alt={`${showcase.title}, ${showcase.city}`}
 								width={showcase.imageWidth || 1920}

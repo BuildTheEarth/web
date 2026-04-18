@@ -7,10 +7,28 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	outputFileTracingRoot: path.join(__dirname, '../../'),
 	images: {
-		remotePatterns: [
-			{ protocol: 'https', hostname: 'cdn.buildtheearth.net', pathname: '/**' },
-			{ protocol: 'https', hostname: 'cms.buildtheearth.net', pathname: '/assets/**' },
-		],
+		remotePatterns: [{ protocol: 'https', hostname: 'cms.buildtheearth.net', pathname: '/assets/**' }],
+	},
+	async headers() {
+		return [
+			{
+				source: '/(.*)',
+				headers: [
+					{
+						key: 'Content-Security-Policy',
+						value: [
+							"default-src 'self'",
+							"base-uri 'self'",
+							"frame-ancestors 'none'",
+							"img-src 'self' data: blob: https://cdn.buildtheearth.net https://cms.buildtheearth.net https://tiles.dachstein.cloud",
+							"connect-src 'self' https://buildtheearth.net https://cms.buildtheearth.net https://tiles.dachstein.cloud",
+							"style-src 'self' 'unsafe-inline'",
+							"script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+						].join('; '),
+					},
+				],
+			},
+		];
 	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
 };

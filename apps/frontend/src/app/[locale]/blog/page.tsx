@@ -1,26 +1,37 @@
 import LinkButton from '@/components/core/LinkButton';
 import Wrapper from '@/components/layout/Wrapper';
 import directus from '@/util/directus';
+import { getLanguageAlternates } from '@/util/seo';
 import { readItems } from '@directus/sdk';
 import { Card, CardSection, Group, Image, SimpleGrid, Text, Title, Tooltip } from '@mantine/core';
 import { IconCalendar, IconChevronRight } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
-import { getFormatter, setRequestLocale } from 'next-intl/server';
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
 
 export const dynamic = 'force-static';
 export const revalidate = 86400; // 24h
 
-export const metadata: Metadata = {
-	title: 'Blog',
-	description:
-		'Discover the latest news, updates, and stories from BuildTheEarth. Explore our blog to learn about our projects, events, and the passionate community behind our mission to recreate Earth in Minecraft.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale;
+	const t = (await getTranslations({ locale, namespace: 'blog.seo' })) as (key: 'title' | 'description') => string;
+
+	return {
+		title: t('title'),
+		description: t('description'),
+		alternates: {
+			languages: getLanguageAlternates('/blog'),
+		},
+		openGraph: { images: ['/opengraph-image.png'] },
+	};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;
 	setRequestLocale(locale);
 	const formatter = await getFormatter();
+	const t = await getTranslations('blog');
+	const tSeo = await getTranslations('blog.seo');
 
 	const posts: {
 		slug: string;
@@ -38,14 +49,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	)) as any[];
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: 'Blog', src: '/placeholders/home.png' }}>
-			<Text>
-				Ever wonder how we build our projects, what goes on behind the scenes, or want to stay updated with our latest
-				news? Then this is the place! Dive into a world of creativity, innovation, and community spirit as we share
-				stories, updates, and insights from our journey to recreate Earth in Minecraft.
-			</Text>
+		<Wrapper offsetHeader={false} head={{ title: tSeo('title'), src: '/placeholders/home.png' }}>
+			<Text>{t('intro')}</Text>
 			<Title order={2} mb="md" mt="lg">
-				Latest Posts
+				{t('latestPosts')}
 			</Title>
 			<SimpleGrid cols={3}>
 				{posts.map((post) => (
@@ -57,7 +64,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						className="anim"
 					>
 						<CardSection>
-							<Image src={`${directus.url}assets/${post.thumbnail}?height=320`} height={160} alt="Thumbnail Image" />
+							<Image src={`${directus.url}assets/${post.thumbnail}?height=320`} height={160} alt={t('thumbnailAlt')} />
 						</CardSection>
 
 						<Text
@@ -76,13 +83,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						</Text>
 						<Group wrap="nowrap" gap={10} mt="xs" mb="md">
 							<Tooltip
-								label={'Published on ' + formatter.dateTime(new Date(post.published_at), { dateStyle: 'medium' })}
+								label={t('publishedOn', {
+									date: formatter.dateTime(new Date(post.published_at), { dateStyle: 'medium' }),
+								})}
 							>
 								<IconCalendar size={16} />
 							</Tooltip>
 							<Text size="xs" c="dimmed">
 								{formatter.dateTime(new Date(post.published_at), { dateStyle: 'medium' })} /{' '}
-								{post.user_created.display_name || 'BuildTheEarth'}
+								{post.user_created.display_name || t('defaultAuthor')}
 							</Text>
 						</Group>
 						<Text
@@ -107,7 +116,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							rightSection={<IconChevronRight size={12} />}
 							mt="md"
 						>
-							Read more
+							{t('readMore')}
 						</LinkButton>
 					</Card>
 				))}
