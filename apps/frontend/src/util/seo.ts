@@ -1,7 +1,5 @@
 import { routing } from '@/i18n/routing';
 
-export const SITE_URL = 'https://buildtheearth.net';
-
 export function getLocalizedPath(locale: string, path: string): string {
 	const normalizedPath = path.startsWith('/') ? path : `/${path}`;
 
@@ -13,7 +11,7 @@ export function getLocalizedPath(locale: string, path: string): string {
 }
 
 export function getLocalizedUrl(locale: string, path: string): string {
-	return `${SITE_URL}${getLocalizedPath(locale, path)}`;
+	return `https://buildtheearth.net${getLocalizedPath(locale, path)}`;
 }
 
 export function getLanguageAlternates(path: string): Record<string, string> {

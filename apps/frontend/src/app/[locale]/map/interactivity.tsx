@@ -4,32 +4,9 @@ import { getClaimData } from '@/actions/claimActions';
 import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import { UserDisplay } from '@/components/data/User';
 import { CustomMapControls } from '@/components/map/CustomMapControls';
-import { Carousel } from '@mantine/carousel';
-import {
-	ActionIcon,
-	Badge,
-	Box,
-	Divider,
-	Drawer,
-	Flex,
-	Group,
-	Image,
-	Stack,
-	Text,
-	ThemeIcon,
-	Title,
-	Tooltip,
-} from '@mantine/core';
-import {
-	IconAddressBook,
-	IconBuildings,
-	IconInfoCircle,
-	IconMapPin,
-	IconPolygon,
-	IconRadar2,
-	IconUser,
-	IconUsers,
-} from '@tabler/icons-react';
+import { Carousel, CarouselSlide } from '@mantine/carousel';
+import { Box, Divider, Drawer, Flex, Group, Image, Stack, Text, ThemeIcon, Title, Tooltip } from '@mantine/core';
+import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react';
 import { useFormatter } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre';
@@ -237,9 +214,13 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 			{claimData._count.images > 0 && (
 				<Carousel withIndicators slideGap="0px" emblaOptions={{ loop: true }} style={{ aspectRatio: '16 / 9' }}>
 					{claimData.images.map((image) => (
-						<Carousel.Slide key={image.id} style={{ aspectRatio: '16 / 9', height: '100%' }}>
-							<Image style={{ aspectRatio: '16 / 9', height: '100%' }} src={image.src} />
-						</Carousel.Slide>
+						<CarouselSlide key={image.id} style={{ aspectRatio: '16 / 9', height: '100%' }}>
+							<Image
+								style={{ aspectRatio: '16 / 9', height: '100%' }}
+								src={image.src}
+								alt={'Image ' + image.id + ' for claim'}
+							/>
+						</CarouselSlide>
 					))}
 				</Carousel>
 			)}

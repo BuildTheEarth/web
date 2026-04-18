@@ -2,7 +2,7 @@ import { Image as MantineImage } from '@mantine/core';
 import NextImage, { type ImageProps as NextImageProps } from 'next/image';
 import type { CSSProperties } from 'react';
 
-const CLOUDFLARE_CDN_HOST = 'cdn.buildtheearth.net';
+const CDN_HOST = 'cdn.buildtheearth.net';
 
 function isCdnUrl(src: NextImageProps['src']): src is string {
 	if (typeof src !== 'string') {
@@ -14,7 +14,7 @@ function isCdnUrl(src: NextImageProps['src']): src is string {
 	}
 
 	try {
-		return new URL(src).hostname === CLOUDFLARE_CDN_HOST;
+		return new URL(src).hostname === CDN_HOST;
 	} catch {
 		return false;
 	}

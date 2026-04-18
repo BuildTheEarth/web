@@ -1,4 +1,5 @@
 import BackgroundImage from '@/components/core/BackgroundImage';
+import SmartImage from '@/components/core/SmartImage';
 import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
 import { getCountryNames } from '@/util/countries';
@@ -81,7 +82,16 @@ export default async function Page({
 
 	const buildTeam = await prisma.buildTeam.findUnique({
 		where: { slug: (await params).slug },
-		include: {
+		select: {
+			name: true,
+			about: true,
+			backgroundImage: true,
+			icon: true,
+			ip: true,
+			version: true,
+			location: true,
+			slug: true,
+			color: true,
 			_count: { select: { members: true, claims: true } },
 			showcases: { take: 2, include: { image: { select: { name: true, src: true } } } },
 		},
@@ -237,7 +247,7 @@ export default async function Page({
 							<SimpleGrid cols={2} spacing="calc(var(--mantine-spacing-lg) * 3)">
 								{buildTeam.showcases.map((showcase) => (
 									<Box key={showcase.id} style={{ borderRadius: 0, position: 'relative', cursor: 'pointer' }} mb="md">
-										<img
+										<SmartImage
 											style={{
 												objectFit: 'cover',
 												width: '100%',

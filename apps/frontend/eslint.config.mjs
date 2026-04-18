@@ -1,25 +1,18 @@
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import prettier from 'eslint-config-prettier/flat';
 import { defineConfig, globalIgnores } from 'eslint/config';
-import next from 'eslint-config-next';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-	recommendedConfig: js.configs.recommended,
-	allConfig: js.configs.all,
-});
-
-export default defineConfig([
-	globalIgnores(['**/dist/*']),
-	{
-		extends: [...next, ...compat.extends('plugin:path/recommended')],
-
-		rules: {
-			'@next/next/no-img-element': 0,
-		},
-	},
+const eslintConfig = defineConfig([
+	...nextVitals,
+	prettier,
+	// Override default ignores of eslint-config-next.
+	globalIgnores([
+		// Default ignores of eslint-config-next:
+		'.next/**',
+		'out/**',
+		'build/**',
+		'next-env.d.ts',
+	]),
 ]);
+
+export default eslintConfig;

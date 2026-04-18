@@ -23,8 +23,7 @@ import { Notifications } from '@mantine/notifications';
 import { Metadata } from 'next';
 import { Locale, NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
-import { parseMaxPostponedStateSize } from 'next/dist/server/config-shared';
-import { Cairo, Catamaran, Inter } from 'next/font/google';
+import { Cairo, Inter } from 'next/font/google';
 import localFont from 'next/font/local';
 
 const cairoFont = Cairo({ subsets: ['latin'], variable: '--font-cairo' });
