@@ -1,18 +1,43 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "ui": "tui",
-  "tasks": {
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"globalPassThroughEnv": [
+		"DATABASE_URL",
+		"CMS_URL",
+		"NEXTAUTH_URL",
+		"NEXT_PUBLIC_API_URL",
+		"NEXT_PUBLIC_FRONTEND_URL",
+		"NEXT_PUBLIC_KEYCLOAK_ID",
+		"NEXT_PUBLIC_KEYCLOAK_URL",
+		"NEXT_PUBLIC_MAPBOX_TOKEN",
+		"NEXT_PUBLIC_SMYLER_API_URL"
+	],
+	"tasks": {
 		"build": {
-			"dependsOn": ["db:generate", "^build"],
-			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": [".next/**", "!.next/cache/**", "dist/**"]
+			"dependsOn": [
+				"db:generate",
+				"^build"
+			],
+			"inputs": [
+				"$TURBO_DEFAULT$",
+				".env*"
+			],
+			"outputs": [
+				".next/**",
+				"!.next/cache/**",
+				"dist/**"
+			]
 		},
 		"clean": {
-			"dependsOn": ["^clean"],
+			"dependsOn": [
+				"^clean"
+			],
 			"cache": false
 		},
 		"start": {
-			"dependsOn": ["build"],
+			"dependsOn": [
+				"build"
+			],
 			"persistent": true,
 			"cache": false
 		},
@@ -21,10 +46,14 @@
 			"cache": false
 		},
 		"lint": {
-			"dependsOn": ["^lint"]
+			"dependsOn": [
+				"^lint"
+			]
 		},
 		"prettier": {
-			"dependsOn": ["^prettier"]
+			"dependsOn": [
+				"^prettier"
+			]
 		},
 		"db:generate": {
 			"cache": false
