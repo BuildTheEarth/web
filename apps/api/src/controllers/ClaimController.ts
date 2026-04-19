@@ -11,7 +11,7 @@ import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddl
 
 class ClaimController {
 	private core: Core;
-	private static readonly OVERPASS_URL = 'https://overpass.private.coffee/api/interpreter';
+	private static readonly OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 	private static readonly OVERPASS_MIN_INTERVAL_MS = 1200;
 	private static nextOverpassRequestAt = 0;
 
