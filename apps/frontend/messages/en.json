@@ -20,7 +20,11 @@
 			"Server",
 			"1:1",
 			"Global"
-		]
+		],
+		"og": {
+			"title": "BuildTheEarth",
+			"subtitle": "Rebuilding The Earth In Minecraft"
+		}
 	},
 	"common": {
 		"pagination": {

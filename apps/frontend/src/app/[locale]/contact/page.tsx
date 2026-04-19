@@ -30,7 +30,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/contact'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 
@@ -39,7 +38,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	setRequestLocale(locale);
 	const t = await getTranslations('contact');
 
-	const contacts = await prisma.contact.findMany({});
+	const contacts = await prisma.contact.findMany({
+		select: {
+			id: true,
+			name: true,
+			role: true,
+			discord: true,
+			email: true,
+		},
+	});
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>

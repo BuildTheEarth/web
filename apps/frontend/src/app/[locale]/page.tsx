@@ -58,7 +58,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 
@@ -78,7 +77,12 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 		where: { approved: true },
 		take: 9,
 		orderBy: { createdAt: 'desc' },
-		include: { image: { select: { name: true } } },
+		select: {
+			id: true,
+			title: true,
+			city: true,
+			image: { select: { name: true } },
+		},
 	});
 
 	const outreachArticles: OutreachArticle[] = (await directus.request(

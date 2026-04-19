@@ -21,7 +21,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/faq'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 
@@ -38,6 +37,11 @@ export default async function Page({
 
 	const q = (await searchParams).q || '';
 	const faqs = await prisma.fAQQuestion.findMany({
+		select: {
+			id: true,
+			question: true,
+			answer: true,
+		},
 		where: {
 			OR: [
 				{

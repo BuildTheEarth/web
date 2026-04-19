@@ -54,15 +54,15 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		openGraph: {
 			type: 'website',
 			siteName: t('site_name'),
-			images: ['/opengraph-image.png'],
+			// images: ['/opengraph-image.png'],
 			locale: t('locale_long'),
 			alternateLocale: routing.locales.filter((currentLocale) => currentLocale !== locale),
 		},
 		twitter: {
 			card: 'summary_large_image',
-			images: ['/opengraph-image.png'],
+			// images: ['/opengraph-image.png'],
 		},
-		assets: ['/favicon.ico', '/opengraph-image.png'],
+		// assets: ['/favicon.ico', '/opengraph-image.png'],
 		keywords: t.raw('keywords') as string[],
 	};
 }

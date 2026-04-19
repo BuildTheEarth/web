@@ -18,7 +18,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/map'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 

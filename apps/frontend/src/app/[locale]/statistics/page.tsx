@@ -23,7 +23,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/statistics'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 
@@ -52,12 +51,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			orderBy: { buildings: 'desc' },
 			where: { active: true, finished: true },
 			take: 5,
+			select: { name: true, city: true, buildings: true },
 		}),
 		prisma.claim.findMany({
 			orderBy: { size: 'desc' },
 			where: { active: true, finished: true },
 
 			take: 5,
+			select: { name: true, city: true, size: true },
 		}),
 		prisma.user.findMany({
 			orderBy: { claims: { _count: 'desc' } },

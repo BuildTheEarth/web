@@ -24,7 +24,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/teams'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 

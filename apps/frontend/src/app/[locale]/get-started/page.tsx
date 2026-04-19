@@ -53,7 +53,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/get-started'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 

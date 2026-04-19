@@ -22,7 +22,6 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/blog'),
 		},
-		openGraph: { images: ['/opengraph-image.png'] },
 	};
 }
 
