@@ -409,5 +409,8 @@
 			"title": "Project Map",
 			"description": "Explore active and finished BuildTheEarth claims on the interactive world map."
 		}
+	},
+	"attribution": {
+		"translations": {}
 	}
 }
