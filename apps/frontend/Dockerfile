@@ -24,12 +24,12 @@ RUN yarn install
 
 COPY --from=builder /app/out/full/ .
 RUN --mount=type=secret,id=database_url \
-    CMS_URL="$CMS_URL" \
-    DATABASE_URL="$(cat /run/secrets/database_url)" \
-    NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" \
-    NEXT_PUBLIC_FRONTEND_URL="$NEXT_PUBLIC_FRONTEND_URL" \
-    NEXT_PUBLIC_CDN_URL="$NEXT_PUBLIC_CDN_URL" \
-    NEXT_PUBLIC_MAP_STYLE_URL="$NEXT_PUBLIC_MAP_STYLE_URL" \
+    export CMS_URL="$CMS_URL" && \
+    export DATABASE_URL="$(cat /run/secrets/database_url)" && \
+    export NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" && \
+    export NEXT_PUBLIC_FRONTEND_URL="$NEXT_PUBLIC_FRONTEND_URL" && \
+    export NEXT_PUBLIC_CDN_URL="$NEXT_PUBLIC_CDN_URL" && \
+    export NEXT_PUBLIC_MAP_STYLE_URL="$NEXT_PUBLIC_MAP_STYLE_URL" && \
     yarn turbo run build --filter=frontend...
 
 FROM base AS runner
