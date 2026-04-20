@@ -18,18 +18,18 @@ ARG NEXT_PUBLIC_FRONTEND_URL
 ARG NEXT_PUBLIC_CDN_URL
 ARG NEXT_PUBLIC_MAP_STYLE_URL
 
+ENV CMS_URL=$CMS_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
+ENV NEXT_PUBLIC_CDN_URL=$NEXT_PUBLIC_CDN_URL
+ENV NEXT_PUBLIC_MAP_STYLE_URL=$NEXT_PUBLIC_MAP_STYLE_URL
 
 COPY --from=builder /app/out/json/ .
 RUN yarn install
 
 COPY --from=builder /app/out/full/ .
 RUN --mount=type=secret,id=database_url \
-    export CMS_URL="$CMS_URL" && \
-    export DATABASE_URL="$(cat /run/secrets/database_url)" && \
-    export NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" && \
-    export NEXT_PUBLIC_FRONTEND_URL="$NEXT_PUBLIC_FRONTEND_URL" && \
-    export NEXT_PUBLIC_CDN_URL="$NEXT_PUBLIC_CDN_URL" && \
-    export NEXT_PUBLIC_MAP_STYLE_URL="$NEXT_PUBLIC_MAP_STYLE_URL" && \
+    DATABASE_URL="$(cat /run/secrets/database_url)" \
     yarn turbo run build --filter=frontend...
 
 FROM base AS runner
