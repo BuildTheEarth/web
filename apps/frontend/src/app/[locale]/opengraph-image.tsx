@@ -31,7 +31,7 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
 					alignItems: 'center',
 					justifyContent: 'center',
 					position: 'relative',
-					backgroundImage: 'url("https://cdn.buildtheearth.net/static/opengraph-base.png")',
+					backgroundImage: `url("${process.env.NEXT_PUBLIC_CDN_URL}/static/opengraph-base.png")`,
 					backgroundSize: 'cover',
 					backgroundPosition: 'center',
 					padding: '40px',

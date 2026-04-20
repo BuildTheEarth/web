@@ -13,11 +13,10 @@ RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 WORKDIR /app
 
 ARG CMS_URL
-ARG NEXTAUTH_URL
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_FRONTEND_URL
-ARG NEXT_PUBLIC_KEYCLOAK_ID
-ARG NEXT_PUBLIC_KEYCLOAK_URL
+ARG NEXT_PUBLIC_CDN_URL
+ARG NEXT_PUBLIC_MAP_STYLE_URL
 
 
 COPY --from=builder /app/out/json/ .
@@ -27,11 +26,10 @@ COPY --from=builder /app/out/full/ .
 RUN --mount=type=secret,id=database_url \
     CMS_URL="$CMS_URL" \
     DATABASE_URL="$(cat /run/secrets/database_url)" \
-    NEXTAUTH_URL="$NEXTAUTH_URL" \
     NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" \
     NEXT_PUBLIC_FRONTEND_URL="$NEXT_PUBLIC_FRONTEND_URL" \
-    NEXT_PUBLIC_KEYCLOAK_ID="$NEXT_PUBLIC_KEYCLOAK_ID" \
-    NEXT_PUBLIC_KEYCLOAK_URL="$NEXT_PUBLIC_KEYCLOAK_URL" \
+    NEXT_PUBLIC_CDN_URL="$NEXT_PUBLIC_CDN_URL" \
+    NEXT_PUBLIC_MAP_STYLE_URL="$NEXT_PUBLIC_MAP_STYLE_URL" \
     yarn turbo run build --filter=frontend...
 
 FROM base AS runner

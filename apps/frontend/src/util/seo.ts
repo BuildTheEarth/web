@@ -11,7 +11,7 @@ export function getLocalizedPath(locale: string, path: string): string {
 }
 
 export function getLocalizedUrl(locale: string, path: string): string {
-	return `https://buildtheearth.net${getLocalizedPath(locale, path)}`;
+	return `${process.env.NEXT_PUBLIC_FRONTEND_URL}${getLocalizedPath(locale, path)}`;
 }
 
 export function getLanguageAlternates(path: string): Record<string, string> {

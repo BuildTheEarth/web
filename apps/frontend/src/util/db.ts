@@ -9,7 +9,7 @@ const prismaClientSingleton = () => {
 				src: {
 					needs: { name: true },
 					compute: (upload) => {
-						return `https://cdn.buildtheearth.net/uploads/${upload.name}`;
+						return `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${upload.name}`;
 					},
 				},
 			},

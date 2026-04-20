@@ -94,7 +94,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			<BackgroundImage
 				src={
 					showcaseImages.length > 0
-						? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[0].image.name
+						? `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[0].image.name}`
 						: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 				}
 				aria-label={t('landing.image.alt')}
@@ -182,7 +182,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									style={{ aspectRatio: '16 / 9' }}
 									src={
 										showcaseImages.length > 0
-											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[1].image.name
+											? `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[1].image.name}`
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
 									w="100%"
@@ -211,7 +211,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									style={{ aspectRatio: '17 / 9' }}
 									src={
 										showcaseImages.length > 0
-											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[2].image.name
+											? `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[2].image.name}`
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
 									w="100%"
@@ -354,7 +354,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									style={{ aspectRatio: '5 / 3' }}
 									src={
 										showcaseImages.length > 0
-											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[3].image.name
+											? `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[3].image.name}`
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
 									w="100%"
@@ -382,7 +382,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									style={{ aspectRatio: '16 / 9' }}
 									src={
 										showcaseImages.length > 0
-											? 'https://cdn.buildtheearth.net/uploads/' + showcaseImages[4].image.name
+											? `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[4].image.name}`
 											: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
 									}
 									w="100%"
@@ -457,7 +457,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }} key={`showcase-image-${image.id}`}>
 										<Image
 											style={{ aspectRatio: '16 / 9', height: '100%' }}
-											src={'https://cdn.buildtheearth.net/uploads/' + image.image.name}
+											src={`${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${image.image.name}`}
 											alt={image.title}
 										/>
 									</CarouselSlide>

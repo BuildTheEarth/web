@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 	const t = (await getTranslations({ namespace: 'seo', locale })) as any;
 
 	return {
-		metadataBase: new URL('https://buildtheearth.net'),
+		metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL!),
 		title: { default: t('title.default'), template: t('title.template') },
 		description: t('description'),
 		generator: t('site_name'),

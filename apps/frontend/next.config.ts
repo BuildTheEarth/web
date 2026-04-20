@@ -12,6 +12,21 @@ const nextConfig: NextConfig = {
 		remotePatterns: [{ protocol: 'https', hostname: 'cms.buildtheearth.net', pathname: '/assets/**' }],
 	},
 	async headers() {
+		const connectSources = [
+			process.env.NEXT_PUBLIC_FRONTEND_URL,
+			process.env.CMS_URL,
+			process.env.NEXT_PUBLIC_MAP_STYLE_URL?.split('/styles/')[0],
+			'https://static.cloudflareinsights.com',
+			'https://cloudflareinsights.com',
+			'https://cdn.discordapp.com',
+			'https://orangemug.github.io',
+		]
+			.filter(Boolean)
+			.join(' ');
+		const scriptSources = ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://static.cloudflareinsights.com'].join(
+			' ',
+		);
+
 		return [
 			{
 				source: '/(.*)',
@@ -22,10 +37,13 @@ const nextConfig: NextConfig = {
 							"default-src 'self'",
 							"base-uri 'self'",
 							"frame-ancestors 'none'",
-							"img-src 'self' data: blob: https://cdn.buildtheearth.net https://cms.buildtheearth.net https://tiles.dachstein.cloud",
-							"connect-src 'self' https://buildtheearth.net https://cms.buildtheearth.net https://tiles.dachstein.cloud",
+							'img-src * data: blob:',
+							`connect-src 'self' ${connectSources}`,
 							"style-src 'self' 'unsafe-inline'",
-							"script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+							`script-src ${scriptSources}`,
+							`script-src-elem ${scriptSources}`,
+							'worker-src blob:',
+							'object-src none',
 						].join('; '),
 					},
 				],

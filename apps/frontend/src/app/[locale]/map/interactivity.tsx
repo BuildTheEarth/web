@@ -83,7 +83,7 @@ export const MapClient = () => {
 		<>
 			<MapGL
 				style={{ width: '100vw', height: 'calc(100vh - var(--root-footer-height))' }}
-				mapStyle="https://tiles.dachstein.cloud/styles/bteextradark/style.json"
+				mapStyle={process.env.NEXT_PUBLIC_MAP_STYLE_URL}
 				attributionControl={{ compact: false }}
 				dragRotate={false}
 				maxTileCacheSize={50}

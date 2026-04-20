@@ -37,19 +37,16 @@ jobs:
       - name: Build the Docker image
         env:
           DOCKER_BUILDKIT: 1
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.INFISICAL_FRONTEND_DATABASE_URL }}
         run: |
           docker build . \
             --file apps/frontend/Dockerfile \
             --secret id=database_url,env=DATABASE_URL \
-            --build-arg CMS_URL="https://cms.buildtheearth.net" \
-            --build-arg NEXTAUTH_URL="https://buildtheearth.net" \
-            --build-arg NEXT_PUBLIC_API_URL="https://api.buildtheearth.net/api/v1" \
-            --build-arg NEXT_PUBLIC_SMYLER_API_URL="https://smybteapi.buildtheearth.net" \
-            --build-arg NEXT_PUBLIC_FRONTEND_URL="https://buildtheearth.net" \
-            --build-arg NEXT_PUBLIC_KEYCLOAK_URL="https://auth.buildtheearth.net/realms/website" \
-            --build-arg NEXT_PUBLIC_KEYCLOAK_ID="frontend" \
-            --build-arg NEXT_PUBLIC_MAPBOX_TOKEN="${{ secrets.MAPBOX_TOKEN }}" \
+            --build-arg CMS_URL="${{ secrets.INFISICAL_FRONTEND_CMS_URL }}" \
+            --build-arg NEXT_PUBLIC_API_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_API_URL }}" \
+            --build-arg NEXT_PUBLIC_FRONTEND_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_FRONTEND_URL }}" \
+            --build-arg NEXT_PUBLIC_CDN_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_CDN_URL }}" \
+            --build-arg NEXT_PUBLIC_MAP_STYLE_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_MAP_STYLE_URL }}" \
             --tag ghcr.io/buildtheearth/website-frontend:v2-$(git rev-parse --short HEAD) \
             --tag ghcr.io/buildtheearth/website-frontend:v2-latest
       - name: Docker push tag
