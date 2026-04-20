@@ -5,7 +5,8 @@
 		"USERPROFILE",
 		"HOME",
 		"APPDATA",
-		"INFISICAL_TOKEN"
+		"INFISICAL_TOKEN",
+		"DATABASE_URL"
 	],
 	"tasks": {
 		"build": {
