@@ -22,10 +22,8 @@ jobs:
           echo NEXTAUTH_URL="https://dash.buildtheearth.net" >> build.env.local
           echo NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" >> build.env.local
           echo NEXT_PUBLIC_API_URL="https://api.buildtheearth.net/api/v1" >> build.env.local
-          echo NEXT_PUBLIC_SMYLER_API_URL="https://smybteapi.buildtheearth.net" >> build.env.local
           echo NEXT_PUBLIC_FRONTEND_URL="https://buildtheearth.net" >> build.env.local
           echo FRONTEND_KEY="${{ secrets.FRONTEND_KEY }}" >> build.env.local
-          echo REPORTS_WEBHOOK="${{ secrets.REPORTS_WEBHOOK }}" >> build.env.local
           echo PORT=3000 >> build.env.local
 
       - name: Build Docker Image

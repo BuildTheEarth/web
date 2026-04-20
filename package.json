@@ -21,7 +21,9 @@
 		"db:studio": "yarn workspace @repo/db db:studio",
 		"db:migrate": "yarn workspace api db:migrate",
 		"git:pull": "git pull && yarn install && yarn run db:generate",
-		"ws": "yarn workspace"
+		"ws": "yarn workspace",
+		"env:generate": "turbo env:generate",
+		"env:copy": "turbo env:copy"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "*",

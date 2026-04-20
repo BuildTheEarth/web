@@ -155,7 +155,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					<LottieAnimation animationData={chevronBounceLottie} loop={true} style={{ height: '54px' }} />
 				</motion.a>
 			</BackgroundImage>
-			<div style={{ width: '100%' }} id="more">
+			<div style={{ width: '100%' }} id="more" role="main">
 				<Container
 					style={{ border: 'var(--debug-border) solid red' }}
 					my="calc(var(--mantine-spacing-xl) * 5)"
@@ -450,6 +450,8 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								emblaOptions={{ loop: true }}
 								style={{ aspectRatio: '16 / 9' }}
 								aria-label={t('gallery.alt')}
+								nextControlProps={{ 'aria-label': 'Next slide' }}
+								previousControlProps={{ 'aria-label': 'Previous slide' }}
 							>
 								{showcaseImages.slice(5, 9).map((image) => (
 									<CarouselSlide style={{ aspectRatio: '16 / 9', height: '100%' }} key={`showcase-image-${image.id}`}>

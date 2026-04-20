@@ -2,15 +2,10 @@
 	"$schema": "https://turbo.build/schema.json",
 	"ui": "tui",
 	"globalPassThroughEnv": [
-		"DATABASE_URL",
-		"CMS_URL",
-		"NEXTAUTH_URL",
-		"NEXT_PUBLIC_API_URL",
-		"NEXT_PUBLIC_FRONTEND_URL",
-		"NEXT_PUBLIC_KEYCLOAK_ID",
-		"NEXT_PUBLIC_KEYCLOAK_URL",
-		"NEXT_PUBLIC_MAPBOX_TOKEN",
-		"NEXT_PUBLIC_SMYLER_API_URL"
+		"USERPROFILE",
+		"HOME",
+		"APPDATA",
+		"INFISICAL_TOKEN"
 	],
 	"tasks": {
 		"build": {
@@ -60,6 +55,12 @@
 		},
 		"db:studio": {
 			"persistent": true,
+			"cache": false
+		},
+		"env:generate": {
+			"cache": false
+		},
+		"env:copy": {
 			"cache": false
 		}
 	}

@@ -7,10 +7,11 @@
 		"build": "next build",
 		"clean": "rm -rf .next",
 		"start": "next start",
-		"dev": "next dev --port 3000",
+		"dev": "infisical run --path=\"/frontend\" -- next dev --port 3000",
 		"lint": "eslint . --max-warnings 0",
 		"prettier": "prettier ./src --write --ignore-unknown",
-		"env:copy": "cp .env.example .env"
+		"env:copy": "cp .env.example .env",
+		"env:generate": "infisical secrets generate-example-env --path=\"/frontend\" > .env.example"
 	},
 	"dependencies": {
 		"@bte-germany/terraconvert": "^1.1.2",
