@@ -273,7 +273,9 @@ export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: s
 	});
 
 	sendBotMessage(
-		`**${userIsOwner.name}** \\nGenerated new API Token: ||${token}|| \\nPlease save it somewhere secure.`,
+		`## <:inprogress:1441532224473268234> ${userIsOwner.name} has a new API Token` +
+			`\n\nYou requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.` +
+			`\n\nToken: ||${token}|| \nSlug: \`${userIsOwner.slug}\``,
 		[userIsOwner.creator.discordId!],
 	);
 };
