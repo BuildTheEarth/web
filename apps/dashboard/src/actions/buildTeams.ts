@@ -8,6 +8,45 @@ import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
 import build from 'next/dist/build';
 import { redirect } from 'next/navigation';
+
+const socialNameOptions = [
+	'twitter',
+	'instagram',
+	'facebook',
+	'tiktok',
+	'twitch',
+	'youtube',
+	'github',
+	'website',
+] as const;
+
+type SocialName = (typeof socialNameOptions)[number];
+
+function normalizeSocialName(value: string): SocialName | null {
+	const normalized = value.trim().toLowerCase();
+	return socialNameOptions.includes(normalized as SocialName) ? (normalized as SocialName) : null;
+}
+
+function parseSocials(formData: FormData): Array<{ id?: string; name: string; url: string }> {
+	const socialsByIndex = new Map<number, { id?: string; name: string; url: string }>();
+
+	for (const [key, value] of Array.from(formData.entries())) {
+		const match = key.match(/^socials\[(\d+)\]\[(id|name|url)\]$/);
+		if (!match || typeof value !== 'string') continue;
+
+		const index = Number(match[1]);
+		const field = match[2];
+		const current = socialsByIndex.get(index) ?? { name: '', url: '' };
+
+		current[field as 'id' | 'name' | 'url'] = value;
+		socialsByIndex.set(index, current);
+	}
+
+	return Array.from(socialsByIndex.entries())
+		.sort(([left], [right]) => left - right)
+		.map(([, social]) => social)
+		.filter((social) => social.id || social.name.trim() || social.url.trim());
+}
 export const adminTransferTeam = async (
 	prevState: any,
 	{
@@ -248,6 +287,114 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 	revalidateWebsitePaths(['/teams', `/teams/${updatedTeam.slug}`]);
 	revalidatePath(`/team/${updatedTeam.slug}`);
 	redirect(`/team/${updatedTeam.slug}/edit?saved=1`);
+};
+
+export const userEditTeamSocials = async (
+	_prevState: { status?: string; error?: string },
+	formData: FormData,
+): Promise<{ status: string; error?: string }> => {
+	const userId = formData.get('userId') as string;
+	const id = formData.get('id') as string;
+
+	if (!userId || !id) {
+		return { status: 'error', error: 'Missing team context' };
+	}
+
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			userId,
+			buildTeamId: id,
+			permissionId: {
+				in: ['team.settings.edit', 'team.socials.edit'],
+			},
+		},
+	});
+
+	if (!userHasPermission) {
+		return { status: 'error', error: 'User does not have permission to edit these social links' };
+	}
+
+	const team = await prisma.buildTeam.findFirst({
+		where: { id },
+		select: {
+			id: true,
+			slug: true,
+			socials: { select: { id: true } },
+		},
+	});
+
+	if (!team) {
+		return { status: 'error', error: 'Could not find Build Team' };
+	}
+
+	const socials = parseSocials(formData);
+
+	for (const social of socials) {
+		if (!social.name.trim() || !social.url.trim()) {
+			return { status: 'error', error: 'Every social link needs a platform and a URL' };
+		}
+
+		if (!normalizeSocialName(social.name)) {
+			return { status: 'error', error: `Invalid social platform: ${social.name}` };
+		}
+	}
+
+	const existingSocialIds = new Set(team.socials.map((social) => social.id));
+	const submittedSocialIds = new Set<string>();
+
+	await prisma.$transaction(async (tx) => {
+		for (const social of socials) {
+			const normalizedName = normalizeSocialName(social.name)!;
+			const payload = {
+				name: normalizedName,
+				icon: normalizedName,
+				url: social.url.trim(),
+			};
+
+			if (social.id) {
+				const currentSocial = await tx.social.findFirst({
+					where: { id: social.id, buildTeamId: team.id },
+					select: { id: true },
+				});
+
+				if (!currentSocial) {
+					throw Error('One of the social links could not be found');
+				}
+
+				submittedSocialIds.add(currentSocial.id);
+				await tx.social.update({
+					where: { id: currentSocial.id },
+					data: payload,
+				});
+				continue;
+			}
+
+			const createdSocial = await tx.social.create({
+				data: {
+					...payload,
+					buildTeam: { connect: { id: team.id } },
+				},
+				select: { id: true },
+			});
+
+			submittedSocialIds.add(createdSocial.id);
+		}
+
+		const removedSocialIds = Array.from(existingSocialIds).filter((socialId) => !submittedSocialIds.has(socialId));
+
+		if (removedSocialIds.length > 0) {
+			await tx.social.deleteMany({
+				where: {
+					buildTeamId: team.id,
+					id: { in: removedSocialIds },
+				},
+			});
+		}
+	});
+
+	revalidateWebsitePaths(['/teams', `/teams/${team.slug}`]);
+	revalidatePath(`/team/${team.slug}`);
+	redirect(`/team/${team.slug}/edit?saved=1`);
 };
 
 export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: string }): Promise<void> => {

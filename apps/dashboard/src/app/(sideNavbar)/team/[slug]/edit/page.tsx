@@ -18,9 +18,19 @@ import {
 	Title,
 	Tooltip,
 } from '@mantine/core';
-import { IconAlertTriangle, IconCamera, IconDeviceFloppy, IconNote, IconSocial } from '@tabler/icons-react';
+import {
+	IconAlertTriangle,
+	IconCamera,
+	IconCloudComputing,
+	IconDeviceFloppy,
+	IconForms,
+	IconGlobe,
+	IconMessage,
+	IconNote,
+	IconSocial,
+} from '@tabler/icons-react';
 import { Metadata } from 'next';
-import SaveNotification, { RTEWrapper } from './interactivity';
+import SaveNotification, { RTEWrapper, SocialLinksEditor } from './interactivity';
 
 export const metadata: Metadata = {
 	title: 'Edit Build Team',
@@ -68,9 +78,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					<Group justify="space-between" w="100%" mt="xl" mb="md">
 						<Title order={1}>Edit Build Team Information</Title>
 						<Group gap="xs">
-							<Button color="green" rightSection={<IconDeviceFloppy size={14} />} type="submit">
-								Save
-							</Button>
+							<Tooltip label="Save Changes on main Settings">
+								<Button color="green" rightSection={<IconDeviceFloppy size={14} />} type="submit">
+									Save
+								</Button>
+							</Tooltip>
 						</Group>
 					</Group>
 					<Stack gap="md">
@@ -137,7 +149,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</TextCard>
 						<TextCard
 							title={`Location Information`}
-							icon={IconSocial}
+							icon={IconGlobe}
 							style={{ width: '100%', height: '100%', flexGrow: 1 }}
 						>
 							<SimpleGrid cols={2} spacing="xl" w="100%">
@@ -218,7 +230,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								/>
 							</SimpleGrid>
 						</TextCard>
-						<TextCard title={`Applications`} icon={IconSocial} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
+						<TextCard title={`Applications`} icon={IconForms} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
 							<SimpleGrid cols={1} spacing="xl" w="100%">
 								<Switch
 									label="Applications Enabled"
@@ -245,7 +257,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</TextCard>
 						<TextCard
 							title={`Interaction Messages`}
-							icon={IconSocial}
+							icon={IconMessage}
 							style={{ width: '100%', height: '100%', flexGrow: 1 }}
 						>
 							<Text fz="sm" w="85%">
@@ -288,7 +300,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								/>
 							</SimpleGrid>
 						</TextCard>
-						<TextCard title={`Developers`} icon={IconSocial} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
+						<TextCard
+							title={`Developers`}
+							icon={IconCloudComputing}
+							style={{ width: '100%', height: '100%', flexGrow: 1 }}
+						>
 							<SimpleGrid cols={1} spacing="xl" w="100%">
 								<TextInput
 									label="Webhook URL"
@@ -307,6 +323,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						Generate new API Key
 					</Button>
 				</form>
+
+				<SocialLinksEditor teamId={team.id} userId={user.id} socials={team.socials} />
 			</ContentWrapper>
 		</Protection>
 	);
