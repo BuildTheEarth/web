@@ -8931,6 +8931,7 @@ __metadata:
     react-dom: "npm:19.1.0"
     recharts: "npm:^2.13.3"
     swr: "npm:^2.2.5"
+    tiptap-markdown: "npm:^0.9.0"
     typescript: "npm:^5.6.3"
     zustand: "npm:^5.0.4"
   languageName: unknown
@@ -17075,6 +17076,20 @@ __metadata:
   peerDependencies:
     "@tiptap/core": ^2.0.3
   checksum: 10c0/0102ce7dc2ac6d418f544265a1ed12f5fba4abb4d540837cc1c8508f43bda69521e789342936cd7609194902336df3dbb4398d9765143dcf226e07885482807a
+  languageName: node
+  linkType: hard
+
+"tiptap-markdown@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "tiptap-markdown@npm:0.9.0"
+  dependencies:
+    "@types/markdown-it": "npm:^13.0.7"
+    markdown-it: "npm:^14.1.0"
+    markdown-it-task-lists: "npm:^2.1.1"
+    prosemirror-markdown: "npm:^1.11.1"
+  peerDependencies:
+    "@tiptap/core": ^3.0.1
+  checksum: 10c0/d599a93aac549963488394f1112937f9f2d268b1a48640ab5e1ba0b05590d184c26f0b5f714601a82c5437d77691819e1d790e0c14e6dc252a3476b6227b39a1
   languageName: node
   linkType: hard
 

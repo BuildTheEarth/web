@@ -1,4 +1,4 @@
-import '@/app/util/invalidatedSessions';
+import '@/util/invalidatedSessions';
 import { NextRequest, NextResponse } from 'next/server';
 import { createPublicKey, createVerify } from 'node:crypto';
 
