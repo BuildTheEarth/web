@@ -56,7 +56,7 @@ export const meNavLinks: NavLink[] = [
 	},
 	{
 		link: '/team/[team_slug]/applications',
-		label: 'Review',
+		label: 'Applications',
 		icon: 'Search',
 		permission: 'review-team',
 	},

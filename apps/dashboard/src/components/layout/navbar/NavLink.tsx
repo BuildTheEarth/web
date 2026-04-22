@@ -37,7 +37,7 @@ export default function NavLink(props: NavLink) {
 
 	return (
 		<Anchor
-			key={props.label}
+			key={props.link}
 			component={Link}
 			href={props.link.replaceAll('[team_slug]', activeBuildTeam?.slug || 'unknown')}
 			className={classes.navbarLink}
