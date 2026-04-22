@@ -11065,7 +11065,7 @@ __metadata:
     geolib: "npm:^3.3.4"
     highlight.js: "npm:^11.10.0"
     i18next: "npm:^22.0.6"
-    keycloak-js: "npm:^19.0.1"
+    keycloak-js: "npm:^26.2.3"
     mantine-contextmenu: "npm:^7.3.3"
     mapbox-gl: "npm:2.13.0"
     mapbox-gl-draw-snap-mode: "npm:^0.2.0"
@@ -12519,13 +12519,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-sha256@npm:^0.9.0":
-  version: 0.9.0
-  resolution: "js-sha256@npm:0.9.0"
-  checksum: 10c0/f20b9245f6ebe666f42ca05536f777301132fb1aa7fbc22f10578fa302717a6cca507344894efdeaf40a011256eb2f7d517b94ac7105bd5cf087fa61551ad634
-  languageName: node
-  linkType: hard
-
 "js-tokens@npm:^3.0.0 || ^4.0.0, js-tokens@npm:^4.0.0":
   version: 4.0.0
   resolution: "js-tokens@npm:4.0.0"
@@ -12715,13 +12708,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"keycloak-js@npm:^19.0.1":
-  version: 19.0.3
-  resolution: "keycloak-js@npm:19.0.3"
-  dependencies:
-    base64-js: "npm:^1.5.1"
-    js-sha256: "npm:^0.9.0"
-  checksum: 10c0/30f0a06c5661f4bbe35aa4ed3f8cb274f2b033fe80e28c2ba945d1de77cddbc2eb5f978240a386182e888d2f57f745e10296b48d430ffa6b27720e68e3bc5b4b
+"keycloak-js@npm:^26.2.3":
+  version: 26.2.3
+  resolution: "keycloak-js@npm:26.2.3"
+  checksum: 10c0/9c08a24c9667d31e0a599f19fc8f475499fe212fc399103a1d22c4a3aa87f5a9f43f62ed9a88929ae52ef9626ba695f02d97ab736d238668834e3f9a9de2096d
   languageName: node
   linkType: hard
 
