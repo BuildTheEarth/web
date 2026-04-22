@@ -20,10 +20,14 @@ export default class Router {
 
 		this.web.getCore().getLogger().debug(`Registering endpoint "${requestMethod.toString()} ${fullEndpoint}"`);
 
-		const methodHandler = (rq: Request, rs: Response) => {
+		const methodHandler = async (rq: Request, rs: Response) => {
 			try {
-				executor(rq, rs);
+				await executor(rq, rs);
 			} catch (e) {
+				this.web
+					.getCore()
+					.getLogger()
+					.error(`Unhandled route error on ${requestMethod.toString()} ${fullEndpoint}: ${e}`);
 				ERROR_GENERIC(rq, rs, 500, 'Internal Server Error. Please try again and report this bug.');
 			}
 		};
