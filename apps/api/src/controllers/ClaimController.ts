@@ -701,7 +701,12 @@ class ClaimController {
 					continue;
 				}
 
-				throw new Error(`Overpass request failed with status ${response.status}`);
+				this.core
+					.getLogger()
+					.error(
+						`Overpass request failed with status ${response.status}. Setting building count to -1. (claim: ${claimId})`,
+					);
+				return -1;
 			} catch (e: unknown) {
 				const isAxiosError = axios.isAxiosError(e);
 				const status = isAxiosError ? e.response?.status : undefined;
