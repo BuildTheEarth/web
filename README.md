@@ -1,7 +1,7 @@
 <!-- markdownlint-disable -->
 <div align="center">
 
-<img width="128" src="https://github.com/BuildTheEarth/assets/blob/main/images/logos/logo_archive_2.png?raw=true" />
+<img width="128" src="https://github.com/BuildTheEarth/assets/blob/main/logos/logo_archive_2.png?raw=true" />
 
 # @BuildTheEarth/web
 
@@ -29,23 +29,24 @@ This repository contains the following apps and other shared packages:
 
 ## Table of Contents
 
-+ [@BuildTheEarth/web](#buildtheearthweb)
-  + [Apps and Packages](#apps-and-packages)
-  + [Table of Contents](#table-of-contents)
-  + [Getting Started](#getting-started)
-  + [Bugs and Features](#bugs-and-features)
-  + [Building](#building)
-    + [Building all applications](#building-all-applications)
-    + [Building a single application](#building-a-single-application)
-  + [CI/CD](#cicd)
+- [@BuildTheEarth/web](#buildtheearthweb)
+  - [Apps and Packages](#apps-and-packages)
+  - [Table of Contents](#table-of-contents)
+  - [Getting Started](#getting-started)
+  - [Bugs and Features](#bugs-and-features)
+  - [Building](#building)
+    - [Building all applications](#building-all-applications)
+    - [Building a single application](#building-a-single-application)
+  - [CI/CD](#cicd)
 
 ## Getting Started
 
 First, clone this repository:
 
 ```bash
-git clone https://github.com/BuildTheEarth/web.git 
+git clone https://github.com/BuildTheEarth/web.git
 ```
+
 It is recommended to install [Turborepo](https://turbo.build/repo/docs) globally:
 
 ```bash
@@ -59,6 +60,7 @@ yarn install
 # and optionally
 yarn db:generate
 ```
+
 Now, copy the example `.env` file and change all its options:
 
 ```bash
@@ -70,9 +72,11 @@ Then you can start the development server with:
 ```bash
 yarn dev
 ```
+
 This will also start the Prisma Studio.
 
 ## Bugs and Features
+
 We use [GitHub Issues](https://github.com/BuildTheEarth/website-frontend/issues) to manage all bugs and features. You can submit a new bug or feature request [here](https://github.com/BuildTheEarth/website-frontend/issues/new). An overview of the state of bugs and features can be found [here](https://github.com/orgs/BuildTheEarth/projects/11).
 
 ## Building
@@ -92,6 +96,7 @@ yarn clean
 ```bash
 yarn build
 ```
+
 Due to the use of Turborepo, this command will only build applications that have changed since the last build!
 
 ### Building a single application
