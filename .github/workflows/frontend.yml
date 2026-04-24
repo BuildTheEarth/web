@@ -38,15 +38,20 @@ jobs:
         env:
           DOCKER_BUILDKIT: 1
           DATABASE_URL: ${{ secrets.INFISICAL_FRONTEND_DATABASE_URL }}
+          CMS_URL: ${{ secrets.INFISICAL_FRONTEND_CMS_URL }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_FRONTEND_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_CDN_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_CDN_URL }}
+          NEXT_PUBLIC_MAP_STYLE_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_MAP_STYLE_URL }}
         run: |
           docker build . \
             --file apps/frontend/Dockerfile \
+            --build-arg CMS_URL="$CMS_URL" \
+            --build-arg NEXT_PUBLIC_API_URL="$NEXT_PUBLIC_API_URL" \
+            --build-arg NEXT_PUBLIC_FRONTEND_URL="$NEXT_PUBLIC_FRONTEND_URL" \
+            --build-arg NEXT_PUBLIC_CDN_URL="$NEXT_PUBLIC_CDN_URL" \
+            --build-arg NEXT_PUBLIC_MAP_STYLE_URL="$NEXT_PUBLIC_MAP_STYLE_URL" \
             --secret id=database_url,env=DATABASE_URL \
-            --build-arg CMS_URL="${{ secrets.INFISICAL_FRONTEND_CMS_URL }}" \
-            --build-arg NEXT_PUBLIC_API_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_API_URL }}" \
-            --build-arg NEXT_PUBLIC_FRONTEND_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_FRONTEND_URL }}" \
-            --build-arg NEXT_PUBLIC_CDN_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_CDN_URL }}" \
-            --build-arg NEXT_PUBLIC_MAP_STYLE_URL="${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_MAP_STYLE_URL }}" \
             --tag ghcr.io/buildtheearth/website-frontend:v2-$(git rev-parse --short HEAD) \
             --tag ghcr.io/buildtheearth/website-frontend:v2-latest
       - name: Docker push tag
