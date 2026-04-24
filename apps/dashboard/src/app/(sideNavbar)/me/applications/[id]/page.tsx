@@ -74,7 +74,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				Application {id.split('-')[0]}
 			</Title>
 			<SimpleGrid cols={{ base: 1, md: 3 }}>
-				<TextCard isText={false} title="Build Team">
+				<TextCard isText={false} title="Build Region">
 					<BuildTeamDisplay team={application.buildteam} noAnchor />
 				</TextCard>
 				<TextCard title="Created At" isText>
@@ -105,7 +105,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				<Text>{alertContent.description}</Text>
 				{successorApplications.length > 0 && (
 					<Text mt="sm">
-						We have found a more recent application for this Build Team. You can view it{' '}
+						We have found a more recent application for this Build Region. You can view it{' '}
 						<Link href={`/me/applications/${successorApplications.at(-1)?.id || successorApplications[0].id}`}>
 							here
 						</Link>
@@ -120,7 +120,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 							Your application to {application.buildteam.name} has been <b>declined</b>.{' '}
 							{application.reason ? (
 								<>
-									The Build Team has provided the following <b>reason</b>:
+									The Build Region has provided the following <b>reason</b>:
 								</>
 							) : (
 								<></>
@@ -131,7 +131,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 								{application.reason}
 							</Blockquote>
 						) : (
-							<Text w="100%">Unfortunately, the Build Team did not provide a reason.</Text>
+							<Text w="100%">Unfortunately, the Build Region did not provide a reason.</Text>
 						)}
 					</TextCard>
 					<Space h="md" />
@@ -141,7 +141,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 			<TextCard title="Application Answers">
 				<Text c="dimmed" size="md" mb="lg" maw={{ base: '100%', md: '90%', xl: '60%' }}>
 					These are the answers you provided in your application. If you believe there is an error or you would like to
-					provide additional information, please contact the Build Team directly.
+					provide additional information, please contact the Build Region directly.
 				</Text>
 				{applicationAnswers
 					.sort((a: any, b: any) => a.question.sort - b.question.sort)

@@ -34,9 +34,10 @@
 		"dash/editor",
 		"db",
 		"dash/responsive",
-		"dash/team"
+		"frontend/i18n",
+		"frontend/stats",
+		"frontend/join",
+		"frontend/map"
 	],
-	"githubPullRequests.ignoredPullRequestBranches": [
-		"main"
-	]
+	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }

@@ -21,7 +21,9 @@
 		"db:studio": "yarn workspace @repo/db db:studio",
 		"db:migrate": "yarn workspace api db:migrate",
 		"git:pull": "git pull && yarn install && yarn run db:generate",
-		"ws": "yarn workspace"
+		"ws": "yarn workspace",
+		"env:generate": "turbo env:generate",
+		"env:copy": "turbo env:copy"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "*",
@@ -40,5 +42,9 @@
 		"prosemirror-view": "1.39.1"
 	},
 	"packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538",
-	"prettier": "@repo/prettier-config"
+	"prettier": "@repo/prettier-config",
+	"dependencies": {
+		"embla-carousel": "^8.5.2",
+		"embla-carousel-react": "^8.5.2"
+	}
 }

@@ -14,7 +14,7 @@ export default async function Page() {
 			</Title>
 			<SimpleGrid cols={3}>
 				<Skeleton>
-					<TextCard isText={false} title="Build Team">
+					<TextCard isText={false} title="Build Region">
 						<BuildTeamDisplay team={{ icon: '', name: '', slug: '' }} noAnchor />
 					</TextCard>
 				</Skeleton>
@@ -48,7 +48,7 @@ export default async function Page() {
 				<TextCard title="Application Answers">
 					<Text c="dimmed" size="md" mb="lg" maw={{ base: '100%', md: '90%', xl: '60%' }}>
 						These are the answers you provided in your application. If you believe there is an error or you would like
-						to provide additional information, please contact the Build Team directly.
+						to provide additional information, please contact the Build Region directly.
 					</Text>
 				</TextCard>
 			</Skeleton>
