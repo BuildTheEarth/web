@@ -1,0 +1,6 @@
+{
+	"extends": ["//"],
+	"env": [
+		"DATABASE_URL"
+	]
+}
