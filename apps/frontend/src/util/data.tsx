@@ -77,22 +77,3 @@ export function handleFetch(
 		}
 	};
 }
-
-// Specific functions
-
-export function revalidateWebsitePath(path: string) {
-	return revalidateWebsitePaths([path]);
-}
-export function revalidateWebsitePaths(paths: string[]) {
-	return globalFetcher(
-		`${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/revalidate?secret=${process.env.FRONTEND_KEY}&paths=${JSON.stringify(
-			paths,
-		)}`,
-		{
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		},
-	);
-}
