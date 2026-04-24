@@ -185,7 +185,6 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 		if (claimId) {
 			getClaimData(claimId)
 				.then((data) => {
-					console.log('Claim data:', data);
 					setClaimData(data);
 				})
 				.catch((err) => {
