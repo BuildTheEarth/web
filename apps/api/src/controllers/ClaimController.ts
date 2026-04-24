@@ -11,9 +11,47 @@ import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddl
 
 class ClaimController {
 	private core: Core;
+	private static readonly OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
+	private static readonly OVERPASS_MIN_INTERVAL_MS = 1200;
+	private static nextOverpassRequestAt = 0;
 
 	constructor(core: Core) {
 		this.core = core;
+	}
+
+	private wait(ms: number): Promise<void> {
+		return new Promise((resolve) => setTimeout(resolve, ms));
+	}
+
+	private readHeader(headers: Record<string, unknown> | undefined, key: string): string | undefined {
+		if (!headers) return undefined;
+		const value = headers[key.toLowerCase()];
+		if (Array.isArray(value)) return value[0]?.toString();
+		if (value === undefined || value === null) return undefined;
+		return value.toString();
+	}
+
+	private parseRetryAfterMs(headers: Record<string, unknown> | undefined): number | undefined {
+		const retryAfter = this.readHeader(headers, 'retry-after');
+		if (!retryAfter) return undefined;
+
+		const seconds = parseInt(retryAfter, 10);
+		if (!Number.isNaN(seconds)) return Math.max(0, seconds * 1000);
+
+		const retryAt = Date.parse(retryAfter);
+		if (!Number.isNaN(retryAt)) return Math.max(0, retryAt - Date.now());
+
+		return undefined;
+	}
+
+	private previewOverpassBody(data: unknown): string {
+		if (data === undefined || data === null) return 'empty';
+		if (typeof data === 'string') return data.replace(/\s+/g, ' ').trim().slice(0, 500);
+		try {
+			return JSON.stringify(data).slice(0, 500);
+		} catch {
+			return '[unserializable-response-body]';
+		}
 	}
 
 	public async getClaims(req: Request, res: Response) {
@@ -422,9 +460,20 @@ class ClaimController {
 		const area = req.body.area;
 		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ');
 
-		const buildingCount = area && (await this.updateClaimBuildingCount({ area }, false));
+		let buildingCount;
 
-		if (buildingCount == undefined || buildingCount == null || typeof buildingCount != 'number') {
+		try {
+			buildingCount = area && (await this.updateClaimBuildingCount({ area }, false));
+			if (buildingCount == undefined || buildingCount == null || typeof buildingCount != 'number') {
+				this.core
+					.getLogger()
+					.error(`Failed to get building count for new claim (bt: ${buildteam.id}, name: ${req.body.name})`);
+				return ERROR_GENERIC(req, res, 500, 'Could not update building count');
+			}
+		} catch (e) {
+			this.core
+				.getLogger()
+				.error(`Error while getting building count for new claim (bt: ${buildteam.id}, name: ${req.body.name}): ${e}`);
 			return ERROR_GENERIC(req, res, 500, 'Could not update building count');
 		}
 
@@ -549,6 +598,7 @@ class ClaimController {
 		update?: boolean,
 	): Promise<number | { message: string } | Claim> {
 		const polygon = toOverpassPolygon(claim.area);
+		const claimId = claim.id || 'unknown';
 
 		const overpassQuery = `[out:json][timeout:25];
         (
@@ -558,34 +608,135 @@ class ClaimController {
         );
       out count;`;
 
-		try {
-			const { data } = await axios.post(
-				`https://overpass.private.coffee/api/interpreter?`,
-				`data=${overpassQuery.replace('\n', '')}`,
-			);
+		const maxAttempts = 4;
 
-			if (!data?.elements || data?.elements.length <= 0) {
+		for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+			try {
+				const now = Date.now();
+				const waitForSlot = Math.max(0, ClaimController.nextOverpassRequestAt - now);
+				if (waitForSlot > 0) {
+					this.core
+						.getLogger()
+						.debug(`Overpass pacing wait ${waitForSlot}ms (claim: ${claimId}; attempt: ${attempt}/${maxAttempts})`);
+					await this.wait(waitForSlot);
+				}
+
+				ClaimController.nextOverpassRequestAt = Date.now() + ClaimController.OVERPASS_MIN_INTERVAL_MS;
+
+				const params = new URLSearchParams();
+				params.append('data', overpassQuery);
+
+				this.core
+					.getLogger()
+					.debug(
+						`Overpass request start (claim: ${claimId}; attempt: ${attempt}/${maxAttempts}; areaPoints: ${claim.area.length})`,
+					);
+
+				const response = await axios.post(ClaimController.OVERPASS_URL, params.toString(), {
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'User-Agent': 'BuildTheEarth/1.0 (contact: development@buildtheearth.net)',
+						Referer: 'https://buildtheearth.net',
+						Origin: 'https://buildtheearth.net',
+					},
+					timeout: 45000,
+					validateStatus: () => true,
+				});
+
+				const responseHeaders = (response.headers || {}) as Record<string, unknown>;
+				const retryAfterHeader = this.readHeader(responseHeaders, 'retry-after');
+				const overpassRateLimit = this.readHeader(responseHeaders, 'x-ratelimit-limit');
+				const overpassRateRemaining = this.readHeader(responseHeaders, 'x-ratelimit-remaining');
+				const overpassRateReset = this.readHeader(responseHeaders, 'x-ratelimit-reset');
+
+				if (response.status >= 200 && response.status < 300) {
+					const data = response.data;
+
+					this.core
+						.getLogger()
+						.debug(
+							`Overpass request success (claim: ${claimId}; status: ${response.status}; remaining: ${overpassRateRemaining || 'n/a'}; reset: ${overpassRateReset || 'n/a'})`,
+						);
+
+					if (!data?.elements || data?.elements.length <= 0) {
+						this.core
+							.getLogger()
+							.error(
+								`Claim did not contain any elements, setting building count to 0 (${ClaimController.OVERPASS_URL}; claim: ${claimId})`,
+							);
+						return 0;
+					}
+
+					if (update) {
+						const updatedClaim = await this.core.getPrisma().claim.update({
+							where: { id: claim.id },
+							data: { buildings: parseInt(data?.elements[0]?.tags?.total) || 0 },
+						});
+						return updatedClaim;
+					}
+
+					return parseInt(data?.elements[0]?.tags?.total) || 0;
+				}
+
+				const bodyPreview = this.previewOverpassBody(response.data);
+				const computedBackoffMs = 1000 * Math.pow(2, attempt - 1) + Math.floor(Math.random() * 250);
+				const retryAfterMs = this.parseRetryAfterMs(responseHeaders) || computedBackoffMs;
+
+				const isRetryable =
+					response.status === 429 || response.status === 502 || response.status === 503 || response.status === 504;
+
+				const logMethod = isRetryable ? 'warn' : 'error';
+				this.core
+					.getLogger()
+					[
+						logMethod
+					](`Overpass non-success response (claim: ${claimId}; attempt: ${attempt}/${maxAttempts}; status: ${response.status}; statusText: ${response.statusText || 'n/a'}; retryAfter: ${retryAfterHeader || 'n/a'}; limit: ${overpassRateLimit || 'n/a'}; remaining: ${overpassRateRemaining || 'n/a'}; reset: ${overpassRateReset || 'n/a'}; bodyPreview: ${bodyPreview})`);
+
+				if (isRetryable && attempt < maxAttempts) {
+					ClaimController.nextOverpassRequestAt = Math.max(
+						ClaimController.nextOverpassRequestAt,
+						Date.now() + retryAfterMs,
+					);
+					await this.wait(retryAfterMs);
+					continue;
+				}
+
 				this.core
 					.getLogger()
 					.error(
-						`Claim did not contain any elements, setting building count to 0 (https://overpass.private.coffee/api/interpreter; claim: ${claim.id})`,
+						`Overpass request failed with status ${response.status}. Setting building count to -1. (claim: ${claimId})`,
 					);
-				return 0;
-			}
+				return -1;
+			} catch (e: unknown) {
+				const isAxiosError = axios.isAxiosError(e);
+				const status = isAxiosError ? e.response?.status : undefined;
+				const statusText = isAxiosError ? e.response?.statusText : undefined;
+				const responseHeaders = (isAxiosError ? e.response?.headers : undefined) as Record<string, unknown> | undefined;
+				const bodyPreview = isAxiosError ? this.previewOverpassBody(e.response?.data) : 'n/a';
+				const retryAfterMs = this.parseRetryAfterMs(responseHeaders) || 1000 * Math.pow(2, attempt - 1);
+				const isRetryableError =
+					status === 429 || status === 502 || status === 503 || status === 504 || status === undefined;
 
-			if (update) {
-				const updatedClaim = await this.core.getPrisma().claim.update({
-					where: { id: claim.id },
-					data: { buildings: parseInt(data?.elements[0]?.tags?.total) || 0 },
-				});
-				return updatedClaim;
-			} else {
-				return parseInt(data?.elements[0]?.tags?.total) || 0;
+				this.core
+					.getLogger()
+					[
+						isRetryableError ? 'warn' : 'error'
+					](`Overpass request error (claim: ${claimId}; attempt: ${attempt}/${maxAttempts}; status: ${status || 'n/a'}; statusText: ${statusText || 'n/a'}; retryAfter: ${this.readHeader(responseHeaders, 'retry-after') || 'n/a'}; message: ${isAxiosError ? e.message : e instanceof Error ? e.message : String(e)}; bodyPreview: ${bodyPreview})`);
+
+				if (isRetryableError && attempt < maxAttempts) {
+					ClaimController.nextOverpassRequestAt = Math.max(
+						ClaimController.nextOverpassRequestAt,
+						Date.now() + retryAfterMs,
+					);
+					await this.wait(retryAfterMs);
+					continue;
+				}
+
+				return e as { message: string };
 			}
-		} catch (e) {
-			this.core.getLogger().error(e.message + ` (https://overpass.private.coffee/api/interpreter; claim: ${claim.id})`);
-			return e;
 		}
+
+		return { message: 'Overpass retries exhausted' };
 	}
 
 	public async updateClaimOSMDetails(

@@ -1,6 +1,7 @@
 'use client';
 
 import { MultiSelect, NumberInput, TagsInput } from '@mantine/core';
+import { useMemo, useState } from 'react';
 
 import { ApplicationQuestion } from '@/util/application';
 import { IconSelect } from '@tabler/icons-react';
@@ -19,20 +20,42 @@ function validation(props: DropdownQuestionProps): (value: string) => void {
 }
 
 const DropdownQuestion = (props: DropdownQuestionProps) => {
+	const initialValue = useMemo(() => {
+		if (!props.value) return [] as string[];
+		if (Array.isArray(props.value)) return props.value as string[];
+		if (typeof props.value === 'string') {
+			try {
+				const parsed = JSON.parse(props.value);
+				return Array.isArray(parsed) ? parsed : [];
+			} catch {
+				return [];
+			}
+		}
+		return [] as string[];
+	}, [props.value]);
+	const [value, setValue] = useState<string[]>(initialValue);
+
 	return (
-		<MultiSelect
-			required={props.required}
-			description={props.subtitle}
-			label={props.title}
-			data={props.additionalData.options}
-			style={props.style}
-			maxValues={props.additionalData.maxSelect}
-			onChange={(e) => props.onChange && props.onChange(e)}
-			error={props.error}
-			disabled={props.disabled}
-			readOnly={props.readonly}
-			value={props.value && JSON.parse(props.value)}
-		/>
+		<>
+			<input type="hidden" name={props.id} value={JSON.stringify(value)} disabled={props.disabled} />
+			<MultiSelect
+				required={props.required}
+				description={props.subtitle}
+				label={props.title}
+				data={props.additionalData.options}
+				style={props.style}
+				maxValues={props.additionalData.maxSelect}
+				onChange={(e) => {
+					setValue(e);
+					props.onChange && props.onChange(e);
+				}}
+				error={props.error}
+				disabled={props.disabled}
+				readOnly={props.readonly}
+				value={value}
+				id={props.id}
+			/>
+		</>
 	);
 };
 

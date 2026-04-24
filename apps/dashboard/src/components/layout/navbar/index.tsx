@@ -14,14 +14,18 @@ export interface Navbar {
  */
 export default async function Navbar(props: Navbar) {
 	const allowedLinks = navLinks.filter((link) =>
-		link.permission ? hasRole({ user: { realm_access: { roles: props.roles } } }, link.permission) : true,
+		link.permission
+			? link.permission.includes('|')
+				? link.permission.split('|').some((perm) => hasRole({ user: { realm_access: { roles: props.roles } } }, perm))
+				: hasRole({ user: { realm_access: { roles: props.roles } } }, link.permission)
+			: true,
 	);
 
 	const links = allowedLinks.map((item) =>
 		item.divider ? (
 			<Divider key={item.label} label={item.label} labelPosition="left" />
 		) : (
-			<NavLink key={item.label} {...item} />
+			<NavLink key={item.link} {...item} />
 		),
 	);
 
