@@ -2,18 +2,11 @@
 import '@/styles/global.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/charts/styles.layer.css';
-import '@mantine/code-highlight/styles.layer.css';
 import '@mantine/core/styles.layer.css';
-import '@mantine/dates/styles.layer.css';
 import '@mantine/notifications/styles.layer.css';
-import '@mantine/nprogress/styles.layer.css';
-import '@mantine/spotlight/styles.layer.css';
-import '@mantine/tiptap/styles.layer.css';
-import 'mantine-datatable/styles.layer.css';
 
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 
-import SWRSetup from '@/components/core/SWRSetup';
 import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck';
 import AppLayout from '@/components/layout';
 import { routing } from '@/i18n/routing';
@@ -84,16 +77,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
 				<NextIntlClientProvider>
 					<MantineProvider theme={theme} forceColorScheme="dark">
-						<SWRSetup>
-							<ModalsProvider>
-								<Notifications limit={3} />
-								{
-									//  Only in development
-									process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />
-								}
-								<AppLayout>{children}</AppLayout>
-							</ModalsProvider>
-						</SWRSetup>
+						<ModalsProvider>
+							<Notifications limit={3} />
+							{
+								//  Only in development
+								process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />
+							}
+							<AppLayout>{children}</AppLayout>
+						</ModalsProvider>
 					</MantineProvider>
 				</NextIntlClientProvider>
 			</body>

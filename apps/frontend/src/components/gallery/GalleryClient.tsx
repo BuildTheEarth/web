@@ -1,8 +1,8 @@
 'use client';
 
-import SmartImage from '@/components/core/SmartImage';
 import { QueryPagination } from '@/components/core/Pagination';
-import { AspectRatio, Avatar, Badge, Box, Button, Card, Grid, GridCol, Group, Stack, Text, Title } from '@mantine/core';
+import SmartImage from '@/components/core/SmartImage';
+import { AspectRatio, Avatar, Badge, Box, Button, Card, Grid, GridCol, Group, Stack, Text } from '@mantine/core';
 import * as motion from 'motion/react-client';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';

@@ -3,7 +3,7 @@ import { QuerySearchInput } from '@/components/core/SearchInput';
 import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
 import { Group, SimpleGrid, Skeleton, Stack, Text, Tooltip } from '@mantine/core';
-import { IconPin, IconUser, IconUsers } from '@tabler/icons-react';
+import { IconPin, IconUsers } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';

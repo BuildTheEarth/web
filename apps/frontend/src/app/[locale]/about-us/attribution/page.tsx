@@ -1,32 +1,9 @@
-import { QuerySearchInput } from '@/components/core/SearchInput';
 import Wrapper from '@/components/layout/Wrapper';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
-import {
-	Accordion,
-	AccordionControl,
-	AccordionItem,
-	AccordionPanel,
-	Alert,
-	Group,
-	List,
-	ListItem,
-	Text,
-	Title,
-} from '@mantine/core';
-import { IconLanguage } from '@tabler/icons-react';
-import { Metadata } from 'next';
+import { List, ListItem, Text, Title } from '@mantine/core';
 import { Locale } from 'next-intl';
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
 
 export const dynamic = 'force-static';
-
-// export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-// 	const locale = (await params).locale;
-// 	const t = (await getTranslations({ locale, namespace: 'faq.seo' })) as (key: 'title' | 'description') => string;
-
-// 	return { title: t('title'), description: t('description'), alternates: { languages: getLanguageAlternates('/faq') } };
-// }
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale;

@@ -1,14 +1,8 @@
 import '@/styles/global.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/charts/styles.layer.css';
-import '@mantine/code-highlight/styles.layer.css';
 import '@mantine/core/styles.layer.css';
-import '@mantine/dates/styles.layer.css';
 import '@mantine/notifications/styles.layer.css';
-import '@mantine/nprogress/styles.layer.css';
-import '@mantine/spotlight/styles.layer.css';
-import '@mantine/tiptap/styles.layer.css';
-import 'mantine-datatable/styles.layer.css';
 
 import { routing } from '@/i18n/routing';
 import { Locale, NextIntlClientProvider, hasLocale } from 'next-intl';

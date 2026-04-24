@@ -1,6 +1,6 @@
+import ProgressCard from '@/components/core/card/ProgressCard';
+import StatCard from '@/components/core/card/StatCard';
 import Wrapper from '@/components/layout/Wrapper';
-import ProgressCard from '@/components/our-progress/ProgressCard';
-import StatCard from '@/components/our-progress/StatCard';
 import prisma from '@/util/db';
 import { getLanguageAlternates } from '@/util/seo';
 import { Box, Container, Grid, GridCol, SimpleGrid, Text, Title } from '@mantine/core';

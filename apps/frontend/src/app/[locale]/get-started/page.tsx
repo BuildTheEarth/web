@@ -8,7 +8,7 @@ import EarthBackground from '@/components/layout/EarthBackground';
 import Wrapper from '@/components/layout/Wrapper';
 import { Link } from '@/i18n/navigation';
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
-import getCountryName, { getCountryNames } from '@/util/countries';
+import getCountryName from '@/util/countries';
 import prisma from '@/util/db';
 import { getLanguageAlternates } from '@/util/seo';
 import {

@@ -1,24 +1,7 @@
 'use client';
 import Anchor from '@/components/core/Anchor';
-import {
-	Alert,
-	AspectRatio,
-	Box,
-	Button,
-	Code,
-	Group,
-	Kbd,
-	List,
-	ListItem,
-	SimpleGrid,
-	Stepper,
-	StepperCompleted,
-	StepperStep,
-	Text,
-	Title,
-} from '@mantine/core';
+import { Alert, Box, Code, Kbd, List, ListItem, SimpleGrid, Text, Title } from '@mantine/core';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
 
 export default function JoinServerGuide(props: { ip: string; version: string; name: string; slug: string }) {
 	const t = useTranslations('teams.ownPage.joinServer');
