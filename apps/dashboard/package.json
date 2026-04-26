@@ -18,7 +18,7 @@
 		"@mantine/charts": "^8.2.3",
 		"@mantine/code-highlight": "^8.2.3",
 		"@mantine/core": "^8.2.3",
-		"@mantine/dates": "^8.2.3",
+		"@mantine/dates": "^9.1.0",
 		"@mantine/form": "^8.2.3",
 		"@mantine/hooks": "^8.2.3",
 		"@mantine/modals": "^8.2.3",
