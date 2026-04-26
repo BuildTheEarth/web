@@ -23,7 +23,8 @@
 		"git:pull": "git pull && yarn install && yarn run db:generate",
 		"ws": "yarn workspace",
 		"env:generate": "turbo env:generate",
-		"env:copy": "turbo env:copy"
+		"env:copy": "turbo env:copy",
+		"release:app": "node --experimental-strip-types scripts/release-frontend.ts"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "*",
