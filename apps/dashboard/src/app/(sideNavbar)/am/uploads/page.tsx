@@ -46,15 +46,6 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						>
 							Check Uploads
 						</Button>
-						<Button
-							color="cyan"
-							variant="outline"
-							component={Link}
-							href="/am/uploads/approve"
-							rightSection={<IconChevronRight size={14} />}
-						>
-							Approve Showcases
-						</Button>
 					</Group>
 				</Group>
 				<UploadsDatatable

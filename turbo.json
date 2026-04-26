@@ -1,18 +1,38 @@
 {
-  "$schema": "https://turbo.build/schema.json",
-  "ui": "tui",
-  "tasks": {
+	"$schema": "https://turbo.build/schema.json",
+	"ui": "tui",
+	"globalPassThroughEnv": [
+		"USERPROFILE",
+		"HOME",
+		"APPDATA",
+		"INFISICAL_TOKEN"
+	],
+	"tasks": {
 		"build": {
-			"dependsOn": ["db:generate", "^build"],
-			"inputs": ["$TURBO_DEFAULT$", ".env*"],
-			"outputs": [".next/**", "!.next/cache/**", "dist/**"]
+			"dependsOn": [
+				"db:generate",
+				"^build"
+			],
+			"inputs": [
+				"$TURBO_DEFAULT$",
+				".env*"
+			],
+			"outputs": [
+				".next/**",
+				"!.next/cache/**",
+				"dist/**"
+			]
 		},
 		"clean": {
-			"dependsOn": ["^clean"],
+			"dependsOn": [
+				"^clean"
+			],
 			"cache": false
 		},
 		"start": {
-			"dependsOn": ["build"],
+			"dependsOn": [
+				"build"
+			],
 			"persistent": true,
 			"cache": false
 		},
@@ -21,16 +41,26 @@
 			"cache": false
 		},
 		"lint": {
-			"dependsOn": ["^lint"]
+			"dependsOn": [
+				"^lint"
+			]
 		},
 		"prettier": {
-			"dependsOn": ["^prettier"]
+			"dependsOn": [
+				"^prettier"
+			]
 		},
 		"db:generate": {
 			"cache": false
 		},
 		"db:studio": {
 			"persistent": true,
+			"cache": false
+		},
+		"env:generate": {
+			"cache": false
+		},
+		"env:copy": {
 			"cache": false
 		}
 	}

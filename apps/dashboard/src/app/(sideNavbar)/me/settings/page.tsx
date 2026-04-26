@@ -64,7 +64,7 @@ export default function Page() {
 					disabled
 					rightSection={
 						<Tooltip
-							label="You can only change your minecraft username when filling out an application to a Build Team."
+							label="You can only change your minecraft username when filling out an application to a Build Region."
 							position="right"
 							withArrow
 						>

@@ -1,6 +1,6 @@
 'use server';
 
-import { Alert, Box, Grid, GridCol, Group, Title } from '@mantine/core';
+import { Alert, Box, Grid, GridCol, Title } from '@mantine/core';
 
 import { Protection } from '@/components/Protection';
 import ContentWrapper from '@/components/core/ContentWrapper';
@@ -13,7 +13,6 @@ import { toHumanDateTime } from '@/util/date';
 import prisma from '@/util/db';
 import { IconClockExclamation } from '@tabler/icons-react';
 import { Metadata } from 'next';
-import { EditMenu } from './interactivity';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
 	const { id } = await params;
@@ -46,12 +45,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 	return (
 		<Protection requiredRole="get-applications">
 			<ContentWrapper maw="90vw" mih="100vh">
-				<Group justify="space-between" w="100%" mt="xl" mb="md">
-					<Title order={1} mt="xl" mb="md">
-						Application {id.split('-')[0]}
-					</Title>
-					<EditMenu application={application} />
-				</Group>
+				<Title order={1} mt="xl" mb="md">
+					Application {id.split('-')[0]}
+				</Title>
 				<Grid>
 					<GridCol span={{ base: 12, sm: 6, xl: 2 }}>
 						<TextCard title="Applicant" style={{ height: '100%' }}>
@@ -59,7 +55,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 12, sm: 6, xl: 2 }}>
-						<TextCard title="Build Team" style={{ height: '100%' }}>
+						<TextCard title="Build Region" style={{ height: '100%' }}>
 							<BuildTeamDisplay team={application.buildteam} />
 						</TextCard>
 					</GridCol>

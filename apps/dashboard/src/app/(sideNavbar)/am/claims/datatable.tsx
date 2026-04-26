@@ -1,13 +1,12 @@
 'use client';
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core';
-import { IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react';
+import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem, Text } from '@mantine/core';
+import { IconDots, IconExternalLink, IconEye, IconTrash } from '@tabler/icons-react';
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { adminDeleteClaim } from '@/actions/claims';
 import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import { UserDisplay } from '@/components/data/User';
-import { useClipboard } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
 import { Claim } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
@@ -18,7 +17,6 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 	const params = useSearchParams();
 	const pathname = usePathname();
 	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
 
 	return (
 		<DataTable
@@ -51,7 +49,7 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 				},
 				{
 					accessor: 'buildTeam',
-					title: 'Build Team',
+					title: 'Build Region',
 					render: ({ buildTeam }: any) => (buildTeam ? <BuildTeamDisplay team={buildTeam} /> : ''),
 				},
 				{
@@ -79,11 +77,14 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
-										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-										aria-label="Copy ID"
-										onClick={() => clipboard.copy(claim.id)}
+										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+										color="cyan"
+										aria-label="View Details"
+										component={Link}
+										href={`/am/claims/${claim.id}`}
+										rel="noopener"
 									>
-										Copy ID
+										View Details
 									</MenuItem>
 									<MenuItem
 										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
@@ -93,7 +94,6 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 									>
 										Open on Website
 									</MenuItem>
-									<MenuLabel>Danger Zone</MenuLabel>
 									<MenuItem
 										leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
 										color="red"

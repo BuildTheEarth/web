@@ -12,11 +12,8 @@ export const metadata: Metadata = {
 };
 export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
 	const page = (await searchParams).page;
-	const uploadCount = await prisma.upload.count({
-		where: {
-			checked: false,
-		},
-	});
+	const searchQuery = (await searchParams).query;
+	const uploadCount = await prisma.upload.count({});
 	const uploads = await prisma.upload.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,

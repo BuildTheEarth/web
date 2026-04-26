@@ -57,7 +57,7 @@ export default async function Page() {
 			<ActionsCard
 				withCard={false}
 				links={[
-					{ title: 'Participating Teams', icon: IconUsersGroup, color: 'grape', url: '/me/teams' },
+					{ title: 'Participating Regions', icon: IconUsersGroup, color: 'grape', url: '/me/teams' },
 					{ title: 'Applications', icon: IconForms, color: 'violet', url: '/me/applications' },
 					{ title: 'Claim Editor', icon: IconTools, color: 'indigo', url: '/me/claims' },
 
@@ -80,7 +80,7 @@ export default async function Page() {
 			{(websiteData?._count?.joinedBuildTeams ?? 0) + (websiteData?._count?.createdBuildTeams ?? 0) > 0 && (
 				<>
 					<Title order={2} mt="xl">
-						Manage your Build Teams
+						Manage your Build Regions
 					</Title>
 					<ActionsCard
 						withCard={false}

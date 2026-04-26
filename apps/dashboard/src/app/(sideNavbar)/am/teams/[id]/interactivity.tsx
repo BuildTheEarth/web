@@ -2,14 +2,12 @@
 
 import { hasRole } from '@/util/auth';
 import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem } from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
 import { BuildTeam } from '@repo/db';
-import { IconDots, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react';
+import { IconDots, IconTransfer, IconUserCog } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 export function EditMenu({ team }: { team: BuildTeam }) {
 	const session = useSession();
-	const clipboard = useClipboard({ timeout: 500 });
 
 	return (
 		<Menu>
@@ -25,13 +23,6 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				</ActionIcon>
 			</MenuTarget>
 			<MenuDropdown>
-				<MenuItem
-					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy ID"
-					onClick={() => clipboard.copy(team.id)}
-				>
-					Copy ID
-				</MenuItem>
 				<MenuLabel>Danger Zone</MenuLabel>
 				<MenuItem
 					leftSection={<IconUserCog style={{ width: rem(14), height: rem(14) }} />}
@@ -46,12 +37,12 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				<MenuItem
 					leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
-					aria-label="Delete or Transfer Team"
+					aria-label="Delete or Transfer Region"
 					component={Link}
 					href={`/am/teams/${team.id}/transfer?ref=transfer`}
 					rel="noopener"
 				>
-					Transfer Team
+					Transfer Region
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>

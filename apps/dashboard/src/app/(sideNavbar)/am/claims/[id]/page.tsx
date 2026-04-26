@@ -78,7 +78,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 6, lg: 2 }}>
-						<TextCard title="Build Team" style={{ height: '100%' }}>
+						<TextCard title="Build Region" style={{ height: '100%' }}>
 							<BuildTeamDisplay team={claim.buildTeam} />
 						</TextCard>
 					</GridCol>
@@ -158,13 +158,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 								{getCountryNames(claim.buildTeam.location.split(', ')).includes(
 									claim.osmName?.split(', ').at(-1) || '#',
 								) ? (
-									<Tooltip label="This country is in the Build Team's location list">
+									<Tooltip label="This country is in the Build Region's location list">
 										<ThemeIcon color="green" size="md" variant="outline" style={{ border: 'none' }}>
 											<IconCheck style={{ width: '70%', height: '70%' }} />
 										</ThemeIcon>
 									</Tooltip>
 								) : (
-									<Tooltip label="The country of this claim is no in the Build Team's location list. Please verify the correctness of this claim!">
+									<Tooltip label="The country of this claim is no in the Build Region's location list. Please verify the correctness of this claim!">
 										<ThemeIcon color="red" size="md" variant="outline" style={{ border: 'none' }}>
 											<IconAlertCircle style={{ width: '70%', height: '70%' }} />
 										</ThemeIcon>

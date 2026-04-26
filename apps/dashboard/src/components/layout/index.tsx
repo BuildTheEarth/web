@@ -27,11 +27,11 @@ export default async function AppLayout({ children, hideNavbar, customNavbar, ..
 			p="md"
 			{...props}
 		>
-			{!hideNavbar && <Navbar roles={session?.user?.realm_access.roles || []} />}
+			{!hideNavbar && <Navbar roles={session?.user.realm_access.roles || []} />}
 
 			{customNavbar}
 
-			<Header roles={session?.user?.realm_access.roles || []} />
+			<Header roles={session?.user.realm_access.roles || []} />
 
 			<AppShellMain style={{ position: 'relative', paddingBottom: 'calc(var(--mantine-spacing-xl) * 1.5)' }}>
 				{children}

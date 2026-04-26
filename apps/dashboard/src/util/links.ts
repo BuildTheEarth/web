@@ -20,7 +20,7 @@ export const meNavLinks: NavLink[] = [
 	},
 	{
 		link: '/me/teams',
-		label: 'Participating Teams',
+		label: 'Participating Regions',
 		icon: 'UsersGroup',
 	},
 	{
@@ -32,33 +32,6 @@ export const meNavLinks: NavLink[] = [
 		link: '/editor',
 		label: 'Claim Editor',
 		icon: 'Polygon',
-	},
-
-	// ---- BuildTeam Specific ----
-	{
-		link: '',
-		label: 'Your BuildTeams',
-		icon: null,
-		divider: true,
-		permission: 'team|get-team|get-team-questions|review-team|get-team-members',
-	},
-	{
-		link: '/team/[team_slug]',
-		label: 'Info Overview',
-		icon: 'FileInfo',
-		permission: 'get-team',
-	},
-	{
-		link: '/team/[team_slug]/applications',
-		label: 'Applications',
-		icon: 'Search',
-		permission: 'review-team',
-	},
-	{
-		link: '/team/[team_slug]/members',
-		label: 'Members',
-		icon: 'UsersGroup',
-		permission: 'get-team-members',
 	},
 
 	// ---- Account Links ----
@@ -113,7 +86,7 @@ export const meNavLinks: NavLink[] = [
 	},
 	{
 		link: '/am/teams',
-		label: 'Build Teams',
+		label: 'Build Regions',
 		permission: 'get-teams',
 		icon: 'UsersGroup',
 	},

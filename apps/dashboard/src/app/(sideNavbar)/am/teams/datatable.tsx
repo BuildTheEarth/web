@@ -14,11 +14,10 @@ import {
 	Tooltip,
 	rem,
 } from '@mantine/core';
-import { IconDots, IconExternalLink, IconEye, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react';
+import { IconDots, IconExternalLink, IconEye, IconTransfer, IconUserCog } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { UserDisplay } from '@/components/data/User';
-import { useClipboard } from '@mantine/hooks';
 import { BuildTeam } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';
@@ -36,7 +35,6 @@ export default function BuildTeamsDatatable({
 	const params = useSearchParams();
 	const pathname = usePathname();
 	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
 
 	return (
 		<DataTable
@@ -126,11 +124,14 @@ export default function BuildTeamsDatatable({
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
-										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-										aria-label="Copy ID"
-										onClick={() => clipboard.copy(team.id)}
+										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+										color="cyan"
+										aria-label="View Details"
+										component={Link}
+										href={`/am/teams/${team.id}`}
+										rel="noopener"
 									>
-										Copy ID
+										View Details
 									</MenuItem>
 									<MenuItem
 										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
@@ -154,12 +155,12 @@ export default function BuildTeamsDatatable({
 									<MenuItem
 										leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
 										color="red"
-										aria-label="Delete or Transfer Team"
+										aria-label="Delete or Transfer Region"
 										component={Link}
 										href={`/am/teams/${team.id}/transfer?ref=transfer`}
 										rel="noopener"
 									>
-										Transfer Team
+										Transfer Region
 									</MenuItem>
 								</MenuDropdown>
 							</Menu>

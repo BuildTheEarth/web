@@ -41,84 +41,84 @@ export function TransferStepper({ id }: { id: string }) {
 			id: 'move-claims',
 			icon: IconPolygon,
 			title: 'Move Claims',
-			description: `Transfer all claims made by this Build Team to the destination Build Team.`,
+			description: `Transfer all claims made by this Build Region to the destination Build Region.`,
 			button: 'Claims',
 		},
 		{
 			id: 'move-showcases',
 			icon: IconPhoto,
 			title: 'Move Showcase Images',
-			description: `Transfer all showcase images made by this Build Team to the destination Build Team.`,
+			description: `Transfer all showcase images made by this Build Region to the destination Build Region.`,
 			button: 'Showcase Images',
 		},
 		{
 			id: 'move-calendar',
 			icon: IconCalendar,
 			title: 'Move Calendar Events',
-			description: `Transfer all calendar events made by this Build Team to the destination Build Team.`,
+			description: `Transfer all calendar events made by this Build Region to the destination Build Region.`,
 			button: 'Calendar Events',
 		},
 		{
 			id: 'copy-members',
 			icon: IconUsersGroup,
 			title: 'Add Members',
-			description: `Add all members of this Build Team to the destination Build Team.`,
+			description: `Add all members of this Build Region to the destination Build Region.`,
 			button: 'Members',
 		},
 		{
 			id: 'delete-applications',
 			icon: IconForms,
 			title: 'Delete Applications',
-			description: `Delete all applications to this Build Team.`,
+			description: `Delete all applications to this Build Region.`,
 			button: 'Applications',
 		},
 		{
 			id: 'delete-application-questions',
 			icon: IconQuestionMark,
 			title: 'Delete Application Questions',
-			description: `Delete all application questions of this Build Team.`,
+			description: `Delete all application questions of this Build Region.`,
 			button: 'Application Questions',
 		},
 		{
 			id: 'delete-application-responses',
 			icon: IconMessage,
 			title: 'Delete Application Response Templates',
-			description: `Delete all application response templates of this Build Team.`,
+			description: `Delete all application response templates of this Build Region.`,
 			button: 'Application Response Templates',
 		},
 		{
 			id: 'delete-socials',
 			icon: IconBrandDiscord,
 			title: 'Delete Socials',
-			description: `Delete all socials of this Build Team.`,
+			description: `Delete all socials of this Build Region.`,
 			button: 'Socials',
 		},
 		{
 			id: 'delete-permissions',
 			icon: IconUsers,
 			title: 'Remove Managers',
-			description: `Remove all users with special permissions from this Build Team.`,
+			description: `Remove all users with special permissions from this Build Region.`,
 			button: 'Managers',
 		},
 		{
 			id: 'remove-members',
 			icon: IconUsersGroup,
 			title: 'Remove Members',
-			description: `Remove all users from this Build Team.`,
+			description: `Remove all users from this Build Region.`,
 			button: 'Members',
 		},
 		{
 			id: 'delete-team',
 			icon: IconTrash,
-			title: 'Delete Build Team',
-			description: `Delete this Build Team.`,
-			button: 'Build Team',
+			title: 'Delete Build Region',
+			description: `Delete this Build Region.`,
+			button: 'Build Region',
 		},
 		{
 			id: 'reload-data',
 			icon: IconReload,
 			title: 'Refresh Data',
-			description: `Refreshes all data on the destination Build Team.`,
+			description: `Refreshes all data on the destination Build Region.`,
 			button: 'Reload & Finish',
 		},
 	];
@@ -128,7 +128,7 @@ export function TransferStepper({ id }: { id: string }) {
 			<Box maw={{ base: '100%', md: '80%' }}>
 				<Alert title="Warning" color="red" mb="md" icon={<IconExclamationCircle />}>
 					Actions performed on this page are irreversible and cause heavy data mutations. Please be careful of what you
-					are doing here. You will need to confirm every action. To get started, select the destination Build Team you
+					are doing here. You will need to confirm every action. To get started, select the destination Build Region you
 					want to transfer some of the data (Showcase Images, Claims, Members, Calendar Events) to below.
 				</Alert>
 
@@ -136,8 +136,8 @@ export function TransferStepper({ id }: { id: string }) {
 					value={destinationTeam}
 					onChange={setDestinationTeam}
 					searchable
-					label="Destination Build Team"
-					description="Select the Build Team you want to transfer the data to."
+					label="Destination Build Region"
+					description="Select the Build Region you want to transfer the data to."
 				/>
 				<Button
 					mt="xl"
@@ -217,7 +217,7 @@ export function ChangeOwner({ id }: { id: string }) {
 		<Box maw={{ base: '100%', sm: '80%', md: '60%', xl: '40%' }}>
 			<Alert title="Warning" color="red" mb="md" icon={<IconExclamationCircle />}>
 				Actions performed on this page cause heavy data mutations. Please be careful of what you are doing here. Please
-				let the old and new owners know about the transfer of the Build Team.
+				let the old and new owners know about the transfer of the Build Region.
 			</Alert>
 			<UserSelect label="New Owner" onChange={(u) => setNewOwner(u?.id || null)} />
 			<Checkbox

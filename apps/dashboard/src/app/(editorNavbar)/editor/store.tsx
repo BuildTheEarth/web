@@ -117,8 +117,8 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 				return true;
 			} else {
 				showNotification({
-					title: 'Permission Denied',
-					message: 'You dont have permission to edit this claim.',
+					title: 'Claim not found',
+					message: 'The claim you are trying to edit does not exist.',
 					color: 'red',
 				});
 				return false;
