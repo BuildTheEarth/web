@@ -20,7 +20,7 @@ import {
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { modals, openConfirmModal } from '@mantine/modals';
-import { BuildTeam, Claim } from '@repo/db';
+import type { BuildTeam, Claim } from '@repo/db';
 import { IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import { redirect } from 'next/navigation';

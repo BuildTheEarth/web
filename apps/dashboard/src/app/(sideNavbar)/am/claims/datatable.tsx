@@ -9,7 +9,7 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import { UserDisplay } from '@/components/data/User';
 import { useClipboard } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
-import { Claim } from '@repo/db';
+import type { Claim } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';
 

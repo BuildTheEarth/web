@@ -7,7 +7,7 @@ import { adminAddContact, adminDeleteContact, adminEditContact } from '@/actions
 import { useFormActions } from '@/hooks/useFormAction';
 import { useForm } from '@mantine/form';
 import { modals } from '@mantine/modals';
-import { Contact } from '@repo/db';
+import type { Contact } from '@repo/db';
 
 export function AddContactButton({ disabled }: { disabled?: boolean }) {
 	return (

@@ -20,22 +20,34 @@
 import { Badge, BadgeProps } from '@mantine/core';
 
 import { applicationStatusToGradient } from '@/util/transformers';
-import { ApplicationStatus } from '@repo/db';
+
+type ApplicationStatus = 'SEND' | 'REVIEWING' | 'TRIAL' | 'DECLINED' | 'ACCEPTED';
+
+const APPLICATION_STATUS = {
+	SEND: 'SEND',
+	REVIEWING: 'REVIEWING',
+	TRIAL: 'TRIAL',
+	DECLINED: 'DECLINED',
+	ACCEPTED: 'ACCEPTED',
+} as const;
 
 export function ApplicationStatusBadge({ status, ...props }: { status: ApplicationStatus } & BadgeProps) {
 	let text = '';
 
 	switch (status) {
-		case ApplicationStatus.SEND:
+		case APPLICATION_STATUS.SEND:
 			text = 'Needs Review';
 			break;
-		case ApplicationStatus.TRIAL:
+		case APPLICATION_STATUS.REVIEWING:
+			text = 'Reviewing';
+			break;
+		case APPLICATION_STATUS.TRIAL:
 			text = 'Trial';
 			break;
-		case ApplicationStatus.DECLINED:
+		case APPLICATION_STATUS.DECLINED:
 			text = 'Rejected';
 			break;
-		case ApplicationStatus.ACCEPTED:
+		case APPLICATION_STATUS.ACCEPTED:
 			text = 'Accepted';
 			break;
 		default:

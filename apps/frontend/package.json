@@ -22,6 +22,7 @@
 		"@mantine/modals": "^8.3.10",
 		"@mantine/notifications": "^8.3.10",
 		"@next/bundle-analyzer": "16.2.4",
+		"@prisma/adapter-pg": "^7.8.0",
 		"@repo/db": "*",
 		"@tabler/icons-react": "^3.31.0",
 		"clsx": "^2.1.1",

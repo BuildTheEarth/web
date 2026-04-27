@@ -19,7 +19,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { UserDisplay } from '@/components/data/User';
 import { useClipboard } from '@mantine/hooks';
-import { BuildTeam } from '@repo/db';
+import type { BuildTeam } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';
 

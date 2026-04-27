@@ -23,7 +23,7 @@ import {
 } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
 import { showNotification } from '@mantine/notifications';
-import { BuildTeam } from '@repo/db';
+import type { BuildTeam } from '@repo/db';
 import { IconCheck, IconDeviceFloppy, IconDots, IconId, IconPlus, IconSocial, IconTrash } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';

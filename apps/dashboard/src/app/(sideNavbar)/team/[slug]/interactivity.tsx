@@ -3,7 +3,7 @@
 import { hasRole } from '@/util/auth';
 import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
-import { BuildTeam } from '@repo/db';
+import type { BuildTeam } from '@repo/db';
 import { IconDots, IconExternalLink, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';

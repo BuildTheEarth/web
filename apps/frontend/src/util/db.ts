@@ -1,4 +1,5 @@
-import { PrismaClient, PrismaPg } from '@repo/db';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '@repo/db';
 
 const prismaClientSingleton = () => {
 	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });

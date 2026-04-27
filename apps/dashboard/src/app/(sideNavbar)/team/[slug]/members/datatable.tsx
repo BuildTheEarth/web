@@ -27,7 +27,7 @@ import { toHumanDate } from '@/util/date';
 import { useClipboard } from '@mantine/hooks';
 import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { ApplicationStatus } from '@repo/db';
+import type { ApplicationStatus } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import moment from 'moment';
 import Link from 'next/link';

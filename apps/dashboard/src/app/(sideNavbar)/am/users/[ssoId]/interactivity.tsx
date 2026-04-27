@@ -37,7 +37,7 @@ import {
 } from '@/actions/user';
 import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
-import { Permisision, User } from '@repo/db';
+import type { Permisision, User } from '@repo/db';
 import Link from 'next/link';
 
 export function BuildTeamMenu(props: { team: { slug: string; name: string }; ssoId: string; canEdit: boolean }) {

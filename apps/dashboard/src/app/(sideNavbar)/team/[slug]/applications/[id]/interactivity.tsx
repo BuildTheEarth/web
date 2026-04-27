@@ -18,7 +18,7 @@ import { useClipboard } from '@mantine/hooks';
 import { openConfirmModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
-import { Application, ApplicationResponseTemplate, ApplicationStatus } from '@repo/db';
+import type { Application, ApplicationResponseTemplate, ApplicationStatus } from '@repo/db';
 import { IconCheck, IconDots, IconId, IconTemplate, IconX } from '@tabler/icons-react';
 import Highlight from '@tiptap/extension-highlight';
 import Link from '@tiptap/extension-link';
@@ -66,6 +66,9 @@ export function ResponseEditor({
 	userId: string;
 	buildTeamSlug: string;
 }) {
+	const APPLICATION_STATUS_ACCEPTED: ApplicationStatus = 'ACCEPTED';
+	const APPLICATION_STATUS_DECLINED: ApplicationStatus = 'DECLINED';
+
 	const responseEditor = useEditor({
 		extensions: [
 			StarterKit,
@@ -129,7 +132,7 @@ export function ResponseEditor({
 								buildTeamSlug,
 								applicationId: application.id,
 								reason: responseEditor?.storage.markdown.getMarkdown(),
-								status: ApplicationStatus.ACCEPTED,
+								status: APPLICATION_STATUS_ACCEPTED,
 							}).then(() => {
 								showNotification({
 									message: `Application accepted successfully.`,
@@ -150,7 +153,7 @@ export function ResponseEditor({
 								buildTeamSlug,
 								applicationId: application.id,
 								reason: responseEditor?.storage.markdown.getMarkdown(),
-								status: ApplicationStatus.DECLINED,
+								status: APPLICATION_STATUS_DECLINED,
 							}).then(() => {
 								showNotification({
 									message: `Application declined successfully.`,
