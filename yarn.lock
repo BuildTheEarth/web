@@ -1913,18 +1913,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mantine/dates@npm:^8.2.3":
-  version: 8.3.18
-  resolution: "@mantine/dates@npm:8.3.18"
+"@mantine/dates@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "@mantine/dates@npm:9.1.0"
   dependencies:
     clsx: "npm:^2.1.1"
   peerDependencies:
-    "@mantine/core": 8.3.18
-    "@mantine/hooks": 8.3.18
+    "@mantine/core": 9.1.0
+    "@mantine/hooks": 9.1.0
     dayjs: ">=1.0.0"
-    react: ^18.x || ^19.x
-    react-dom: ^18.x || ^19.x
-  checksum: 10c0/13926abde2b03415eef661897bbb4a3d14ef2ca31598e11c11d0c683af76399910bdc2d9c531fd63b3a115d7e594bbdd9b5b9f88770742584643842456a1801e
+    react: ^19.2.0
+    react-dom: ^19.2.0
+  checksum: 10c0/863cc90a8df0c3f4a66fb4126b03d7e3df487cb37ca0e11f05c311105d5bff80717df582ce1f4b91b654665283fedfa17cdce9ffc39d136e2ef63b6d0bf0b3e1
   languageName: node
   linkType: hard
 
@@ -7984,7 +7984,7 @@ __metadata:
     "@mantine/charts": "npm:^8.2.3"
     "@mantine/code-highlight": "npm:^8.2.3"
     "@mantine/core": "npm:^8.2.3"
-    "@mantine/dates": "npm:^8.2.3"
+    "@mantine/dates": "npm:^9.1.0"
     "@mantine/form": "npm:^8.2.3"
     "@mantine/hooks": "npm:^8.2.3"
     "@mantine/modals": "npm:^8.2.3"
