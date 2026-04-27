@@ -8,6 +8,7 @@ import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { Request } from "express";
 import { IS_PUBLIC_KEY } from "../decorators/skip-auth.decorator";
+import { IS_AUTH_OPTIONAL_KEY } from "../decorators/optional-auth.decorator";
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
@@ -31,16 +32,28 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    const isOptional = this.reflector.getAllAndOverride<boolean>(
+      IS_AUTH_OPTIONAL_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
     // If the route is not public, we proceed with authentication
     const request = context.switchToHttp().getRequest<Request>();
     const token = this.extractTokenFromHeader(request);
+
+    if (!token && isOptional) {
+      return true;
+    }
+
     if (!token) {
       throw new UnauthorizedException();
     }
+
     try {
       const payload = await this.jwtService.verifyAsync(token);
       request["token"] = payload;
     } catch {
+      // If auth is optional but failed to verify, we still reject the request
       throw new UnauthorizedException();
     }
     return true;

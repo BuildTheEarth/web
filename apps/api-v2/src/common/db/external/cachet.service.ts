@@ -9,8 +9,8 @@ import { firstValueFrom } from "rxjs";
 @Injectable()
 export class CachetAPIService {
   private readonly logger = new Logger(CachetAPIService.name);
-  private baseURL: string;
-  private apiToken: string;
+  private baseURL: string | undefined;
+  private apiToken: string | undefined;
 
   constructor(
     private readonly http: HttpService,
@@ -26,11 +26,11 @@ export class CachetAPIService {
     } else {
       this.baseURL = this.configService.get<string>("CACHET_URL") as string;
       this.apiToken = this.configService.get<string>("CACHET_TOKEN") as string;
-    }
 
-    this.testConnection().then(() => {
-      this.logger.log("Cachet API is reachable");
-    });
+      this.testConnection().then(() => {
+        this.logger.log("Cachet API is reachable");
+      });
+    }
   }
 
   async testConnection(): Promise<string> {
