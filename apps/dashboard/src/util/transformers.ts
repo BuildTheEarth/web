@@ -48,13 +48,13 @@ export function applicationStatusToIcon(status: ApplicationStatus) {
 export function applicationStatusToTooltip(status: ApplicationStatus) {
 	switch (status) {
 		case ApplicationStatus.SEND:
-			return 'The region has received your application and is reviewing it.';
+			return 'The Team has received your application and is reviewing it.';
 		case ApplicationStatus.TRIAL:
-			return 'You have been accepted to the region on a trial basis.';
+			return 'You have been accepted to the Team on a trial basis.';
 		case ApplicationStatus.DECLINED:
 			return 'Your application has been declined. Please check the reason for more information.';
 		case ApplicationStatus.ACCEPTED:
-			return 'You have been accepted to the region.';
+			return 'You have been accepted to the Team.';
 		default:
 			return 'Unknown status.';
 	}
@@ -71,7 +71,7 @@ export function applicationStatusToAlert(status: ApplicationStatus): {
 				icon: applicationStatusToIcon(status),
 				title: 'Application pending review',
 				description:
-					'The Build Region has received your application and is reviewing it. As soon as a decision is made, you will be notified via a Direct Message on Discord. If you have any questions about the status of this application, please contact the Build Region directly.',
+					'The Build Team has received your application and is reviewing it. As soon as a decision is made, you will be notified via a Direct Message on Discord. If you have any questions about the status of this application, please contact the Build Team directly.',
 				color: applicationStatusToColor(status),
 			};
 		case ApplicationStatus.TRIAL:
@@ -79,7 +79,7 @@ export function applicationStatusToAlert(status: ApplicationStatus): {
 				icon: applicationStatusToIcon(status),
 				title: 'Trial Application accepted',
 				description:
-					'Congratulations! Your application has been accepted and you have been added to the Build Region as a Trial Member. If you have any questions about the Trial role or the status of this application, please contact the Build Region directly.',
+					'Congratulations! Your application has been accepted and you have been added to the Build Team as a Trial Member. If you have any questions about the Trial role or the status of this application, please contact the Build Team directly.',
 				color: applicationStatusToColor(status),
 			};
 		case ApplicationStatus.DECLINED:
@@ -87,7 +87,7 @@ export function applicationStatusToAlert(status: ApplicationStatus): {
 				icon: applicationStatusToIcon(status),
 				title: 'Application declined',
 				description:
-					'This application has been declined by the Build Region. Please check the reason for more information about possible mistakes and how to improve your application. If you have any questions about this feedback, please contact the Build Region directly. You can reapply to this Build Region at any time.',
+					'This application has been declined by the Build Team. Please check the reason for more information about possible mistakes and how to improve your application. If you have any questions about this feedback, please contact the Build Team directly. You can reapply to this Build Team at any time.',
 				color: applicationStatusToColor(status),
 			};
 		case ApplicationStatus.ACCEPTED:
@@ -95,7 +95,7 @@ export function applicationStatusToAlert(status: ApplicationStatus): {
 				icon: applicationStatusToIcon(status),
 				title: 'Application accepted',
 				description:
-					'Congratulations! Your application has been accepted by the Build Region. You are now a member of the Build Region. If you have any questions about your new role or the status of this application, please contact the Build Region directly.',
+					'Congratulations! Your application has been accepted by the Build Team. You are now a member of the Build Team. If you have any questions about your new role or the status of this application, please contact the Build Team directly.',
 				color: applicationStatusToColor(status),
 			};
 		default:

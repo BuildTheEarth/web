@@ -81,7 +81,7 @@ export default async function Page({
 		<Protection requiredRole="get-applications">
 			<ContentWrapper maw="90vw">
 				<Title order={1} mt="xl" mb="md">
-					Region Applications
+					Team Applications
 				</Title>
 				<SearchApplications mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<ApplicationsDatatable applications={applications} count={applicationCount} />

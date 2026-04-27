@@ -11,7 +11,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 	const { id } = await params;
 
 	return {
-		title: 'Transfer Build Region ' + id.split('-')[0],
+		title: 'Transfer Build Team ' + id.split('-')[0],
 	};
 }
 
@@ -34,9 +34,9 @@ export default async function Page({
 		return (
 			<Box mx="md" maw="90vw">
 				<Title order={1} mt="xl" mb="md">
-					Transfer and Delete Build Region
+					Transfer and Delete Build Team
 				</Title>
-				<Alert title="Region not found" icon={<IconExclamationCircle />} mb="lg" />
+				<Alert title="Team not found" icon={<IconExclamationCircle />} mb="lg" />
 			</Box>
 		);
 	}

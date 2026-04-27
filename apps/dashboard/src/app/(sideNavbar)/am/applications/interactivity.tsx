@@ -8,14 +8,14 @@ import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 
 export function SearchApplications(props: GroupProps) {
-	const [searchValue, setSearchValue] = useState('');
-	const [searchType, setSearchType] = useState('applicant');
-	const [onlyPending, setOnlyPending] = useState(false);
-
-	const [debouncedValue] = useDebouncedValue(searchValue, 500);
 	const router = useRouter();
 	const params = useSearchParams();
 	const pathname = usePathname();
+
+	const [searchValue, setSearchValue] = useState(() => params.get('query') || '');
+	const [searchType, setSearchType] = useState(() => params.get('searchType') || 'applicant');
+	const [onlyPending, setOnlyPending] = useState(() => params.get('onlyPending') === 'true');
+	const [debouncedValue] = useDebouncedValue(searchValue, 500);
 
 	const searchTypes = [
 		{
@@ -30,24 +30,25 @@ export function SearchApplications(props: GroupProps) {
 		},
 		{
 			value: 'team',
-			label: 'Build Region',
-			example: 'Build Region Name, Country, IP, Invite, Slug...',
+			label: 'Build Team',
+			example: 'Build Team Name, Country, IP, Invite, Slug...',
 		},
 	];
 
 	useEffect(() => {
-		if (
-			debouncedValue != (params.get('query') || '') ||
-			onlyPending != (params.get('onlyPending') === 'true') ||
-			searchType != (params.get('searchType') || '')
-		) {
+		const currentQuery = params.get('query') || '';
+		const currentType = params.get('searchType') || 'applicant';
+		const currentPending = params.get('onlyPending') === 'true';
+		if (debouncedValue !== currentQuery || searchType !== currentType || onlyPending !== currentPending) {
 			if (debouncedValue) {
 				router.push(`${pathname}?query=${debouncedValue}&searchType=${searchType}&onlyPending=${onlyPending}&page=1`);
 			} else {
 				router.push(`${pathname}?page=${params.get('page') || 1}`);
 			}
 		}
-	}, [debouncedValue, onlyPending, searchType, params, pathname, router]);
+		// Only run when debouncedValue, searchType, onlyPending, pathname, or router changes
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [debouncedValue, searchType, onlyPending, pathname, router]);
 
 	return (
 		<Group gap="sm" {...props} w="100%">

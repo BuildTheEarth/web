@@ -1,9 +1,10 @@
 'use client';
 
 import { ActionIcon, Badge, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem, Tooltip } from '@mantine/core';
-import { IconDots, IconEye, IconMessage2 } from '@tabler/icons-react';
+import { IconDots, IconEye, IconId, IconMessage2 } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { useClipboard } from '@mantine/hooks';
 import { User } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';
@@ -13,6 +14,7 @@ export default function UsersDatatabe({ users, count }: { users: User[]; count: 
 	const params = useSearchParams();
 	const pathname = usePathname();
 	const page = Number(params.get('page')) || 1;
+	const clipboard = useClipboard({ timeout: 500 });
 
 	return (
 		<DataTable
@@ -73,14 +75,18 @@ export default function UsersDatatabe({ users, count }: { users: User[]; count: 
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
-										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-										color="cyan"
-										aria-label="View Question on Website"
-										component={Link}
-										href={`/am/users/${user.ssoId}`}
-										rel="noopener"
+										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+										aria-label="Copy ID"
+										onClick={() => clipboard.copy(user.id)}
 									>
-										View Details
+										Copy ID
+									</MenuItem>
+									<MenuItem
+										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+										aria-label="Copy SSO ID"
+										onClick={() => clipboard.copy(user.ssoId)}
+									>
+										Copy SSO ID
 									</MenuItem>
 									<MenuItem
 										leftSection={<IconMessage2 style={{ width: rem(14), height: rem(14) }} />}

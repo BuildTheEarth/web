@@ -10,7 +10,7 @@ import BuildTeamsDatatable from './datatable';
 import { SearchBuildTeams } from './interactivity';
 
 export const metadata: Metadata = {
-	title: 'Build Regions',
+	title: 'Build Teams',
 };
 export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
 	const page = (await searchParams).page;
@@ -24,6 +24,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						{ location: { contains: searchQuery || undefined } },
 						{ invite: { contains: searchQuery || undefined } },
 						{ ip: { contains: searchQuery || undefined } },
+						{ members: { some: { ssoId: { contains: searchQuery || undefined } } } },
+						{ creator: { ssoId: { contains: searchQuery || undefined } } },
 					],
 				}
 			: undefined,
@@ -39,6 +41,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						{ location: { contains: searchQuery || undefined } },
 						{ invite: { contains: searchQuery || undefined } },
 						{ ip: { contains: searchQuery || undefined } },
+						{ members: { some: { ssoId: { contains: searchQuery || undefined } } } },
+						{ creator: { ssoId: { contains: searchQuery || undefined } } },
 					],
 				}
 			: undefined,
@@ -49,7 +53,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 		<Protection requiredRole="get-teams">
 			<ContentWrapper maw="90vw">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
-					<Title order={1}>Build Regions</Title>
+					<Title order={1}>Build Teams</Title>
 					<Group gap="xs">
 						<Button
 							variant="light"

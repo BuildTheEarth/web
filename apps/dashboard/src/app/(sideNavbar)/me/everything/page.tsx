@@ -6,6 +6,7 @@ import {
 	IconChevronRight,
 	IconCode,
 	IconDeviceWatch,
+	IconFreeRights,
 	IconId,
 	IconInfoCircle,
 	IconLicense,
@@ -17,7 +18,7 @@ import {
 	IconUsers,
 } from '@tabler/icons-react';
 
-import { getUser } from '@/actions/getUser';
+import { getUser, getUserPermissions } from '@/actions/getUser';
 import ContentWrapper from '@/components/core/ContentWrapper';
 import { WebsiteKeycloakUser } from '@/types/User';
 import { getSession } from '@/util/auth';
@@ -34,6 +35,10 @@ export default async function Page() {
 	const user = await getUser();
 	const session = await getSession();
 	const data = await authedFetcher<WebsiteKeycloakUser>(`/users/${user.id}/kc`);
+	const userPermissions = await getUserPermissions(session?.user.id);
+	if (!data) {
+		throw new Error('Could not fetch user data. Please sign out and back in.');
+	}
 
 	return (
 		<ContentWrapper>
@@ -85,7 +90,7 @@ export default async function Page() {
 							<Flex align={'center'} gap={'md'}>
 								<IconMail size={'2rem'} />
 								<Text>
-									<b>E-Mail Address:</b> {user.email}
+									<b>E-Mail Address:</b> {data.email}
 								</Text>
 							</Flex>
 						</Card>
@@ -93,7 +98,7 @@ export default async function Page() {
 							<Flex align={'center'} gap={'md'}>
 								<IconMailCheck size={'2rem'} />
 								<Text>
-									<b>E-Mail Status:</b> {user.emailVerified ? 'Verified' : 'Unverified'}
+									<b>E-Mail Status:</b> {data.emailVerified ? 'Verified' : 'Unverified'}
 								</Text>
 							</Flex>
 						</Card>
@@ -186,6 +191,20 @@ export default async function Page() {
 					<Text my="sm" fw="bold" fz="lg">
 						Other Data
 					</Text>
+					<Stack gap="sm">
+						<Card>
+							<Flex align={'center'} gap={'md'}>
+								<IconFreeRights size={'2rem'} />
+								<Text>
+									<b>BT Permission Keys:</b>{' '}
+									{userPermissions
+										.map((p) => p.permission.id)
+										.filter((id, index, allIds) => allIds.indexOf(id) === index && id.includes('team.'))
+										.join(', ')}
+								</Text>
+							</Flex>
+						</Card>
+					</Stack>
 					<Button component={Link} href="/me/sessions" rightSection={<IconChevronRight />} mr="md" mb="md">
 						View active Sessions
 					</Button>
@@ -205,6 +224,10 @@ export default async function Page() {
 						Session Data
 					</Text>
 					<CodeHighlight code={JSON.stringify(session, null, 2)} language="json" withCopyButton={false} />
+					<Text fw="bold" mt="sm">
+						BuildTeam Permissions
+					</Text>
+					<CodeHighlight code={JSON.stringify(userPermissions, null, 2)} language="json" withCopyButton={false} />
 					<Text fw="bold" mt="sm">
 						Allowed Navigation Links
 					</Text>

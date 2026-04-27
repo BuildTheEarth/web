@@ -1,13 +1,14 @@
 'use client';
 
 import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core';
-import { IconDots, IconEye, IconMessage2 } from '@tabler/icons-react';
+import { IconDots, IconExternalLink, IconEye, IconId } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { ApplicationStatusBadge } from '@/components/data/ApplicationStatusBadge';
 import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import { UserDisplay } from '@/components/data/User';
 import { toHumanDateTime } from '@/util/date';
+import { useClipboard } from '@mantine/hooks';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';
 
@@ -22,6 +23,7 @@ export default function ApplicationsDatatable<A extends { id: string }>({
 	const params = useSearchParams();
 	const pathname = usePathname();
 	const page = Number(params.get('page')) || 1;
+	const clipboard = useClipboard({ timeout: 500 });
 
 	return (
 		<DataTable
@@ -61,7 +63,7 @@ export default function ApplicationsDatatable<A extends { id: string }>({
 				},
 				{
 					accessor: 'buildteam.name',
-					title: 'Build Region',
+					title: 'Build Team',
 					render: ({ buildteam }: any) => <BuildTeamDisplay team={buildteam} />,
 				},
 				{
@@ -89,17 +91,14 @@ export default function ApplicationsDatatable<A extends { id: string }>({
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
-										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-										color="cyan"
-										aria-label="View Application"
-										component={Link}
-										href={`/am/applications/${application.id}`}
-										rel="noopener"
+										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+										aria-label="Copy ID"
+										onClick={() => clipboard.copy(application.id)}
 									>
-										View Details
+										Copy ID
 									</MenuItem>
 									<MenuItem
-										leftSection={<IconMessage2 style={{ width: rem(14), height: rem(14) }} />}
+										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
 										component={Link}
 										target="_blank"
 										href={`https://buildtheearth.net/teams/${application.buildteam.slug}/manage/review/${application.id}`}

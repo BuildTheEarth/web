@@ -4,6 +4,7 @@ import {
 	IconBubble,
 	IconChartPie,
 	IconDeviceDesktop,
+	IconFileInfo,
 	IconFileUpload,
 	IconForms,
 	IconHome,
@@ -11,10 +12,12 @@ import {
 	IconPlugConnected,
 	IconPolygon,
 	IconQuestionMark,
+	IconSearch,
 	IconSettings,
 	IconUsersGroup,
 } from '@tabler/icons-react';
 
+import { useActiveBuildTeam } from '@/hooks/useBuildTeamData';
 import classes from '@/styles/Navbar.module.css';
 import { Anchor } from '@mantine/core';
 import Link from 'next/link';
@@ -26,14 +29,17 @@ export interface NavLink {
 	icon: string;
 }
 
-export default function Navbar(props: NavLink) {
+export default function NavLink(props: NavLink) {
 	const pathname = usePathname();
+	const activeBuildTeam = useActiveBuildTeam();
+
 	const Icon = getIcon(props.icon);
+
 	return (
 		<Anchor
-			key={props.label}
+			key={props.link}
 			component={Link}
-			href={props.link}
+			href={props.link.replaceAll('[team_slug]', activeBuildTeam?.slug || 'unknown')}
 			className={classes.navbarLink}
 			data-active={props.link == pathname}
 		>
@@ -67,6 +73,10 @@ function getIcon(name: string) {
 			return IconFileUpload;
 		case 'Bubble':
 			return IconBubble;
+		case 'FileInfo':
+			return IconFileInfo;
+		case 'Search':
+			return IconSearch;
 		default:
 			return IconQuestionMark;
 	}

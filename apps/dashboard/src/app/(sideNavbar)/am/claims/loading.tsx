@@ -53,7 +53,7 @@ export default function Page() {
 						},
 						{
 							accessor: 'buildTeam',
-							title: 'Build Region',
+							title: 'Build Team',
 						},
 						{
 							accessor: '',

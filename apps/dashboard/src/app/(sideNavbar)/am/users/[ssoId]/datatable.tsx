@@ -71,7 +71,7 @@ export default function ClaimDatatabe({
 				},
 				{
 					accessor: 'buildTeam',
-					title: 'Build Region',
+					title: 'Build Team',
 					visibleMediaQuery: '(min-width: 64em)', // md
 					render: ({ buildTeam }: { buildTeam: (typeof claims)[0]['buildTeam'] }) => (
 						<BuildTeamDisplay team={buildTeam} />

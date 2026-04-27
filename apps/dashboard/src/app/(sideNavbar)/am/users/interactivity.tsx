@@ -8,21 +8,25 @@ import { useEffect, useState } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 
 export function SearchUsers(props: TextInputProps) {
-	const [value, setValue] = useState('');
-	const [debounced] = useDebouncedValue(value, 500);
 	const router = useRouter();
 	const params = useSearchParams();
 	const pathname = usePathname();
 
+	const [value, setValue] = useState(() => params.get('query') || '');
+	const [debounced] = useDebouncedValue(value, 500);
+
 	useEffect(() => {
-		if (debounced != params.get('query') || '') {
+		const currentQuery = params.get('query') || '';
+		if (debounced !== currentQuery) {
 			if (debounced) {
 				router.push(`${pathname}?query=${debounced}&page=1`);
 			} else {
 				router.push(`${pathname}?page=1`);
 			}
 		}
-	}, [debounced, params, pathname, router]);
+		// Only run when debounced, pathname, or router changes
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [debounced, pathname, router]);
 
 	return (
 		<TextInput
