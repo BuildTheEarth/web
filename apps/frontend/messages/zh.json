@@ -1,0 +1,418 @@
+{
+	"seo": {
+		"locale_long": "zh_TW",
+		"locale_short": "zh",
+		"locale_name": "中文",
+		"site_name": "BuildTheEarth",
+		"description": "在 Minecraft 中建造地球 - 加入全球最大的社群專案，在電玩遊戲 Minecraft 中重現我們的星球。",
+		"title": {
+			"template": "%s | BuildTheEarth",
+			"default": "在 Minecraft 中 1:1 建造地球 | BuildTheEarth"
+		},
+		"keywords": [
+			"BuildTheEarth",
+			"Minecraft",
+			"BTE",
+			"社群",
+			"地球",
+			"地圖",
+			"Minecraft",
+			"伺服器",
+			"1:1",
+			"全球"
+		],
+		"og": {
+			"title": "BuildTheEarth",
+			"subtitle": "在 Minecraft 中重建地球"
+		}
+	},
+	"common": {
+		"pagination": {
+			"page": "第 {page} 頁",
+			"first": "首頁",
+			"last": "末頁",
+			"next": "下一頁",
+			"previous": "上一頁"
+		},
+		"search": {
+			"placeholder": "搜尋..."
+		},
+		"footer": {
+			"copyright": "© {year} BuildTheEarth"
+		},
+		"header": {
+			"cta": "開始使用",
+			"toggleNavigation": "切換導覽連結"
+		},
+		"links": {
+			"faq": "問答",
+			"teams": "團隊",
+			"contact": "聯繫",
+			"status": "狀態",
+			"gallery": "畫廊",
+			"map": "地圖"
+		}
+	},
+	"home": {
+		"seo": {
+			"title": "在 Minecraft 中建造地球",
+			"description": "加入並協助 BuildTheEarth 以 1:1 的比例在 Minecraft 中重現這顆星球。"
+		},
+		"landing": {
+			"image": {
+				"alt": "法國城市的圓環，背景圖片"
+			},
+			"title": "在 Minecraft 中建造地球",
+			"cta": {
+				"label": "加入我們！",
+				"alt": "加入 BuildTheEarth 社群"
+			},
+			"arrowDown": {
+				"alt": "向下捲動以了解更多"
+			}
+		},
+		"whoWeAre": {
+			"title": "我們是誰",
+			"description": "BuildTheEarth 是一個社群專案，旨在於電腦遊戲 Minecraft 中以 1:1 的比例完整再製地球上的所有建築物，打造出整個世界的虛擬副本，展現我們星球上文化和生活空間的多樣性，並印證人類共同努力所能達成的成就。我們與世界各地的建築師連結、分享和學習，一同以前所未有的方式探索地球。加入我們的全球社群，賦予我們的世界新生！",
+			"cta": "閱讀更多"
+		},
+		"whatWeHaveDone": {
+			"title": "我們完成了什麼",
+			"buildings": "建築物",
+			"area": "面積",
+			"users": "使用者"
+		},
+		"globalCommunity": {
+			"title": "我們的全球社群",
+			"description": "每個地區或國家都在各自的 Minecraft 伺服器上進行建設，並由 BuildTheEarth 的子團隊管理進度。若想開始建設，請搜尋該地區的團隊並看看您能如何協助他們！許多人一開始會建造自己的社區抑或僅是自家的房屋，接著才越建越多。不要擔心自己建得不夠好，萬丈高樓平地起。要記得我們一直都在，隨時準備協助您學習如何建造更複雜的事物。",
+			"cta": "立即加入我們"
+		},
+		"explore": {
+			"title": "探索地球",
+			"description": "遊客可以自由查看和探索 BuildTheEarth 的所有進度。這些成果根據它們在世界上的位置被劃分到不同的伺服器上。您所要做的就是找到您想探索地區的 IP 並連線！有許多伺服器可以透過我們位於 Java 版上的中央樞紐 buildtheearth.net 來連接。",
+			"cta": "尋找伺服器"
+		},
+		"howToHelp": {
+			"title": "您能如何協助",
+			"description": "要開始建設，請搜尋該地區的團隊，看看您能如何協助他們！所有團隊都需要您「申請」，目的是教導您在地球世界上建造的基礎知識。這通常包括在他們的伺服器上重建 1 或 2 座小型建築物。您隨時可以在我們的 Discord 伺服器上尋求幫助和建築建議。經驗豐富的建築師總是樂意協助您入門。",
+			"step1": "尋找您的團隊",
+			"step2": "加入伺服器",
+			"step3": "建造您的第一棟建築"
+		},
+		"gallery": {
+			"alt": "BuildTheEarth 的作品展示畫廊",
+			"cta": "探索畫廊"
+		},
+		"mediaList": {
+			"title": "您可能看過",
+			"cta": "繼續閱讀",
+			"mainCta": "查看全部"
+		}
+	},
+	"notfound": {
+		"title": "找不到...",
+		"description": "您嘗試開啟的頁面不存在。您可能打錯網址，或者該頁面已移至其他網址。",
+		"cta": "返回"
+	},
+	"teams": {
+		"seo": {
+			"title": "建築團隊",
+			"description": "探索 BuildTheEarth 團隊，尋找您的地區，並加入 Minecraft 伺服器開始貢獻。"
+		},
+		"title": "建築團隊",
+		"description": [
+			"BuildTheEarth 被劃分為多個子團隊，分別建造世界上特定的國家或地區。",
+			"每個團隊都有各自的 Minecraft 伺服器，您可以加入並開始建造。"
+		],
+		"tooltip": {
+			"location": "該團隊建設的國家列表",
+			"members": "該團隊的成員數量"
+		},
+		"memberCount": "{count, plural, =0 {沒有成員} =1 {1 位成員} other {# 位成員}}",
+		"ownPage": {
+			"seo": {
+				"notFoundTitle": "找不到建築團隊",
+				"notFoundDescription": "您正在尋找的建築團隊不存在。",
+				"defaultOgImage": "/opengraph-image.png"
+			},
+			"notFoundFallback": "找不到建築團隊。",
+			"showcaseImageAlt": "展示圖片",
+			"overview": "簡介",
+			"details": "詳情",
+			"ip": "Minecraft IP",
+			"version": "Minecraft 版本",
+			"location": "{count, plural, =1 {個地點} other {個地點}}",
+			"moreLocations": "{list}, +{count}",
+			"members": "成員",
+			"recentImages": "最新圖片",
+			"noRecentImages": "{team} 尚未上傳任何圖片。",
+			"apply": "申請加入",
+			"joinServer": {
+				"label": "加入伺服器",
+				"step1": [
+					"1. 啟動 Minecraft",
+					"開啟啟動器。",
+					"在左側邊欄選擇 <i>Minecraft Java 版</i>。",
+					"點擊綠色的 <launcherButton>開始遊玩</launcherButton> 按鈕來啟動 Minecraft。",
+					"Minecraft 啟動後，在主選單上點擊 <button>多人遊戲</button>。"
+				],
+				"tip": "為了獲得最佳體驗，您可能需要將<link>您的遊戲版本更改為</link> <code>{version}</code>。",
+				"step2": [
+					"2. 新增伺服器",
+					"點擊右下角的 <button>新增伺服器</button>。",
+					"在 <b>伺服器名稱</b> 輸入一個給自己看的標籤（例如 <i>{name}</i>）。",
+					"在 <b>伺服器位址</b> 輸入 <code>{ip}</code> 並點擊 <button>完成</button>。",
+					"點擊列表中您剛剛新增的伺服器。",
+					"輸入 <code>/bt {slug}</code> 並按下 <kbd>ENTER</kbd>。"
+				],
+				"done": "<b>完成！</b> 您現在已在 {name} 的 Minecraft 伺服器上了。"
+			},
+			"locationsList": {
+				"label": "地點",
+				"description": "{buildTeam} 正在多個國家進行建設。您可以在下方找到完整的國家列表。如果您想在地圖上查看此列表，請點擊下方按鈕。",
+				"viewOnMap": "在地圖上查看"
+			}
+		}
+	},
+	"faq": {
+		"seo": {
+			"title": "常見問題",
+			"description": "獲得有關 BuildTheEarth 常見問題的解答，包括加入團隊、建築規則和社群詳情。"
+		},
+		"title": "常見問題",
+		"differentLanguageAlert": {
+			"title": "常見問題翻譯",
+			"description": "本頁列出的所有問題均以英文撰寫和回答。如果您需要獲得解答的協助，請在 Discord 上傳送訊息給我們。"
+		}
+	},
+	"contact": {
+		"seo": {
+			"title": "聯絡我們",
+			"description": "聯絡 BuildTheEarth 的社群管道、工作人員聯絡方式或申訴支援。"
+		},
+		"title": "聯絡我們",
+		"socialMedia": "社群媒體",
+		"staffContacts": "專案管理",
+		"appeals": {
+			"title": "停權申訴",
+			"description": "如果您希望對您在我們 Discord 伺服器上的停權提出申訴，請傳送電子郵件至 <mail></mail>。為了提交停權申訴，您必須包含您的 Discord 名稱和 ID、停權訊息的截圖以及您的申訴理由。不合理的申訴將被忽略。"
+		}
+	},
+	"statistics": {
+		"seo": {
+			"title": "專案統計",
+			"description": "探索有關建築師、建案、建築物和專案進度的 BuildTheEarth 統計資料。"
+		},
+		"atAGlance": "概覽",
+		"users": {
+			"label": "使用者",
+			"description": "正在協助在 Minecraft 中建造地球。"
+		},
+		"buildings": {
+			"label": "建築物",
+			"description": "已經在全球各地建造完畢。",
+			"total": {
+				"label": "建築物總數",
+				"description": "已建立。"
+			},
+			"active": {
+				"label": "進行中的建築物",
+				"description": "目前在我們的地圖上可見。"
+			},
+			"finished": {
+				"label": "已完成的建築物",
+				"description": "已經完全建造完畢。"
+			},
+			"unfinished": {
+				"label": "未完成的建築物",
+				"description": "仍在建設中。"
+			}
+		},
+		"claims": {
+			"label": "建案",
+			"description": "正在建設中或已經完成。",
+			"sectionTitle": "建案",
+			"total": {
+				"label": "建案總數",
+				"description": "已建立。"
+			},
+			"active": {
+				"label": "進行中的建案",
+				"description": "目前在我們的地圖上可見。"
+			},
+			"finished": {
+				"label": "已完成的建案",
+				"description": "已經完全建造完畢。"
+			},
+			"unfinished": {
+				"label": "未完成的建案",
+				"description": "仍在建設中。"
+			}
+		},
+		"common": {
+			"finished": "已完成",
+			"unfinished": "未完成"
+		},
+		"charts": {
+			"finishedVsUnfinishedCount": "已完成與未完成（數量）",
+			"finishedVsUnfinishedBuildings": "已完成與未完成（建築物）",
+			"finishedVsUnfinishedArea": "已完成與未完成（面積）"
+		},
+		"area": {
+			"total": "總面積",
+			"active": "進行中面積",
+			"finished": "已完成面積"
+		},
+		"leaderboard": {
+			"title": "排行榜",
+			"largestFinishedByBuildings": "最大的已完成建案（依建築物數）",
+			"largestFinishedByArea": "最大的已完成建案（依面積）",
+			"mostClaimsByUser": "最多的建案（依使用者）",
+			"mostClaimsByBuildTeam": "最多的建案（依建築團隊）"
+		},
+		"buildTeams": {
+			"title": "建築團隊",
+			"mostBuilders": "最多建築師（依建築團隊）"
+		},
+		"title": "專案統計"
+	},
+	"get-started": {
+		"seo": {
+			"title": "開始使用",
+			"description": "了解如何探索伺服器、尋找您的團隊，並開始在 BuildTheEarth 進行建設。"
+		},
+		"cards": {
+			"imageAlt": "開始使用圖卡"
+		},
+		"title": "開始進行建設",
+		"arrowDown": {
+			"alt": "向下捲動以了解更多關於如何開始的資訊"
+		},
+		"explore": {
+			"title": "探索 BuildTheEarth",
+			"description": "瀏覽我們的全球社群在重現世界時所取得的令人難以置信的進展。",
+			"cta": "尋找伺服器",
+			"searchCountries": "搜尋國家...",
+			"content": {
+				"text": "根據您想參觀的國家，有多個伺服器可供選擇。您可以在下方的方塊中搜尋國家。<br></br><br></br>此外，您也可以透過查看畫廊或造訪我們的地圖頁面來探索我們的進度。",
+				"ctaGallery": "查看畫廊",
+				"ctaMap": "探索地圖頁面"
+			},
+			"joinServer": {
+				"title": "探索 {country}",
+				"description": "加入 {name} Minecraft 伺服器以探索該地區令人嘆為觀止的建築。<br></br><br></br>如果您在伺服器上需要導覽方面的協助，請隨時在 Discord 上與我們聯絡！",
+				"ctaDiscord": "加入 Discord 伺服器",
+				"moreInformation": "更多資訊"
+			}
+		},
+		"build": {
+			"title": "開始建設",
+			"description": "加入我們並為創作獻身，在 Minecraft 中以 1:1 的比例再現地球。",
+			"cta": "尋找您的團隊",
+			"content": {
+				"text": "BuildTheEarth 由多個<b>建築團隊</b>組成，每個團隊負責重現世界的不同地區。建築團隊通常專注於特定的<b>國家或大陸</b>，您能夠為您熱愛的地區做出貢獻。<br></br><br></br>沒有限制您可以加入哪個或多少個建築團隊，因此請隨意探索！<br></br><br></br>每個建築團隊都有各自的伺服器，讓您可以與其他建築師合作、參與活動並獲得支援。因此，並沒有單一的「申請流程」。<br></br>而是需要加入您感興趣的建築團隊的<b> Discord 伺服器</b>，依照他們的指示即可輕鬆開始。<br></br><br></br>您也可以加入我們的中樞伺服器 (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) 以獲得協助並結識來自世界各地的其他建築師！"
+			},
+			"joinServer": {
+				"title": "在 {country} 建設",
+				"description": "加入 {name} Minecraft 伺服器來協助建設這個地區！<br></br><br></br>別忘了透過下方的連結加入 Discord 伺服器！",
+				"ctaDiscord": "{name} Discord 伺服器",
+				"moreInformation": "更多資訊"
+			}
+		}
+	},
+	"outreach": {
+		"seo": {
+			"title": "推廣",
+			"description": "閱讀 BuildTheEarth 相關的媒體報導、新聞專題和推廣故事。"
+		},
+		"title": "推廣",
+		"articles": "文章與媒體",
+		"contact": {
+			"title": "媒體洽詢",
+			"description": "如有媒體洽詢、合作機會或任何其他與推廣事務相關的問題，請透過 <mail></mail> 與我們聯絡。我們期待您的來信！您也可以在各種<contact>社群媒體平台</contact>上找到我們。"
+		}
+	},
+	"our-progress": {
+		"title": "我們的進度",
+		"seo": {
+			"title": "我們的進度",
+			"description": "瀏覽 Build The Earth 至今所取得的成就以及我們接下來的目標。"
+		},
+		"meta": {
+			"title": "我們的進度",
+			"description": "瀏覽 Build The Earth 至今所取得的成就以及我們接下來的目標。"
+		},
+		"sections": {
+			"achievements": {
+				"title": "我們至今取得了什麼成就",
+				"description": "我們所呈現出的完成度乍看之下可能毫不起眼，但這個專案從來都不是為了追求百分比的競速。它是關於建立全球合作、保存地方特色，並共同為我們的世界創造一份可以長久留存的數位記錄。"
+			},
+			"progress": {
+				"title": "進度估算",
+				"description": "這些指標以地球總面積的比例呈現我們的進度，也提醒我們反思，這項任務關乎的是品質和社群，而不是速度。"
+			}
+		},
+		"stats": {
+			"builders": {
+				"label": "建築師",
+				"description": "在團隊中積極合作、指導新人，並在世界各地分享技術的人們。"
+			},
+			"buildings": {
+				"label": "已收錄的建築物",
+				"description": "一個不斷擴展的檔案庫，收錄以細心、研究與在地知識重現的真實世界建築。"
+			},
+			"area": {
+				"label": "覆蓋面積",
+				"description": "將不同大小的區域劃分為建案，以便團隊可以跨洲協調工作。"
+			}
+		},
+		"cards": {
+			"claimCompletion": {
+				"title": "建案完成度",
+				"description": "共有 {activeClaims} 個進行中的建案，其中有 {finishedClaims} 個被標記為已完成。"
+			},
+			"landCoverage": {
+				"title": "地球陸地覆蓋率",
+				"description": "地球陸地表面的進度 ({trackedAreaKm2} km²)。"
+			},
+			"totalCoverage": {
+				"title": "地球總面積覆蓋率",
+				"description": "地球總表面積的進度 ({trackedAreaKm2} km²)。"
+			}
+		},
+		"impact": {
+			"title": "低百分比，大影響力。",
+			"description": "BTE 不是一場衝向 100% 的競速。我們透過歷史背景、在地細節和數千小時的志工時數來建設城市。被細緻完成的即使只有一個街區，也足以教育、啟發和連結跨越國界的人們。"
+		}
+	},
+	"gallery": {
+		"seo": {
+			"title": "展示畫廊",
+			"description": "探索 BuildTheEarth 的展示畫廊，欣賞來自世界各地的社群建築。"
+		}
+	},
+	"blog": {
+		"seo": {
+			"title": "部落格",
+			"description": "閱讀 BuildTheEarth 的新聞、更新和來自全球社群的故事。",
+			"defaultOgImage": "/opengraph-image.png"
+		},
+		"intro": "您是否曾好奇我們是如何建造我們的專案、幕後發生了什麼事，或是想隨時掌握我們的最新消息？那麼您就來對地方了！我們將分享我們在 Minecraft 中重現地球之旅的故事、更新和見解，帶您潛入一個充滿創造力、創新和社群精神的世界。",
+		"latestPosts": "最新貼文",
+		"thumbnailAlt": "封面縮圖",
+		"publishedOn": "發佈於 {date}",
+		"defaultAuthor": "BuildTheEarth",
+		"readMore": "閱讀更多"
+	},
+	"map": {
+		"seo": {
+			"title": "專案地圖",
+			"description": "在互動式世界地圖上探索 BuildTheEarth 進行中和已完成的建案。"
+		}
+	},
+	"attribution": {
+		"translations": {
+			"longhitw": "LonghiTW"
+		}
+	}
+}
