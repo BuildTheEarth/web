@@ -411,6 +411,8 @@
 		}
 	},
 	"attribution": {
-		"translations": {}
+		"translations": {
+				"maxyolo01": "mAxYoLo01"
+		}
 	}
 }
