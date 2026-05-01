@@ -20,7 +20,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const t = await getTranslations('teams');
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
 			<Text maw="65%">
 				{t('description.0')}
 				<br />

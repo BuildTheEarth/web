@@ -49,7 +49,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	});
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
 			<Box>
 				<Title order={2} mb="md">
 					{t('socialMedia')}

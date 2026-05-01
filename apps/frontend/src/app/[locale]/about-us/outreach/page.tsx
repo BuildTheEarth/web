@@ -37,7 +37,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	)) as unknown as OutreachArticle[];
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
 			<Accordion variant="separated" mb="xl">
 				<AccordionItem value="contact">
 					<AccordionControl icon={<IconInfoCircle size={22} color="var(--mantine-color-dimmed)" />}>

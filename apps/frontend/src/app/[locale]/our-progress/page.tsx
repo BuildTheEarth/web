@@ -79,7 +79,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	};
 
 	return (
-		<Wrapper offsetHeader={false} padded={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} padded={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
 			<Container
 				style={{ border: 'var(--debug-border) solid red' }}
 				my="calc(var(--mantine-spacing-xl) * 4)"

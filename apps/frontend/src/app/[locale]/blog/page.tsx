@@ -48,7 +48,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	)) as any[];
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: tSeo('title'), src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: tSeo('title'), src: '/thumbs/home.webp' }}>
 			<Text>{t('intro')}</Text>
 			<Title order={2} mb="md" mt="lg">
 				{t('latestPosts')}

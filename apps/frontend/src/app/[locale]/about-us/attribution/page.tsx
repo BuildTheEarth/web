@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const keys = Object.keys(tMessages.attribution.translations) as (keyof typeof tMessages.attribution.translations)[];
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: 'Public Attributions', src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: 'Public Attributions', src: '/thumbs/home.webp' }}>
 			<Title order={2} mb="md">
 				Datasets and Tools
 			</Title>

@@ -106,7 +106,7 @@ export default async function Page({
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
-				src={buildTeam.backgroundImage || '/placeholders/home.png'}
+				src={buildTeam.backgroundImage || '/thumbs/home.webp'}
 				rootStyle={{ minHeight: '45vh', zIndex: 1 }}
 				priority
 				fetchpriority="high"

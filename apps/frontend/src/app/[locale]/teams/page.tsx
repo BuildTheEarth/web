@@ -54,7 +54,7 @@ export default async function Page({
 	});
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/placeholders/home.png' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
 			<Text maw="65%">
 				{t('description.0')}
 				<br />
