@@ -10,9 +10,7 @@ import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-
-export const dynamic = 'force-static';
-export const revalidate = 3600; // 60m
+import { unstable_cache } from 'next/cache';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale;
@@ -27,6 +25,24 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 	};
 }
 
+const getBuildTeams = unstable_cache(
+	async () =>
+		prisma.buildTeam.findMany({
+			select: {
+				id: true,
+				slug: true,
+				name: true,
+				location: true,
+				color: true,
+				icon: true,
+				ip: true,
+				_count: { select: { claims: true, members: true } },
+			},
+		}),
+	[],
+	{ tags: ['buildTeams'], revalidate: 3600 },
+);
+
 export default async function Page({
 	searchParams,
 	params,
@@ -40,18 +56,7 @@ export default async function Page({
 
 	const search = (await searchParams).q || '';
 	const page = parseInt((await searchParams).page || '1');
-	const buildTeams = await prisma.buildTeam.findMany({
-		select: {
-			id: true,
-			slug: true,
-			name: true,
-			location: true,
-			color: true,
-			icon: true,
-			ip: true,
-			_count: { select: { claims: true, members: true } },
-		},
-	});
+	const buildTeams = await getBuildTeams();
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>

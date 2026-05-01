@@ -69,12 +69,7 @@ export const dynamicParams = false;
 export const dynamic = 'force-static';
 export const revalidate = 3600; // 60 minutes
 
-export default async function Page({
-	params,
-}: {
-	params: Promise<{ locale: Locale; slug: string }>;
-	searchParams: Promise<{ q?: string; page?: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ locale: Locale; slug: string }> }) {
 	const locale = (await params).locale;
 	setRequestLocale(locale);
 	const t = await getTranslations('teams.ownPage');

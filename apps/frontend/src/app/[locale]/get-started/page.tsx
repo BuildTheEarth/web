@@ -38,7 +38,6 @@ import JoinServerGuide from '../teams/[slug]/interactivity';
 
 import * as motion from 'motion/react-client';
 
-export const dynamic = 'force-static';
 export const revalidate = 3600; // 60m
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
