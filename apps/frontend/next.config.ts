@@ -20,6 +20,7 @@ const nextConfig: NextConfig = {
 			'https://cloudflareinsights.com',
 			'https://cdn.discordapp.com',
 			'https://orangemug.github.io',
+			'https://cdn.jsdelivr.net',
 		]
 			.filter(Boolean)
 			.join(' ');
