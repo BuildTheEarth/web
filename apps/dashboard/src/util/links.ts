@@ -55,6 +55,12 @@ export const meNavLinks: NavLink[] = [
 		permission: 'review-team',
 	},
 	{
+		link: '/team/[team_slug]/claims',
+		label: 'Claims',
+		icon: 'Polygon',
+		permission: 'review-team',
+	},
+	{
 		link: '/team/[team_slug]/members',
 		label: 'Members',
 		icon: 'UsersGroup',

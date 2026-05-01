@@ -47,6 +47,7 @@ function parseSocials(formData: FormData): Array<{ id?: string; name: string; ur
 		.map(([, social]) => social)
 		.filter((social) => social.id || social.name.trim() || social.url.trim());
 }
+
 export const adminTransferTeam = async (
 	prevState: any,
 	{
@@ -921,6 +922,44 @@ export const applyToBuildTeam = async (
 
 	revalidatePath(`/team/${buildteam.slug}/applications`);
 	return;
+};
+
+export const deleteClaim = async ({
+	userId,
+	removeId,
+	buildTeamSlug,
+}: {
+	userId: string;
+	removeId: string;
+	buildTeamSlug: string;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.claim.list',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.claim.list',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to delete claims from this Build Team');
+	}
+
+	const claim = await prisma.claim.delete({
+		where: { buildTeam: { slug: buildTeamSlug }, id: removeId },
+	});
+
+	revalidatePath(`/team/${buildTeamSlug}/claims`);
+	redirect(`/team/${buildTeamSlug}/claims`);
 };
 
 /**

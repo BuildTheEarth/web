@@ -1,7 +1,9 @@
 import { Button, Group, Title } from '@mantine/core';
 
+import { getUserPermissions } from '@/actions/getUser';
 import ContentWrapper from '@/components/core/ContentWrapper';
 import { Protection } from '@/components/Protection';
+import { getSession } from '@/util/auth';
 import prisma from '@/util/db';
 import { IconExternalLink } from '@tabler/icons-react';
 import { Metadata } from 'next';
@@ -13,7 +15,16 @@ export const metadata: Metadata = {
 	title: 'Claims',
 };
 
-export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
+export default async function Page({
+	params,
+	searchParams,
+}: {
+	params: Promise<{ slug: string }>;
+	searchParams: Promise<{ page?: string; query?: string }>;
+}) {
+	const session = await getSession();
+	const userPermissions = await getUserPermissions(session?.user.id);
+	const slug = (await params).slug;
 	const page = (await searchParams).page;
 	const searchQuery = (await searchParams).query;
 	const claimCount = await prisma.claim.count({
@@ -29,14 +40,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						{ owner: { minecraft: { contains: searchQuery || undefined } } },
 						{ owner: { discordId: { contains: searchQuery || undefined } } },
 						{ owner: { ssoId: { contains: searchQuery || undefined } } },
-						{ buildTeam: { name: { contains: searchQuery || undefined } } },
-						{ buildTeam: { slug: { contains: searchQuery || undefined } } },
-						{ buildTeam: { location: { contains: searchQuery || undefined } } },
-						{ buildTeam: { invite: { contains: searchQuery || undefined } } },
-						{ buildTeam: { ip: { contains: searchQuery || undefined } } },
 					],
+					buildTeam: { slug },
 				}
-			: undefined,
+			: {
+					buildTeam: { slug },
+				},
 	});
 	const claims = await prisma.claim.findMany({
 		take: 20,
@@ -53,15 +62,13 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						{ owner: { minecraft: { contains: searchQuery || undefined } } },
 						{ owner: { discordId: { contains: searchQuery || undefined } } },
 						{ owner: { ssoId: { contains: searchQuery || undefined } } },
-						{ buildTeam: { name: { contains: searchQuery || undefined } } },
-						{ buildTeam: { slug: { contains: searchQuery || undefined } } },
-						{ buildTeam: { location: { contains: searchQuery || undefined } } },
-						{ buildTeam: { invite: { contains: searchQuery || undefined } } },
-						{ buildTeam: { ip: { contains: searchQuery || undefined } } },
 					],
+					buildTeam: { slug },
 				}
-			: undefined,
-		include: { owner: true, buildTeam: { select: { id: true, slug: true, icon: true, name: true } } },
+			: {
+					buildTeam: { slug },
+				},
+		include: { owner: true },
 		orderBy: { createdAt: 'desc' },
 	});
 
@@ -84,7 +91,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 					</Group>
 				</Group>
 				<SearchClaims mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
-				<ClaimsDatatable claims={claims} count={claimCount} />
+				<ClaimsDatatable
+					claims={claims}
+					count={claimCount}
+					buildTeamSlug={slug}
+					permissions={userPermissions
+						.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
+						.map((p) => p.permission.id)}
+					userId={session?.user.id!}
+				/>
 			</ContentWrapper>
 		</Protection>
 	);
