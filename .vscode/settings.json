@@ -37,7 +37,8 @@
 		"frontend/i18n",
 		"frontend/stats",
 		"frontend/join",
-		"frontend/map"
+		"frontend/map",
+		"frontend/assets"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
