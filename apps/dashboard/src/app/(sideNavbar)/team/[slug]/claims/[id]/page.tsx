@@ -83,7 +83,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 				<Grid>
 					<GridCol span={{ base: 6, lg: 2 }}>
 						<TextCard title="Owner" style={{ height: '100%' }}>
-							<UserDisplay user={claim?.owner as any} />
+							{claim.owner ? <UserDisplay user={claim.owner as any} /> : '-/-'}
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 6, lg: 2 }}>
