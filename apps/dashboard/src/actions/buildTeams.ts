@@ -488,6 +488,67 @@ export const removeMember = async ({
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
 
+export const removeMembers = async ({
+	userId,
+	removeIds,
+	buildTeamSlug,
+	reason,
+	notifyUsers = true,
+}: {
+	userId: string;
+	removeIds: string[];
+	reason?: string;
+	buildTeamSlug?: string;
+	notifyUsers?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.remove',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.remove',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to remove members from this Build Team');
+	}
+
+	const membersToRemove = await prisma.user.findMany({
+		where: { ssoId: { in: removeIds } },
+		select: { discordId: true },
+	});
+
+	const buildTeam = await prisma.buildTeam.update({
+		where: { slug: buildTeamSlug },
+		data: {
+			members: {
+				disconnect: removeIds.map((id) => ({ ssoId: id })),
+			},
+		},
+	});
+
+	if (notifyUsers) {
+		sendBotMessage(
+			`## <:warn:1441532241628102686> You have been removed from ${buildTeam.name}` +
+				`\n\nThe Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
+				(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
+				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+			membersToRemove.map((member) => member.discordId!).filter((id): id is string => !!id),
+		);
+	}
+
+	revalidatePath(`/team/${buildTeam.slug}/members`);
+};
+
 export const addMember = async ({
 	userId,
 	addId,

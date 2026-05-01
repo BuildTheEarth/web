@@ -38,7 +38,8 @@
 		"frontend/stats",
 		"frontend/join",
 		"frontend/map",
-		"frontend/assets"
+		"frontend/assets",
+		"dash/team"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
