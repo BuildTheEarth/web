@@ -49,6 +49,12 @@ export const meNavLinks: NavLink[] = [
 		permission: 'get-team',
 	},
 	{
+		link: '/team/[team_slug]/questions',
+		label: 'Application Questions',
+		icon: 'Send',
+		permission: 'review-team',
+	},
+	{
 		link: '/team/[team_slug]/applications',
 		label: 'Applications',
 		icon: 'Search',

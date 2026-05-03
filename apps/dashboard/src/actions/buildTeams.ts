@@ -1011,6 +1011,116 @@ export const applyToBuildTeam = async (
 	return;
 };
 
+export const saveBuildTeamApplicationQuestions = async ({ userId, buildTeamSlug, questions }: any) => {
+	if (!Array.isArray(questions)) {
+		throw Error('Invalid payload: expected a list of questions');
+	}
+
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to edit application questions on this Build Team');
+	}
+
+	const team = await prisma.buildTeam.findFirst({ where: { slug: buildTeamSlug }, select: { id: true, slug: true } });
+	if (!team) {
+		throw Error('Build Team not found');
+	}
+
+	function sanitizeQuestionInput(q: any) {
+		if (!q || typeof q.id !== 'string') throw Error('A question is missing a valid id');
+		if (!q || typeof q.title !== 'string') throw Error('A question is missing a valid title');
+		if (!Object.values(ApplicationQuestionType).includes(q.type))
+			throw Error(`Unsupported question type: ${String(q.type)}`);
+
+		return {
+			id: q.id,
+			title: (q.title || '').trim(),
+			subtitle: (q.subtitle || '').trim(),
+			placeholder: q.placeholder || '',
+			required: Boolean(q.required),
+			type: q.type,
+			icon: (q.icon || 'question-mark').trim(),
+			additionalData: q.additionalData ?? {},
+			sort: Number.isFinite(q.sort) ? Math.trunc(q.sort) : 0,
+			trial: Boolean(q.trial),
+		};
+	}
+
+	const sanitizedQuestions = questions.map((question) => sanitizeQuestionInput(question));
+
+	await prisma.$transaction(async (tx) => {
+		// if (deleteIds.length > 0) {
+		// 	await tx.applicationQuestion.deleteMany({ where: { buildTeamId: team.id, id: { in: deleteIds } } });
+		// }
+
+		for (const question of sanitizedQuestions) {
+			const existingQuestion = await tx.applicationQuestion.findUnique({
+				where: { id: question.id },
+				select: { id: true, buildTeamId: true },
+			});
+
+			if (existingQuestion && existingQuestion.buildTeamId !== team.id) {
+				throw Error('A question id does not belong to this Build Team');
+			}
+
+			if (existingQuestion) {
+				await tx.applicationQuestion.update({
+					where: { id: question.id },
+					data: {
+						title: question.title,
+						subtitle: question.subtitle || '',
+						placeholder: question.placeholder || '',
+						required: question.required ?? false,
+						type: question.type,
+						icon: question.icon || 'question-mark',
+						additionalData: question.additionalData ?? {},
+						sort: question.sort,
+						trial: question.trial ?? false,
+					},
+				});
+				continue;
+			}
+
+			await tx.applicationQuestion.create({
+				data: {
+					id: question.id,
+					title: question.title,
+					subtitle: question.subtitle || '',
+					placeholder: question.placeholder || '',
+					required: question.required ?? false,
+					type: question.type,
+					icon: question.icon || 'question-mark',
+					additionalData: question.additionalData ?? {},
+					sort: question.sort,
+					trial: question.trial ?? false,
+					buildTeam: { connect: { id: team.id } },
+				},
+			});
+		}
+	});
+
+	revalidatePath(`/team/${team.slug}/questions`);
+	revalidatePath(`/apply/${team.slug}`);
+
+	return;
+};
+
 export const deleteClaim = async ({
 	userId,
 	removeId,

@@ -13,6 +13,7 @@ import {
 	IconPolygon,
 	IconQuestionMark,
 	IconSearch,
+	IconSend,
 	IconSettings,
 	IconUsersGroup,
 } from '@tabler/icons-react';
@@ -67,6 +68,8 @@ function getIcon(name: string) {
 			return IconDeviceDesktop;
 		case 'Settings':
 			return IconSettings;
+		case 'Send':
+			return IconSend;
 		case 'Mail':
 			return IconMail;
 		case 'Upload':
