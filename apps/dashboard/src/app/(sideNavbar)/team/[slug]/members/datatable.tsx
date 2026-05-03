@@ -6,6 +6,7 @@ import {
 	Checkbox,
 	Code,
 	ColorSwatch,
+	Flex,
 	Group,
 	Menu,
 	MenuDivider,
@@ -13,19 +14,29 @@ import {
 	MenuItem,
 	MenuLabel,
 	MenuTarget,
+	MultiSelect,
 	rem,
 	Text,
 	Textarea,
 	ThemeIcon,
 	Tooltip,
 } from '@mantine/core';
-import { IconCheck, IconDots, IconEye, IconId, IconTrash } from '@tabler/icons-react';
+import {
+	IconCheck,
+	IconCrown,
+	IconDots,
+	IconEye,
+	IconFingerprint,
+	IconId,
+	IconPassword,
+	IconTrash,
+} from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
-import { removeMember, removeMembers } from '@/actions/buildTeams';
+import { removeMember, removeMembers, setMemberPermissions } from '@/actions/buildTeams';
 import { toHumanDate } from '@/util/date';
 import { useClipboard } from '@mantine/hooks';
-import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
+import { closeAllModals, openModal } from '@mantine/modals';
 import { showNotification } from '@mantine/notifications';
 import type { ApplicationStatus } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
@@ -38,6 +49,7 @@ export default function MembersDatatable({
 	count,
 	isAdmin,
 	permissions,
+	availablePermissions,
 	userId,
 	slug,
 }: {
@@ -55,6 +67,7 @@ export default function MembersDatatable({
 		permissions: { permission: { id: string; description: string } }[];
 		createdBuildTeams: { id: string }[];
 	}[];
+	availablePermissions: { id: string; description: string }[];
 	count: number;
 	isAdmin?: boolean;
 	userId: string;
@@ -73,24 +86,42 @@ export default function MembersDatatable({
 			selectedRecords={selectedRecords}
 			onSelectedRecordsChange={setSelectedRecords}
 			minHeight={500}
+			rowBackgroundColor={({ permissions, createdBuildTeams }) => {
+				if (createdBuildTeams.length > 0) return '#c4c53b0c';
+				if (permissions.length > 0) return '#835bf20c';
+				return undefined;
+			}}
+			isRecordSelectable={(record) => record.createdBuildTeams.length === 0 && record.permissions.length === 0}
 			columns={[
 				{
 					accessor: 'id',
 					title: '#',
-					render: ({ id, permissions, createdBuildTeams }) => (
-						<Group>
-							<Code>{id.split('-')[0]}</Code>
-							{permissions.length > 0 && (
-								<Tooltip label="This user has special permissions in this BuildTeam">
-									<ColorSwatch size={12} color={`orange`} />
+					render: ({ id, permissions, createdBuildTeams, ssoId }) => (
+						<Flex align="center" gap={4}>
+							<Code c={ssoId.startsWith('o_') ? 'red' : undefined}>{id.split('-')[0]}</Code>
+							{ssoId.startsWith('o_') && (
+								<Tooltip label="This User has never logged in to the new Website yet. His Data is saved, he does not have a SSO Account">
+									<ThemeIcon variant="light" color="red" size="sm">
+										!
+									</ThemeIcon>
 								</Tooltip>
 							)}
-							{createdBuildTeams.length > 0 && (
-								<Tooltip label="This user is the creator of this BuildTeam">
-									<ColorSwatch size={12} color={`purple`} />
+							{createdBuildTeams.length > 0 ? (
+								<Tooltip label="This user is the creator of the BuildTeam">
+									<ThemeIcon variant="light" color="yellow" size="sm">
+										<IconCrown style={{ width: '70%', height: '70%' }} />
+									</ThemeIcon>
 								</Tooltip>
+							) : (
+								permissions.length > 0 && (
+									<Tooltip label="This user has elevated permissions in the BuildTeam">
+										<ThemeIcon variant="light" color="grape" size="sm">
+											<IconFingerprint style={{ width: '70%', height: '70%' }} />
+										</ThemeIcon>
+									</Tooltip>
+								)
 							)}
-						</Group>
+						</Flex>
 					),
 				},
 
@@ -104,19 +135,8 @@ export default function MembersDatatable({
 					accessor: 'discordId',
 					title: 'Discord #',
 					visibleMediaQuery: '(min-width: 64em)', // md
-					render: ({ discordId, ssoId }) => {
-						return (
-							<>
-								<Code>{discordId || 'N/A'}</Code>
-								{ssoId.startsWith('o_') && (
-									<Tooltip label="This User has never logged in to the new Website yet. His Data is saved, he does not have a SSO Account">
-										<ThemeIcon variant="light" color="red" size="xs">
-											!
-										</ThemeIcon>
-									</Tooltip>
-								)}
-							</>
-						);
+					render: ({ discordId }) => {
+						return <Code>{discordId || 'N/A'}</Code>;
 					},
 				},
 				{
@@ -173,10 +193,82 @@ export default function MembersDatatable({
 									<MenuDivider />
 									<MenuLabel>Danger Zone</MenuLabel>
 									<MenuItem
+										leftSection={<IconFingerprint style={{ width: rem(14), height: rem(14) }} />}
+										aria-label="Change Permissions"
+										disabled={!(permissions?.includes('permission.remove') && permissions?.includes('permission.add'))}
+										onClick={() => {
+											let newPermissions = user.permissions.map((p) => p.permission.id);
+											let notifyUser = true;
+
+											let changeUserPermissions = () => {
+												setMemberPermissions({
+													changeId: user.ssoId,
+													notifyUser: notifyUser,
+													permissions: newPermissions,
+													userId,
+													buildTeamSlug: slug,
+												}).then(() => {
+													closeAllModals();
+													showNotification({
+														title: 'Permissions Updated',
+														message: 'The user permissions have been updated successfully.',
+														color: 'green',
+														autoClose: 2000,
+														icon: <IconCheck size={18} />,
+													});
+													closeAllModals();
+													router.refresh();
+												});
+											};
+
+											openModal({
+												title: 'Change User Permissions',
+												children: (
+													<>
+														<Text mb="sm">
+															Select all permissions you want this user to have. No permissions means the user will be a
+															regular member.
+														</Text>
+
+														<MultiSelect
+															data={availablePermissions.map((p) => p.id)}
+															defaultValue={newPermissions}
+															onChange={(values) => {
+																notifyUser = true;
+																newPermissions = values;
+															}}
+														/>
+
+														<Checkbox
+															mt="md"
+															defaultChecked={true}
+															label="Notify User about permission changes"
+															onChange={(event) => (notifyUser = event.currentTarget.checked)}
+														/>
+														<Group justify="end" mt="lg">
+															<Button color="red" onClick={() => changeUserPermissions()}>
+																Update
+															</Button>
+															<Button variant="default" onClick={() => closeAllModals()}>
+																Cancel
+															</Button>
+														</Group>
+													</>
+												),
+											});
+										}}
+									>
+										Change Permissions
+									</MenuItem>
+									<MenuItem
 										leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Remove from BuildTeam"
 										color="red"
-										disabled={!permissions?.includes('permission.remove')}
+										disabled={
+											!permissions?.includes('permission.remove') ||
+											user.createdBuildTeams.length > 0 ||
+											user.permissions.length > 0
+										}
 										onClick={() => {
 											let removeReason: string | undefined = undefined;
 											let notifyUser = true;

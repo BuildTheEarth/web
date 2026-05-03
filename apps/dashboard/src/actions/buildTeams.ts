@@ -616,6 +616,93 @@ export const addMember = async ({
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
 
+export const setMemberPermissions = async ({
+	userId,
+	changeId,
+	permissions,
+	buildTeamSlug,
+	notifyUser = true,
+}: {
+	userId: string;
+	changeId: string;
+	permissions: string[];
+	buildTeamSlug?: string;
+	notifyUser?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	const buildTeam = await prisma.buildTeam.findFirst({
+		where: { slug: buildTeamSlug },
+		select: { id: true, name: true, slug: true },
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to change permissions on this Build Team');
+	}
+
+	if (!buildTeam) {
+		throw Error('Build Team not found');
+	}
+
+	const userToChange = await prisma.user.findFirst({
+		where: { OR: [{ ssoId: changeId }, { id: changeId }, { discordId: changeId }, { username: changeId }] },
+		include: {
+			permissions: {
+				where: { buildTeam: { slug: buildTeamSlug } },
+				include: { permission: true },
+			},
+		},
+	});
+
+	if (!userToChange) {
+		throw Error('User to set permissions for not found');
+	}
+
+	await prisma.userPermission.deleteMany({
+		where: {
+			userId: userToChange.id,
+			buildTeamId: (await prisma.buildTeam.findFirst({ where: { slug: buildTeamSlug }, select: { id: true } }))?.id,
+			NOT: { permissionId: { in: permissions } },
+		},
+	});
+	await prisma.userPermission.createMany({
+		data: permissions
+			.filter((permission) => !userToChange.permissions.some((p) => p.permissionId === permission))
+			.map((permission) => ({
+				userId: userToChange.id,
+				buildTeamId: buildTeam.id,
+				permissionId: permission,
+			})),
+	});
+
+	if (notifyUser) {
+		sendBotMessage(
+			`## <:unban:1441532232627130548> Your permissions for ${buildTeam.name} changed` +
+				`\n\nYour permissions for the BuildTeam  \`${buildTeam.name}\` have been changed. You now have the following additional permissions:` +
+				`\n\n${permissions.length > 0 ? permissions.map((p) => `- ${p}`).join('\n') : ' `none`'}`,
+			[userToChange?.discordId!],
+		);
+		// TODO: possibly add discord role if this is the first BT the user joins
+	}
+
+	revalidatePath(`/team/${buildTeam.slug}/members`);
+};
+
 export const addApplicationResponseTemplate = async ({
 	userId,
 	buildTeamSlug,
