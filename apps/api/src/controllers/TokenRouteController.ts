@@ -3,7 +3,7 @@ import { sendBtWebhook, WebhookType } from '../util/BtWebhooks.js';
 import turf, { toPolygon } from '../util/Coordinates.js';
 import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js';
 
-import { ApplicationStatus } from '@repo/db';
+import { ApplicationStatus } from '@prisma/client';
 import { validationResult } from 'express-validator';
 import Core from '../Core.js';
 import { parseApplicationStatus } from '../util/Parser.js';

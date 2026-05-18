@@ -10,6 +10,11 @@ generator client {
   importFileExtension    = "ts"
 }
 
+generator client-js {
+  provider = "prisma-client-js"
+  url      = env("DATABASE_URL")
+}
+
 datasource db {
   provider = "postgresql"
 }

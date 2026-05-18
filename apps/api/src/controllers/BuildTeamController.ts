@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js';
 import { FrontendRoutesGroups, rerenderFrontend } from '../util/Frontend.js';
 
-import { ApplicationQuestionType } from '@repo/db';
+import { ApplicationQuestionType } from '@prisma/client';
 import crypto from 'crypto';
 import { validationResult } from 'express-validator';
 import yup from 'yup';

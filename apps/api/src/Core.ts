@@ -5,7 +5,8 @@ import { LIB_LICENSE, LIB_VERSION } from './util/package.js';
 import { applicationReminder, purgeClaims, purgeVerifications } from './util/Prisma.js';
 
 import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@repo/db';
+import { PrismaClient } from '@prisma/client';
+
 import Keycloak from 'keycloak-connect';
 import AmazonAWS from './util/AmazonAWS.js';
 import CronHandler from './util/CronHandler.js';
@@ -151,9 +152,14 @@ class Core {
 export default Core;
 
 function createPrismaClient() {
-	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+	const connectionString = process.env.DATABASE_URL;
+	if (!connectionString) {
+		throw new Error('DATABASE_URL is not set');
+	}
 
-	return new PrismaClient({ adapter }).$extends({
+	return new PrismaClient({
+		adapter: new PrismaPg({ connectionString }),
+	}).$extends({
 		name: 'uploadSrc',
 		result: {
 			upload: {

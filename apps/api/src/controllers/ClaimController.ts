@@ -3,7 +3,7 @@ import { sendBtWebhook, WebhookType } from '../util/BtWebhooks.js';
 import turf, { toOverpassPolygon, toPolygon } from '../util/Coordinates.js';
 import { ERROR_GENERIC, ERROR_NO_PERMISSION, ERROR_VALIDATION } from '../util/Errors.js';
 
-import { Claim } from '@repo/db';
+import { Claim } from '@prisma/client';
 import axios from 'axios';
 import { validationResult } from 'express-validator';
 import Core from '../Core.js';
