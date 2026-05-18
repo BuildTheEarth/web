@@ -127,8 +127,8 @@ class ShowcaseController {
 			return res.send([delUpload, delShowcase]);
 		}
 		const command = new DeleteObjectCommand({
-			Bucket: this.core.getAWS().getS3Bucket(false),
-			Key: fileKey,
+			Bucket: this.core.getAWS().getS3Bucket(),
+			Key: this.core.getAWS().getS3Folder(false, fileKey),
 		});
 		await this.core.getAWS().getS3Client().send(command);
 		res.send([delUpload, delShowcase]);

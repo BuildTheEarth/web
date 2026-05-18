@@ -34,8 +34,9 @@ See the global Readme file.
 | AWS_REGION             | reg-1                                                  | The Region your S3 Bucket is hosted in                                 |
 | AWS_ACCESS_KEY         | thirdtopsecret                                         | Your AWS S3 Access Key                                                 |
 | AWS_SECRET_KEY         | fourthtopsecret                                        | Your actual S3 Secret                                                  |
-| AWS_UPLOAD_BUCKET_NAME | uploads                                                | The Bueckt to use for User Uploads                                     |
-| AWS_STATIC_BUCKET_NAME | static                                                 | The Bucket to use for static images                                    |
+| AWS_BUCKET_NAME        | yourbucket                                             | The Bucket to use for User Uploads                                     |
+| AWS_UPLOAD_FOLDER_NAME | uploads                                                | The Folder to use for User Uploads                                     |
+| AWS_STATIC_FOLDER_NAME | static                                                 | The Folder to use for static images                                    |
 | OUTLINE_URL            | https://outline.yourserver.net                         | The hosted Outline instance                                            |
 | OUTLINE_KEY            | ol_api_XXXXXX                                          | Your Outline API Key (must be of a admin)                              |
 | DISCORD_WEBHOOK_URL    | https://discord.com/api/webhooks                       | A webhook to a private channel on discord                              |

@@ -583,7 +583,7 @@ class ClaimController {
 		}
 
 		if (claim?.images[0]) {
-			await this.core.getAWS().deleteFile('uploads', claim.images[0].id);
+			await this.core.getAWS().deleteFile('uploads', claim.images[0].name);
 			res.send(claim);
 		} else {
 			ERROR_GENERIC(req, res, 404, 'Claim or Image does not exist.');

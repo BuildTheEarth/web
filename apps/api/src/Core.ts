@@ -4,6 +4,7 @@ import * as winston from 'winston';
 import { LIB_LICENSE, LIB_VERSION } from './util/package.js';
 import { applicationReminder, purgeClaims, purgeVerifications } from './util/Prisma.js';
 
+import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@repo/db';
 import Keycloak from 'keycloak-connect';
 import AmazonAWS from './util/AmazonAWS.js';
@@ -150,7 +151,9 @@ class Core {
 export default Core;
 
 function createPrismaClient() {
-	return new PrismaClient({ datasourceUrl: process.env.DATABASE_URL }).$extends({
+	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+
+	return new PrismaClient({ adapter }).$extends({
 		name: 'uploadSrc',
 		result: {
 			upload: {
