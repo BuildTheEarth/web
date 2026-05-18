@@ -655,7 +655,9 @@ class ClaimController {
 					this.core
 						.getLogger()
 						.debug(
-							`Overpass request success (claim: ${claimId}; status: ${response.status}; remaining: ${overpassRateRemaining || 'n/a'}; reset: ${overpassRateReset || 'n/a'})`,
+							`Overpass request success (claim: ${claimId}; status: ${response.status}; remaining: ${
+								overpassRateRemaining || 'n/a'
+							}; reset: ${overpassRateReset || 'n/a'})`,
 						);
 
 					if (!data?.elements || data?.elements.length <= 0) {
