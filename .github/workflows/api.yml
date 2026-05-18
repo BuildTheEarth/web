@@ -36,7 +36,11 @@ jobs:
         run: npm install -g turbo@2.4.4
       - name: Login to Docker
         run: |
-          echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+          echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin#
+      - name: Create env file
+        run: |
+          touch apps/api/.env
+          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> apps/api/.env
       - name: Build the Docker image
         run: docker build . --file apps/api/Dockerfile --tag ghcr.io/buildtheearth/website-node-backend:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/website-node-backend:latest
       - name: Docker push tag
