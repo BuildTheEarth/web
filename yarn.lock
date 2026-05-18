@@ -6717,6 +6717,7 @@ __metadata:
     "@aws-sdk/client-s3": "npm:^3.787.0"
     "@bte-germany/terraconvert": "npm:^1.1.2"
     "@keycloak/keycloak-admin-client": "npm:24.0.5"
+    "@prisma/adapter-pg": "npm:^7.8.0"
     "@repo/db": "npm:*"
     "@repo/prettier-config": "npm:*"
     "@repo/typescript-config": "npm:*"
