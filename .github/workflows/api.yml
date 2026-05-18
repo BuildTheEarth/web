@@ -36,7 +36,7 @@ jobs:
         run: npm install -g turbo@2.4.4
       - name: Login to Docker
         run: |
-          echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin#
+          echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
       - name: Create env file
         run: |
           touch apps/api/.env
