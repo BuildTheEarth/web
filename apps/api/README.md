@@ -45,3 +45,5 @@ See the global Readme file.
 | SESSION_SECRET         | sixthtopsecret                                         | Secret used to encode session information of users                     |
 | LOGLEVEL               | debug                                                  | Which logs should be logged to the console?                            |
 | WEBPORT                | 8080                                                   | The port the API should run on                                         |
+
+! AWS is configured to use the actual hosted S3 Server !
