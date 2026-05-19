@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { getCountryNames } from '@/util/countries';
 import prisma from '@/util/db';
 import { getLanguageAlternates } from '@/util/seo';
-import { Avatar, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
+import { Avatar, Button, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
 import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
@@ -65,7 +65,12 @@ export default async function Page({
 				<br />
 				{t('description.1')}
 			</Text>
-			<QuerySearchInput paramName="q" my="xl" />
+			<Group my="xl" wrap="nowrap" align="flex-end">
+				<QuerySearchInput paramName="q" style={{ flex: 1 }} />
+				<Button component={Link} href="/map/teams">
+					{t('viewTeamOnMap')}
+				</Button>
+			</Group>
 			<SimpleGrid cols={2} spacing="xl" mb="xl">
 				{buildTeams
 					.filter((element) => {

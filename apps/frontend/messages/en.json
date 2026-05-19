@@ -124,6 +124,7 @@
 			"BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
 			"Each Team has its own Minecraft server, where you can join and start building."
 		],
+		"viewTeamOnMap": "Explore Teams on Map",
 		"tooltip": {
 			"location": "A list of countries this team builds in",
 			"members": "Number of members in this team"
