@@ -409,6 +409,17 @@
 		"seo": {
 			"title": "Project Map",
 			"description": "Explore active and finished BuildTheEarth claims on the interactive world map."
+		},
+		"teams": {
+			"seo": {
+				"title": "BuildTeam Map",
+				"description": "Explore BuildTheEarth teams, find your region, and join a Minecraft server to start contributing."
+			},
+			"infoNotice": {
+				"title": "Note: {country}",
+				"description": "The country or region you clicked is currently not beeing build by any BuildTeam. We are in the process of fixing this, but in the meantime, if you want to help out, please consider joining a different BuildTeam!",
+				"descriptionUs": "The United States is currently being built by multiple BuildTeams. If you want to help out, please consider joining one of the following BuildTeams that are building in the US:"
+			}
 		}
 	},
 	"attribution": {

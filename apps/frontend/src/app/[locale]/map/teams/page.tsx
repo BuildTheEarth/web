@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'map.seo' })) as (key: 'title' | 'description') => string;
+	const t = (await getTranslations({ locale, namespace: 'map.teams.seo' })) as (key: 'title' | 'description') => string;
 
 	return {
 		title: t('title'),
