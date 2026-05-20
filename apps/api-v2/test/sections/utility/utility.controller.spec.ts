@@ -45,17 +45,27 @@ describe('UtilityController', () => {
       const originalVersion = process.env.npm_package_version;
       const originalName = process.env.npm_package_name;
 
-      delete process.env.npm_package_version;
-      delete process.env.npm_package_name;
+      try {
+        delete process.env.npm_package_version;
+        delete process.env.npm_package_name;
 
-      const result = await utilityController.getVersion();
+        const result = await utilityController.getVersion();
 
-      expect(result.version).toBe('unknown');
-      expect(result.name).toBe('unknown');
+        expect(result.version).toBe('unknown');
+        expect(result.name).toBe('unknown');
+      } finally {
+        if (originalVersion === undefined) {
+          delete process.env.npm_package_version;
+        } else {
+          process.env.npm_package_version = originalVersion;
+        }
 
-      // restore env
-      process.env.npm_package_version = originalVersion;
-      process.env.npm_package_name = originalName;
+        if (originalName === undefined) {
+          delete process.env.npm_package_name;
+        } else {
+          process.env.npm_package_name = originalName;
+        }
+      }
     });
   });
 
