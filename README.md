@@ -47,7 +47,7 @@ First, clone this repository:
 git clone https://github.com/BuildTheEarth/web.git
 ```
 
-It is recommended to install [Turborepo](https://turbo.build/repo/docs) globally:
+If you want, you can install [Turborepo](https://turbo.build/repo/docs) globally. Note that `yarn@4` does not support global installs anymore.
 
 ```bash
 yarn global add turbo@2.1.1
