@@ -6,7 +6,7 @@ permissions:
 
 on:
   push:
-    branches: [main, frontend/v2]
+    branches: [main]
     tags: ['frontend-v*.*.*']
 
 jobs:
