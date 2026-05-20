@@ -7,6 +7,7 @@ import { CreateApplicationDto } from "./dto/create.application.dto";
 import { ApplicationDto } from "./dto/application.dto";
 import { randomUUID } from "crypto";
 import { ApplicationStatus } from "@repo/db";
+import { ReviewApplicationDto } from "./dto/review.application.dto";
 
 @Injectable()
 export class ApplicationsService {
@@ -112,5 +113,35 @@ export class ApplicationsService {
     }
 
     return application;
+  }
+
+  /**
+   * Reviews an application by updating its status, reviewer, and other relevant fields.
+   * @param id The ID of the application to review.
+   * @param reviewApplicationDto The data transfer object containing the review details (status, reviewerId, reason, etc.).
+   * @returns The updated application.
+   */
+  async review(id: string, reviewApplicationDto: ReviewApplicationDto) {
+    // TODO inject the userService to check if the reviewer exists (if reviewerId is provided)
+    const reviewerId = reviewApplicationDto.reviewerId ?? null;
+
+    const status = reviewApplicationDto.status ?? ApplicationStatus.REVIEWING;
+
+    const reviewedAt = 
+      status !== ApplicationStatus.REVIEWING ? reviewApplicationDto.reviewedAt ?? new Date().toISOString() : null;
+
+    const data: any = {
+      reviewerId,
+      status,
+      reviewedAt,
+      reason: reviewApplicationDto.reason ?? null,
+      claimId: reviewApplicationDto.claimId ?? null,
+      trial: reviewApplicationDto.trial ?? false,
+    };
+
+    return await this.prisma.application.update({
+      where: { id },
+      data,
+    });
   }
 }

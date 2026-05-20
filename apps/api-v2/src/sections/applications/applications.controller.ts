@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Param } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Param, Put } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation } from "@nestjs/swagger";
 import { ApplicationStatus } from "@repo/db";
 import { Request } from "express";
@@ -23,6 +23,7 @@ import { ControllerResponse, PaginatedControllerResponse } from "src/typings";
 import { ApplicationsService } from "./applications.service";
 import { ApplicationDto } from "./dto/application.dto";
 import { CreateApplicationDto } from "./dto/create.application.dto";
+import { ReviewApplicationDto } from "./dto/review.application.dto";
 
 @Controller("applications")
 export class ApplicationsController {
@@ -126,5 +127,22 @@ export class ApplicationsController {
     @Param("id") id: string,
   ) : ControllerResponse {
     return await this.applicationsService.findById(id);
+  }
+
+  @Put('/:id')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: 'Review Application',
+    description: 'Review and update an application (set status, reason, claim, etc).',
+  })
+  @ApiDefaultResponse(ApplicationDto, { description: 'Success' })
+  @ApiErrorResponse({ status: 401, description: 'Unauthorized' })
+  @ApiErrorResponse({ status: 400, description: 'Bad Request' })
+  @ApiErrorResponse({ status: 404, description: 'Application not found' })
+  async reviewApplication(
+    @Param('id') id: string,
+    @Body() reviewApplicationDto: ReviewApplicationDto,
+  ): ControllerResponse {
+    return await this.applicationsService.review(id, reviewApplicationDto);
   }
 }
