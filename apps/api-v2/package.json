@@ -38,7 +38,7 @@
 		"@eslint/js": "^9.18.0",
 		"@nestjs/cli": "^11.0.0",
 		"@nestjs/schematics": "^11.0.0",
-		"@nestjs/testing": "^11.0.1",
+		"@nestjs/testing": "^11.1.21",
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
 		"@swc/cli": "^0.6.0",
@@ -69,13 +69,23 @@
 			"json",
 			"ts"
 		],
-		"rootDir": "src",
+		"rootDir": "test",
 		"testRegex": ".*\\.spec\\.ts$",
 		"transform": {
-			"^.+\\.(t|j)s$": "ts-jest"
+			"^.+\\.(t|j)s$": [
+				"ts-jest",
+				{
+					"tsconfig": "<rootDir>/../tsconfig.spec.json"
+				}
+			]
+		},
+		"moduleNameMapper": {
+			"^src/(.*)$": "<rootDir>/../src/$1"
 		},
 		"collectCoverageFrom": [
-			"**/*.(t|j)s"
+			"../src/**/*.{ts,js}",
+			"!../src/**/*.spec.{ts,js}",
+			"!../src/**/*.test.{ts,js}"
 		],
 		"coverageDirectory": "../coverage",
 		"testEnvironment": "node"
