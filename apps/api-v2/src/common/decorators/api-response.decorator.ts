@@ -87,6 +87,7 @@ export function ApiErrorResponse({
   description = "Error: Internal Server Error",
 }: { status?: number; description?: string } = {}) {
   return applyDecorators(
+    ApiExtraModels(ErrorResponseDto),
     ApiResponse({
       status,
       description,
