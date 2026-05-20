@@ -66,7 +66,7 @@ export default async function Page({
 				</Alert>
 			)}
 			<Group justify="flex-end" mb="md">
-				<QuerySearchInput paramName="q" maw="30%" />
+				<QuerySearchInput paramName="q" maw={{ base: '75%', xs: '60%', md: '30%' }} />
 			</Group>
 			<Accordion variant="separated">
 				{faqs.map((faq) => (

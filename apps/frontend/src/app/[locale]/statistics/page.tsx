@@ -1,8 +1,9 @@
+import Anchor from '@/components/core/Anchor';
 import Wrapper from '@/components/layout/Wrapper';
 import prisma from '@/util/db';
 import { getLanguageAlternates } from '@/util/seo';
 import { BarChart, PieChart } from '@mantine/charts';
-import { Badge, Box, Code, Container, Grid, GridCol, Text, Title } from '@mantine/core';
+import { Alert, Badge, Box, Code, Container, Grid, GridCol, Text, Title } from '@mantine/core';
 // import { PrismaClient } from '@prisma/client';
 import { Metadata } from 'next';
 import { Locale } from 'next-intl';
@@ -88,6 +89,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				size="responsive"
 				w="80%"
 			>
+				<Alert hiddenFrom="lg" title="Device Width" mb="xl" color="red">
+					This page is best viewed on a large screen (desktop or laptop). Some elements may not display correctly or at
+					all on smaller screens. As an replacement, you can visit{' '}
+					<Anchor href="/our-progress" fz="sm">
+						Our Progress
+					</Anchor>
+					.
+				</Alert>
 				<Grid>
 					<GridCol span={12}>
 						<Title order={2}>{t('atAGlance')}</Title>

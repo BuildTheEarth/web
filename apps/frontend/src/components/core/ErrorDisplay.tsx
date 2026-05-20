@@ -29,7 +29,7 @@ export default function ErrorDisplay({
 			<Title order={1} mt="xl" mb="md" ta="center">
 				<SplitTextAnimation asOne>{title}</SplitTextAnimation>
 			</Title>
-			<Text c="dimmed" size="md" maw="40%" ta="center" mb="xl">
+			<Text c="dimmed" size="md" maw={{ base: '70%', md: '40%' }} ta="center" mb="xl">
 				<SplitTextAnimation asOne delay={0.15}>
 					{message}
 				</SplitTextAnimation>

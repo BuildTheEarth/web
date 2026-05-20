@@ -60,18 +60,21 @@ export default async function Page({
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
-			<Text maw="65%">
+			<Text maw={{ md: '80%', xl: '65%' }}>
 				{t('description.0')}
 				<br />
 				{t('description.1')}
 			</Text>
-			<Group my="xl" wrap="nowrap" align="flex-end">
+			<Group mt="xl" mb={{ base: 'md', xs: 'xl' }} align="flex-end">
 				<QuerySearchInput paramName="q" style={{ flex: 1 }} />
-				<Button component={Link} href="/map/teams">
+				<Button component={Link} href="/map/teams" visibleFrom="xs">
 					{t('viewTeamOnMap')}
 				</Button>
 			</Group>
-			<SimpleGrid cols={2} spacing="xl" mb="xl">
+			<Button component={Link} href="/map/teams" hiddenFrom="xs" fullWidth mb="xl">
+				{t('viewTeamOnMap')}
+			</Button>
+			<SimpleGrid cols={{ base: 1, lg: 2 }} spacing="xl" mb="xl">
 				{buildTeams
 					.filter((element) => {
 						if (search.length < 3) return true;

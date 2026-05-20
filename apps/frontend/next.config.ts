@@ -53,6 +53,7 @@ const nextConfig: NextConfig = {
 	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
 	turbopack: {},
+	allowedDevOrigins: ['192.168.178.22'],
 };
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: process.env.ANALYZE === 'true' });

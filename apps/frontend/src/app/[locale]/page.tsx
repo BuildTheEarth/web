@@ -481,14 +481,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						</GridCol>
 						<GridCol>
 							<Group justify="center" w="100%">
-								<SimpleGrid cols={2} hiddenFrom="lg" id="outreach-2">
+								<SimpleGrid cols={{ base: 1, xs: 2 }} hiddenFrom="md" id="outreach-2">
 									{outreachArticles.slice(0, 2).map((item) => (
 										<Fragment key={item.id}>
 											<OutreachArticleCard article={item} formatter={formatter} ctaText={t('mediaList.cta')} />
 										</Fragment>
 									))}
 								</SimpleGrid>
-								<SimpleGrid cols={3} visibleFrom="lg" id="outreach-3">
+								<SimpleGrid cols={3} visibleFrom="md" id="outreach-3">
 									{outreachArticles.slice(0, 3).map((item) => (
 										<Fragment key={item.id}>
 											<OutreachArticleCard article={item} formatter={formatter} ctaText={t('mediaList.cta')} />

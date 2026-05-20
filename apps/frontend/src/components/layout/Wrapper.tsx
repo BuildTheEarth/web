@@ -38,10 +38,14 @@ export default async function Wrapper({
 			{padded ? (
 				<Container
 					style={{ border: 'var(--debug-border) solid red' }}
-					mt="calc(var(--mantine-spacing-xl) * 3)"
-					mb="calc(var(--mantine-spacing-xl) * 4)"
+					mt={{
+						base: 'var(--mantine-spacing-xl)',
+						xs: 'calc(var(--mantine-spacing-xl) * 2)',
+						sm: 'calc(var(--mantine-spacing-xl) * 3)',
+					}}
+					mb={{ base: 'calc(var(--mantine-spacing-xl) * 2)', sm: 'calc(var(--mantine-spacing-xl) * 4)' }}
 					size="responsive"
-					w="60%"
+					w={{ base: '90%', xs: '80%', sm: '70%', lg: '60%' }}
 				>
 					{children}
 				</Container>

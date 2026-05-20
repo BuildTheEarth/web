@@ -56,7 +56,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			<Title order={2} mb="md">
 				{t('articles')}
 			</Title>
-			<SimpleGrid cols={3}>
+			<SimpleGrid cols={{ base: 1, sm: 2, xl: 3 }} w="100%">
 				{outreachArticles.map((article) => (
 					<OutreachArticleCard key={article.id} article={article} formatter={formatter} />
 				))}

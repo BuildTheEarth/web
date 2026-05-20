@@ -54,7 +54,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				<Title order={2} mb="md">
 					{t('socialMedia')}
 				</Title>
-				<Group gap="sm" wrap="nowrap">
+				<Group gap="sm">
 					{[
 						{ name: 'discord', icon: IconBrandDiscord, color: 'blue', link: 'https://go.buildtheearth.net/dc' },
 						{ name: 'youtube', icon: IconBrandYoutube, color: 'red', link: 'https://www.youtube.com/c/BuildTheEarth' },
@@ -95,7 +95,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				<Title order={2} mb="md" mt="xl">
 					{t('staffContacts')}
 				</Title>
-				<SimpleGrid cols={2} spacing="md" w="80%">
+				<SimpleGrid cols={{ xs: 1, sm: 2 }} spacing="md" w="100%">
 					{contacts.map((contact) => (
 						<Paper key={contact.id} withBorder p="md" radius="md" h="100%">
 							<Text fz="xs" tt="uppercase" fw={700} c="dimmed">

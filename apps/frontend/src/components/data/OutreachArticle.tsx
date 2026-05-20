@@ -25,13 +25,7 @@ export async function OutreachArticleCard({
 	ctaText?: string;
 }) {
 	return (
-		<Card
-			key={article.id + '-lg'}
-			withBorder
-			maw={{ base: '60vw', sm: '40vw', md: '32vw', xl: '20vw' }}
-			radius={0}
-			className="anim"
-		>
+		<Card key={article.id + '-lg'} withBorder maw={{ sm: '40vw', md: '32vw', xl: '20vw' }} radius={0} className="anim">
 			<CardSection>
 				<Image src={`${directus.url}assets/${article.thumbnail}?height=320`} height={160} alt="Thumbnail Image" />
 			</CardSection>

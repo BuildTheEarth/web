@@ -44,6 +44,7 @@ export default function SmartImage(props: NextImageProps) {
 					width: '100%',
 					height: '100%',
 					objectFit: imageStyle.objectFit || 'cover',
+					aspectRatio: imageStyle.aspectRatio,
 					...imageStyle,
 				}}
 			/>

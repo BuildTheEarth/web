@@ -53,12 +53,12 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			<Title order={2} mb="md" mt="lg">
 				{t('latestPosts')}
 			</Title>
-			<SimpleGrid cols={3}>
+			<SimpleGrid cols={{ base: 1, sm: 2, xl: 3 }}>
 				{posts.map((post) => (
 					<Card
 						key={post.slug + '-lg'}
 						withBorder
-						maw={{ base: '60vw', sm: '40vw', md: '32vw', xl: '20vw' }}
+						maw={{ sm: '40vw', md: '32vw', xl: '20vw' }}
 						radius={0}
 						className="anim"
 					>

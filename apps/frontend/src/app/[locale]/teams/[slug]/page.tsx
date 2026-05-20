@@ -118,7 +118,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					top: 0,
 				}}
 			>
-				<Group justify="space-between" style={{ width: '80%' }}>
+				<Flex
+					justify="space-between"
+					align={{ base: 'stretch', md: 'center' }}
+					direction={{ base: 'column', md: 'row' }}
+					gap="md"
+					style={{ width: '80%' }}
+				>
 					<Group>
 						<Avatar
 							src={buildTeam.icon}
@@ -134,10 +140,16 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						></Avatar>
 						<h1>{buildTeam.name}</h1>
 					</Group>
-					<Button component={Link} href="https://my.buildtheearth.net/ineedtochangethisurl">
+					<Button
+						component={Link}
+						href="https://my.buildtheearth.net/ineedtochangethisurl"
+						w={{ base: '100%', md: 'auto' }}
+						maw="none"
+						mb={{ base: 'xl', md: 0 }}
+					>
 						{t('apply')}
 					</Button>
-				</Group>
+				</Flex>
 			</Group>
 			<Container
 				style={{ border: 'var(--debug-border) solid red' }}
@@ -239,7 +251,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						{buildTeam.showcases.length == 0 ? (
 							<Text>{t('noRecentImages', { team: buildTeam.name })}</Text>
 						) : (
-							<SimpleGrid cols={2} spacing="calc(var(--mantine-spacing-lg) * 3)">
+							<SimpleGrid cols={{ base: 1, lg: 2 }} spacing="calc(var(--mantine-spacing-lg) * 3)">
 								{buildTeam.showcases.map((showcase) => (
 									<Box key={showcase.id} style={{ borderRadius: 0, position: 'relative', cursor: 'pointer' }} mb="md">
 										<SmartImage
@@ -248,6 +260,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 												width: '100%',
 												height: '100%',
 												boxShadow: 'var(--mantine-shadow-block)',
+												aspectRatio: '16/9',
 											}}
 											src={showcase.image.src}
 											alt={showcase.image.name || t('showcaseImageAlt')}
