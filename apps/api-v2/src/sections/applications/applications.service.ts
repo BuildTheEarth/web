@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/common/db/prisma.service";
 import { FilterParams } from "src/common/decorators/filter.decorator";
 import { PaginationParams } from "src/common/decorators/pagination.decorator";
@@ -95,5 +95,22 @@ export class ApplicationsService {
     return await this.prisma.application.create({
       data: applicationData,
     });
+  }
+
+  /**
+   * Finds an application by its ID.
+   * @param id - The ID of the application to find.
+   * @returns The application with the specified ID, or null if not found.
+   */
+  async findById(id: string) {
+    const application = await this.prisma.application.findUnique({
+      where: { id },
+    });
+
+    if (!application) {
+      throw new NotFoundException("Application not found");
+    }
+
+    return application;
   }
 }
