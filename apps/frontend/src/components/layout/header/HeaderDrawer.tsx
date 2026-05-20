@@ -1,6 +1,6 @@
 'use client';
 
-import { Burger, Button, Divider, Drawer, Group, ScrollArea, Stack } from '@mantine/core';
+import { Burger, Button, Drawer, Flex, Group, ScrollArea, Stack } from '@mantine/core';
 
 import { Link } from '@/i18n/navigation';
 import classes from '@/styles/layout/Header.module.css';
@@ -28,21 +28,28 @@ export function HeaderDrawer() {
 				position="top"
 				withCloseButton={false}
 				styles={{ body: { padding: 0 } }}
-				size="50%"
+				size="50vh"
 			>
-				<Divider mb="sm" mt="56px" />
+				<Flex
+					direction="column"
+					h="calc(50vh - 60px)"
+					mt="56px"
+					justify="space-between"
+					gap={0}
+					style={{ borderTop: '1px solid var(--mantine-color-gray-200)' }}
+				>
+					<ScrollArea h="calc(40vh - 80px)" type="always" offsetScrollbars my="sm">
+						<Stack gap={'sm'} mx="xl" mb="md">
+							{items}
+						</Stack>
+					</ScrollArea>
 
-				<ScrollArea h="calc(40vh - 80px)" type="always" offsetScrollbars mt="xl" mb="md">
-					<Stack gap={'sm'} mx="xl" mb="md">
-						{items}
-					</Stack>
-				</ScrollArea>
-
-				<Group mt="lg" mx="xl" mb="xl" grow style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
-					<Button variant="filled" color="indigo" rightSection={<IconChevronRight size={12} />}>
-						{t('cta')}
-					</Button>
-				</Group>
+					<Group mx="xl" mb="md" grow style={{}}>
+						<Button variant="filled" color="indigo" rightSection={<IconChevronRight size={12} />}>
+							{t('cta')}
+						</Button>
+					</Group>
+				</Flex>
 			</Drawer>
 		</>
 	);
