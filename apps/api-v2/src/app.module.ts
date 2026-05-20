@@ -8,9 +8,11 @@ import { AuthModule } from "./sections/auth/auth.module";
 import { StatusModule } from "./sections/status/status.module";
 import { UtilityModule } from "./sections/utility/utility.module";
 import { ClaimsModule } from "./sections/claims/claims.module";
+import { ApplicationQuestionsModule } from "./sections/applications/questions/application-questions.module";
 
 @Module({
   imports: [
+    ApplicationQuestionsModule,
     ApplicationsModule,
     AuthModule,
     ClaimsModule,
