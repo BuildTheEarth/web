@@ -417,7 +417,7 @@
 			},
 			"infoNotice": {
 				"title": "Note: {country}",
-				"description": "The country or region you clicked is currently not beeing build by any BuildTeam. We are in the process of fixing this, but in the meantime, if you want to help out, please consider joining a different BuildTeam!",
+				"description": "The country or region you clicked is currently not being built by any BuildTeam. We are in the process of fixing this, but in the meantime, if you want to help out, please consider joining a different BuildTeam!",
 				"descriptionUs": "The United States is currently being built by multiple BuildTeams. If you want to help out, please consider joining one of the following BuildTeams that are building in the US:"
 			}
 		}
