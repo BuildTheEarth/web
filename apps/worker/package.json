@@ -7,7 +7,8 @@
 		"dev": "infisical run --path=\"/worker\" -- tsx watch --tsconfig tsconfig.runtime.json src/main.ts",
 		"build": "tsc",
 		"start": "infisical run --path=\"/worker\" -- tsx --tsconfig tsconfig.runtime.json dist/main.js",
-		"prettier": "prettier ./src --write --ignore-unknown"
+		"prettier": "prettier ./src --write --ignore-unknown",
+		"test": "infisical run --path=\"/worker\" -- tsx --tsconfig tsconfig.test.json test/index.test.ts"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "workspace:^",

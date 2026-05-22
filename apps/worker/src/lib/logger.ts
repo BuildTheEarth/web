@@ -3,7 +3,7 @@ import winston from 'winston';
 type LogMeta = {
 	timestamp: unknown;
 	level: string;
-	requestId?: string;
+	jobId?: string;
 	component?: string;
 	fields?: Record<string, unknown>;
 };
@@ -28,13 +28,13 @@ const formatFieldValue = (value: unknown): string => {
 	}
 };
 
-const formatPrefix = ({ timestamp, level, requestId, component = 'main', fields = {} }: LogMeta): string => {
-	return `${timestamp} | ${level} [${requestId || component}] » `;
+const formatPrefix = ({ timestamp, level, jobId, component = 'main', fields = {} }: LogMeta): string => {
+	return `${timestamp} | ${level} [${jobId ? `j-${jobId}|` : ''}${component}] » `;
 };
 
 const formatLine = (content: string | Record<string, unknown>, meta: LogMeta): string => {
 	if (typeof content === 'string') {
-		return `${formatPrefix(meta)}${content}`;
+		return `${formatPrefix(meta)}${content} ${Object.keys(meta.fields || {}).length > 0 ? JSON.stringify(meta.fields) : ''}`;
 	}
 
 	try {
@@ -54,16 +54,16 @@ const formatBlock = (content: string, meta: LogMeta): string => {
 
 const loggerConfig = {
 	development: {
-		level: 'debug',
+		level: 'info',
 		format: winston.format.combine(
 			winston.format.errors({ stack: true }),
 			winston.format.timestamp(),
 			winston.format.colorize(),
 			winston.format.simple(),
 			winston.format.printf((info) => {
-				const { level, message, timestamp, requestId, component, error, stack, label, ...rest } =
+				const { level, message, timestamp, jobId, component, error, stack, label, ...rest } =
 					info as winston.Logform.TransformableInfo & {
-						requestId?: string;
+						jobId?: string;
 						component?: string;
 						error?: unknown;
 						stack?: string;
@@ -79,7 +79,7 @@ const loggerConfig = {
 				return formatBlock(lines.join('\n'), {
 					timestamp,
 					level,
-					requestId,
+					jobId,
 					component,
 					fields: rest,
 				});
