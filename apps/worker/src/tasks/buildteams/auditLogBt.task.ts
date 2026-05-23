@@ -1,0 +1,137 @@
+import { PrismaClient } from '@repo/db';
+import { Job } from 'bullmq';
+import { BuildTeamWebhook, WebhookBuildTeam } from 'src/lib/buildteamWebhook';
+import { sendBotMessage } from 'src/lib/discordBot';
+import { Logger } from 'winston';
+import { BaseTask } from '../base.task';
+
+enum AuditLogBuildTeamType {
+	APPLICATION = 'APPLICATION',
+	APPLICATION_SEND = 'APPLICATION_SEND',
+	CLAIM_CREATE = 'CLAIM_CREATE',
+	CLAIM_UPDATE = 'CLAIM_UPDATE',
+	CLAIM_DELETE = 'CLAIM_DELETE',
+}
+
+type AuditLogBtPayload = {
+	type: AuditLogBuildTeamType;
+	data?: any;
+} & { destination: WebhookBuildTeam[] };
+
+class PartialBuildTeamWebhookFailureError extends Error {
+	readonly failed: WebhookBuildTeam[];
+
+	constructor(failed: WebhookBuildTeam[]) {
+		super(`Failed to send BuildTeam Webhook to ${failed.length} BuildTeam(s)`);
+		this.name = 'PartialBuildTeamWebhookFailureError';
+		this.failed = failed;
+	}
+}
+
+export class AuditLogBtTask extends BaseTask<AuditLogBtPayload> {
+	readonly name = 'AUDIT_LOG_BUILDTEAM';
+
+	async execute(data: AuditLogBtPayload, { prisma, logger, job }: { prisma: PrismaClient; logger: Logger; job: Job }) {
+		const { type, data: content, destination } = data;
+
+		if (!destination || destination.length === 0) {
+			return;
+		}
+		if (!Object.values(AuditLogBuildTeamType).includes(type)) {
+			logger.warn(`Unknown AuditLogBuildTeamType: ${type}`);
+			return;
+		}
+
+		const failed: WebhookBuildTeam[] = [];
+
+		for (const dest of destination) {
+			try {
+				const { ok, status, error } = await new BuildTeamWebhook().send(dest, type, this.transformData(type, content));
+				if (!ok) {
+					failed.push(dest);
+				}
+			} catch (err: any) {
+				failed.push(dest);
+			}
+		}
+
+		if (failed.length > 0) {
+			logger.warn(`Failed to send BuildTeam Webhook to some BuildTeams`, {
+				successCount: destination.length - failed.length,
+				failedCount: failed.length,
+				failed: failed.map((d) => ('url' in d ? d.url : 'id' in d ? d.id : 'slug' in d ? d.slug : 'unknown')),
+			});
+
+			// Let BullMQ retry with the failed IDs
+			await job.updateData({
+				...data,
+				destination: failed,
+			});
+			throw new PartialBuildTeamWebhookFailureError(failed);
+		}
+	}
+
+	private transformData(type: AuditLogBuildTeamType, data: any): any {
+		switch (type) {
+			case AuditLogBuildTeamType.APPLICATION:
+			case AuditLogBuildTeamType.APPLICATION_SEND:
+				return {
+					id: data.id,
+					status: data.status,
+					createdAt: data.createdAt,
+					reviewedAt: data.reviewedAt,
+					reason: data.reason,
+					trial: data.trial,
+					buildteamId: data.buildteamId,
+					buildteam: {
+						id: data.buildteam.id,
+						name: data.buildteam.name,
+						slug: data.buildteam.slug,
+						acceptionMessage: data.buildteam.acceptionMessage,
+						rejectionMessage: data.buildteam.rejectionMessage,
+						trialMessage: data.buildteam.trialMessage,
+					},
+					userId: data.userId,
+					user: {
+						id: data.user.id,
+						username: data.user.username,
+						discordId: data.user.discordId,
+						minecraft: data.user.minecraft,
+					},
+					reviewerId: data.reviewerId,
+					reviewer: data.reviewer?.id
+						? {
+								id: data.reviewer?.id,
+								username: data.reviewer?.username,
+								discordId: data.reviewer?.discordId,
+								minecraft: data.reviewer?.minecraft,
+							}
+						: undefined,
+					ApplicationAnswer: data.ApplicationAnswer,
+				};
+			case AuditLogBuildTeamType.CLAIM_CREATE:
+			case AuditLogBuildTeamType.CLAIM_UPDATE:
+			case AuditLogBuildTeamType.CLAIM_DELETE:
+				return {
+					id: data.id,
+					externalId: data.externalId,
+					ownerId: data.ownerId,
+					area: data.area,
+					center: data.center,
+					size: data.size,
+					buildings: data.buildings,
+					active: data.active,
+					finished: data.finished,
+					buildTeamId: data.buildTeamId,
+					name: data.name,
+					description: data.description,
+					city: data.city,
+					osmName: data.osmName,
+					createdAt: data.createdAt,
+				};
+			default:
+				// DOES NOT STRIP ANY TOKEN, WEBHOOK LINK etc.
+				return data;
+		}
+	}
+}

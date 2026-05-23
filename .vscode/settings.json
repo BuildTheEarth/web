@@ -41,7 +41,8 @@
 		"frontend/assets",
 		"dash/team",
 		"frontend/mobile",
-		"worker"
+		"worker",
+		"worker/tasks"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
