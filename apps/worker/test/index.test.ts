@@ -11,7 +11,7 @@ async function trigger() {
 	await testQueue.add(
 		'SEND_DISCORD_DM',
 		{
-			discordIds: ['635411595253776385', '455314410198532096'],
+			discordIds: ['635411595253776385'],
 			content: 'Hello from Redis!',
 		},
 		{

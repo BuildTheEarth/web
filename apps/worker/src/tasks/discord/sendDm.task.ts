@@ -2,15 +2,22 @@ import { PrismaClient } from '@repo/db';
 import { Job } from 'bullmq';
 import { sendBotMessage } from 'src/lib/discordBot';
 import { Logger } from 'winston';
+import { z } from 'zod';
 import { BaseTask } from '../base.task';
 
-interface DiscordDmPayload {
-	userId?: string;
-	userIds?: string[];
-	discordId?: string;
-	discordIds?: string[];
-	content: string;
-}
+const discordDmPayloadSchema = z
+	.object({
+		userId: z.string().min(1).optional(),
+		userIds: z.array(z.string().min(1)).optional(),
+		discordId: z.string().min(1).optional(),
+		discordIds: z.array(z.string().min(1)).optional(),
+		content: z.string(),
+	})
+	.refine((data) => Boolean(data.userId || data.userIds || data.discordId || data.discordIds), {
+		message: 'Invalid payload: at least one discordId or userId must be provided',
+	});
+
+type DiscordDmPayload = z.infer<typeof discordDmPayloadSchema>;
 
 class PartialDiscordDmFailureError extends Error {
 	readonly failedIds: string[];
@@ -22,8 +29,9 @@ class PartialDiscordDmFailureError extends Error {
 	}
 }
 
-export class SendDiscordDmTask extends BaseTask<DiscordDmPayload> {
+export class SendDiscordDmTask extends BaseTask<typeof discordDmPayloadSchema> {
 	readonly name = 'SEND_DISCORD_DM';
+	readonly schema = discordDmPayloadSchema;
 
 	async execute(data: DiscordDmPayload, { prisma, logger, job }: { prisma: PrismaClient; logger: Logger; job: Job }) {
 		const users = await this.resolveUsers(data, prisma, logger);

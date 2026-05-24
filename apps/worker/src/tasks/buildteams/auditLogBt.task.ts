@@ -1,8 +1,8 @@
 import { PrismaClient } from '@repo/db';
 import { Job } from 'bullmq';
 import { BuildTeamWebhook, WebhookBuildTeam } from 'src/lib/buildteamWebhook';
-import { sendBotMessage } from 'src/lib/discordBot';
 import { Logger } from 'winston';
+import { z } from 'zod';
 import { BaseTask } from '../base.task';
 
 enum AuditLogBuildTeamType {
@@ -13,10 +13,19 @@ enum AuditLogBuildTeamType {
 	CLAIM_DELETE = 'CLAIM_DELETE',
 }
 
-type AuditLogBtPayload = {
-	type: AuditLogBuildTeamType;
-	data?: any;
-} & { destination: WebhookBuildTeam[] };
+const webhookBuildTeamSchema = z.union([
+	z.object({ url: z.string().min(1) }),
+	z.object({ id: z.string().min(1) }),
+	z.object({ slug: z.string().min(1) }),
+]);
+
+const auditLogBtPayloadSchema = z.object({
+	type: z.enum(AuditLogBuildTeamType),
+	data: z.unknown().optional(),
+	destination: z.array(webhookBuildTeamSchema),
+});
+
+type AuditLogBtPayload = z.infer<typeof auditLogBtPayloadSchema>;
 
 class PartialBuildTeamWebhookFailureError extends Error {
 	readonly failed: WebhookBuildTeam[];
@@ -28,8 +37,9 @@ class PartialBuildTeamWebhookFailureError extends Error {
 	}
 }
 
-export class AuditLogBtTask extends BaseTask<AuditLogBtPayload> {
+export class AuditLogBtTask extends BaseTask<typeof auditLogBtPayloadSchema> {
 	readonly name = 'AUDIT_LOG_BUILDTEAM';
+	readonly schema = auditLogBtPayloadSchema;
 
 	async execute(data: AuditLogBtPayload, { prisma, logger, job }: { prisma: PrismaClient; logger: Logger; job: Job }) {
 		const { type, data: content, destination } = data;
@@ -49,6 +59,13 @@ export class AuditLogBtTask extends BaseTask<AuditLogBtPayload> {
 				const { ok, status, error } = await new BuildTeamWebhook().send(dest, type, this.transformData(type, content));
 				if (!ok) {
 					failed.push(dest);
+					if (error) {
+						logger.warn(`Failed to send BuildTeam Webhook`, {
+							destination: 'url' in dest ? dest.url : 'id' in dest ? dest.id : 'slug' in dest ? dest.slug : 'unknown',
+							error,
+							status,
+						});
+					}
 				}
 			} catch (err: any) {
 				failed.push(dest);
