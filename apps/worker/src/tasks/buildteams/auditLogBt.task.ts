@@ -41,14 +41,14 @@ export class AuditLogBtTask extends BaseTask<typeof auditLogBtPayloadSchema> {
 	readonly name = 'AUDIT_LOG_BUILDTEAM';
 	readonly schema = auditLogBtPayloadSchema;
 
-	async execute(data: AuditLogBtPayload, { prisma, logger, job }: { prisma: PrismaClient; logger: Logger; job: Job }) {
+	async execute(data: AuditLogBtPayload, job: Job) {
 		const { type, data: content, destination } = data;
 
 		if (!destination || destination.length === 0) {
 			return;
 		}
 		if (!Object.values(AuditLogBuildTeamType).includes(type)) {
-			logger.warn(`Unknown AuditLogBuildTeamType: ${type}`);
+			this.logger.warn(`Unknown AuditLogBuildTeamType: ${type}`);
 			return;
 		}
 
@@ -60,7 +60,7 @@ export class AuditLogBtTask extends BaseTask<typeof auditLogBtPayloadSchema> {
 				if (!ok) {
 					failed.push(dest);
 					if (error) {
-						logger.warn(`Failed to send BuildTeam Webhook`, {
+						this.logger.warn(`Failed to send BuildTeam Webhook`, {
 							destination: 'url' in dest ? dest.url : 'id' in dest ? dest.id : 'slug' in dest ? dest.slug : 'unknown',
 							error,
 							status,
@@ -73,7 +73,7 @@ export class AuditLogBtTask extends BaseTask<typeof auditLogBtPayloadSchema> {
 		}
 
 		if (failed.length > 0) {
-			logger.warn(`Failed to send BuildTeam Webhook to some BuildTeams`, {
+			this.logger.warn(`Failed to send BuildTeam Webhook to some BuildTeams`, {
 				successCount: destination.length - failed.length,
 				failedCount: failed.length,
 				failed: failed.map((d) => ('url' in d ? d.url : 'id' in d ? d.id : 'slug' in d ? d.slug : 'unknown')),

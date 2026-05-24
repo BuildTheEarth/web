@@ -18,5 +18,5 @@ export abstract class BaseTask<TSchema extends ZodTypeAny = ZodTypeAny> {
 		return this.schema.parse(data);
 	}
 
-	abstract execute(data: z.infer<TSchema>, context: { prisma: PrismaClient; logger: Logger; job: Job }): Promise<void>;
+	abstract execute(data: z.infer<TSchema>, job: Job): Promise<void>;
 }

@@ -22,7 +22,7 @@ export class ReviewActivityCheckTask extends BaseTask<typeof reviewActivityCheck
 	readonly schema = reviewActivityCheckPayloadSchema;
 	private readonly CHUNK_SIZE = 9;
 
-	async execute(_data: reviewActivityCheckPayloadSchema) {
+	async execute(_data: reviewActivityCheckPayloadSchema, _job: Job) {
 		const pastData = await this.fetchPastData();
 		const buildTeams = await this.fetchBuildTeams();
 
