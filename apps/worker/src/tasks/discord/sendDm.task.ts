@@ -1,7 +1,5 @@
-import { PrismaClient } from '@repo/db';
 import { Job } from 'bullmq';
-import { sendBotMessage } from 'src/lib/discordBot';
-import { Logger } from 'winston';
+import { discordBotMessageMessageSchema, sendDiscordDm } from 'src/lib/discordBot';
 import { z } from 'zod';
 import { BaseTask } from '../base.task';
 
@@ -11,7 +9,7 @@ const discordDmPayloadSchema = z
 		userIds: z.array(z.string().min(1)).optional(),
 		discordId: z.string().min(1).optional(),
 		discordIds: z.array(z.string().min(1)).optional(),
-		content: z.string(),
+		content: discordBotMessageMessageSchema.or(z.string()),
 	})
 	.refine((data) => Boolean(data.userId || data.userIds || data.discordId || data.discordIds), {
 		message: 'Invalid payload: at least one discordId or userId must be provided',
@@ -39,7 +37,7 @@ export class SendDiscordDmTask extends BaseTask<typeof discordDmPayloadSchema> {
 			throw new Error(`Invalid payload: at least one discordId or userId must be provided`);
 		}
 
-		const result = await sendBotMessage(data.content, users);
+		const result = await sendDiscordDm(data.content, users);
 		const failedIds = result.failure ?? [];
 		const successIds = result.success ?? [];
 

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@repo/db';
 import { Job } from 'bullmq';
 import { config } from 'src/lib/config';
-import { sendBotMessage } from 'src/lib/discordBot';
+import { sendDiscordDm } from 'src/lib/discordBot';
 import discordWebhook from 'src/lib/discordWebhook';
 import { getReviewActivityScore } from 'src/util/reviewActivity';
 import { Logger } from 'winston';

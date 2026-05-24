@@ -12,7 +12,12 @@ async function trigger() {
 		'SEND_DISCORD_DM',
 		{
 			discordIds: ['635411595253776385'],
-			content: 'Hello from Redis!',
+			content: {
+				title: 'Test Message from Worker',
+				emoji: 'INFORMATION',
+				body: 'This is a test message sent from the Worker to verify that the Discord DM functionality is working correctly.',
+				footer: 'This message was generated during testing.',
+			},
 		},
 		{
 			...config.retryOptions,
