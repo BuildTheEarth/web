@@ -35,7 +35,7 @@ export class DiscordWebhook {
 				return { ok: false, status: res.status, body, error: typeof body === 'string' ? body : undefined };
 			}
 
-			logger.info('Discord webhook sent', { status: res.status });
+			logger.debug('Discord webhook sent', { status: res.status });
 			return { ok: true, status: res.status, body };
 		} catch (err: any) {
 			logger.error('Discord webhook error', { error: err?.message });

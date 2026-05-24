@@ -1,7 +1,8 @@
 import { ReviewActivityCheckTask } from './administrative/reviewActivityCheck.task';
 import { BaseTask } from './base.task';
-import { AuditLogBtTask } from './buildteams/auditLogBt.task';
+import { SendBuildTeamWebhookTask } from './buildteams/sendWebhook.task';
 import { SendDiscordDmTask } from './discord/sendDm.task';
+import { SendDiscordLogTask } from './discord/sendLog.task';
 
 export const taskRegistry: Record<string, BaseTask> = {};
 
@@ -11,4 +12,5 @@ function register(task: BaseTask) {
 
 register(new SendDiscordDmTask());
 register(new ReviewActivityCheckTask());
-register(new AuditLogBtTask());
+register(new SendBuildTeamWebhookTask());
+register(new SendDiscordLogTask());

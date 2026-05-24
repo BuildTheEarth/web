@@ -37,8 +37,8 @@ class PartialBuildTeamWebhookFailureError extends Error {
 	}
 }
 
-export class AuditLogBtTask extends BaseTask<typeof auditLogBtPayloadSchema> {
-	readonly name = 'AUDIT_LOG_BUILDTEAM';
+export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadSchema> {
+	readonly name = 'BUILDTEAM_WEBHOOK';
 	readonly schema = auditLogBtPayloadSchema;
 
 	async execute(data: AuditLogBtPayload, job: Job) {
