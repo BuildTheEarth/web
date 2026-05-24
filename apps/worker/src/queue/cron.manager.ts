@@ -25,16 +25,31 @@ export class CronManager {
 	async start(clearExisting = true) {
 		try {
 			if (clearExisting) {
+				const schedulers = await this.queue.getJobSchedulers();
+				for (const scheduler of schedulers) {
+					try {
+						await this.queue.removeJobScheduler(scheduler.id ?? scheduler.key);
+						logger.debug('Removed existing job scheduler', { name: scheduler.name, id: scheduler.id ?? scheduler.key });
+					} catch (err: any) {
+						logger.warn('Failed to remove existing job scheduler', {
+							name: scheduler.name,
+							id: scheduler.id ?? scheduler.key,
+							error: err?.message,
+						});
+					}
+				}
+
 				const repeatables = await this.queue.getRepeatableJobs();
-				for (const e of this.entries) {
-					const matches = repeatables.filter((r) => r.name === e.name);
-					for (const m of matches) {
-						try {
-							await this.queue.removeRepeatableByKey(m.key);
-							logger.debug('Removed existing repeatable cron job', { name: m.name, key: m.key });
-						} catch (err: any) {
-							logger.warn('Failed to remove existing repeatable', { name: m.name, key: m.key, error: err?.message });
-						}
+				for (const repeatable of repeatables) {
+					try {
+						await this.queue.removeRepeatableByKey(repeatable.key);
+						logger.debug('Removed legacy repeatable cron job', { name: repeatable.name, key: repeatable.key });
+					} catch (err: any) {
+						logger.warn('Failed to remove legacy repeatable', {
+							name: repeatable.name,
+							key: repeatable.key,
+							error: err?.message,
+						});
 					}
 				}
 				logger.info('Cleared existing repeatable cron jobs');
