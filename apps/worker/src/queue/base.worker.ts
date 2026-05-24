@@ -20,6 +20,8 @@ export class WorkerManager {
 			const taskLogger = logger.child({ jobId: job.id, component: job.name });
 
 			taskLogger.info(`Starting job execution`);
+
+			handler.setContext(taskLogger, prisma);
 			const data = handler.validate(job.data);
 			await handler.execute(data, { prisma, logger: taskLogger, job });
 		};
