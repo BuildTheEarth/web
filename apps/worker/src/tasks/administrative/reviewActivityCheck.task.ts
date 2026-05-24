@@ -18,7 +18,7 @@ type ReviewActivityData = {
 };
 
 export class ReviewActivityCheckTask extends BaseTask<typeof reviewActivityCheckPayloadSchema> {
-	readonly name = 'SEND_DISCORD_DM';
+	readonly name = 'REVIEW_ACTIVITY_CHECK';
 	readonly schema = reviewActivityCheckPayloadSchema;
 	private readonly CHUNK_SIZE = 9;
 

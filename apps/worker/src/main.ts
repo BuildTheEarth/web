@@ -27,6 +27,9 @@ async function bootstrap() {
 		logger.debug('Registering cron jobs');
 		const cron = new CronManager();
 
+		// Cron jobs
+		cron.register('REVIEW_ACTIVITY_CHECK', {}, '0 0 * * *');
+
 		await cron.start();
 		cronManagers.add(cron);
 	} catch (error: any) {

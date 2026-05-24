@@ -23,7 +23,7 @@ export class WorkerManager {
 
 			handler.setContext(taskLogger, prisma);
 			const data = handler.validate(job.data);
-			await handler.execute(data, { prisma, logger: taskLogger, job });
+			await handler.execute(data, job);
 		};
 
 		this.worker = new Worker(config.eventQueueName, workerHandler, {

@@ -34,7 +34,9 @@ const formatPrefix = ({ timestamp, level, jobId, component = 'main', fields = {}
 
 const formatLine = (content: string | Record<string, unknown>, meta: LogMeta): string => {
 	if (typeof content === 'string') {
-		return `${formatPrefix(meta)}${content} ${Object.keys(meta.fields || {}).length > 0 ? JSON.stringify(meta.fields) : ''}`;
+		return `${formatPrefix(meta)}${content} ${
+			Object.keys(meta.fields || {}).length > 0 ? JSON.stringify(meta.fields) : ''
+		}`;
 	}
 
 	try {
