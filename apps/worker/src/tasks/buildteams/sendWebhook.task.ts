@@ -20,7 +20,7 @@ const webhookBuildTeamSchema = z.union([
 ]);
 
 const auditLogBtPayloadSchema = z.object({
-	type: z.enum(AuditLogBuildTeamType),
+	type: z.nativeEnum(AuditLogBuildTeamType),
 	data: z.unknown().optional(),
 	destination: z.array(webhookBuildTeamSchema),
 });
