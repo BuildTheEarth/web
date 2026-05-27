@@ -1,7 +1,7 @@
 import { Queue } from 'bullmq';
-import { config } from 'src/lib/config';
-import { logger } from 'src/lib/logger';
-import { redis } from 'src/lib/redis';
+import { config } from '../../src/lib/config';
+import { logger } from '../../src/lib/logger';
+import { redis } from '../../src/lib/redis';
 
 type CronEntry = {
 	name: string;

@@ -1,5 +1,5 @@
 import { ApplicationStatus } from '@repo/db';
-import prisma from 'src/lib/prisma';
+import prisma from '../../src/lib/prisma';
 
 /**
  * Calculate Review Activity Score for a Build Team

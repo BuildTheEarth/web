@@ -1,11 +1,8 @@
-import { PrismaClient } from '@repo/db';
 import { Job } from 'bullmq';
-import { config } from 'src/lib/config';
-import { sendDiscordDm } from 'src/lib/discordBot';
-import discordWebhook from 'src/lib/discordWebhook';
-import { getReviewActivityScore } from 'src/util/reviewActivity';
-import { Logger } from 'winston';
 import { z } from 'zod';
+import { config } from '../../../src/lib/config';
+import discordWebhook from '../../../src/lib/discordWebhook';
+import { getReviewActivityScore } from '../../../src/util/reviewActivity';
 import { BaseTask } from '../base.task';
 
 const reviewActivityCheckPayloadSchema = z.unknown();

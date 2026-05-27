@@ -1,8 +1,6 @@
-import { PrismaClient } from '@repo/db';
 import { Job } from 'bullmq';
-import { BuildTeamWebhook, WebhookBuildTeam } from 'src/lib/buildteamWebhook';
-import { Logger } from 'winston';
 import { z } from 'zod';
+import { BuildTeamWebhook, WebhookBuildTeam } from '../../../src/lib/buildteamWebhook';
 import { BaseTask } from '../base.task';
 
 enum AuditLogBuildTeamType {

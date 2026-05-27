@@ -1,6 +1,6 @@
 import { Job } from 'bullmq';
-import { discordBotMessageMessageSchema, sendDiscordDm } from 'src/lib/discordBot';
 import { z } from 'zod';
+import { discordBotMessageMessageSchema, sendDiscordDm } from '../../../src/lib/discordBot';
 import { BaseTask } from '../base.task';
 
 const discordDmPayloadSchema = z
