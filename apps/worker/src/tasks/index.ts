@@ -14,9 +14,9 @@ function register(task: BaseTask) {
 }
 
 register(new SendDiscordDmTask());
-register(new ReviewActivityCheckTask());
-register(new SendBuildTeamWebhookTask());
 register(new SendDiscordLogTask());
+register(new SendBuildTeamWebhookTask());
+register(new ReviewActivityCheckTask());
 register(new PurgeClaimsTask());
 register(new PurgeVerificationsTask());
 register(new RemindApplicationsTask());
