@@ -1,6 +1,6 @@
 import { Job } from 'bullmq';
 import { z } from 'zod';
-import { BuildTeamWebhook, WebhookBuildTeam } from '../../../src/lib/buildteamWebhook';
+import { BuildTeamWebhook, WebhookBuildTeam } from '../../lib/buildteamWebhook';
 import { BaseTask } from '../base.task';
 
 enum AuditLogBuildTeamType {

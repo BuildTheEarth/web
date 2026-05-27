@@ -1,7 +1,7 @@
 import { Job } from 'bullmq';
 import { z } from 'zod';
-import { config } from '../../../src/lib/config';
-import discordWebhook from '../../../src/lib/discordWebhook';
+import { config } from '../../lib/config';
+import discordWebhook from '../../lib/discordWebhook';
 import { BaseTask } from '../base.task';
 
 const discordLogPayloadSchema = z.any();

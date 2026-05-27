@@ -1,8 +1,8 @@
 import { Job } from 'bullmq';
 import { z } from 'zod';
-import { config } from '../../../src/lib/config';
-import discordWebhook from '../../../src/lib/discordWebhook';
-import { getReviewActivityScore } from '../../../src/util/reviewActivity';
+import { config } from '../../lib/config';
+import discordWebhook from '../../lib/discordWebhook';
+import { getReviewActivityScore } from '../../util/reviewActivity';
 import { BaseTask } from '../base.task';
 
 const reviewActivityCheckPayloadSchema = z.unknown();

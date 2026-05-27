@@ -1,7 +1,7 @@
 import { ApplicationStatus } from '@repo/db';
 import { Job, Queue } from 'bullmq';
 import { z } from 'zod';
-import { DiscordBotEmojis } from '../../../src/lib/discordBot';
+import { DiscordBotEmojis } from '../../lib/discordBot';
 import { BaseTask } from '../base.task';
 
 const remindApplicationsPayloadSchema = z.unknown();
