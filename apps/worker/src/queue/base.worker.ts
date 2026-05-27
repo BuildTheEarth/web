@@ -1,9 +1,9 @@
 import { Job, Queue, Worker } from 'bullmq';
-import { config } from '../../src/lib/config';
-import discordWebhook from '../../src/lib/discordWebhook';
-import { logger } from '../../src/lib/logger';
-import prisma from '../../src/lib/prisma';
-import { redis } from '../../src/lib/redis';
+import { config } from '../lib/config';
+import discordWebhook from '../lib/discordWebhook';
+import { logger } from '../lib/logger';
+import prisma from '../lib/prisma';
+import { redis } from '../lib/redis';
 import { taskRegistry } from '../tasks';
 
 export class WorkerManager {
