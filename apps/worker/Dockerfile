@@ -6,9 +6,10 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 # Run turbo
-RUN yarn global add turbo@^2.1.1
+RUN corepack enable
+RUN corepack prepare yarn@4.9.1 --activate
 COPY . .
-RUN turbo prune worker --docker
+RUN yarn dlx turbo@2.1.1 prune worker --docker
 
 # Add lockfile and package.json
 FROM base AS installer
