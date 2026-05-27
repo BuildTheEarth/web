@@ -14,7 +14,7 @@ export class PurgeClaimsTask extends BaseTask<typeof purgeClaimsPayloadSchema> {
 			where: { center: null },
 		});
 
-		this.logger.debug(`Purged ${emptyClaims.count} emtpy Claims`);
+		this.logger.debug(`Purged ${emptyClaims.count} empty Claims`);
 
 		const noRefClaims = await this.prisma.claim.deleteMany({
 			where: { externalId: null, ownerId: null },
