@@ -124,6 +124,7 @@
 			"BuildTheEarth est divisé en des sous-équipes, qui construisent chacune des pays ou des zones du monde.",
 			"Chaque équipe dispose de son propre serveur Minecraft, sur lequel tu peux te connecter et commencer à construire."
 		],
+		"viewTeamOnMap": "Explore les équipes sur la carte",
 		"tooltip": {
 			"location": "A list of countries this team builds in",
 			"members": "Number of members in this team"
@@ -408,11 +409,22 @@
 		"seo": {
 			"title": "Carte du projet",
 			"description": "Découvre les projets BuildTheEarth en cours et achevés sur la carte interactive du monde."
+		},
+		"teams": {
+			"seo": {
+				"title": "Carte des équipes",
+				"description": "Explore les équipes de BuildTheEarth, trouve ta région, et rejoins un serveur Minecraft pour commencer à contribuer au projet."
+			},
+			"infoNotice": {
+				"title": "Note: {country}",
+				"description": "Le pays ou la région sur lequel tu as cliqué n'est actuellement pris en charge par aucune équipe de construction. Nous sommes en train de régler ce problème, mais en attendant, si tu souhaites nous aider, pense à rejoindre une autre équipe de construction !",
+				"descriptionUs": "Les États-Unis sont actuellement en cours de construction par plusieurs équipes de développement. Si tu souhaites apporter ton aide, n'hésite pas à rejoindre l'une des équipes de construction suivantes qui travaillent aux États-Unis :"
+			}
 		}
 	},
 	"attribution": {
 		"translations": {
-				"maxyolo01": "mAxYoLo01"
+			"maxyolo01": "mAxYoLo01"
 		}
 	}
 }
