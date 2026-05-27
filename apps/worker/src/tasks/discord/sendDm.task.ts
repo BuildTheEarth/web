@@ -11,9 +11,18 @@ const discordDmPayloadSchema = z
 		discordIds: z.array(z.string().min(1)).optional(),
 		content: discordBotMessageMessageSchema.or(z.string()),
 	})
-	.refine((data) => Boolean(data.userId || data.userIds || data.discordId || data.discordIds), {
-		message: 'Invalid payload: at least one discordId or userId must be provided',
-	});
+	.refine(
+		(data) =>
+			Boolean(
+				data.userId ||
+					data.discordId ||
+					(Array.isArray(data.userIds) && data.userIds.length > 0) ||
+					(Array.isArray(data.discordIds) && data.discordIds.length > 0),
+			),
+		{
+			message: 'Invalid payload: at least one discordId or userId must be provided',
+		},
+	);
 
 type DiscordDmPayload = z.infer<typeof discordDmPayloadSchema>;
 
