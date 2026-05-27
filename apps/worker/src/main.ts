@@ -29,6 +29,8 @@ async function bootstrap() {
 
 		// Cron jobs
 		cron.register('REVIEW_ACTIVITY_CHECK', {}, '0 0 * * *');
+		cron.register('PURGE_VERIFICATIONS', {}, '0 0 * * *');
+		cron.register('PURGE_CLAIMS', {}, '0 0 * * *');
 
 		await cron.start();
 		cronManagers.add(cron);

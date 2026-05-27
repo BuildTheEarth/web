@@ -1,4 +1,4 @@
-import { Job, Worker } from 'bullmq';
+import { Job, Queue, Worker } from 'bullmq';
 import { config } from 'src/lib/config';
 import discordWebhook from 'src/lib/discordWebhook';
 import { logger } from 'src/lib/logger';
@@ -9,7 +9,15 @@ import { taskRegistry } from '../tasks';
 export class WorkerManager {
 	private worker?: Worker;
 
+	private queue: Queue;
+
 	start(): this {
+		this.queue = new Queue(config.eventQueueName, {
+			connection: redis,
+			...config.retryOptions,
+			...config.removalOptions,
+		});
+
 		const workerHandler = async (job: Job) => {
 			const handler = taskRegistry[job.name];
 
@@ -23,7 +31,7 @@ export class WorkerManager {
 
 			handler.setContext(taskLogger, prisma);
 			const data = handler.validate(job.data);
-			await handler.execute(data, job);
+			await handler.execute(data, job, this.queue);
 		};
 
 		this.worker = new Worker(config.eventQueueName, workerHandler, {

@@ -1,3 +1,6 @@
+import { PurgeClaimsTask } from './administrative/purgeClaims.task';
+import { PurgeVerificationsTask } from './administrative/purgeVerifications.task';
+import { RemindApplicationsTask } from './administrative/remindApplications.task';
 import { ReviewActivityCheckTask } from './administrative/reviewActivityCheck.task';
 import { BaseTask } from './base.task';
 import { SendBuildTeamWebhookTask } from './buildteams/sendWebhook.task';
@@ -14,3 +17,6 @@ register(new SendDiscordDmTask());
 register(new ReviewActivityCheckTask());
 register(new SendBuildTeamWebhookTask());
 register(new SendDiscordLogTask());
+register(new PurgeClaimsTask());
+register(new PurgeVerificationsTask());
+register(new RemindApplicationsTask());

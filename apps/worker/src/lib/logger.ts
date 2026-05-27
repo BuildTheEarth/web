@@ -56,7 +56,7 @@ const formatBlock = (content: string, meta: LogMeta): string => {
 
 const loggerConfig = {
 	development: {
-		level: 'info',
+		level: 'debug',
 		format: winston.format.combine(
 			winston.format.errors({ stack: true }),
 			winston.format.timestamp(),

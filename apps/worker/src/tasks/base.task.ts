@@ -1,5 +1,5 @@
 import { PrismaClient } from '@repo/db';
-import { Job } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { Logger } from 'winston';
 import { type ZodTypeAny, z } from 'zod';
 
@@ -18,5 +18,5 @@ export abstract class BaseTask<TSchema extends ZodTypeAny = ZodTypeAny> {
 		return this.schema.parse(data);
 	}
 
-	abstract execute(data: z.infer<TSchema>, job: Job): Promise<void>;
+	abstract execute(data: z.infer<TSchema>, job: Job, queue: Queue): Promise<void>;
 }
