@@ -54,28 +54,37 @@ export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPa
 		}
 
 		await Promise.all(
-			Object.values(groupedApplications).map((apps: any) => {
-				const content = apps?.map(
-					(app) =>
-						`- ${new Date(app.createdAt).toLocaleDateString('en-us', {
-							year: 'numeric',
-							month: 'numeric',
-							day: 'numeric',
-						})}: <@${app.user.discordId}> (${app.user.minecraft})`,
-				);
+			Object.values(groupedApplications)
+				.map((apps: any) => {
+					const content = apps?.map(
+						(app) =>
+							`- ${new Date(app.createdAt).toLocaleDateString('en-us', {
+								year: 'numeric',
+								month: 'numeric',
+								day: 'numeric',
+							})}: <@${app.user.discordId}> (${app.user.minecraft})`,
+					);
 
-				return queue.add('SEND_DISCORD_DM', {
-					discordIds: apps[0].buildteam.UserPermission.map((u) => u.user.discordId),
-					content: {
-						title: `Application reminder for ${apps[0].buildteam.name}`,
-						emoji: DiscordBotEmojis.INFORMATION,
-						body: `Here is a list of Applications that are older than two weeks. Please review them:\n${content.join(
-							'\n',
-						)}`,
-						footer: `Automatically sent on ${new Date().toISOString().split('T')[0]}`,
-					},
-				});
-			}),
+					const discordIds = apps[0].buildteam.UserPermission.map((u) => u.user.discordId).filter(
+						(discordId): discordId is string => typeof discordId === 'string' && discordId.trim().length > 0,
+					);
+					if (discordIds.length === 0) {
+						return null;
+					}
+
+					return queue.add('SEND_DISCORD_DM', {
+						discordIds,
+						content: {
+							title: `Application reminder for ${apps[0].buildteam.name}`,
+							emoji: DiscordBotEmojis.INFORMATION,
+							body: `Here is a list of Applications that are older than two weeks. Please review them:\n${content.join(
+								'\n',
+							)}`,
+							footer: `Automatically sent on ${new Date().toISOString().split('T')[0]}`,
+						},
+					});
+				})
+				.filter((job): job is NonNullable<typeof job> => job !== null),
 		);
 	}
 }

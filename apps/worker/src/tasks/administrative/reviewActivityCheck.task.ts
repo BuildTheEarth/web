@@ -38,7 +38,7 @@ export class ReviewActivityCheckTask extends BaseTask<typeof reviewActivityCheck
 			compared: [],
 		}) as ReviewActivityData;
 
-		this.logger.debug(`Found data from ${pastData.date.toISOString()} with ${pastData.current.length} BuildTeams.`);
+		this.logger.debug(`Found data from ${pastData.date.toString()} with ${pastData.current.length} BuildTeams.`);
 		return pastData;
 	}
 
