@@ -38,7 +38,7 @@ export enum DiscordBotEmojis {
 
 export const discordBotMessageMessageSchema = z.object({
 	title: z.string(),
-	emoji: z.enum(DiscordBotEmojis),
+	emoji: z.nativeEnum(DiscordBotEmojis),
 	body: z.string(),
 	footer: z.string().optional(),
 });
