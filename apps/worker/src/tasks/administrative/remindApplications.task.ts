@@ -69,7 +69,9 @@ export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPa
 					content: {
 						title: `Application reminder for ${apps[0].buildteam.name}`,
 						emoji: DiscordBotEmojis.INFORMATION,
-						body: `Here is a list of Applications that are older than two weeks. Please review them:\n${content.join('\n')}`,
+						body: `Here is a list of Applications that are older than two weeks. Please review them:\n${content.join(
+							'\n',
+						)}`,
 						footer: `Automatically sent on ${new Date().toISOString().split('T')[0]}`,
 					},
 				});

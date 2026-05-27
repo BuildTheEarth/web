@@ -51,7 +51,9 @@ export async function sendDiscordDm(
 		const content =
 			typeof message === 'string'
 				? message
-				: `## ${DiscordBotEmojisRaw[message.emoji]} ${message.title}\n\n${message.body}${message.footer ? `\n\n-# ${message.footer}` : ''}`;
+				: `## ${DiscordBotEmojisRaw[message.emoji]} ${message.title}\n\n${message.body}${
+						message.footer ? `\n\n-# ${message.footer}` : ''
+					}`;
 
 		const res = await fetch(process.env.DISCORD_BOT_API_URL + '/api/v1/website/message/blank', {
 			method: 'POST',
