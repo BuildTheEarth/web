@@ -4,7 +4,7 @@ import { DiscordBotEmojis } from 'src/lib/discordBot';
 import { z } from 'zod';
 import { BaseTask } from '../base.task';
 
-const remindApplicationsPayloadSchema = z.void().or(z.object({}));
+const remindApplicationsPayloadSchema = z.unknown();
 type remindApplicationsPayloadSchema = z.infer<typeof remindApplicationsPayloadSchema>;
 
 export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPayloadSchema> {

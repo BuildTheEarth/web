@@ -8,7 +8,7 @@ import { Logger } from 'winston';
 import { z } from 'zod';
 import { BaseTask } from '../base.task';
 
-const reviewActivityCheckPayloadSchema = z.void();
+const reviewActivityCheckPayloadSchema = z.unknown();
 type reviewActivityCheckPayloadSchema = z.infer<typeof reviewActivityCheckPayloadSchema>;
 
 type ReviewActivityData = {

@@ -2,7 +2,7 @@ import { Job } from 'bullmq';
 import { z } from 'zod';
 import { BaseTask } from '../base.task';
 
-const purgeVerificationsPayloadSchema = z.void();
+const purgeVerificationsPayloadSchema = z.unknown();
 type purgeVerificationsPayloadSchema = z.infer<typeof purgeVerificationsPayloadSchema>;
 
 export class PurgeVerificationsTask extends BaseTask<typeof purgeVerificationsPayloadSchema> {
