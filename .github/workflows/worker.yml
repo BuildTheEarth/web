@@ -69,6 +69,7 @@ jobs:
       - name: Build and push Docker image
         env:
           DOCKER_BUILDKIT: 1
+          DATABASE_URL: ${{ secrets.INFISICAL_FRONTEND_DATABASE_URL }}
           IS_RELEASE: ${{ steps.release_meta.outputs.is_release }}
           RELEASE_VERSION: ${{ steps.release_meta.outputs.version }}
           RELEASE_MAJOR: ${{ steps.release_meta.outputs.major }}
@@ -90,6 +91,7 @@ jobs:
 
           docker buildx build . \
             --file apps/worker/Dockerfile \
+            --secret id=database_url,env=DATABASE_URL \
             --label org.opencontainers.image.source="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
             --label org.opencontainers.image.revision="${GITHUB_SHA}" \
             --label org.opencontainers.image.version="${RELEASE_VERSION:-sha-$(git rev-parse --short=12 HEAD)}" \
