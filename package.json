@@ -24,7 +24,8 @@
 		"ws": "yarn workspace",
 		"env:generate": "turbo env:generate",
 		"env:copy": "turbo env:copy",
-		"release:app": "node --experimental-strip-types scripts/release.ts"
+		"app:release": "node --experimental-strip-types scripts/release.ts",
+		"app:info": "node --experimental-strip-types scripts/info.ts"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "*",
