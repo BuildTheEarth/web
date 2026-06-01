@@ -27,7 +27,7 @@ export class DiscordWebhook {
 			try {
 				body = JSON.parse(text);
 			} catch {
-				/* not JSON */
+				body = text;
 			}
 
 			if (!res.ok) {
