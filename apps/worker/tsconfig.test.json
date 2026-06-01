@@ -1,0 +1,10 @@
+{
+	"extends": "./tsconfig.json",
+	"include": ["./test/**/*"],
+	"compilerOptions": {
+		"paths": {
+			"@repo/*": ["../../packages/*/src"]
+		},
+		"rootDir": "./test"
+	}
+}
