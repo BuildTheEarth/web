@@ -2,6 +2,8 @@
  * Static constant configuration values
  */
 
+import { remove } from 'winston';
+
 export const config = {
 	// The number of worker threads to spawn for processing background jobs
 	workerThreadCount: 5,
@@ -16,6 +18,9 @@ export const config = {
 	removalOptions: {
 		removeOnComplete: {
 			age: 3600, // 1h
+			count: 200,
+		},
+		removeOnFail: {
 			count: 200,
 		},
 	},
