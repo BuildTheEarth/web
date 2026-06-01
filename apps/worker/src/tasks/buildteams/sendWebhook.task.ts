@@ -35,6 +35,10 @@ class PartialBuildTeamWebhookFailureError extends Error {
 	}
 }
 
+/**
+ * This task sends a webhook to the BuildTeam Webhook URL when certain events occur related to BuildTeams, such as application submission, claim creation, etc. If the webhook fails to send to any of the destinations, it will retry with the failed destinations until it succeeds or exhausts the retry attempts.
+ * @summary Send BuildTeam Webhook on relevant events
+ */
 export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadSchema> {
 	readonly name = 'BUILDTEAM_WEBHOOK';
 	readonly schema = auditLogBtPayloadSchema;

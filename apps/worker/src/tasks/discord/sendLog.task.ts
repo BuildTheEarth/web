@@ -8,6 +8,10 @@ const discordLogPayloadSchema = z.any();
 
 type DiscordLogPayload = z.infer<typeof discordLogPayloadSchema>;
 
+/**
+ * This task sends a message to a staff-only discord channel for logging purposes. The message can be any discord accepted json payload.
+ * @summary Send log message
+ */
 export class SendDiscordLogTask extends BaseTask<typeof discordLogPayloadSchema> {
 	readonly name = 'SEND_DISCORD_LOG';
 	readonly schema = discordLogPayloadSchema;

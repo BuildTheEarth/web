@@ -5,6 +5,10 @@ import { BaseTask } from '../base.task';
 const purgeVerificationsPayloadSchema = z.unknown();
 type purgeVerificationsPayloadSchema = z.infer<typeof purgeVerificationsPayloadSchema>;
 
+/**
+ * This task deletes Minecraft verification codes that are older than 24 hours.
+ * @summary Purge expired Minecraft verification codes
+ */
 export class PurgeVerificationsTask extends BaseTask<typeof purgeVerificationsPayloadSchema> {
 	readonly name = 'PURGE_VERIFICATIONS';
 	readonly schema = purgeVerificationsPayloadSchema;

@@ -7,6 +7,10 @@ import { BaseTask } from '../base.task';
 const remindApplicationsPayloadSchema = z.unknown();
 type remindApplicationsPayloadSchema = z.infer<typeof remindApplicationsPayloadSchema>;
 
+/**
+ * This tasks finds all applications that are older than two weeks and havent been reviewed yet and sends a reminder to the BuildTeam staff (team.application.notify) to review them.
+ * @summary Remind BuildTeams of pending Applications
+ */
 export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPayloadSchema> {
 	readonly name = 'REMIND_APPLICATIONS';
 	readonly schema = remindApplicationsPayloadSchema;

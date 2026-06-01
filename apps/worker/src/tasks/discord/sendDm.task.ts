@@ -36,6 +36,10 @@ class PartialDiscordDmFailureError extends Error {
 	}
 }
 
+/**
+ * This task sends a DM to one or more users on discord. The message follows a standard format. If sending fails for any user, it will retry with the failed users until it succeeds or exhausts the retry attempts.
+ * @summary Send Discord DM to users
+ */
 export class SendDiscordDmTask extends BaseTask<typeof discordDmPayloadSchema> {
 	readonly name = 'SEND_DISCORD_DM';
 	readonly schema = discordDmPayloadSchema;

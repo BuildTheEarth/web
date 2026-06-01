@@ -14,6 +14,10 @@ type ReviewActivityData = {
 	compared: { id: string; art: number; par: number; ps: number; res: number; ras: number }[];
 };
 
+/**
+ * This task calculated the review activity score of each BuildTeam and sends a message to a Discord channel if there are significant changes compared to the last time the task was run. The review activity score is calculated based on the average review time, pending application ratio, review efficiency score and processing speed of each BuildTeam.
+ * @summary Check BuildTeam review activity
+ */
 export class ReviewActivityCheckTask extends BaseTask<typeof reviewActivityCheckPayloadSchema> {
 	readonly name = 'REVIEW_ACTIVITY_CHECK';
 	readonly schema = reviewActivityCheckPayloadSchema;
