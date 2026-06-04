@@ -34,6 +34,7 @@ const HeaderBuildTeamSelector = () => {
 		</ComboboxOption>
 	));
 
+	if (buildteams.length === 0) return null;
 	if (!activeBuildTeam) return null;
 
 	return (

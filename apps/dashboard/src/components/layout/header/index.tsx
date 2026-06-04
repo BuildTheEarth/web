@@ -7,7 +7,7 @@ import MobileLinkDrawer from './MobileLinkDrawer';
 
 export interface Header {}
 
-const Header = (props: { roles: string[] }) => {
+const Header = (props: { roles: string[]; hideTeamSelector?: boolean; hideProfile?: boolean }) => {
 	return (
 		<AppShellHeader>
 			<Group h="100%" px="md" justify="space-between">
@@ -24,8 +24,8 @@ const Header = (props: { roles: string[] }) => {
 				</Group>
 
 				<Group gap="sm">
-					<HeaderBuildTeamSelector />
-					<HeaderProfile />
+					{!props.hideTeamSelector && <HeaderBuildTeamSelector />}
+					{!props.hideProfile && <HeaderProfile />}
 				</Group>
 			</Group>
 		</AppShellHeader>

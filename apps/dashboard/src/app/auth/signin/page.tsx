@@ -1,7 +1,9 @@
 'use client';
 
 import ErrorDisplay from '@/components/core/ErrorDisplay';
-import { Button } from '@mantine/core';
+import Header from '@/components/layout/header';
+import { AppShell, AppShellMain, Button } from '@mantine/core';
+import { useLocalStorage } from '@mantine/hooks';
 import { signIn, useSession } from 'next-auth/react';
 
 import { useRouter } from 'next/navigation';
@@ -22,12 +24,12 @@ export default function SigninPage() {
 	return (
 		<>
 			<ErrorDisplay
-				title="You are beeing redirected..."
+				title="Redirecting to Authentication Provider..."
 				message="If you are still on this page after 5 seconds, please click the button below."
 				showBackButton={false}
 			/>
 			<Button size="sm" ml="md" mt="lg" onClick={() => void signIn('keycloak', { callbackUrl: '/', redirect: true })}>
-				Sign In with Keycloak
+				Sign In or Create Account
 			</Button>
 		</>
 	);
