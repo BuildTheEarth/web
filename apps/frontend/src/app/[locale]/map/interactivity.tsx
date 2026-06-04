@@ -5,7 +5,20 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import { UserDisplay } from '@/components/data/User';
 import { CustomMapControls } from '@/components/map/CustomMapControls';
 import { Carousel, CarouselSlide } from '@mantine/carousel';
-import { Box, Divider, Drawer, Flex, Group, Image, Stack, Text, ThemeIcon, Title, Tooltip } from '@mantine/core';
+import {
+	Box,
+	Button,
+	Divider,
+	Drawer,
+	Flex,
+	Group,
+	Image,
+	Stack,
+	Text,
+	ThemeIcon,
+	Title,
+	Tooltip,
+} from '@mantine/core';
 import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react';
 import { useFormatter } from 'next-intl';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -207,7 +220,6 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 			}}
 			position="left"
 			title=""
-			size="lg"
 			padding={0}
 		>
 			{claimData._count.images > 0 && (
@@ -296,6 +308,11 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 						</Group>
 						<Divider style={{ margin: '0' }} my="xs" />
 					</Stack>
+				</Box>
+				<Box style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }} p="md">
+					<Button fullWidth variant="outline" color="dark" onClick={closeAction}>
+						Close
+					</Button>
 				</Box>
 			</Box>
 		</Drawer>
