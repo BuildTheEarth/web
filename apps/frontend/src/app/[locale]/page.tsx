@@ -81,7 +81,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			id: true,
 			title: true,
 			city: true,
-			image: { select: { name: true } },
+			image: { select: { name: true, hash: true } },
 		},
 	});
 
@@ -92,16 +92,18 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
-				src={
-					showcaseImages.length > 0
-						? `${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[0].image.name}`
-						: '/images/landing_bg_default.jpg' // TODO: replace with better cdn fallback
-				}
+				//  ._. Mantine doesnt parse the src prop so we can escape it to add an additional (fallback/loading) image
+				src={`${process.env.NEXT_PUBLIC_CDN_URL}/uploads/${showcaseImages[0].image.name}), url('${showcaseImages[0].image.hash}'`}
 				aria-label={t('landing.image.alt')}
 				w="100%"
 				h="100%"
 				mih="100vh"
-				style={{ position: 'relative', zIndex: 0 }}
+				style={{
+					position: 'relative',
+					zIndex: 0,
+					backgroundImage:
+						'radial-gradient(circle, rgba(0, 119, 255, 0.97) 0%, rgba(216, 17, 17, 0.87) 100%), url(...)',
+				}}
 			>
 				<Center h="100vh" w="100vw" bg="radial-gradient(circle,rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0) 100%)">
 					<div style={{ textAlign: 'center', zIndex: 1 }}>
