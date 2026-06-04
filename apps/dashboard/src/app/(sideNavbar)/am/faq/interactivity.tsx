@@ -8,7 +8,7 @@ import RichTextEditor from '@/components/input/RTE';
 import { useFormActions } from '@/hooks/useFormAction';
 import { useForm } from '@mantine/form';
 import { modals } from '@mantine/modals';
-import { FAQQuestion } from '@repo/db';
+import type { FAQQuestion } from '@repo/db';
 
 export function AddFaqQuestionButton({ disabled }: { disabled?: boolean }) {
 	return (

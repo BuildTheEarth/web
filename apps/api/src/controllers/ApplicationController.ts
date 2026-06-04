@@ -1,4 +1,4 @@
-import { Application, ApplicationQuestionType, ApplicationStatus } from '@repo/db';
+import { Application, ApplicationQuestionType, ApplicationStatus } from '@prisma/client';
 import { Request, Response } from 'express';
 import { WebhookType, sendBtWebhook } from '../util/BtWebhooks.js';
 import { ERROR_GENERIC, ERROR_NO_PERMISSION, ERROR_VALIDATION } from '../util/Errors.js';

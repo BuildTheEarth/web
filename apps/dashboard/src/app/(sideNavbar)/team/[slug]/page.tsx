@@ -43,6 +43,7 @@ import {
 	IconExternalLink,
 	IconForms,
 	IconInfoSmall,
+	IconMap,
 	IconPhoto,
 	IconPolygon,
 	IconTag,
@@ -52,6 +53,7 @@ import {
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { EditMenu } from './interactivity';
+import { getCountryNames } from '@/util/countries';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
 	const { slug: id } = await params;
@@ -149,6 +151,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						<ScrollAreaAutosize h="100%" type="auto" offsetScrollbars>
 							<div dangerouslySetInnerHTML={{ __html: team.about }} />
 						</ScrollAreaAutosize>
+					</TextCard>
+					<TextCard title="Locations / Countries" icon={IconMap} style={{ width: '100%' }}>
+						{getCountryNames(team.location.split(',')).join(', ')}
 					</TextCard>
 				</Flex>
 				<Grid>

@@ -21,12 +21,16 @@
 		"db:studio": "yarn workspace @repo/db db:studio",
 		"db:migrate": "yarn workspace api db:migrate",
 		"git:pull": "git pull && yarn install && yarn run db:generate",
-		"ws": "yarn workspace"
+		"ws": "yarn workspace",
+		"env:generate": "turbo env:generate",
+		"env:copy": "turbo env:copy",
+		"app:release": "node --experimental-strip-types scripts/release.ts",
+		"app:info": "node --experimental-strip-types scripts/info.ts"
 	},
 	"devDependencies": {
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
-		"husky": "^9.1.5",
+		"husky": "^9.1.7",
 		"lint-staged": "^15.2.10",
 		"turbo": "^2.5.4"
 	},
@@ -34,6 +38,15 @@
 		"apps/*",
 		"packages/*"
 	],
+	"resolutions": {
+		"prosemirror-model": "1.25.0",
+		"prosemirror-transform": "1.10.2",
+		"prosemirror-view": "1.39.1"
+	},
 	"packageManager": "yarn@4.9.1+sha512.f95ce356460e05be48d66401c1ae64ef84d163dd689964962c6888a9810865e39097a5e9de748876c2e0bf89b232d583c33982773e9903ae7a76257270986538",
-	"prettier": "@repo/prettier-config"
+	"prettier": "@repo/prettier-config",
+	"dependencies": {
+		"embla-carousel": "^8.5.2",
+		"embla-carousel-react": "^8.5.2"
+	}
 }

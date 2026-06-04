@@ -5,7 +5,7 @@ import { IconDots, IconEye, IconId, IconMessage2 } from '@tabler/icons-react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 import { useClipboard } from '@mantine/hooks';
-import { User } from '@repo/db';
+import type { User } from '@repo/db';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';
 

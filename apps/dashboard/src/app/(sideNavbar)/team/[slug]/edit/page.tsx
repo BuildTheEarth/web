@@ -1,13 +1,36 @@
 import { ownerGenerateToken, userEditTeamInfo } from '@/actions/buildTeams';
 import { getUser } from '@/actions/getUser';
+import Anchor from '@/components/core/Anchor';
 import { TextCard } from '@/components/core/card/TextCard';
 import ContentWrapper from '@/components/core/ContentWrapper';
 import { Protection } from '@/components/Protection';
 import prisma from '@/util/db';
-import { Button, ColorInput, Group, SimpleGrid, Stack, Switch, Text, Textarea, TextInput, Title } from '@mantine/core';
-import { IconCamera, IconDeviceFloppy, IconNote, IconSocial } from '@tabler/icons-react';
+import {
+	Button,
+	ColorInput,
+	Group,
+	SimpleGrid,
+	Stack,
+	Switch,
+	Text,
+	Textarea,
+	TextInput,
+	Title,
+	Tooltip,
+} from '@mantine/core';
+import {
+	IconAlertTriangle,
+	IconCamera,
+	IconCloudComputing,
+	IconDeviceFloppy,
+	IconForms,
+	IconGlobe,
+	IconMessage,
+	IconNote,
+	IconSocial,
+} from '@tabler/icons-react';
 import { Metadata } from 'next';
-import SaveNotification, { RTEWrapper } from './interactivity';
+import SaveNotification, { RTEWrapper, SocialLinksEditor } from './interactivity';
 
 export const metadata: Metadata = {
 	title: 'Edit Build Team',
@@ -55,9 +78,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					<Group justify="space-between" w="100%" mt="xl" mb="md">
 						<Title order={1}>Edit Build Team Information</Title>
 						<Group gap="xs">
-							<Button color="green" rightSection={<IconDeviceFloppy size={14} />} type="submit">
-								Save
-							</Button>
+							<Tooltip label="Save Changes on main Settings">
+								<Button color="green" rightSection={<IconDeviceFloppy size={14} />} type="submit">
+									Save
+								</Button>
+							</Tooltip>
 						</Group>
 					</Group>
 					<Stack gap="md">
@@ -67,6 +92,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 									label="BuildTeam Name"
 									placeholder="BTE xyz"
 									defaultValue={team.name}
+									leftSection={
+										team.name.includes('Build The Earth') && (
+											<Tooltip label="We recommend to either use 'BTE' or 'BuildTheEarth' in your name.">
+												<IconAlertTriangle size={16} color="var(--mantine-color-orange-outline)" />
+											</Tooltip>
+										)
+									}
 									required
 									id="name"
 									name="name"
@@ -85,6 +117,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								<TextInput
 									label="Logo URL"
 									defaultValue={team.icon}
+									leftSection={
+										team.icon.includes('discordapp') && (
+											<Tooltip label="Do not use images uploaded to Discord! Their links will expire.">
+												<IconAlertTriangle size={16} color="var(--mantine-color-orange-outline)" />
+											</Tooltip>
+										)
+									}
 									required
 									id="icon"
 									name="icon"
@@ -94,6 +133,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								<TextInput
 									label="Background Image URL"
 									defaultValue={team.backgroundImage}
+									leftSection={
+										team.backgroundImage.includes('discordapp') && (
+											<Tooltip label="Do not use images uploaded to Discord! Their links will expire.">
+												<IconAlertTriangle size={16} color="var(--mantine-color-orange-outline)" />
+											</Tooltip>
+										)
+									}
 									required
 									id="backgroundImage"
 									name="backgroundImage"
@@ -103,7 +149,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</TextCard>
 						<TextCard
 							title={`Location Information`}
-							icon={IconSocial}
+							icon={IconGlobe}
 							style={{ width: '100%', height: '100%', flexGrow: 1 }}
 						>
 							<SimpleGrid cols={2} spacing="xl" w="100%">
@@ -113,7 +159,19 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 									required
 									id="location"
 									name="location"
-									description="A comma seperated list of 2-ISO codes. If you are a global BuildTeam, set to 'glb'."
+									description={
+										<>
+											A comma seperated list of 2-ISO codes. If you are a global BuildTeam, set to &apos;glb&apos;. You
+											can find a list of codes{' '}
+											<Anchor
+												href="https://github.com/BuildTheEarth/web/blob/main/apps/dashboard/src/util/countries.ts"
+												fz="xs"
+											>
+												here
+											</Anchor>
+											.
+										</>
+									}
 								/>
 
 								<TextInput
@@ -158,6 +216,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								<TextInput
 									label="Discord Invite Link"
 									defaultValue={team.invite}
+									leftSection={
+										!team.invite.includes('discord') && (
+											<Tooltip label="Are you sure this is a Discord invite link?">
+												<IconAlertTriangle size={16} color="var(--mantine-color-orange-outline)" />
+											</Tooltip>
+										)
+									}
 									required
 									id="invite"
 									name="invite"
@@ -165,7 +230,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								/>
 							</SimpleGrid>
 						</TextCard>
-						<TextCard title={`Applications`} icon={IconSocial} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
+						<TextCard title={`Applications`} icon={IconForms} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
 							<SimpleGrid cols={1} spacing="xl" w="100%">
 								<Switch
 									label="Applications Enabled"
@@ -192,7 +257,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</TextCard>
 						<TextCard
 							title={`Interaction Messages`}
-							icon={IconSocial}
+							icon={IconMessage}
 							style={{ width: '100%', height: '100%', flexGrow: 1 }}
 						>
 							<Text fz="sm" w="85%">
@@ -204,6 +269,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 							</Text>
 							<SimpleGrid cols={3} spacing="xl" w="100%">
 								<Textarea
+									styles={{ input: { paddingTop: 4 } }}
 									label="Acception Message"
 									defaultValue={team.acceptionMessage}
 									id="acceptionMessage"
@@ -213,6 +279,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 									rows={25}
 								/>
 								<Textarea
+									styles={{ input: { paddingTop: 4 } }}
 									label="Trial Acception Message"
 									defaultValue={team.trialMessage}
 									id="trialMessage"
@@ -222,6 +289,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 									rows={25}
 								/>
 								<Textarea
+									styles={{ input: { paddingTop: 4 } }}
 									label="Rejection Message"
 									defaultValue={team.rejectionMessage}
 									id="rejectionMessage"
@@ -232,7 +300,11 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 								/>
 							</SimpleGrid>
 						</TextCard>
-						<TextCard title={`Developers`} icon={IconSocial} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
+						<TextCard
+							title={`Developers`}
+							icon={IconCloudComputing}
+							style={{ width: '100%', height: '100%', flexGrow: 1 }}
+						>
 							<SimpleGrid cols={1} spacing="xl" w="100%">
 								<TextInput
 									label="Webhook URL"
@@ -251,6 +323,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						Generate new API Key
 					</Button>
 				</form>
+
+				<SocialLinksEditor teamId={team.id} userId={user.id} socials={team.socials} />
 			</ContentWrapper>
 		</Protection>
 	);

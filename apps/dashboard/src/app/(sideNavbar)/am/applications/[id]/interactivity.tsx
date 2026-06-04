@@ -2,7 +2,7 @@
 import { hasRole } from '@/util/auth';
 import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core';
 import { useClipboard } from '@mantine/hooks';
-import { Application } from '@repo/db';
+import type { Application } from '@repo/db';
 import { IconDots, IconId } from '@tabler/icons-react';
 
 export function EditMenu({ application }: { application: Application }) {

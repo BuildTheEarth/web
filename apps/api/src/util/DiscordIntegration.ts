@@ -1,4 +1,4 @@
-import { Claim } from '@repo/db';
+import { Claim } from '@prisma/client';
 import Core from '../Core.js';
 
 class DiscordIntegration {

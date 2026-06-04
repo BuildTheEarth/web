@@ -1,6 +1,7 @@
-import { AppShellHeader, Group, Text } from '@mantine/core';
+import { AppShellHeader, Divider, Group, Text } from '@mantine/core';
 
 import Image from 'next/image';
+import HeaderBuildTeamSelector from './HeaderBuildTeamSelector';
 import HeaderProfile from './HeaderProfile';
 import MobileLinkDrawer from './MobileLinkDrawer';
 
@@ -23,6 +24,7 @@ const Header = (props: { roles: string[] }) => {
 				</Group>
 
 				<Group gap="sm">
+					<HeaderBuildTeamSelector />
 					<HeaderProfile />
 				</Group>
 			</Group>

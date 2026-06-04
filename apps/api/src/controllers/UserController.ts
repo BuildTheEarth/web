@@ -3,7 +3,7 @@ import Core, { ExtendedPrismaClient } from '../Core.js';
 import { ERROR_GENERIC, ERROR_NO_PERMISSION, ERROR_VALIDATION } from '../util/Errors.js';
 
 import type KcAdminClient from '@keycloak/keycloak-admin-client';
-import { ApplicationStatus } from '@repo/db';
+import { ApplicationStatus } from '@prisma/client';
 import { validationResult } from 'express-validator';
 import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddleware.js';
 

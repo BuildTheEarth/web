@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js';
 import { FrontendRoutesGroups, rerenderFrontend } from '../util/Frontend.js';
 
-import { ApplicationQuestionType } from '@repo/db';
+import { ApplicationQuestionType } from '@prisma/client';
 import crypto from 'crypto';
 import { validationResult } from 'express-validator';
 import yup from 'yup';
@@ -13,6 +13,19 @@ class BuildTeamController {
 
 	constructor(core: Core) {
 		this.core = core;
+	}
+
+	private async getKeycloakMemberSafe(ssoId: string) {
+		try {
+			return await this.core.getKeycloakAdmin().getKeycloakAdminClient().users.findOne({
+				id: ssoId,
+			});
+		} catch (error) {
+			this.core
+				.getLogger()
+				.warn(`Failed to fetch Keycloak user ${ssoId}: ${error instanceof Error ? error.message : error}`);
+			return null;
+		}
 	}
 
 	/**
@@ -453,9 +466,7 @@ class BuildTeamController {
 		// Get Keycloak information about all members present and mutate the object
 		const kcMembers = await Promise.all(
 			members.map(async (member) => {
-				const kcMember = await this.core.getKeycloakAdmin().getKeycloakAdminClient().users.findOne({
-					id: member.ssoId,
-				});
+				const kcMember = await this.getKeycloakMemberSafe(member.ssoId);
 				return {
 					id: member.id,
 					ssoId: member.ssoId,
@@ -525,9 +536,7 @@ class BuildTeamController {
 		// Mutate users with information from keycloak
 		const kcMembers = await Promise.all(
 			members.map(async (member) => {
-				const kcMember = await this.core.getKeycloakAdmin().getKeycloakAdminClient().users.findOne({
-					id: member.ssoId,
-				});
+				const kcMember = await this.getKeycloakMemberSafe(member.ssoId);
 				return {
 					id: member.id,
 					ssoId: member.ssoId,

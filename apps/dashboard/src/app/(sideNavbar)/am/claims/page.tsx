@@ -29,6 +29,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						{ owner: { minecraft: { contains: searchQuery || undefined } } },
 						{ owner: { discordId: { contains: searchQuery || undefined } } },
 						{ owner: { ssoId: { contains: searchQuery || undefined } } },
+						{ buildTeam: { name: { contains: searchQuery || undefined } } },
+						{ buildTeam: { slug: { contains: searchQuery || undefined } } },
+						{ buildTeam: { location: { contains: searchQuery || undefined } } },
+						{ buildTeam: { invite: { contains: searchQuery || undefined } } },
+						{ buildTeam: { ip: { contains: searchQuery || undefined } } },
 					],
 				}
 			: undefined,
@@ -48,6 +53,11 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 						{ owner: { minecraft: { contains: searchQuery || undefined } } },
 						{ owner: { discordId: { contains: searchQuery || undefined } } },
 						{ owner: { ssoId: { contains: searchQuery || undefined } } },
+						{ buildTeam: { name: { contains: searchQuery || undefined } } },
+						{ buildTeam: { slug: { contains: searchQuery || undefined } } },
+						{ buildTeam: { location: { contains: searchQuery || undefined } } },
+						{ buildTeam: { invite: { contains: searchQuery || undefined } } },
+						{ buildTeam: { ip: { contains: searchQuery || undefined } } },
 					],
 				}
 			: undefined,

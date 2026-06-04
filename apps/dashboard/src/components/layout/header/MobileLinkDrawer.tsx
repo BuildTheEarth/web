@@ -18,7 +18,7 @@ const MobileLinkDrawer = (props: { roles: string[] }) => {
 		item.divider ? (
 			<Divider key={item.label} label={item.label} labelPosition="left" />
 		) : (
-			<NavLink key={item.label} {...item} />
+			<NavLink key={item.link} {...item} />
 		),
 	);
 

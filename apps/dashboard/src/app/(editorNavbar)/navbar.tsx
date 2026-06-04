@@ -11,7 +11,7 @@ import {
 	Text,
 	TextInput,
 } from '@mantine/core';
-import { Claim } from '@repo/db';
+import type { Claim } from '@repo/db';
 import { IconSearch, IconX } from '@tabler/icons-react';
 import { redirect } from 'next/navigation';
 import { useState } from 'react';

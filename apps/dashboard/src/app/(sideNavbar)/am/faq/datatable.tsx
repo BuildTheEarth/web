@@ -2,7 +2,7 @@
 
 import { ActionIcon, Code, Group } from '@mantine/core';
 
-import { FAQQuestion } from '@repo/db';
+import type { FAQQuestion } from '@repo/db';
 import { IconExternalLink } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import Link from 'next/link';

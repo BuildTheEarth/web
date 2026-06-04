@@ -25,7 +25,7 @@ export default async function Navbar(props: Navbar) {
 		item.divider ? (
 			<Divider key={item.label} label={item.label} labelPosition="left" />
 		) : (
-			<NavLink key={item.label} {...item} />
+			<NavLink key={item.link} {...item} />
 		),
 	);
 

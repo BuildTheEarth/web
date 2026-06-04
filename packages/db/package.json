@@ -18,11 +18,11 @@
 		"build": "tsc"
 	},
 	"dependencies": {
-		"@prisma/client": "6",
+		"@prisma/client": "^7.3.0",
 		"@repo/typescript-config": "*"
 	},
 	"devDependencies": {
-		"prisma": "6",
+		"prisma": "^7.3.0",
 		"typescript": "^5.6.3"
 	},
 	"exports": {

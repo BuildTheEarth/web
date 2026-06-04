@@ -2,9 +2,52 @@
 import { revalidateWebsitePaths } from '@/util/data';
 import prisma from '@/util/db';
 import { sendBotMessage } from '@/util/discordIntegration';
+import { sendBtWebhook, WebhookType } from '@/util/webhooks';
+import { Application, ApplicationQuestionType, ApplicationStatus, Prisma } from '@repo/db';
 import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
+import build from 'next/dist/build';
 import { redirect } from 'next/navigation';
+
+const socialNameOptions = [
+	'twitter',
+	'instagram',
+	'facebook',
+	'tiktok',
+	'twitch',
+	'youtube',
+	'github',
+	'website',
+] as const;
+
+type SocialName = (typeof socialNameOptions)[number];
+
+function normalizeSocialName(value: string): SocialName | null {
+	const normalized = value.trim().toLowerCase();
+	return socialNameOptions.includes(normalized as SocialName) ? (normalized as SocialName) : null;
+}
+
+function parseSocials(formData: FormData): Array<{ id?: string; name: string; url: string }> {
+	const socialsByIndex = new Map<number, { id?: string; name: string; url: string }>();
+
+	for (const [key, value] of Array.from(formData.entries())) {
+		const match = key.match(/^socials\[(\d+)\]\[(id|name|url)\]$/);
+		if (!match || typeof value !== 'string') continue;
+
+		const index = Number(match[1]);
+		const field = match[2];
+		const current = socialsByIndex.get(index) ?? { name: '', url: '' };
+
+		current[field as 'id' | 'name' | 'url'] = value;
+		socialsByIndex.set(index, current);
+	}
+
+	return Array.from(socialsByIndex.entries())
+		.sort(([left], [right]) => left - right)
+		.map(([, social]) => social)
+		.filter((social) => social.id || social.name.trim() || social.url.trim());
+}
+
 export const adminTransferTeam = async (
 	prevState: any,
 	{
@@ -247,6 +290,114 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 	redirect(`/team/${updatedTeam.slug}/edit?saved=1`);
 };
 
+export const userEditTeamSocials = async (
+	_prevState: { status?: string; error?: string },
+	formData: FormData,
+): Promise<{ status: string; error?: string }> => {
+	const userId = formData.get('userId') as string;
+	const id = formData.get('id') as string;
+
+	if (!userId || !id) {
+		return { status: 'error', error: 'Missing team context' };
+	}
+
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			userId,
+			buildTeamId: id,
+			permissionId: {
+				in: ['team.settings.edit', 'team.socials.edit'],
+			},
+		},
+	});
+
+	if (!userHasPermission) {
+		return { status: 'error', error: 'User does not have permission to edit these social links' };
+	}
+
+	const team = await prisma.buildTeam.findFirst({
+		where: { id },
+		select: {
+			id: true,
+			slug: true,
+			socials: { select: { id: true } },
+		},
+	});
+
+	if (!team) {
+		return { status: 'error', error: 'Could not find Build Team' };
+	}
+
+	const socials = parseSocials(formData);
+
+	for (const social of socials) {
+		if (!social.name.trim() || !social.url.trim()) {
+			return { status: 'error', error: 'Every social link needs a platform and a URL' };
+		}
+
+		if (!normalizeSocialName(social.name)) {
+			return { status: 'error', error: `Invalid social platform: ${social.name}` };
+		}
+	}
+
+	const existingSocialIds = new Set(team.socials.map((social) => social.id));
+	const submittedSocialIds = new Set<string>();
+
+	await prisma.$transaction(async (tx) => {
+		for (const social of socials) {
+			const normalizedName = normalizeSocialName(social.name)!;
+			const payload = {
+				name: normalizedName,
+				icon: normalizedName,
+				url: social.url.trim(),
+			};
+
+			if (social.id) {
+				const currentSocial = await tx.social.findFirst({
+					where: { id: social.id, buildTeamId: team.id },
+					select: { id: true },
+				});
+
+				if (!currentSocial) {
+					throw Error('One of the social links could not be found');
+				}
+
+				submittedSocialIds.add(currentSocial.id);
+				await tx.social.update({
+					where: { id: currentSocial.id },
+					data: payload,
+				});
+				continue;
+			}
+
+			const createdSocial = await tx.social.create({
+				data: {
+					...payload,
+					buildTeam: { connect: { id: team.id } },
+				},
+				select: { id: true },
+			});
+
+			submittedSocialIds.add(createdSocial.id);
+		}
+
+		const removedSocialIds = Array.from(existingSocialIds).filter((socialId) => !submittedSocialIds.has(socialId));
+
+		if (removedSocialIds.length > 0) {
+			await tx.social.deleteMany({
+				where: {
+					buildTeamId: team.id,
+					id: { in: removedSocialIds },
+				},
+			});
+		}
+	});
+
+	revalidateWebsitePaths(['/teams', `/teams/${team.slug}`]);
+	revalidatePath(`/team/${team.slug}`);
+	redirect(`/team/${team.slug}/edit?saved=1`);
+};
+
 export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: string }): Promise<void> => {
 	const userIsOwner = await prisma.buildTeam.findFirst({
 		where: {
@@ -270,7 +421,9 @@ export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: s
 	});
 
 	sendBotMessage(
-		`**${userIsOwner.name}** \\nGenerated new API Token: ||${token}|| \\nPlease save it somewhere secure.`,
+		`## <:inprogress:1441532224473268234> ${userIsOwner.name} has a new API Token` +
+			`\n\nYou requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.` +
+			`\n\nToken: ||${token}|| \nSlug: \`${userIsOwner.slug}\``,
 		[userIsOwner.creator.discordId!],
 	);
 };
@@ -336,6 +489,67 @@ export const removeMember = async ({
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
 
+export const removeMembers = async ({
+	userId,
+	removeIds,
+	buildTeamSlug,
+	reason,
+	notifyUsers = true,
+}: {
+	userId: string;
+	removeIds: string[];
+	reason?: string;
+	buildTeamSlug?: string;
+	notifyUsers?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.remove',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.remove',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to remove members from this Build Team');
+	}
+
+	const membersToRemove = await prisma.user.findMany({
+		where: { ssoId: { in: removeIds } },
+		select: { discordId: true },
+	});
+
+	const buildTeam = await prisma.buildTeam.update({
+		where: { slug: buildTeamSlug },
+		data: {
+			members: {
+				disconnect: removeIds.map((id) => ({ ssoId: id })),
+			},
+		},
+	});
+
+	if (notifyUsers) {
+		sendBotMessage(
+			`## <:warn:1441532241628102686> You have been removed from ${buildTeam.name}` +
+				`\n\nThe Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
+				(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
+				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+			membersToRemove.map((member) => member.discordId!).filter((id): id is string => !!id),
+		);
+	}
+
+	revalidatePath(`/team/${buildTeam.slug}/members`);
+};
+
 export const addMember = async ({
 	userId,
 	addId,
@@ -388,7 +602,6 @@ export const addMember = async ({
 	});
 
 	if (notifyUser) {
-		console.log(buildTeam.name, memberToAdd?.discordId);
 		sendBotMessage(
 			`## <:approved:1441532214562128034> You have been added to ${buildTeam.name}` +
 				`\n\nThe Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
@@ -396,8 +609,590 @@ export const addMember = async ({
 				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
 			[memberToAdd?.discordId!],
 		);
+		// TODO: possibly add discord role if this is the first BT the user joins
 	}
 
 	revalidatePath(`/am/users/${addId}`);
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
+
+export const setMemberPermissions = async ({
+	userId,
+	changeId,
+	permissions,
+	buildTeamSlug,
+	notifyUser = true,
+}: {
+	userId: string;
+	changeId: string;
+	permissions: string[];
+	buildTeamSlug?: string;
+	notifyUser?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	const buildTeam = await prisma.buildTeam.findFirst({
+		where: { slug: buildTeamSlug },
+		select: { id: true, name: true, slug: true },
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to change permissions on this Build Team');
+	}
+
+	if (!buildTeam) {
+		throw Error('Build Team not found');
+	}
+
+	const userToChange = await prisma.user.findFirst({
+		where: { OR: [{ ssoId: changeId }, { id: changeId }, { discordId: changeId }, { username: changeId }] },
+		include: {
+			permissions: {
+				where: { buildTeam: { slug: buildTeamSlug } },
+				include: { permission: true },
+			},
+		},
+	});
+
+	if (!userToChange) {
+		throw Error('User to set permissions for not found');
+	}
+
+	await prisma.userPermission.deleteMany({
+		where: {
+			userId: userToChange.id,
+			buildTeamId: (await prisma.buildTeam.findFirst({ where: { slug: buildTeamSlug }, select: { id: true } }))?.id,
+			NOT: { permissionId: { in: permissions } },
+		},
+	});
+	await prisma.userPermission.createMany({
+		data: permissions
+			.filter((permission) => !userToChange.permissions.some((p) => p.permissionId === permission))
+			.map((permission) => ({
+				userId: userToChange.id,
+				buildTeamId: buildTeam.id,
+				permissionId: permission,
+			})),
+	});
+
+	if (notifyUser) {
+		sendBotMessage(
+			`## <:unban:1441532232627130548> Your permissions for ${buildTeam.name} changed` +
+				`\n\nYour permissions for the BuildTeam  \`${buildTeam.name}\` have been changed. You now have the following additional permissions:` +
+				`\n\n${permissions.length > 0 ? permissions.map((p) => `- ${p}`).join('\n') : ' `none`'}`,
+			[userToChange?.discordId!],
+		);
+		// TODO: possibly add discord role if this is the first BT the user joins
+	}
+
+	revalidatePath(`/team/${buildTeam.slug}/members`);
+};
+
+export const addApplicationResponseTemplate = async ({
+	userId,
+	buildTeamSlug,
+	content,
+	name,
+}: {
+	userId: string;
+	buildTeamSlug?: string;
+	content: string;
+	name: string;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to add a response template to this Build Team');
+	}
+
+	const template = await prisma.applicationResponseTemplate.create({
+		data: {
+			name,
+			content,
+			buildteam: { connect: { slug: buildTeamSlug } },
+		},
+	});
+
+	revalidatePath(`/team/${buildTeamSlug}/applications`);
+	return template;
+};
+
+export const reviewApplication = async ({
+	userId,
+	buildTeamSlug,
+	applicationId,
+	reason,
+	status,
+}: {
+	userId: string;
+	buildTeamSlug?: string;
+	applicationId: string;
+	reason?: string;
+	status: ApplicationStatus;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.review',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.review',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to review an application to this Build Team');
+	}
+
+	const applicationOld = await prisma.application.findUnique({
+		where: { id: applicationId, buildteam: { slug: buildTeamSlug } },
+	});
+
+	if (!applicationOld) {
+		throw Error('Application not found');
+	}
+
+	const application = await prisma.application.update({
+		where: { id: applicationOld.id, buildteam: { slug: buildTeamSlug } },
+		data: {
+			status,
+			reviewer: { connect: { ssoId: userId } },
+			reviewedAt: new Date(),
+			reason,
+		},
+		include: { user: true, buildteam: true },
+	});
+
+	if (status === ApplicationStatus.ACCEPTED || status === ApplicationStatus.TRIAL) {
+		await prisma.buildTeam.update({
+			where: { slug: buildTeamSlug },
+			data: {
+				members: { connect: { ssoId: application.user.ssoId } },
+			},
+		});
+
+		sendBotMessage(
+			parseApplicationMessage(
+				application.buildteam.acceptionMessage,
+				application,
+				application.user,
+				application.buildteam,
+			),
+			[application.user.discordId!],
+		);
+
+		// TODO: possibly add discord role if this is the first BT the user joins and they got accepted to it
+	}
+
+	if (status === ApplicationStatus.DECLINED) {
+		await prisma.buildTeam.update({
+			where: { slug: buildTeamSlug },
+			data: {
+				members: { disconnect: { ssoId: application.user.ssoId } },
+			},
+		});
+
+		sendBotMessage(
+			parseApplicationMessage(
+				application.buildteam.rejectionMessage,
+				application,
+				application.user,
+				application.buildteam,
+			),
+			[application.user.discordId!],
+		);
+
+		//TODO: remove discord role if this is the only BT the user is in and they got declined from it
+	}
+
+	// TODO: send webhook to staff dc
+
+	if (application.buildteam.webhook) {
+		sendBtWebhook(application.buildteam.webhook, WebhookType.APPLICATION, application);
+	}
+
+	revalidatePath(`/team/${buildTeamSlug}/applications`);
+	return application;
+};
+
+export const applyToBuildTeam = async (
+	data: { userId: string; buildTeamSlug: string },
+	formData: FormData,
+): Promise<void> => {
+	console.log(Object.fromEntries(formData));
+	console.log(data);
+
+	let buildteam = await prisma.buildTeam.findUnique({
+		where: { slug: data.buildTeamSlug },
+		select: {
+			instantAccept: true,
+			applicationQuestions: true,
+			id: true,
+			slug: true,
+			name: true,
+			acceptionMessage: true,
+			token: false,
+			allowApplications: true,
+			webhook: true,
+		},
+	});
+
+	const user = await prisma.user.findUnique({
+		where: { ssoId: data.userId },
+		select: { id: true, discordId: true, ssoId: true, username: true },
+	});
+
+	if (!buildteam) {
+		throw Error('Build Team not found');
+	}
+
+	if (!user) {
+		throw Error('User not found');
+	}
+
+	// TODO: check if user is on BTE.net discord
+
+	const pastApplications = await prisma.application.findMany({
+		where: { userId: user.id, buildteamId: buildteam.id },
+		orderBy: { createdAt: 'desc' },
+	});
+
+	if (pastApplications[0]?.status === ApplicationStatus.ACCEPTED) {
+		throw Error('You have already been accepted to this Build Team in the past, you cannot apply again');
+	}
+
+	if (!buildteam.allowApplications) {
+		throw Error('This Build Team is not accepting applications at the moment');
+	}
+
+	if (pastApplications.some((app) => app.status === ApplicationStatus.SEND)) {
+		throw Error(
+			'You already have a pending application to this Build Team, please wait for it to be reviewed before applying again',
+		);
+	}
+
+	// Handle Instant-Accept
+	if (buildteam.instantAccept) {
+		const application = await prisma.application.create({
+			data: {
+				buildteam: { connect: { id: buildteam.id } },
+				user: { connect: user },
+				status: ApplicationStatus.ACCEPTED,
+				createdAt: new Date(),
+				reviewedAt: new Date(),
+				trial: false,
+			},
+		});
+
+		sendBotMessage(parseApplicationMessage(buildteam.acceptionMessage, application, user, buildteam), [
+			user.discordId!,
+		]);
+
+		// TODO: possibly add discord role if this is the first BT the user joins
+
+		revalidatePath(`/team/${buildteam.slug}/applications`);
+		return;
+	}
+
+	const validatedAnswers = [];
+
+	for (const question of buildteam.applicationQuestions) {
+		// Filter by correct questions
+		if (question.trial == false) {
+			if (formData.has(question.id)) {
+				let answer: any = formData.get(question.id);
+				const type = question.type;
+
+				if (typeof answer != 'string') {
+					if (typeof answer == 'number') {
+						answer = answer.toString();
+					} else {
+						try {
+							answer = JSON.stringify(answer);
+						} catch (e) {}
+					}
+				}
+				validatedAnswers.push({ id: question.id, answer: answer });
+
+				// If Type is minecraft, populate the minecraft name of the user
+				// TODO: verify account
+				if (type == ApplicationQuestionType.MINECRAFT) {
+					// TODO: update minecraft account name / check if account name is the same as verified name
+				}
+			} else if (question.required && question.sort >= 0) {
+				throw Error('Required Questions are missing');
+			}
+		}
+	}
+
+	// Save answers
+	if (validatedAnswers.length <= 0) {
+		throw Error('No valid answers provided');
+	}
+	const application = await prisma.application.create({
+		data: {
+			buildteam: { connect: { id: buildteam.id } },
+			user: { connect: user },
+			status: ApplicationStatus.SEND,
+			createdAt: new Date(),
+			trial: false,
+			ApplicationAnswer: {
+				createMany: {
+					data: validatedAnswers.map((a) => ({
+						answer: a.answer,
+						questionId: a.id,
+					})),
+				},
+			},
+		},
+		include: {
+			reviewer: true,
+			user: true,
+		},
+	});
+
+	// Send Review Notification to Discord
+	const reviewers = await prisma.userPermission.findMany({
+		where: {
+			permissionId: 'team.application.notify',
+			buildTeamId: buildteam.id,
+		},
+		select: { user: { select: { id: true, discordId: true } } },
+	});
+
+	await sendBotMessage(
+		`**${buildteam.name}** \\nNew Application from <@${user.discordId}> (${user.username}). Review it [here](${process.env.FRONTEND_URL}/team/${buildteam.slug}/applications/${application.id})`,
+		reviewers.map((r) => r.user.discordId!),
+	);
+
+	// Send Webhook to BuildTeam
+	if (buildteam.webhook) {
+		sendBtWebhook(buildteam.webhook, WebhookType.APPLICATION_SEND, application);
+	}
+
+	revalidatePath(`/team/${buildteam.slug}/applications`);
+	return;
+};
+
+export const saveBuildTeamApplicationQuestions = async ({ userId, buildTeamSlug, questions }: any) => {
+	if (!Array.isArray(questions)) {
+		throw Error('Invalid payload: expected a list of questions');
+	}
+
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.application.edit',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to edit application questions on this Build Team');
+	}
+
+	const team = await prisma.buildTeam.findFirst({ where: { slug: buildTeamSlug }, select: { id: true, slug: true } });
+	if (!team) {
+		throw Error('Build Team not found');
+	}
+
+	function sanitizeQuestionInput(q: any) {
+		if (!q || typeof q.id !== 'string') throw Error('A question is missing a valid id');
+		if (!q || typeof q.title !== 'string') throw Error('A question is missing a valid title');
+		if (!Object.values(ApplicationQuestionType).includes(q.type))
+			throw Error(`Unsupported question type: ${String(q.type)}`);
+
+		return {
+			id: q.id,
+			title: (q.title || '').trim(),
+			subtitle: (q.subtitle || '').trim(),
+			placeholder: q.placeholder || '',
+			required: Boolean(q.required),
+			type: q.type,
+			icon: (q.icon || 'question-mark').trim(),
+			additionalData: q.additionalData ?? {},
+			sort: Number.isFinite(q.sort) ? Math.trunc(q.sort) : 0,
+			trial: Boolean(q.trial),
+		};
+	}
+
+	const sanitizedQuestions = questions.map((question) => sanitizeQuestionInput(question));
+
+	await prisma.$transaction(async (tx) => {
+		// if (deleteIds.length > 0) {
+		// 	await tx.applicationQuestion.deleteMany({ where: { buildTeamId: team.id, id: { in: deleteIds } } });
+		// }
+
+		for (const question of sanitizedQuestions) {
+			const existingQuestion = await tx.applicationQuestion.findUnique({
+				where: { id: question.id },
+				select: { id: true, buildTeamId: true },
+			});
+
+			if (existingQuestion && existingQuestion.buildTeamId !== team.id) {
+				throw Error('A question id does not belong to this Build Team');
+			}
+
+			if (existingQuestion) {
+				await tx.applicationQuestion.update({
+					where: { id: question.id },
+					data: {
+						title: question.title,
+						subtitle: question.subtitle || '',
+						placeholder: question.placeholder || '',
+						required: question.required ?? false,
+						type: question.type,
+						icon: question.icon || 'question-mark',
+						additionalData: question.additionalData ?? {},
+						sort: question.sort,
+						trial: question.trial ?? false,
+					},
+				});
+				continue;
+			}
+
+			await tx.applicationQuestion.create({
+				data: {
+					id: question.id,
+					title: question.title,
+					subtitle: question.subtitle || '',
+					placeholder: question.placeholder || '',
+					required: question.required ?? false,
+					type: question.type,
+					icon: question.icon || 'question-mark',
+					additionalData: question.additionalData ?? {},
+					sort: question.sort,
+					trial: question.trial ?? false,
+					buildTeam: { connect: { id: team.id } },
+				},
+			});
+		}
+	});
+
+	revalidatePath(`/team/${team.slug}/questions`);
+	revalidatePath(`/apply/${team.slug}`);
+
+	return;
+};
+
+export const deleteClaim = async ({
+	userId,
+	removeId,
+	buildTeamSlug,
+}: {
+	userId: string;
+	removeId: string;
+	buildTeamSlug: string;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.claim.list',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'team.claim.list',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to delete claims from this Build Team');
+	}
+
+	const claim = await prisma.claim.delete({
+		where: { buildTeam: { slug: buildTeamSlug }, id: removeId },
+	});
+
+	revalidatePath(`/team/${buildTeamSlug}/claims`);
+	redirect(`/team/${buildTeamSlug}/claims`);
+};
+
+/**
+ * Replaces placeholders to actual data in discord messages to users
+ * @param message Message with placeholders
+ * @param application Application Information
+ * @param user User Information
+ * @param team Team Information
+ * @returns Replaced Message
+ */
+function parseApplicationMessage(
+	message: string,
+	application: Application,
+	user: { discordId: string | null },
+	team: { slug: string; name: string },
+): string {
+	return message
+		.replace('{user}', `<@${user.discordId!}>`)
+		.replace('{team}', team.name)
+		.replace('{url}', process.env.FRONTEND_URL + `/teams/${team.slug}`)
+		.replace('{reason}', application.reason!)
+		.replace(
+			'{reviewedAt}',
+			new Date(application.reviewedAt!).toLocaleDateString('en-GB', {
+				year: 'numeric',
+				month: 'numeric',
+				day: 'numeric',
+			}),
+		)
+		.replace(
+			'{createdAt}',
+			new Date(application.createdAt).toLocaleDateString('en-GB', {
+				year: 'numeric',
+				month: 'numeric',
+				day: 'numeric',
+			}),
+		)
+		.replace('{id}', application.id.toString().split('-')[0]);
+}

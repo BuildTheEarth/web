@@ -26,6 +26,7 @@ const LongTextQuestion = (props: LongTextQuestionProps) => {
 			description={props.subtitle}
 			placeholder={props.placeholder}
 			label={props.title}
+			name={props.id}
 			style={props.style}
 			autosize
 			minRows={2}
@@ -35,6 +36,7 @@ const LongTextQuestion = (props: LongTextQuestionProps) => {
 			disabled={props.disabled}
 			readOnly={props.readonly}
 			value={props.value}
+			id={props.id}
 		/>
 	);
 };

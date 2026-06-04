@@ -1,8 +1,0 @@
-user-agent: *
-disallow: /me
-disallow: /*manage$
-
-user-agent: *
-allow: /
-
-sitemap: https://buildtheearth.net/sitemap.xml

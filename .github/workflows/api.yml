@@ -23,8 +23,8 @@ jobs:
         run: npx turbo-ignore api --fallback=HEAD^1 && echo "has_changes=false" >> "$GITHUB_OUTPUT" || echo "has_changes=true" >> "$GITHUB_OUTPUT"
   build:
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.has_changes == 'true'
+    # needs: check
+    # if: needs.check.outputs.has_changes == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -37,6 +37,12 @@ jobs:
       - name: Login to Docker
         run: |
           echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - name: Create env files
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          printf 'DATABASE_URL=%s\n' "$DATABASE_URL" > apps/api/.env
+          printf 'DATABASE_URL=%s\n' "$DATABASE_URL" > packages/db/.env
       - name: Build the Docker image
         run: docker build . --file apps/api/Dockerfile --tag ghcr.io/buildtheearth/website-node-backend:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/website-node-backend:latest
       - name: Docker push tag

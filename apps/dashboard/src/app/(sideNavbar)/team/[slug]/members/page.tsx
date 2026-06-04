@@ -90,6 +90,16 @@ export default async function Page({
 		},
 	});
 
+	const availablePermissions = await prisma.permisision.findMany({
+		where: {
+			global: false,
+		},
+		select: {
+			id: true,
+			description: true,
+		},
+	});
+
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug: 'de' }}>
 			<ContentWrapper maw="90vw">
@@ -109,6 +119,7 @@ export default async function Page({
 				</Group>
 				<SearchMembers mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<MembersDatatable
+					availablePermissions={availablePermissions}
 					builders={builders}
 					count={builderCount}
 					isAdmin={hasRole(session, 'get-users')}
