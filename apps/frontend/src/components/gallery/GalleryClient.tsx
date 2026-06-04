@@ -90,7 +90,7 @@ export default function GalleryClient({
 							sizes={sizes}
 							loading={index < eagerImageCount ? 'eager' : 'lazy'}
 							fetchPriority={index < eagerImageCount ? 'high' : 'auto'}
-							priority={index < eagerImageCount}
+							preload={index < eagerImageCount}
 							style={{ objectFit: 'cover' }}
 							placeholder={showcase.imageHash ? 'blur' : 'empty'}
 							blurDataURL={showcase.imageHash || undefined}
@@ -108,7 +108,7 @@ export default function GalleryClient({
 								sizes={sizes}
 								loading={index < eagerImageCount ? 'eager' : 'lazy'}
 								fetchPriority={index < eagerImageCount ? 'high' : 'auto'}
-								priority={index < eagerImageCount}
+								preload={index < eagerImageCount}
 								style={{ objectFit: 'cover', width: '100%', height: '100%' }}
 								placeholder={showcase.imageHash ? 'blur' : 'empty'}
 								blurDataURL={showcase.imageHash || undefined}

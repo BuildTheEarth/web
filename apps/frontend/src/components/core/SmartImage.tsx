@@ -23,45 +23,49 @@ function isCdnUrl(src: NextImageProps['src']): src is string {
 export default function SmartImage(props: NextImageProps) {
 	const { src, alt, fill, width, height, style, className, loading } = props;
 
-	if (!isCdnUrl(src)) {
-		return <NextImage {...props} />;
-	}
+	return <NextImage {...props} unoptimized={isCdnUrl(src)} />;
 
-	const imageStyle: CSSProperties = {
-		...((style as CSSProperties | undefined) || {}),
-	};
+	// if (!isCdnUrl(src)) {
+	// 	return <NextImage {...props} />;
+	// }
 
-	if (fill) {
-		return (
-			<MantineImage
-				src={src}
-				alt={alt}
-				loading={loading}
-				className={className}
-				style={{
-					position: 'absolute',
-					inset: 0,
-					width: '100%',
-					height: '100%',
-					objectFit: imageStyle.objectFit || 'cover',
-					aspectRatio: imageStyle.aspectRatio,
-					...imageStyle,
-				}}
-			/>
-		);
-	}
+	// const imageStyle: CSSProperties = {
+	// 	...((style as CSSProperties | undefined) || {}),
+	// };
 
-	return (
-		<MantineImage
-			src={src}
-			alt={alt}
-			loading={loading}
-			className={className}
-			style={{
-				width: width || imageStyle.width,
-				height: height || imageStyle.height,
-				...imageStyle,
-			}}
-		/>
-	);
+	// if (fill) {
+	// 	// TODO: implement blur placeholder for fill images as well
+
+	// 	return (
+	// 		<MantineImage
+	// 			src={src}
+	// 			alt={alt}
+	// 			loading={loading}
+	// 			className={className}
+	// 			style={{
+	// 				position: 'absolute',
+	// 				inset: 0,
+	// 				width: '100%',
+	// 				height: '100%',
+	// 				objectFit: imageStyle.objectFit || 'cover',
+	// 				aspectRatio: imageStyle.aspectRatio,
+	// 				...imageStyle,
+	// 			}}
+	// 		/>
+	// 	);
+	// }
+
+	// return (
+	// 	<MantineImage
+	// 		src={src}
+	// 		alt={alt}
+	// 		loading={loading}
+	// 		className={className}
+	// 		style={{
+	// 			width: width || imageStyle.width,
+	// 			height: height || imageStyle.height,
+	// 			...imageStyle,
+	// 		}}
+	// 	/>
+	// );
 }
