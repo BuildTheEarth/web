@@ -32,8 +32,6 @@ See the global Readme file.
 | NEXTAUTH_URL                 | http://localhost:3000                                          | The URL NextAuth should use for redirections back to your website  |
 | NEXTAUTH_SECRET              | secondtopsecret                                                | A secret used by NextAuth to encrypt session information           |
 | INTERNAL_API_KEY             | internalsecret                                                 | A secret used by the website to send custom api requests to itself |
-| NEXT_PUBLIC_API_URL          | https://api.yourserver.net/api/v1                              | The URL of your deployed or local BuildTheEarth API                |
-| NEXT_PUBLIC_SMYLER_API_URL   | https://smybteapi.yourserver.net                               | The URL of your deployed or local SmyBTE API                       |
 | NEXT_PUBLIC_FRONTEND_URL     | https://yourserver.net                                         | The URL to your local or deployed BuildTheEarth Website            |
 | FRONTEND_KEY                 | thirdtopsecret                                                 | The Key used to Authenticate against the BuildTheEarth Website     |
 | NEXT_PUBLIC_MAPBOX_TOKEN     | fourthtopsecret                                                | Your personal mapbox studio token                                  |

@@ -1,5 +1,6 @@
 import { getSession } from '@/util/auth';
 import prisma from '@/util/db';
+import keycloakAdmin from '@/util/keycloak';
 import { cache } from 'react';
 
 export const getUser = async () => {
@@ -25,6 +26,30 @@ export const getUser = async () => {
 
 	return user!;
 };
+
+export const getUserFederatedIdentities = cache(async (ssoId?: string) => {
+	if (!ssoId) {
+		const session = await getSession();
+		if (!session) throw Error('No session found');
+		ssoId = session.user.id;
+	}
+
+	const kcUser = await keycloakAdmin.users.findOne({ id: ssoId });
+
+	return kcUser?.federatedIdentities || [];
+});
+
+export const getUserSessions = cache(async (ssoId?: string) => {
+	if (!ssoId) {
+		const session = await getSession();
+		if (!session) throw Error('No session found');
+		ssoId = session.user.id;
+	}
+
+	const sessions = await keycloakAdmin.users.listSessions({ id: ssoId });
+
+	return sessions || [];
+});
 
 export const getUserPermissions = cache(async (ssoId?: string) => {
 	if (!ssoId) {

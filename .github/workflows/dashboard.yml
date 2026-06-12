@@ -1,8 +1,13 @@
 name: Docker Publish Dashboard
 
+permissions:
+  contents: write
+  packages: write
+
 on:
   push:
     branches: [main]
+    tags: ['dashboard-v*.*.*']
 
 jobs:
   check:
@@ -20,7 +25,13 @@ jobs:
         run: npm install -g turbo@2.4.4 && npm install -g turbo-ignore
       - name: Check for changes
         id: check_for_changes
-        run: npx turbo-ignore dashboard --fallback=HEAD^1 && echo "has_changes=false" >> "$GITHUB_OUTPUT" || echo "has_changes=true" >> "$GITHUB_OUTPUT"
+        run: |
+          if [[ "${GITHUB_REF}" == refs/tags/dashboard-v* ]]; then
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          npx turbo-ignore dashboard --fallback=HEAD^1 && echo "has_changes=false" >> "$GITHUB_OUTPUT" || echo "has_changes=true" >> "$GITHUB_OUTPUT"
   build:
     runs-on: ubuntu-latest
     needs: check
@@ -30,22 +41,78 @@ jobs:
         with:
           fetch-depth: 3
       - name: Install turbo
-        run: npm install -g turbo@2.4.4
+        run: npm install -g turbo@^2
       - name: Login to Docker
         run: |
           echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-      - name: Create env file
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Resolve release tags
+        id: release_meta
         run: |
-          touch apps/dashboard/.env
-          echo KEYCLOAK_URL="https://auth.buildtheearth.net/realms/website" >> apps/dashboard/.env
-          echo NEXT_PUBLIC_MAPBOX_TOKEN="${{ secrets.MAPBOX_TOKEN }}" >> apps/dashboard/.env
-          echo NEXT_PUBLIC_API_URL="https://api.buildtheearth.net/api/v1" >> apps/dashboard/.env
-          echo NEXT_PUBLIC_SMYLER_API_URL="https://smybteapi.buildtheearth.net" >> apps/dashboard/.env
-          echo NEXT_PUBLIC_FRONTEND_URL="https://buildtheearth.net" >> apps/dashboard/.env
-          echo DATABASE_URL="${{ secrets.DATABASE_URL }}" >> apps/dashboard/.env
-      - name: Build the Docker image
-        run: docker build . --file apps/dashboard/Dockerfile --tag ghcr.io/buildtheearth/dashboard-website:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/dashboard-website:latest
-      - name: Docker push tag
-        run: docker push ghcr.io/buildtheearth/dashboard-website:$(git rev-parse --short HEAD)
-      - name: Docker push latest
-        run: docker push ghcr.io/buildtheearth/dashboard-website:latest
+          if [[ "${GITHUB_REF}" == refs/tags/dashboard-v* ]]; then
+            VERSION="${GITHUB_REF_NAME#dashboard-v}"
+            if [[ ! "${VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "Invalid release tag format: ${GITHUB_REF_NAME}. Expected dashboard-vX.Y.Z"
+              exit 1
+            fi
+
+            IFS='.' read -r MAJOR MINOR PATCH <<< "${VERSION}"
+            echo "is_release=true" >> "$GITHUB_OUTPUT"
+            echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+            echo "major=${MAJOR}" >> "$GITHUB_OUTPUT"
+            echo "minor=${MINOR}" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "is_release=false" >> "$GITHUB_OUTPUT"
+      - name: Build and push Docker image
+        env:
+          DOCKER_BUILDKIT: 1
+          DATABASE_URL: ${{ secrets.INFISICAL_DATABASE_DATABASE_URL }}
+          NEXTAUTH_URL: ${{ secrets.INFISICAL_DASHBOARD_NEXTAUTH_URL }}
+          NEXT_PUBLIC_FRONTEND_URL: ${{ secrets.INFISICAL_DASHBOARD_NEXT_PUBLIC_FRONTEND_URL }}
+          NEXT_PUBLIC_KEYCLOAK_URL: ${{ secrets.INFISICAL_DASHBOARD_NEXT_PUBLIC_KEYCLOAK_URL }}
+          NEXT_PUBLIC_KEYCLOAK_ID: ${{ secrets.INFISICAL_DASHBOARD_NEXT_PUBLIC_KEYCLOAK_ID }}
+          IS_RELEASE: ${{ steps.release_meta.outputs.is_release }}
+          RELEASE_VERSION: ${{ steps.release_meta.outputs.version }}
+          RELEASE_MAJOR: ${{ steps.release_meta.outputs.major }}
+          RELEASE_MINOR: ${{ steps.release_meta.outputs.minor }}
+        run: |
+          IMAGE="ghcr.io/buildtheearth/dashboard-website"
+          TAGS=(
+            --tag "${IMAGE}:sha-$(git rev-parse --short=12 HEAD)"
+          )
+
+          if [[ "${GITHUB_REF}" == "refs/heads/dashboard/v2" ]]; then
+            TAGS+=(--tag "${IMAGE}:edge-dashboard-v2")
+          fi
+
+          if [[ "${IS_RELEASE}" == "true" ]]; then
+            TAGS+=(
+              --tag "${IMAGE}:${RELEASE_VERSION}"
+              --tag "${IMAGE}:${RELEASE_MAJOR}.${RELEASE_MINOR}"
+              --tag "${IMAGE}:${RELEASE_MAJOR}"
+              --tag "${IMAGE}:latest"
+            )
+          fi
+
+          docker buildx build . \
+            --file apps/dashboard/Dockerfile \
+            --build-arg NEXT_PUBLIC_FRONTEND_URL="$NEXT_PUBLIC_FRONTEND_URL" \
+            --build-arg NEXT_PUBLIC_KEYCLOAK_URL="$NEXT_PUBLIC_KEYCLOAK_URL" \
+            --build-arg NEXT_PUBLIC_KEYCLOAK_ID="$NEXT_PUBLIC_KEYCLOAK_ID" \
+            --build-arg NEXTAUTH_URL="$NEXTAUTH_URL" \
+            --secret id=database_url,env=DATABASE_URL \
+            --label org.opencontainers.image.source="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}" \
+            --label org.opencontainers.image.revision="${GITHUB_SHA}" \
+            --label org.opencontainers.image.version="${RELEASE_VERSION:-sha-$(git rev-parse --short=12 HEAD)}" \
+            "${TAGS[@]}" \
+            --push
+      - name: Publish GitHub release
+        if: steps.release_meta.outputs.is_release == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: dashboard-v${{ steps.release_meta.outputs.version }}
+          generate_release_notes: true

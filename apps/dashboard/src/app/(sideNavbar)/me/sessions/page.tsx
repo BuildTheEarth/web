@@ -1,8 +1,7 @@
 import { Badge, Card, Flex, Group, Stack, Text, Title } from '@mantine/core';
 
-import { getUser } from '@/actions/getUser';
+import { getUser, getUserSessions } from '@/actions/getUser';
 import { WebsiteKeycloakUser } from '@/types/User';
-import { authedFetcher } from '@/util/data';
 import { IconDevices } from '@tabler/icons-react';
 
 import ContentWrapper from '@/components/core/ContentWrapper';
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
 	const user = await getUser();
-	const data = await authedFetcher<WebsiteKeycloakUser>(`/users/${user.id}/kc`);
+	const data = await getUserSessions(user.ssoId);
 
 	return (
 		<ContentWrapper>
@@ -26,24 +25,24 @@ export default async function Page() {
 				immediately.
 			</Text>
 			<Stack>
-				{data.sessions.map((session) => (
-					<UserSession key={session.id} session={session} />
+				{data.map((session, i) => (
+					<UserSession key={i} session={session} />
 				))}
 			</Stack>
 		</ContentWrapper>
 	);
 }
 
-function UserSession({ session }: { session: WebsiteKeycloakUser['sessions'][0] }) {
+function UserSession({ session, key }: { session: WebsiteKeycloakUser['sessions'][0]; key: number }) {
 	return (
 		<Card withBorder>
 			<Flex align={'center'} gap={'md'}>
 				<IconDevices size={'3rem'} />
 				<Flex gap={5} direction={'column'} style={{ flex: 1 }}>
 					<Flex align={'center'} gap={'xs'}>
-						<Text fw={'bold'}>Session #{session.id.split('-')[0]} </Text>{' '}
+						<Text fw={'bold'}>Session #{session.id ? session.id.split('-')[0] : key} </Text>{' '}
 						<Group gap={'xs'} visibleFrom="sm">
-							{Object.values(session.clients).map((client) => (
+							{Object.values(session.clients || []).map((client) => (
 								<Badge key={client} variant="light" color="cyan">
 									{client}
 								</Badge>
@@ -53,7 +52,7 @@ function UserSession({ session }: { session: WebsiteKeycloakUser['sessions'][0] 
 
 					<Text size="sm">
 						<b>Last Active: </b>
-						{new Date(session.lastAccess).toLocaleString('en-GB', {
+						{new Date(session.lastAccess!).toLocaleString('en-GB', {
 							day: '2-digit',
 							month: '2-digit',
 							year: '2-digit',
@@ -61,7 +60,7 @@ function UserSession({ session }: { session: WebsiteKeycloakUser['sessions'][0] 
 							minute: '2-digit',
 						})}
 						,<b> Started at: </b>
-						{new Date(session.start).toLocaleString('en-GB', {
+						{new Date(session.start!).toLocaleString('en-GB', {
 							day: '2-digit',
 							month: '2-digit',
 							year: '2-digit',

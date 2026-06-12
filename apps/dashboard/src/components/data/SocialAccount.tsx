@@ -53,7 +53,7 @@ export default function SocialAccount({
 							Not Linked
 						</Badge>
 					) : (
-						<Text size="sm">{identity.userName.replace('#0', '')}</Text>
+						<Text size="sm">{identity.userName!.replace('#0', '')}</Text>
 					)}
 				</Flex>
 				{!isLinked && (

@@ -6,6 +6,11 @@ const keycloakAdminClientSingleton = () => {
 		realmName: process.env.NEXT_PUBLIC_KEYCLOAK_URL?.split('/realms/')[1],
 	});
 
+	if (!process.env.NEXT_PUBLIC_KEYCLOAK_ID || !process.env.KEYCLOAK_SECRET) {
+		console.warn('Keycloak client credentials are not set. Keycloak admin client will not be authenticated.');
+		return client;
+	}
+
 	client
 		.auth({
 			grantType: 'client_credentials',

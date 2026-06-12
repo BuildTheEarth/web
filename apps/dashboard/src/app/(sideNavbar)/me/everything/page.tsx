@@ -1,28 +1,19 @@
 import { Alert, Button, Card, Flex, Stack, Tabs, TabsList, TabsPanel, TabsTab, Text, Title, rem } from '@mantine/core';
 import {
 	IconBrandMinecraft,
-	IconCalendar,
-	IconCheck,
 	IconChevronRight,
 	IconCode,
-	IconDeviceWatch,
 	IconFreeRights,
 	IconId,
 	IconInfoCircle,
-	IconLicense,
-	IconMail,
-	IconMailCheck,
 	IconSocial,
 	IconTable,
 	IconUser,
-	IconUsers,
 } from '@tabler/icons-react';
 
 import { getUser, getUserPermissions } from '@/actions/getUser';
 import ContentWrapper from '@/components/core/ContentWrapper';
-import { WebsiteKeycloakUser } from '@/types/User';
 import { getSession } from '@/util/auth';
-import { authedFetcher } from '@/util/data';
 import { navLinks } from '@/util/links';
 import { CodeHighlight } from '@mantine/code-highlight';
 import { Metadata } from 'next';
@@ -34,11 +25,7 @@ export const metadata: Metadata = {
 export default async function Page() {
 	const user = await getUser();
 	const session = await getSession();
-	const data = await authedFetcher<WebsiteKeycloakUser>(`/users/${user.id}/kc`);
 	const userPermissions = await getUserPermissions(session?.user.id);
-	if (!data) {
-		throw new Error('Could not fetch user data. Please sign out and back in.');
-	}
 
 	return (
 		<ContentWrapper>
@@ -88,30 +75,14 @@ export default async function Page() {
 						</Card>
 						<Card>
 							<Flex align={'center'} gap={'md'}>
-								<IconMail size={'2rem'} />
-								<Text>
-									<b>E-Mail Address:</b> {data.email}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconMailCheck size={'2rem'} />
-								<Text>
-									<b>E-Mail Status:</b> {data.emailVerified ? 'Verified' : 'Unverified'}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
 								<IconBrandMinecraft size={'2rem'} />
 								<Text>
-									<b>Minecraft Username:</b> {data.minecraft}
+									<b>Minecraft Username:</b> {user.minecraft}
 								</Text>
 							</Flex>
 						</Card>
 
-						<Text mt="sm" fw="bold" fz="lg">
+						{/* <Text mt="sm" fw="bold" fz="lg">
 							Authentication Data
 						</Text>
 						<Card>
@@ -137,8 +108,8 @@ export default async function Page() {
 									<b>TOTP:</b> {data.totp ? 'Set' : 'Not Set'}
 								</Text>
 							</Flex>
-						</Card>
-						<Card>
+						</Card> */}
+						{/* <Card>
 							<Flex align={'center'} gap={'md'}>
 								<IconUsers size={'2rem'} />
 								<Text>
@@ -185,7 +156,7 @@ export default async function Page() {
 									<b>View Self:</b> {data.access.view ? 'Yes' : 'No'}
 								</Text>
 							</Flex>
-						</Card>
+						</Card> */}
 					</Stack>
 
 					<Text my="sm" fw="bold" fz="lg">
@@ -216,10 +187,10 @@ export default async function Page() {
 				<TabsPanel value="raw" mt="md">
 					<Text fw="bold">User Data</Text>
 					<CodeHighlight code={JSON.stringify(user, null, 2)} language="json" withCopyButton={false} />
-					<Text fw="bold" mt="sm">
-						Authentication Data
-					</Text>
-					<CodeHighlight code={JSON.stringify(data, null, 2)} language="json" withCopyButton={false} />
+					{/* <Text fw="bold" mt="sm"> */}
+					{/* Authentication Data */}
+					{/* </Text> */}
+					{/* <CodeHighlight code={JSON.stringify(data, null, 2)} language="json" withCopyButton={false} /> */}
 					<Text fw="bold" mt="sm">
 						Session Data
 					</Text>

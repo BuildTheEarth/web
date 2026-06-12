@@ -1,10 +1,8 @@
 import { Title } from '@mantine/core';
 
-import { getUser } from '@/actions/getUser';
+import { getUser, getUserFederatedIdentities } from '@/actions/getUser';
 import ContentWrapper from '@/components/core/ContentWrapper';
 import { SocialAccountStack } from '@/components/data/SocialAccount';
-import { WebsiteKeycloakUser } from '@/types/User';
-import { authedFetcher } from '@/util/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,14 +10,14 @@ export const metadata: Metadata = {
 };
 export default async function Page() {
 	const user = await getUser();
-	const data = await authedFetcher<WebsiteKeycloakUser>(`/users/${user.id}/kc`);
+	const federatedIdentities = await getUserFederatedIdentities(user.ssoId);
 
 	return (
 		<ContentWrapper>
 			<Title order={1} mt="xl" mb="md">
 				Your Social Accounts
 			</Title>
-			<SocialAccountStack identities={data.federatedIdentities} withUnlinked />
+			<SocialAccountStack identities={federatedIdentities} withUnlinked />
 		</ContentWrapper>
 	);
 }

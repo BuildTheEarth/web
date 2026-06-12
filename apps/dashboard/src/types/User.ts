@@ -54,9 +54,9 @@ export type WebsiteKeycloakUser = {
 	disableableCredentialTypes: string[];
 	requiredActions: string[];
 	federatedIdentities: {
-		identityProvider: string;
-		userId: string;
-		userName: string;
+		identityProvider?: string | undefined;
+		userId?: string | undefined;
+		userName?: string | undefined;
 	}[];
 	notBefore: number;
 	access: {
@@ -67,15 +67,13 @@ export type WebsiteKeycloakUser = {
 		manage: boolean;
 	};
 	sessions: {
-		id: string;
-		username: string;
-		userId: string;
-		ipAddress: string;
-		start: number;
-		lastAccess: number;
-		rememberMe: boolean;
-		clients: {
-			[key: string]: string;
-		};
+		id?: string;
+		clients?: Record<string, string>;
+		ipAddress?: string;
+		lastAccess?: number;
+		start?: number;
+		userId?: string;
+		username?: string;
+		transientUser?: boolean;
 	}[];
 };

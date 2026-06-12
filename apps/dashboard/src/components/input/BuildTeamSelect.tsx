@@ -1,18 +1,28 @@
-import { Select } from '@mantine/core';
-import useSWR from 'swr';
+'use server';
 
-export function BuildTeamSelect(
+import prisma from '@/util/db';
+import { Select } from '@mantine/core';
+
+export async function BuildTeamSelect(
 	props: Omit<React.ComponentProps<typeof Select>, 'filter' | 'data'> & {
 		filter?: (buildTeam: {
 			id: string;
 			slug: string;
 			name: string;
 			location: string;
-			allowBuilderClaim: boolean;
+			allowBuilderClaim: boolean | null;
 		}) => boolean;
 	},
 ) {
-	const { data } = useSWR('/buildteams');
+	const data = await prisma.buildTeam.findMany({
+		select: {
+			id: true,
+			slug: true,
+			name: true,
+			location: true,
+			allowBuilderClaim: true,
+		},
+	});
 
 	return (
 		<Select
