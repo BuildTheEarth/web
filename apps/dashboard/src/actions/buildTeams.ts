@@ -616,6 +616,82 @@ export const addMember = async ({
 	revalidatePath(`/team/${buildTeam.slug}/members`);
 };
 
+export const addMembers = async ({
+	userId,
+	addIds,
+	buildTeamSlug,
+	message,
+	notifyUsers = true,
+}: {
+	userId: string;
+	addIds: string[];
+	message?: string;
+	buildTeamSlug?: string;
+	notifyUsers?: boolean;
+}) => {
+	const userHasPermission = await prisma.userPermission.findFirst({
+		where: {
+			OR: [
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeam: { slug: buildTeamSlug },
+				},
+				{
+					user: { ssoId: userId },
+					permissionId: 'permission.add',
+					buildTeamId: null,
+				},
+			],
+		},
+	});
+
+	if (!userHasPermission) {
+		throw Error('You do not have permission to add members to this Build Team');
+	}
+
+	const membersToAdd = await prisma.user.findMany({
+		where: {
+			OR: [
+				{ ssoId: { in: addIds } },
+				{ id: { in: addIds } },
+				{ discordId: { in: addIds } },
+				{ username: { in: addIds } },
+			],
+		},
+		select: { id: true, ssoId: true, discordId: true },
+	});
+
+	if (membersToAdd.length === 0) {
+		throw Error('Users to add not found');
+	}
+
+	const buildTeam = await prisma.buildTeam.update({
+		where: { slug: buildTeamSlug },
+		data: {
+			members: {
+				connect: membersToAdd.map((member) => ({ ssoId: member.ssoId })),
+			},
+		},
+	});
+
+	if (notifyUsers) {
+		sendBotMessage(
+			`## <:approved:1441532214562128034> You have been added to ${buildTeam.name}` +
+				`\n\nThe Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
+				(message ? ` The team has provided the following message: \n \n${message}` : '') +
+				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+			membersToAdd.map((member) => member.discordId!).filter((id): id is string => !!id),
+		);
+		// TODO: possibly add discord role if this is the first BT the user joins
+	}
+
+	for (const member of membersToAdd) {
+		revalidatePath(`/am/users/${member.ssoId}`);
+	}
+	revalidatePath(`/team/${buildTeam.slug}/members`);
+};
+
 export const setMemberPermissions = async ({
 	userId,
 	changeId,
