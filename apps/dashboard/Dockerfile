@@ -4,38 +4,38 @@ RUN corepack enable
 FROM base AS builder
 RUN apk update && apk add --no-cache libc6-compat openssl
 WORKDIR /app
-
-# Run turbo (will prune the lockfile to only include target dependencies)
-RUN yarn global add turbo@^2.1.1
 COPY . .
-RUN turbo prune dashboard --docker
+RUN yarn dlx turbo@^2 prune dashboard --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 RUN apk update && apk add --no-cache libc6-compat openssl 
-# This is only for prisma v5 because it only looks in /lib for openssl libaries
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3 
 WORKDIR /app
 
-# First install the dependencies (as they change less often)
+ARG NEXT_PUBLIC_FRONTEND_URL
+ARG NEXT_PUBLIC_KEYCLOAK_URL
+ARG NEXT_PUBLIC_KEYCLOAK_ID
+ARG NEXTAUTH_URL
+
+ENV NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
+ENV NEXT_PUBLIC_KEYCLOAK_URL=$NEXT_PUBLIC_KEYCLOAK_URL
+ENV NEXT_PUBLIC_KEYCLOAK_ID=$NEXT_PUBLIC_KEYCLOAK_ID
+ENV NEXTAUTH_URL=$NEXTAUTH_URL
+
 COPY --from=builder /app/out/json/ .
-# RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 RUN yarn install
 
-# Build the project
 COPY --from=builder /app/out/full/ .
-COPY --from=builder /app/apps/dashboard/.env ./apps/dashboard/.env
-
-ENV NEXT_TELEMETRY_DISABLED 1
-RUN yarn turbo run build --filter=dashboard...
+RUN --mount=type=secret,id=database_url \
+    DATABASE_URL="$(cat /run/secrets/database_url)" \
+    yarn turbo run build --filter=dashboard...
 
 FROM base AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
-
-# Create a runner user
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 USER nextjs
