@@ -1,9 +1,15 @@
 'use server';
+import { getSession, hasRole } from '@/util/auth';
 import { revalidateWebsitePath } from '@/util/data';
 import prisma from '@/util/db';
 import { revalidatePath } from 'next/cache';
 
 export const adminAddFaqQuestion = async (data: { question: string; answer: string }) => {
+	const session = await getSession();
+	if (!hasRole(session, 'edit-faq')) {
+		throw new Error('Unauthorized');
+	}
+
 	const { question, answer } = data;
 
 	const faq = await prisma.fAQQuestion.create({
@@ -19,6 +25,11 @@ export const adminAddFaqQuestion = async (data: { question: string; answer: stri
 };
 
 export const adminEditFaqQuestion = async (data: { question: string; answer: string; id: string }) => {
+	const session = await getSession();
+	if (!hasRole(session, 'edit-faq')) {
+		throw new Error('Unauthorized');
+	}
+
 	const faq = await prisma.fAQQuestion.update({
 		where: {
 			id: data.id,
@@ -35,6 +46,11 @@ export const adminEditFaqQuestion = async (data: { question: string; answer: str
 };
 
 export const adminDeleteFaqQuestion = async (id: any) => {
+	const session = await getSession();
+	if (!hasRole(session, 'edit-faq')) {
+		throw new Error('Unauthorized');
+	}
+
 	const faq = await prisma.fAQQuestion.delete({
 		where: {
 			id,

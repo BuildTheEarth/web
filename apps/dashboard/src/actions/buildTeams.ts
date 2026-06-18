@@ -1,5 +1,5 @@
 'use server';
-import { getSession } from '@/util/auth';
+import { getSession, hasRole } from '@/util/auth';
 import { revalidateWebsitePaths } from '@/util/data';
 import prisma from '@/util/db';
 import { sendBotMessage } from '@/util/discordIntegration';
@@ -60,6 +60,10 @@ export const adminTransferTeam = async (
 		step: string;
 	},
 ) => {
+	const session = await getSession();
+	if (!hasRole(session, 'transfer-team')) {
+		return { status: 'error', error: 'Unauthorized' };
+	}
 	switch (step) {
 		case 'test':
 			console.log('test', id, destinationId);
@@ -171,6 +175,10 @@ export const adminChangeTeamOwner = async (
 		removeOldPermissions?: boolean;
 	},
 ) => {
+	const session = await getSession();
+	if (!hasRole(session, 'transfer-team')) {
+		return { status: 'error', error: 'Unauthorized' };
+	}
 	const newOwner = await prisma.user.findFirst({ where: { id: newOwnerId } });
 
 	if (!newOwner) {
