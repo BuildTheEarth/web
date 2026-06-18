@@ -51,11 +51,7 @@ export default function Page() {
 			<Paper withBorder p="md" w={{ base: '80%', xs: '50%', sm: '60%', md: '50%', lg: '30%' }} mb="md">
 				<UserDisplay user={{ id: '', ssoId: session?.data?.user.id || '', username: form.values?.username }} noAnchor />
 			</Paper>
-			<form
-				onSubmit={form.onSubmit((values) =>
-					startTransition(() => changeOwnerAction({ ...values, ssoId: session?.data?.user.id || '' })),
-				)}
-			>
+			<form onSubmit={form.onSubmit((values) => startTransition(() => changeOwnerAction(values)))}>
 				<TextInput label="Username" required {...form.getInputProps('username')} />
 				<TextInput
 					label="Minecraft Username"

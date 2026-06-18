@@ -128,7 +128,6 @@ export function ResponseEditor({
 						leftSection={<IconCheck />}
 						onClick={() =>
 							reviewApplication({
-								userId,
 								buildTeamSlug,
 								applicationId: application.id,
 								reason: responseEditor?.storage.markdown.getMarkdown(),
@@ -149,7 +148,6 @@ export function ResponseEditor({
 						leftSection={<IconX />}
 						onClick={() =>
 							reviewApplication({
-								userId,
 								buildTeamSlug,
 								applicationId: application.id,
 								reason: responseEditor?.storage.markdown.getMarkdown(),
@@ -194,7 +192,6 @@ export function ResponseEditor({
 								}),
 							onConfirm: () =>
 								addApplicationResponseTemplate({
-									userId,
 									buildTeamSlug,
 									name,
 									content: responseEditor?.getHTML() || '',

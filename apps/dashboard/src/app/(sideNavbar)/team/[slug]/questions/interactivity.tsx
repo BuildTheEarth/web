@@ -187,7 +187,6 @@ export default function QuestionsEditor({
 		try {
 			const payload = [...recalculated, ...deletedQuestions];
 			await saveQuestionsAction({
-				userId,
 				buildTeamSlug,
 				questions: payload,
 			});

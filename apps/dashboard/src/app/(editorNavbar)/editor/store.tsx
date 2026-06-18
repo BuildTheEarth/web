@@ -218,14 +218,12 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 
 						await createClaim({
 							id,
-							userId,
 							area: props.area,
 							buildTeamId: buildTeamId,
 						});
 					} else {
 						await saveClaim({
 							id,
-							userId,
 							area: props.area,
 						});
 					}
@@ -313,7 +311,7 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 			});
 
 			try {
-				await deleteClaim({ userId: get().userId || 'xxx', id });
+				await deleteClaim({ id });
 				updateNotification({
 					id: notifyId,
 					title: 'Claim Deleted',

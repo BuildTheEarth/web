@@ -107,7 +107,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						component={Link}
 						href={`/team/${team.slug}/edit`}
 						rightSection={<IconEdit size={14} />}
-						disabled={!team.UserPermission.find((p) => (p.permission.id = 'team.settings.edit'))}
+						disabled={!team.UserPermission.find((p) => p.permission.id === 'team.settings.edit')}
 					>
 						Edit Information
 					</Button>

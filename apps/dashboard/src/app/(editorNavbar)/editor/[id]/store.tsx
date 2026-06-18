@@ -82,7 +82,6 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 				try {
 					if (get().isDirty) {
 						await saveAdvancedClaim({
-							userId,
 							id: claim.id,
 							name: claim.name ?? undefined,
 							description: claim.description ?? undefined,
@@ -168,7 +167,7 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 			});
 
 			try {
-				await transferClaim({ userId: get().userId || 'xxx', id: claim.id, newUserId: newOwner.id });
+				await transferClaim({ id: claim.id, newUserId: newOwner.id });
 				updateNotification({
 					id: notifyId,
 					title: 'Claim Transferred',
@@ -244,7 +243,7 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 			});
 
 			try {
-				await deleteClaim({ userId: get().userId || 'xxx', id: claim.id });
+				await deleteClaim({ id: claim.id });
 				updateNotification({
 					id: notifyId,
 					title: 'Claim Deleted',

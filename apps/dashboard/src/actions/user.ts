@@ -54,13 +54,16 @@ export const getUserBuildTeams = async (ssoId: string) => {
 	return buildteams;
 };
 
-export const editOwnProfile = async (
-	prevState: any,
-	data: { email: string; username: string; ssoId: string },
-): Promise<any> => {
+export const editOwnProfile = async (prevState: any, data: { email: string; username: string }): Promise<any> => {
 	try {
+		const session = await getSession();
+		if (!session) {
+			return { status: 'error', error: 'Unauthorized' };
+		}
+		const ssoId = session.user.id;
+
 		const user = await prisma.user.update({
-			where: { ssoId: data.ssoId },
+			where: { ssoId },
 			data: { username: data.username },
 		});
 		await keycloakAdmin.users.update({ id: user.ssoId }, { username: data.username, email: data.email });

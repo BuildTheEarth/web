@@ -1,7 +1,16 @@
+import { getSession } from '@/util/auth';
 import prisma from '@/util/db';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
+	const session = await getSession();
+	if (!session) {
+		return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+			status: 401,
+			headers: { 'Content-Type': 'application/json' },
+		});
+	}
+
 	const searchQuery = req.nextUrl.searchParams.get('query') || '';
 	const opts = {
 		includeAvatar: req.nextUrl.searchParams.get('includeAvatar') === 'true',

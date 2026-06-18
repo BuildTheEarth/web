@@ -18,8 +18,8 @@ export default function Page() {
 		if (editorStore.claims.length > 0) return;
 
 		const setInitialData = async () => {
-			const claims = await getPersonalClaims(session?.data?.user.id || 'XXXXX');
-			const allowedBuildTeamIds = await getAllowedBuildTeams(session?.data?.user.id || 'XXXXX');
+			const claims = await getPersonalClaims();
+			const allowedBuildTeamIds = await getAllowedBuildTeams();
 			editorStore.setClaims(claims);
 			editorStore.setAllowedBuildTeamIds(allowedBuildTeamIds);
 			editorStore.setUserId(session?.data?.user.id || 'XXXXX');

@@ -1,5 +1,6 @@
 'use server';
 
+import { getSession } from '@/util/auth';
 import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.geojson/query';
 import turf, { toPolygon } from '@/util/coordinates';
 import prisma from '@/util/db';
@@ -7,11 +8,19 @@ import { updateClaimBuildingCount, updateClaimOSMDetails } from '@/util/geojsonH
 import { Prisma } from '@repo/db';
 import { revalidatePath } from 'next/cache';
 
-export const getPersonalClaims = async (userId: string) => {
+export const getPersonalClaims = async () => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	const claims = await prisma.claim.findMany(constructClaimGeoJSONQuery({ user: userId, extended: true }));
 	return claims;
 };
-export const getAllowedBuildTeams = async (userId: string) => {
+export const getAllowedBuildTeams = async () => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	const buildTeams = await prisma.buildTeam.findMany({
 		where: {
 			members: {
@@ -28,10 +37,14 @@ export const getAllowedBuildTeams = async (userId: string) => {
 	return buildTeams.map((bt: { id: string }) => bt.id);
 };
 
-export const saveClaim = async (data: { id: string; userId: string; area?: string[] }): Promise<void> => {
+export const saveClaim = async (data: { id: string; area?: string[] }): Promise<void> => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	try {
 		const claim = await prisma.claim.findFirst({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 		});
 
 		if (!claim) {
@@ -62,7 +75,7 @@ export const saveClaim = async (data: { id: string; userId: string; area?: strin
 		}
 
 		const claim2 = await prisma.claim.update({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 			data: {
 				area: data.area,
 				center: center,
@@ -86,7 +99,6 @@ export const saveClaim = async (data: { id: string; userId: string; area?: strin
 };
 export const saveAdvancedClaim = async (data: {
 	id: string;
-	userId: string;
 	name?: string;
 	description?: string;
 	city?: string;
@@ -94,9 +106,13 @@ export const saveAdvancedClaim = async (data: {
 	active?: boolean;
 	builders?: { id: string }[];
 }): Promise<void> => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	try {
 		const claim = await prisma.claim.findFirst({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 		});
 
 		if (!claim) {
@@ -104,7 +120,7 @@ export const saveAdvancedClaim = async (data: {
 		}
 
 		const claim2 = await prisma.claim.update({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 			data: {
 				name: data.name,
 				description: data.description,
@@ -128,15 +144,14 @@ export const saveAdvancedClaim = async (data: {
 		return Promise.reject(msg);
 	}
 };
-export const createClaim = async (data: {
-	id: string;
-	userId: string;
-	area: string[];
-	buildTeamId: string;
-}): Promise<void> => {
+export const createClaim = async (data: { id: string; area: string[]; buildTeamId: string }): Promise<void> => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	try {
 		const buildTeam = await prisma.buildTeam.findFirst({
-			where: { id: data.buildTeamId, members: { some: { ssoId: data.userId } }, allowBuilderClaim: true },
+			where: { id: data.buildTeamId, members: { some: { ssoId: userId } }, allowBuilderClaim: true },
 		});
 
 		if (!buildTeam) {
@@ -169,7 +184,7 @@ export const createClaim = async (data: {
 		const claim = await prisma.claim.create({
 			data: {
 				id: data.id,
-				owner: { connect: { ssoId: data.userId } },
+				owner: { connect: { ssoId: userId } },
 				buildTeam: { connect: { id: data.buildTeamId } },
 				area: data.area,
 				center: center,
@@ -197,10 +212,14 @@ export const createClaim = async (data: {
 		return Promise.reject(msg);
 	}
 };
-export const deleteClaim = async (data: { id: string; userId: string }): Promise<void> => {
+export const deleteClaim = async (data: { id: string }): Promise<void> => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	try {
 		const claim = await prisma.claim.findFirst({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 		});
 
 		if (!claim) {
@@ -208,7 +227,7 @@ export const deleteClaim = async (data: { id: string; userId: string }): Promise
 		}
 
 		await prisma.claim.delete({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 		});
 
 		revalidatePath('/editor');
@@ -224,10 +243,14 @@ export const deleteClaim = async (data: { id: string; userId: string }): Promise
 		return Promise.reject(msg);
 	}
 };
-export const transferClaim = async (data: { id: string; userId: string; newUserId: string }): Promise<void> => {
+export const transferClaim = async (data: { id: string; newUserId: string }): Promise<void> => {
+	const session = await getSession();
+	if (!session) throw new Error('Unauthorized');
+	const userId = session.user.id;
+
 	try {
 		const claim = await prisma.claim.findFirst({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 			include: { builders: { select: { id: true } } },
 		});
 
@@ -236,7 +259,7 @@ export const transferClaim = async (data: { id: string; userId: string; newUserI
 		}
 
 		await prisma.claim.update({
-			where: { id: data.id, owner: { ssoId: data.userId } },
+			where: { id: data.id, owner: { ssoId: userId } },
 			data: {
 				owner: { connect: { id: data.newUserId } },
 				builders: {

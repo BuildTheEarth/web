@@ -93,7 +93,6 @@ export function SocialLinksEditor({
 				</Group>
 			</Group>
 			<input type="hidden" name="id" value={teamId} />
-			<input type="hidden" name="userId" value={userId} />
 			<TextCard title={`Socials`} icon={IconSocial}>
 				<Stack gap="md" w="100%">
 					{rows.length > 0 ? (

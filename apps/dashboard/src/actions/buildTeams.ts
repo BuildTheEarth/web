@@ -1,12 +1,12 @@
 'use server';
+import { getSession } from '@/util/auth';
 import { revalidateWebsitePaths } from '@/util/data';
 import prisma from '@/util/db';
 import { sendBotMessage } from '@/util/discordIntegration';
 import { sendBtWebhook, WebhookType } from '@/util/webhooks';
-import { Application, ApplicationQuestionType, ApplicationStatus, Prisma } from '@repo/db';
+import { Application, ApplicationQuestionType, ApplicationStatus } from '@repo/db';
 import { randomBytes } from 'crypto';
 import { revalidatePath } from 'next/cache';
-import build from 'next/dist/build';
 import { redirect } from 'next/navigation';
 
 const socialNameOptions = [
@@ -225,12 +225,14 @@ export const adminChangeTeamOwner = async (
 };
 
 export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
-	const userId = formData.get('userId') as string;
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
 	const id = formData.get('id') as string;
 
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
-			userId,
+			user: { ssoId: userId },
 			buildTeamId: id,
 			permissionId: 'team.settings.edit',
 		},
@@ -294,16 +296,18 @@ export const userEditTeamSocials = async (
 	_prevState: { status?: string; error?: string },
 	formData: FormData,
 ): Promise<{ status: string; error?: string }> => {
-	const userId = formData.get('userId') as string;
+	const session = await getSession();
+	if (!session) return { status: 'error', error: 'Unauthorized' };
+	const userId = session.user.id;
 	const id = formData.get('id') as string;
 
-	if (!userId || !id) {
+	if (!id) {
 		return { status: 'error', error: 'Missing team context' };
 	}
 
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
-			userId,
+			user: { ssoId: userId },
 			buildTeamId: id,
 			permissionId: {
 				in: ['team.settings.edit', 'team.socials.edit'],
@@ -398,11 +402,21 @@ export const userEditTeamSocials = async (
 	redirect(`/team/${team.slug}/edit?saved=1`);
 };
 
-export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: string }): Promise<void> => {
+export const ownerGenerateToken = async ({ id }: { id: string }): Promise<void> => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const ssoId = session.user.id;
+
+	const dbUser = await prisma.user.findUnique({
+		where: { ssoId },
+		select: { id: true },
+	});
+	if (!dbUser) throw Error('User not found');
+
 	const userIsOwner = await prisma.buildTeam.findFirst({
 		where: {
 			id,
-			creatorId: userId,
+			creatorId: dbUser.id,
 		},
 		include: {
 			creator: { select: { discordId: true } },
@@ -429,18 +443,20 @@ export const ownerGenerateToken = async ({ userId, id }: { userId: string; id: s
 };
 
 export const removeMember = async ({
-	userId,
 	removeId,
 	buildTeamSlug,
 	reason,
 	notifyUser = true,
 }: {
-	userId: string;
 	removeId: string;
 	reason?: string;
 	buildTeamSlug?: string;
 	notifyUser?: boolean;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -490,18 +506,20 @@ export const removeMember = async ({
 };
 
 export const removeMembers = async ({
-	userId,
 	removeIds,
 	buildTeamSlug,
 	reason,
 	notifyUsers = true,
 }: {
-	userId: string;
 	removeIds: string[];
 	reason?: string;
 	buildTeamSlug?: string;
 	notifyUsers?: boolean;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -551,18 +569,20 @@ export const removeMembers = async ({
 };
 
 export const addMember = async ({
-	userId,
 	addId,
 	buildTeamSlug,
 	message,
 	notifyUser = true,
 }: {
-	userId: string;
 	addId: string;
 	message?: string;
 	buildTeamSlug?: string;
 	notifyUser?: boolean;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -617,18 +637,20 @@ export const addMember = async ({
 };
 
 export const addMembers = async ({
-	userId,
 	addIds,
 	buildTeamSlug,
 	message,
 	notifyUsers = true,
 }: {
-	userId: string;
 	addIds: string[];
 	message?: string;
 	buildTeamSlug?: string;
 	notifyUsers?: boolean;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -693,18 +715,20 @@ export const addMembers = async ({
 };
 
 export const setMemberPermissions = async ({
-	userId,
 	changeId,
 	permissions,
 	buildTeamSlug,
 	notifyUser = true,
 }: {
-	userId: string;
 	changeId: string;
 	permissions: string[];
 	buildTeamSlug?: string;
 	notifyUser?: boolean;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -780,16 +804,18 @@ export const setMemberPermissions = async ({
 };
 
 export const addApplicationResponseTemplate = async ({
-	userId,
 	buildTeamSlug,
 	content,
 	name,
 }: {
-	userId: string;
 	buildTeamSlug?: string;
 	content: string;
 	name: string;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -824,18 +850,20 @@ export const addApplicationResponseTemplate = async ({
 };
 
 export const reviewApplication = async ({
-	userId,
 	buildTeamSlug,
 	applicationId,
 	reason,
 	status,
 }: {
-	userId: string;
 	buildTeamSlug?: string;
 	applicationId: string;
 	reason?: string;
 	status: ApplicationStatus;
 }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
+
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [
@@ -1087,10 +1115,14 @@ export const applyToBuildTeam = async (
 	return;
 };
 
-export const saveBuildTeamApplicationQuestions = async ({ userId, buildTeamSlug, questions }: any) => {
+export const saveBuildTeamApplicationQuestions = async ({ buildTeamSlug, questions }: any) => {
 	if (!Array.isArray(questions)) {
 		throw Error('Invalid payload: expected a list of questions');
 	}
+
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
 
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
@@ -1197,15 +1229,10 @@ export const saveBuildTeamApplicationQuestions = async ({ userId, buildTeamSlug,
 	return;
 };
 
-export const deleteClaim = async ({
-	userId,
-	removeId,
-	buildTeamSlug,
-}: {
-	userId: string;
-	removeId: string;
-	buildTeamSlug: string;
-}) => {
+export const deleteClaim = async ({ removeId, buildTeamSlug }: { removeId: string; buildTeamSlug: string }) => {
+	const session = await getSession();
+	if (!session) throw Error('Unauthorized');
+	const userId = session.user.id;
 	const userHasPermission = await prisma.userPermission.findFirst({
 		where: {
 			OR: [

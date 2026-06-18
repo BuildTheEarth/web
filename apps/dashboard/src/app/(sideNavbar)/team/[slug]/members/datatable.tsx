@@ -205,7 +205,6 @@ export default function MembersDatatable({
 													changeId: user.ssoId,
 													notifyUser: notifyUser,
 													permissions: newPermissions,
-													userId,
 													buildTeamSlug: slug,
 												}).then(() => {
 													closeAllModals();
@@ -278,7 +277,6 @@ export default function MembersDatatable({
 													removeId: user.ssoId,
 													reason: removeReason,
 													notifyUser: notifyUser,
-													userId,
 													buildTeamSlug: slug,
 												}).then(() => {
 													closeAllModals();
@@ -346,7 +344,6 @@ export default function MembersDatatable({
 														removeIds: selectedRecords.map((record) => record.ssoId),
 														reason: removeReason,
 														notifyUsers,
-														userId,
 														buildTeamSlug: slug,
 													}).then(() => {
 														closeAllModals();

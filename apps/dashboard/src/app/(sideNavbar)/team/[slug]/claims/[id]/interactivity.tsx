@@ -85,7 +85,7 @@ export function EditMenu({
 							),
 							labels: { confirm: 'Delete', cancel: 'Cancel' },
 							onConfirm: () => {
-								deleteClaim({ removeId: claim.id, buildTeamSlug, userId });
+								deleteClaim({ removeId: claim.id, buildTeamSlug });
 								closeAllModals();
 							},
 						})

@@ -65,15 +65,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 	});
 	if (!team) throw Error('Could not find Build Team');
 
-	const ownerGenerateTokenAction = ownerGenerateToken.bind(null, { userId: user.id, id: team.id });
+	const ownerGenerateTokenAction = ownerGenerateToken.bind(null, { id: team.id });
 
 	return (
-		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug: 'de' }}>
+		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
 			<ContentWrapper maw="90vw">
 				<SaveNotification />
 				<form action={userEditTeamInfo}>
 					<input type="hidden" name="id" value={team.id} />
-					<input type="hidden" name="userId" value={user.id} />
 					<input type="hidden" name="about" value={team.about} /> {/* Changed in RTE dynamically */}
 					<Group justify="space-between" w="100%" mt="xl" mb="md">
 						<Title order={1}>Edit Build Team Information</Title>

@@ -83,7 +83,6 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 							addId: user!,
 							message: addMessage,
 							notifyUser: notifyUser,
-							userId,
 							buildTeamSlug: slug,
 						}).then(() => {
 							closeAllModals();
@@ -169,7 +168,6 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 									addIds: users!,
 									message: addMessage,
 									notifyUsers: notifyUsers,
-									userId,
 									buildTeamSlug: slug,
 								}).then(() => {
 									closeAllModals();
