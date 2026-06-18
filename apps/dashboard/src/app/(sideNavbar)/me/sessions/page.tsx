@@ -25,7 +25,7 @@ export default async function Page() {
 				immediately.
 			</Text>
 			<Stack>
-				{data.map((session, i) => (
+				{data.map((session: any, i: number) => (
 					<UserSession key={i} session={session} />
 				))}
 			</Stack>

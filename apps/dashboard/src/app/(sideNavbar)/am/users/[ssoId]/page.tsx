@@ -1,12 +1,10 @@
 'use server';
 
-import {
-	KeycloakGroup,
-	KeycloakSession,
-	KeycloakUser,
-	KeycloakUserCredential,
-	KeycloakuserConsent,
-} from '@/types/Keycloak';
+import type UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation.js';
+import type UserConsentRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userConsentRepresentation.js';
+import type CredentialRepresentation from '@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation.js';
+import type GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation.js';
+import type UserSessionRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userSessionRepresentation.js';
 import { capitalize, snakeCaseToStartCase } from '@/util/string';
 import {
 	Alert,
@@ -54,8 +52,8 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam';
 import { PluralSingular } from '@/components/data/PluralSingular';
 import { Protection } from '@/components/Protection';
 import { getSession, hasRole } from '@/util/auth';
-import { globalFetcher } from '@/util/data';
 import prisma from '@/util/db';
+import keycloakAdmin from '@/util/keycloak';
 import { Application, ApplicationStatus } from '@repo/db';
 import moment from 'moment';
 import { Metadata } from 'next';
@@ -87,38 +85,19 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 		);
 	}
 
-	const keycloakData = await globalFetcher<KeycloakUser>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace('/realms/website', '')}/admin/realms/website/users/${ssoId}`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
-	const keycloakConsentsData = await globalFetcher<KeycloakuserConsent[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace(
-			'/realms/website',
-			'',
-		)}/admin/realms/website/users/${ssoId}/consents`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
-	const keycloakCredentialsData = await globalFetcher<KeycloakUserCredential[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace(
-			'/realms/website',
-			'',
-		)}/admin/realms/website/users/${ssoId}/credentials`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
-	const keycloakGroupsData = await globalFetcher<KeycloakGroup[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace(
-			'/realms/website',
-			'',
-		)}/admin/realms/website/users/${ssoId}/groups`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
-	const keycloakSessionsData = await globalFetcher<KeycloakSession[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace(
-			'/realms/website',
-			'',
-		)}/admin/realms/website/users/${ssoId}/sessions`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
+	const keycloakData = (await keycloakAdmin.users.findOne({ id: ssoId })) as UserRepresentation;
+	const keycloakConsentsData = (await keycloakAdmin.users.listConsents({
+		id: ssoId,
+	})) as UserConsentRepresentation[];
+	const keycloakCredentialsData = (await keycloakAdmin.users.getCredentials({
+		id: ssoId,
+	})) as CredentialRepresentation[];
+	const keycloakGroupsData = (await keycloakAdmin.users.listGroups({
+		id: ssoId,
+	})) as GroupRepresentation[];
+	const keycloakSessionsData = (await keycloakAdmin.users.listSessions({
+		id: ssoId,
+	})) as UserSessionRepresentation[];
 	const websiteData = await prisma.user.findFirst({
 		where: { ssoId },
 		include: {
@@ -233,14 +212,15 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 								head: ['#', 'Start', 'Clients', ''],
 								body: Array.isArray(keycloakSessionsData)
 									? keycloakSessionsData?.map((session) => [
-											<Code key={session.id}>{session.id.split('-')[0]}</Code>,
-											new Date(session.start).toLocaleString(),
+											<Code key={session.id}>{session.id?.split('-')[0] || ''}</Code>,
+											session.start ? new Date(session.start).toLocaleString() : '',
 											<Group key={session.id} gap={4}>
-												{Object.values(session.clients).map((client) => (
-													<Badge key={client} variant="light">
-														{client}
-													</Badge>
-												))}
+												{session.clients &&
+													Object.values(session.clients).map((client) => (
+														<Badge key={client} variant="light">
+															{client}
+														</Badge>
+													))}
 											</Group>,
 										])
 									: [],
@@ -342,11 +322,9 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 							}
 							style={{ height: '100%' }}
 						>
-							{Array.isArray(keycloakData?.requiredActions)
-								? keycloakData.requiredActions.length > 0
-									? snakeCaseToStartCase(keycloakData.requiredActions[0])
-									: 'No Pending Actions'
-								: 'Sign into SSO'}
+							{Array.isArray(keycloakData?.requiredActions) && keycloakData.requiredActions.length > 0
+								? snakeCaseToStartCase((keycloakData.requiredActions[0] as string) || '')
+								: 'No Pending Actions'}
 						</TextCard>
 					</GridCol>
 					<GridCol span={12}>
@@ -357,9 +335,9 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 									head: ['Provider', 'User #', 'Username'],
 									body: Array.isArray(keycloakData?.federatedIdentities)
 										? keycloakData.federatedIdentities.map((idp) => [
-												capitalize(idp.identityProvider),
-												idp.userId,
-												idp.userName.replace('#0', ''),
+												idp.identityProvider ? capitalize(idp.identityProvider) : '',
+												idp.userId || '',
+												idp.userName ? idp.userName.replace('#0', '') : '',
 											])
 										: [],
 								}}

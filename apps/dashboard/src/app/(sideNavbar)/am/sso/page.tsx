@@ -23,7 +23,7 @@ import Anchor from '@/components/core/Anchor';
 import ContentWrapper from '@/components/core/ContentWrapper';
 import { Protection } from '@/components/Protection';
 import { getSession } from '@/util/auth';
-import { globalFetcher } from '@/util/data';
+import keycloakAdmin from '@/util/keycloak';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -32,23 +32,11 @@ export const metadata: Metadata = {
 
 export default async function Page() {
 	const session = await getSession();
-	const realm = (
-		await globalFetcher<[any]>(`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace('/realms/website', '')}/admin/realms`, {
-			headers: { Authorization: `Bearer ${session?.accessToken}` },
-		})
-	)[0];
-	const adminEvents = await globalFetcher<any[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace('/realms/website', '')}/admin/realms/website/admin-events`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
-	const userEvents = await globalFetcher<any[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace('/realms/website', '')}/admin/realms/website/events`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
-	const clientStats = await globalFetcher<any[]>(
-		`${process.env.NEXT_PUBLIC_KEYCLOAK_URL?.replace('/realms/website', '')}/admin/realms/website/client-session-stats`,
-		{ headers: { Authorization: `Bearer ${session?.accessToken}` } },
-	);
+	const realms = (await keycloakAdmin.realms.find()) as any[];
+	const realm = realms[0];
+	const adminEvents = (await keycloakAdmin.realms.findAdminEvents({ realm: 'website' })) as any[];
+	const userEvents = (await keycloakAdmin.realms.findEvents({ realm: 'website' })) as any[];
+	const clientStats = (await keycloakAdmin.realms.getClientSessionStats({ realm: 'website' })) as any[];
 
 	return (
 		<Protection requiredRole="get-config">

@@ -6,6 +6,8 @@ class KeycloakAdmin {
 	private core: Core;
 	private readonly maxRetries = 3;
 	private readonly baseRetryDelayMs = 250;
+	private tokenExpiry = 0;
+	private authPromise: Promise<void> | null = null;
 
 	constructor(core: Core) {
 		this.core = core;
@@ -17,18 +19,46 @@ class KeycloakAdmin {
 		this.wrapUsersApiWithRetries();
 	}
 
+	private createAuthenticatedProxy(target: any): any {
+		return new Proxy(target, {
+			get: (obj, prop) => {
+				const val = Reflect.get(obj, prop);
+				if (typeof val === 'function') {
+					return async (...args: any[]) => {
+						await this.authKcClient();
+						return val.apply(obj, args);
+					};
+				}
+				if (typeof val === 'object' && val !== null) {
+					return this.createAuthenticatedProxy(val);
+				}
+				return val;
+			},
+		});
+	}
+
 	public getKeycloakAdminClient() {
-		return this.kcAdminClient;
+		return this.createAuthenticatedProxy(this.kcAdminClient);
 	}
 
 	public async authKcClient() {
-		return await this.withNetworkRetry('auth.client_credentials', async () => {
-			return await this.kcAdminClient.auth({
-				grantType: 'client_credentials',
-				clientId: process.env.KEYCLOAK_CLIENTID,
-				clientSecret: process.env.KEYCLOAK_CLIENTSECRET,
-			});
-		});
+		if (Date.now() >= this.tokenExpiry) {
+			if (!this.authPromise) {
+				this.authPromise = this.withNetworkRetry('auth.client_credentials', async () => {
+					await this.kcAdminClient.auth({
+						grantType: 'client_credentials',
+						clientId: process.env.NEXT_PUBLIC_KEYCLOAK_ID,
+						clientSecret: process.env.KEYCLOAK_SECRET,
+					});
+					this.tokenExpiry = Date.now() + 270 * 1000;
+					this.authPromise = null;
+				}).catch((err) => {
+					this.authPromise = null;
+					throw err;
+				});
+			}
+			await this.authPromise;
+		}
 	}
 
 	private wrapUsersApiWithRetries() {
