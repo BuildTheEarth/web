@@ -1,11 +1,11 @@
-'use server';
+'use server'
 
-import type UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation.js';
-import type UserConsentRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userConsentRepresentation.js';
-import type CredentialRepresentation from '@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation.js';
-import type GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation.js';
-import type UserSessionRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userSessionRepresentation.js';
-import { capitalize, snakeCaseToStartCase } from '@/util/string';
+import type UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation.js'
+import type UserConsentRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userConsentRepresentation.js'
+import type CredentialRepresentation from '@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation.js'
+import type GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation.js'
+import type UserSessionRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userSessionRepresentation.js'
+import { capitalize, snakeCaseToStartCase } from '@/util/string'
 import {
 	Alert,
 	Badge,
@@ -23,7 +23,7 @@ import {
 	Text,
 	Title,
 	Tooltip,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconCalendar,
 	IconClockExclamation,
@@ -42,62 +42,62 @@ import {
 	IconUserExclamation,
 	IconUsers,
 	IconWorldExclamation,
-} from '@tabler/icons-react';
+} from '@tabler/icons-react'
 
-import Anchor from '@/components/core/Anchor';
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import ErrorDisplay from '@/components/core/ErrorDisplay';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { PluralSingular } from '@/components/data/PluralSingular';
-import { Protection } from '@/components/Protection';
-import { getSession, hasRole } from '@/util/auth';
-import prisma from '@/util/db';
-import keycloakAdmin from '@/util/keycloak';
-import { Application, ApplicationStatus } from '@repo/db';
-import moment from 'moment';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { Fragment, Key } from 'react';
-import ClaimDatatabe from './datatable';
-import { BuildTeamMenu, PermissionMenu, UserMenu } from './interactivity';
+import Anchor from '@/components/core/Anchor'
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import ErrorDisplay from '@/components/core/ErrorDisplay'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { PluralSingular } from '@/components/data/PluralSingular'
+import { Protection } from '@/components/Protection'
+import { getSession, hasRole } from '@/util/auth'
+import prisma from '@/util/db'
+import keycloakAdmin from '@/util/keycloak'
+import { Application, ApplicationStatus } from '@repo/db'
+import moment from 'moment'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { Fragment, Key } from 'react'
+import ClaimDatatabe from './datatable'
+import { BuildTeamMenu, PermissionMenu, UserMenu } from './interactivity'
 
 export async function generateMetadata({ params }: { params: Promise<{ ssoId: string }> }): Promise<Metadata> {
-	const { ssoId } = await params;
+	const { ssoId } = await params
 
 	const username = await prisma.user.findUnique({
 		where: { ssoId },
 		select: { username: true },
-	});
+	})
 
 	return {
 		title: 'User ' + username?.username || ssoId.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ ssoId: string }> }) {
-	const session = await getSession();
-	const ssoId = (await params).ssoId;
+	const session = await getSession()
+	const ssoId = (await params).ssoId
 
 	if (!hasRole(session, 'get-users')) {
 		return (
 			<ErrorDisplay message="The Page you are trying to open requires special permissions. You are not authorized to view it. If you think this is a mistake please contact us." />
-		);
+		)
 	}
 
-	const keycloakData = (await keycloakAdmin.users.findOne({ id: ssoId })) as UserRepresentation;
+	const keycloakData = (await keycloakAdmin.users.findOne({ id: ssoId })) as UserRepresentation
 	const keycloakConsentsData = (await keycloakAdmin.users.listConsents({
 		id: ssoId,
-	})) as UserConsentRepresentation[];
+	})) as UserConsentRepresentation[]
 	const keycloakCredentialsData = (await keycloakAdmin.users.getCredentials({
 		id: ssoId,
-	})) as CredentialRepresentation[];
+	})) as CredentialRepresentation[]
 	const keycloakGroupsData = (await keycloakAdmin.users.listGroups({
 		id: ssoId,
-	})) as GroupRepresentation[];
+	})) as GroupRepresentation[]
 	const keycloakSessionsData = (await keycloakAdmin.users.listSessions({
 		id: ssoId,
-	})) as UserSessionRepresentation[];
+	})) as UserSessionRepresentation[]
 	const websiteData = await prisma.user.findFirst({
 		where: { ssoId },
 		include: {
@@ -142,10 +142,10 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 				},
 			},
 		},
-	});
-	const availablePermissions = await prisma.permisision.findMany();
+	})
+	const availablePermissions = await prisma.permisision.findMany()
 
-	if (!websiteData) throw Error('Could not find User');
+	if (!websiteData) throw Error('Could not find User')
 
 	if (
 		!keycloakData ||
@@ -154,7 +154,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 		!keycloakGroupsData ||
 		!keycloakSessionsData
 	)
-		throw Error('Could not fetch Keycloak Data, try reloading or sign in again');
+		throw Error('Could not fetch Keycloak Data, try reloading or sign in again')
 
 	return (
 		<ContentWrapper maw="90vw" mih="100vh">
@@ -448,8 +448,8 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 									).map((slug) => {
 										const team = websiteData.createdBuildTeams
 											.concat(websiteData.joinedBuildTeams)
-											.find((t: { slug: unknown }) => t.slug === slug);
-										if (!team) return [];
+											.find((t: { slug: unknown }) => t.slug === slug)
+										if (!team) return []
 										return [
 											<BuildTeamDisplay team={team} key={team.slug} />,
 											websiteData.applications.filter(
@@ -477,7 +477,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 												ssoId={ssoId}
 												canEdit={hasRole(session, 'edit-users')}
 											/>,
-										];
+										]
 									}),
 								}}
 							/>
@@ -648,5 +648,5 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 				<ClaimDatatabe claims={websiteData.claims.concat(websiteData.claimsBuilder)} />
 			</TextCard>
 		</ContentWrapper>
-	);
+	)
 }

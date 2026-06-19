@@ -1,6 +1,6 @@
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Alert, rem, Skeleton, Tabs, TabsList, TabsPanel, TabsTab, Title } from '@mantine/core';
-import { IconCode, IconInfoCircle, IconTable } from '@tabler/icons-react';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Alert, rem, Skeleton, Tabs, TabsList, TabsPanel, TabsTab, Title } from '@mantine/core'
+import { IconCode, IconInfoCircle, IconTable } from '@tabler/icons-react'
 
 export default async function Page() {
 	return (
@@ -32,5 +32,5 @@ export default async function Page() {
 				</TabsPanel>
 			</Tabs>
 		</ContentWrapper>
-	);
+	)
 }

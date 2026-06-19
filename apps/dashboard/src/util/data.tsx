@@ -1,12 +1,12 @@
 export async function globalFetcher<T = {}>(route: string, ...props: any): Promise<T> {
-	const res = await fetch(route, ...props);
-	return res.json();
+	const res = await fetch(route, ...props)
+	return res.json()
 }
 
 // Specific functions
 
 export function revalidateWebsitePath(path: string) {
-	return revalidateWebsitePaths([path]);
+	return revalidateWebsitePaths([path])
 }
 export function revalidateWebsitePaths(paths: string[]) {
 	return globalFetcher(
@@ -19,5 +19,5 @@ export function revalidateWebsitePaths(paths: string[]) {
 				'Content-Type': 'application/json',
 			},
 		},
-	);
+	)
 }

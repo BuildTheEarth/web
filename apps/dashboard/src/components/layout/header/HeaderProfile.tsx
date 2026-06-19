@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	Avatar,
@@ -9,7 +9,7 @@ import {
 	MenuItem,
 	MenuTarget,
 	useMantineColorScheme,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconChevronDown,
 	IconLogout,
@@ -18,39 +18,39 @@ import {
 	IconSettings,
 	IconSun,
 	IconWorld,
-} from '@tabler/icons-react';
-import { signOut, useSession } from 'next-auth/react';
-import { redirect, usePathname } from 'next/navigation';
-import { useState } from 'react';
+} from '@tabler/icons-react'
+import { signOut, useSession } from 'next-auth/react'
+import { redirect, usePathname } from 'next/navigation'
+import { useState } from 'react'
 
-import Link from 'next/link';
+import Link from 'next/link'
 
 const HeaderProfile = () => {
-	const { colorScheme, toggleColorScheme } = useMantineColorScheme();
-	const pathname = usePathname();
-	const session = useSession();
-	const [isLoggingOut, setIsLoggingOut] = useState(false);
+	const { colorScheme, toggleColorScheme } = useMantineColorScheme()
+	const pathname = usePathname()
+	const session = useSession()
+	const [isLoggingOut, setIsLoggingOut] = useState(false)
 
-	if (session.status === 'loading') return null;
+	if (session.status === 'loading') return null
 	if (session.status === 'unauthenticated') {
 		if (pathname !== '/auth/signin') {
-			redirect('/auth/signin');
+			redirect('/auth/signin')
 		}
-		return null;
+		return null
 	}
-	if (!session.data || !session.data.user || !session.data.user.username) return null;
+	if (!session.data || !session.data.user || !session.data.user.username) return null
 
 	const handleSignOut = async () => {
-		setIsLoggingOut(true);
+		setIsLoggingOut(true)
 
 		try {
-			await fetch('/api/auth/federated-logout', { method: 'POST' });
+			await fetch('/api/auth/federated-logout', { method: 'POST' })
 		} catch {
 			// Always continue with local sign-out even if federated logout fails.
 		}
 
-		await signOut({ redirect: true, callbackUrl: '/auth/signin' });
-	};
+		await signOut({ redirect: true, callbackUrl: '/auth/signin' })
+	}
 
 	return (
 		<Menu>
@@ -109,7 +109,7 @@ const HeaderProfile = () => {
 				</Menu.Item>
 			</MenuDropdown>
 		</Menu>
-	);
-};
+	)
+}
 
-export default HeaderProfile;
+export default HeaderProfile

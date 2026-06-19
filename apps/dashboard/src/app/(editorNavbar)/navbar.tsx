@@ -1,5 +1,5 @@
-'use client';
-import { toHumanDate } from '@/util/date';
+'use client'
+import { toHumanDate } from '@/util/date'
 import {
 	ActionIcon,
 	AppShellNavbar,
@@ -10,17 +10,17 @@ import {
 	ScrollArea,
 	Text,
 	TextInput,
-} from '@mantine/core';
-import type { Claim } from '@repo/db';
-import { IconSearch, IconX } from '@tabler/icons-react';
-import { redirect } from 'next/navigation';
-import { useState } from 'react';
-import { NewClaimButton } from './editor/interactivity';
-import { useClaimEditorStore } from './editor/store';
+} from '@mantine/core'
+import type { Claim } from '@repo/db'
+import { IconSearch, IconX } from '@tabler/icons-react'
+import { redirect } from 'next/navigation'
+import { useState } from 'react'
+import { NewClaimButton } from './editor/interactivity'
+import { useClaimEditorStore } from './editor/store'
 
 export default function EditorNavbar({ claims }: { claims: (Claim & { imgSrc?: string })[] }) {
-	const [searchValue, setSearchValue] = useState('');
-	const editorStore = useClaimEditorStore();
+	const [searchValue, setSearchValue] = useState('')
+	const editorStore = useClaimEditorStore()
 
 	return (
 		<AppShellNavbar p="md">
@@ -51,9 +51,9 @@ export default function EditorNavbar({ claims }: { claims: (Claim & { imgSrc?: s
 							claim.name.toLowerCase().includes(searchValue) || claim.city?.toLowerCase().includes(searchValue),
 					)
 					.sort((a, b) => {
-						if (a.finished && !b.finished) return 1;
-						if (!a.finished && b.finished) return -1;
-						return b.createdAt.getTime() - a.createdAt.getTime();
+						if (a.finished && !b.finished) return 1
+						if (!a.finished && b.finished) return -1
+						return b.createdAt.getTime() - a.createdAt.getTime()
 					})
 					.map((claim) => (
 						<Card
@@ -63,12 +63,12 @@ export default function EditorNavbar({ claims }: { claims: (Claim & { imgSrc?: s
 							style={{ cursor: 'pointer' }}
 							onClick={() => {
 								if (location.pathname != '/editor') {
-									redirect('/editor/' + claim.id);
+									redirect('/editor/' + claim.id)
 								}
 
-								if (!editorStore.drawInstance) return;
-								if (!editorStore.claims) return;
-								editorStore.switchClaim(claim.id, { keepPosition: false });
+								if (!editorStore.drawInstance) return
+								if (!editorStore.claims) return
+								editorStore.switchClaim(claim.id, { keepPosition: false })
 							}}
 						>
 							{claim.imgSrc && (
@@ -97,5 +97,5 @@ export default function EditorNavbar({ claims }: { claims: (Claim & { imgSrc?: s
 				<NewClaimButton />
 			</AppShellSection>
 		</AppShellNavbar>
-	);
+	)
 }

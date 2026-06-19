@@ -17,26 +17,26 @@ import {
 	TabsTab,
 	Text,
 	Title,
-} from '@mantine/core';
+} from '@mantine/core'
 
-import Anchor from '@/components/core/Anchor';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { getSession } from '@/util/auth';
-import keycloakAdmin from '@/util/keycloak';
-import { Metadata } from 'next';
+import Anchor from '@/components/core/Anchor'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { getSession } from '@/util/auth'
+import keycloakAdmin from '@/util/keycloak'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'SSO',
-};
+}
 
 export default async function Page() {
-	const session = await getSession();
-	const realms = (await keycloakAdmin.realms.find()) as any[];
-	const realm = realms[0];
-	const adminEvents = (await keycloakAdmin.realms.findAdminEvents({ realm: 'website' })) as any[];
-	const userEvents = (await keycloakAdmin.realms.findEvents({ realm: 'website' })) as any[];
-	const clientStats = (await keycloakAdmin.realms.getClientSessionStats({ realm: 'website' })) as any[];
+	const session = await getSession()
+	const realms = (await keycloakAdmin.realms.find()) as any[]
+	const realm = realms[0]
+	const adminEvents = (await keycloakAdmin.realms.findAdminEvents({ realm: 'website' })) as any[]
+	const userEvents = (await keycloakAdmin.realms.findEvents({ realm: 'website' })) as any[]
+	const clientStats = (await keycloakAdmin.realms.getClientSessionStats({ realm: 'website' })) as any[]
 
 	return (
 		<Protection requiredRole="get-config">
@@ -142,5 +142,5 @@ export default async function Page() {
 				</Tabs>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

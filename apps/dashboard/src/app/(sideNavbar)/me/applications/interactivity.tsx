@@ -1,32 +1,32 @@
-'use client';
+'use client'
 
-import { ActionIcon, Pagination, TextInput, TextInputProps, rem } from '@mantine/core';
-import { IconSearch, IconX } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { ActionIcon, Pagination, TextInput, TextInputProps, rem } from '@mantine/core'
+import { IconSearch, IconX } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedValue } from '@mantine/hooks'
 
 export function SearchApplications(props: TextInputProps) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
 
-	const [value, setValue] = useState(() => params.get('query') || '');
-	const [debounced] = useDebouncedValue(value, 500);
+	const [value, setValue] = useState(() => params.get('query') || '')
+	const [debounced] = useDebouncedValue(value, 500)
 
 	useEffect(() => {
-		const currentQuery = params.get('query') || '';
+		const currentQuery = params.get('query') || ''
 		if (debounced !== currentQuery) {
 			if (debounced) {
-				router.push(`${pathname}?query=${debounced}&page=1`);
+				router.push(`${pathname}?query=${debounced}&page=1`)
 			} else {
-				router.push(`${pathname}?page=1`);
+				router.push(`${pathname}?page=1`)
 			}
 		}
 		// Only run when debounced, pathname, or router changes
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [debounced, pathname, router]);
+	}, [debounced, pathname, router])
 
 	return (
 		<TextInput
@@ -44,7 +44,7 @@ export function SearchApplications(props: TextInputProps) {
 			onChange={(event) => setValue(event.currentTarget.value)}
 			{...props}
 		/>
-	);
+	)
 }
 
 export function ApplicationPagination({
@@ -55,17 +55,17 @@ export function ApplicationPagination({
 	React.ComponentProps<typeof Pagination>,
 	'value' | 'onChange' | 'total'
 >) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
 
 	const changePage = (page: number) => {
 		if (params.get('query') === null) {
-			router.push(`${pathname}?page=${page}`);
+			router.push(`${pathname}?page=${page}`)
 		} else {
-			router.push(`${pathname}?query=${params.get('query')}&page=${page}`);
+			router.push(`${pathname}?query=${params.get('query')}&page=${page}`)
 		}
-	};
+	}
 
 	return (
 		<Pagination
@@ -74,5 +74,5 @@ export function ApplicationPagination({
 			onChange={changePage}
 			total={Math.ceil(applicationCount / pageSize)}
 		/>
-	);
+	)
 }

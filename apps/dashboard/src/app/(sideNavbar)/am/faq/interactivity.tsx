@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { ActionIcon, Button, Group, InputWrapper, TextInput } from '@mantine/core';
-import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react';
+import { ActionIcon, Button, Group, InputWrapper, TextInput } from '@mantine/core'
+import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react'
 
-import { adminAddFaqQuestion, adminDeleteFaqQuestion, adminEditFaqQuestion } from '@/actions/faq';
-import RichTextEditor from '@/components/input/RTE';
-import { useFormActions } from '@/hooks/useFormAction';
-import { useForm } from '@mantine/form';
-import { modals } from '@mantine/modals';
-import type { FAQQuestion } from '@repo/db';
+import { adminAddFaqQuestion, adminDeleteFaqQuestion, adminEditFaqQuestion } from '@/actions/faq'
+import RichTextEditor from '@/components/input/RTE'
+import { useFormActions } from '@/hooks/useFormAction'
+import { useForm } from '@mantine/form'
+import { modals } from '@mantine/modals'
+import type { FAQQuestion } from '@repo/db'
 
 export function AddFaqQuestionButton({ disabled }: { disabled?: boolean }) {
 	return (
@@ -28,7 +28,7 @@ export function AddFaqQuestionButton({ disabled }: { disabled?: boolean }) {
 		>
 			Add New
 		</Button>
-	);
+	)
 }
 
 export function EditFaqQuestionButton({ disabled, ...props }: FAQQuestion & { disabled?: boolean }) {
@@ -51,31 +51,31 @@ export function EditFaqQuestionButton({ disabled, ...props }: FAQQuestion & { di
 		>
 			<IconEdit size={16} />
 		</ActionIcon>
-	);
+	)
 }
 
 function EditFaqQuestionModal(
 	props: {
-		isAdd?: boolean;
+		isAdd?: boolean
 	} & FAQQuestion,
 ) {
 	const form = useForm({
 		initialValues: { id: props.id, question: props.question, answer: props.answer, links: props.links },
-	});
+	})
 	const [[addFaqQuestionAction, editFaqQuestionAction, deleteFaqQuestionAction], isPending] = useFormActions([
 		adminAddFaqQuestion,
 		adminEditFaqQuestion,
 		adminDeleteFaqQuestion,
-	]);
+	])
 
 	const handleSubmit = (values: FAQQuestion) => {
 		if (props.isAdd) {
-			addFaqQuestionAction(values);
+			addFaqQuestionAction(values)
 		} else {
-			editFaqQuestionAction(values);
+			editFaqQuestionAction(values)
 		}
-		modals.closeAll();
-	};
+		modals.closeAll()
+	}
 
 	return (
 		<form onSubmit={form.onSubmit(handleSubmit)}>
@@ -98,8 +98,8 @@ function EditFaqQuestionModal(
 					<Button
 						variant="outline"
 						onClick={() => {
-							deleteFaqQuestionAction(props.id);
-							modals.closeAll();
+							deleteFaqQuestionAction(props.id)
+							modals.closeAll()
 						}}
 						leftSection={<IconTrash size={14} />}
 						color="red"
@@ -114,5 +114,5 @@ function EditFaqQuestionModal(
 				</Button>
 			)}
 		</form>
-	);
+	)
 }

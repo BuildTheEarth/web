@@ -1,7 +1,7 @@
-import { userEditTeamInfo } from '@/actions/buildTeams';
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
+import { userEditTeamInfo } from '@/actions/buildTeams'
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
 import {
 	Button,
 	ColorInput,
@@ -14,9 +14,9 @@ import {
 	Textarea,
 	TextInput,
 	Title,
-} from '@mantine/core';
-import { IconCamera, IconDeviceFloppy, IconNote, IconSocial } from '@tabler/icons-react';
-import SaveNotification, { RTEWrapper } from './interactivity';
+} from '@mantine/core'
+import { IconCamera, IconDeviceFloppy, IconNote, IconSocial } from '@tabler/icons-react'
+import SaveNotification, { RTEWrapper } from './interactivity'
 
 export default function Loading() {
 	return (
@@ -210,5 +210,5 @@ export default function Loading() {
 				</ContentWrapper>
 			</form>
 		</Protection>
-	);
+	)
 }

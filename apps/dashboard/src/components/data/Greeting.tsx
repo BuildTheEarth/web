@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
 export function Greeting({ username }: { username?: string }) {
-	let greeting = 'Hello';
-	const hours = new Date().getHours();
+	let greeting = 'Hello'
+	const hours = new Date().getHours()
 
 	if (hours < 12) {
-		greeting = 'Good Morning';
+		greeting = 'Good Morning'
 	} else if (hours < 18) {
-		greeting = 'Good Afternoon';
+		greeting = 'Good Afternoon'
 	} else {
-		greeting = 'Good Evening';
+		greeting = 'Good Evening'
 	}
 
-	return username ? `${greeting}, ${username}!` : `${greeting}!`;
+	return username ? `${greeting}, ${username}!` : `${greeting}!`
 }

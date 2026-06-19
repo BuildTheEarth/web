@@ -1,6 +1,6 @@
-import { Card, CardProps, Group, RingProgress, Text } from '@mantine/core';
+import { Card, CardProps, Group, RingProgress, Text } from '@mantine/core'
 
-import classes from '@/styles/StatsRingCard.module.css';
+import classes from '@/styles/StatsRingCard.module.css'
 
 export function StatsRingCard({
 	data,
@@ -11,10 +11,10 @@ export function StatsRingCard({
 		{ value: number; label: string; color: string; hidden?: false },
 		{ value: number; label: string } & ({ hidden: true } | { color: string; hidden: false }),
 		{ value: number; label: string } & ({ hidden: true } | { color: string; hidden: false }),
-	];
-	title: string;
+	]
+	title: string
 } & CardProps) {
-	const total = data.reduce((acc, item) => acc + (item.hidden ? 0 : item.value), 0);
+	const total = data.reduce((acc, item) => acc + (item.hidden ? 0 : item.value), 0)
 
 	return (
 		<Card withBorder p="md" radius="md" className={classes.card} {...props}>
@@ -73,5 +73,5 @@ export function StatsRingCard({
 				</div>
 			</div>
 		</Card>
-	);
+	)
 }

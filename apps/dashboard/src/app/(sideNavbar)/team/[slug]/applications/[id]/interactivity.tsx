@@ -1,5 +1,5 @@
-'use client';
-import { addApplicationResponseTemplate, reviewApplication } from '@/actions/buildTeams';
+'use client'
+import { addApplicationResponseTemplate, reviewApplication } from '@/actions/buildTeams'
 import {
 	ActionIcon,
 	Button,
@@ -13,27 +13,27 @@ import {
 	Select,
 	Text,
 	TextInput,
-} from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
-import { openConfirmModal } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
-import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
-import type { Application, ApplicationResponseTemplate, ApplicationStatus } from '@repo/db';
-import { IconCheck, IconDots, IconId, IconTemplate, IconX } from '@tabler/icons-react';
-import Highlight from '@tiptap/extension-highlight';
-import Link from '@tiptap/extension-link';
-import Placeholder from '@tiptap/extension-placeholder';
-import SubScript from '@tiptap/extension-subscript';
-import Superscript from '@tiptap/extension-superscript';
-import TextAlign from '@tiptap/extension-text-align';
-import Underline from '@tiptap/extension-underline';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { Fragment } from 'react';
-import { Markdown } from 'tiptap-markdown';
+} from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
+import { openConfirmModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
+import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap'
+import type { Application, ApplicationResponseTemplate, ApplicationStatus } from '@repo/db'
+import { IconCheck, IconDots, IconId, IconTemplate, IconX } from '@tabler/icons-react'
+import Highlight from '@tiptap/extension-highlight'
+import Link from '@tiptap/extension-link'
+import Placeholder from '@tiptap/extension-placeholder'
+import SubScript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
+import TextAlign from '@tiptap/extension-text-align'
+import Underline from '@tiptap/extension-underline'
+import { useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import { Fragment } from 'react'
+import { Markdown } from 'tiptap-markdown'
 
 export function EditMenu({ application }: { application: Application }) {
-	const clipboard = useClipboard({ timeout: 500 });
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<Menu>
@@ -52,7 +52,7 @@ export function EditMenu({ application }: { application: Application }) {
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }
 
 export function ResponseEditor({
@@ -61,13 +61,13 @@ export function ResponseEditor({
 	userId,
 	buildTeamSlug,
 }: {
-	application: Application;
-	templates: Omit<Omit<ApplicationResponseTemplate, 'buildteam'>, 'buildteamId'>[];
-	userId: string;
-	buildTeamSlug: string;
+	application: Application
+	templates: Omit<Omit<ApplicationResponseTemplate, 'buildteam'>, 'buildteamId'>[]
+	userId: string
+	buildTeamSlug: string
 }) {
-	const APPLICATION_STATUS_ACCEPTED: ApplicationStatus = 'ACCEPTED';
-	const APPLICATION_STATUS_DECLINED: ApplicationStatus = 'DECLINED';
+	const APPLICATION_STATUS_ACCEPTED: ApplicationStatus = 'ACCEPTED'
+	const APPLICATION_STATUS_DECLINED: ApplicationStatus = 'DECLINED'
 
 	const responseEditor = useEditor({
 		extensions: [
@@ -82,7 +82,7 @@ export function ResponseEditor({
 			Markdown,
 		],
 		immediatelyRender: false,
-	});
+	})
 
 	return (
 		<Fragment key="application-response-editor">
@@ -137,7 +137,7 @@ export function ResponseEditor({
 									message: `Application accepted successfully.`,
 									title: 'Application Reviewed',
 									color: 'green',
-								});
+								})
 							})
 						}
 						color="green"
@@ -157,7 +157,7 @@ export function ResponseEditor({
 									message: `Application declined successfully.`,
 									title: 'Application Reviewed',
 									color: 'green',
-								});
+								})
 							})
 						}
 						color="red"
@@ -168,7 +168,7 @@ export function ResponseEditor({
 				<Button
 					leftSection={<IconTemplate />}
 					onClick={() => {
-						let name = '';
+						let name = ''
 						openConfirmModal({
 							title: 'New Template Response',
 							centered: true,
@@ -200,9 +200,9 @@ export function ResponseEditor({
 										message: `Template ${name} was created successfully.`,
 										title: 'Template Created',
 										color: 'green',
-									});
+									})
 								}),
-						});
+						})
 					}}
 					variant="outline"
 				>
@@ -210,11 +210,11 @@ export function ResponseEditor({
 				</Button>
 			</Group>
 		</Fragment>
-	);
+	)
 }
 
 function InsertReviewTemplateControl({ templates }: { templates: { name: string; id: string; content: string }[] }) {
-	const { editor } = useRichTextEditorContext();
+	const { editor } = useRichTextEditorContext()
 	return (
 		<RichTextEditor.Control aria-label="Insert response template" title="Insert response template">
 			<Select
@@ -232,9 +232,9 @@ function InsertReviewTemplateControl({ templates }: { templates: { name: string;
 				]}
 				onChange={(_value, option) => {
 					if (option) {
-						editor?.commands.setContent(templates.find((t) => t.id == option.value)?.content || '-');
+						editor?.commands.setContent(templates.find((t) => t.id == option.value)?.content || '-')
 					} else {
-						editor?.commands.setContent('');
+						editor?.commands.setContent('')
 					}
 				}}
 				// renderOption={({ option, checked }) => (
@@ -253,5 +253,5 @@ function InsertReviewTemplateControl({ templates }: { templates: { name: string;
 				// )}
 			/>
 		</RichTextEditor.Control>
-	);
+	)
 }

@@ -1,25 +1,25 @@
-'use client';
+'use client'
 
-import ErrorDisplay from '@/components/core/ErrorDisplay';
-import Header from '@/components/layout/header';
-import { AppShell, AppShellMain, Button } from '@mantine/core';
-import { useLocalStorage } from '@mantine/hooks';
-import { signIn, useSession } from 'next-auth/react';
+import ErrorDisplay from '@/components/core/ErrorDisplay'
+import Header from '@/components/layout/header'
+import { AppShell, AppShellMain, Button } from '@mantine/core'
+import { useLocalStorage } from '@mantine/hooks'
+import { signIn, useSession } from 'next-auth/react'
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function SigninPage() {
-	const router = useRouter();
-	const { status } = useSession();
+	const router = useRouter()
+	const { status } = useSession()
 
 	useEffect(() => {
 		if (status === 'unauthenticated') {
-			void signIn('keycloak', { callbackUrl: '/', redirect: true });
+			void signIn('keycloak', { callbackUrl: '/', redirect: true })
 		} else if (status === 'authenticated') {
-			void router.push('/');
+			void router.push('/')
 		}
-	}, [status, router]);
+	}, [status, router])
 
 	return (
 		<>
@@ -32,5 +32,5 @@ export default function SigninPage() {
 				Sign In or Create Account
 			</Button>
 		</>
-	);
+	)
 }

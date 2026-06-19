@@ -1,19 +1,19 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import LinkButton from '@/components/core/LinkButton';
-import { Protection } from '@/components/Protection';
-import { Metadata } from 'next';
-import { BatchUploadStepOne } from './stepOne';
-import { BatchUploadStepThree } from './stepThree';
-import { BatchUploadStepTwo } from './stepTwo';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
+import { Protection } from '@/components/Protection'
+import { Metadata } from 'next'
+import { BatchUploadStepOne } from './stepOne'
+import { BatchUploadStepThree } from './stepThree'
+import { BatchUploadStepTwo } from './stepTwo'
 
 export const metadata: Metadata = {
 	title: 'Website Users',
-};
+}
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ step?: string; query?: string }> }) {
-	const { step } = await searchParams;
+	const { step } = await searchParams
 
 	return (
 		<Protection requiredRole="edit-users">
@@ -42,5 +42,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ s
 				{step == '3' && <BatchUploadStepThree />}
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

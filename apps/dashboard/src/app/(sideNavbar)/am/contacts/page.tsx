@@ -1,22 +1,22 @@
-import { getSession, hasRole } from '@/util/auth';
-import { Button, Group, Title } from '@mantine/core';
+import { getSession, hasRole } from '@/util/auth'
+import { Button, Group, Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { IconExternalLink } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import ContactsDatatable from './datatable';
-import { AddContactButton } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { IconExternalLink } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import ContactsDatatable from './datatable'
+import { AddContactButton } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Contacts',
-};
+}
 
 export default async function Page() {
-	const contacts = await prisma.contact.findMany();
-	const session = await getSession();
+	const contacts = await prisma.contact.findMany()
+	const session = await getSession()
 
 	return (
 		<Protection requiredRole="get-contacts">
@@ -40,5 +40,5 @@ export default async function Page() {
 				<ContactsDatatable contacts={contacts} canEdit={hasRole(session, 'edit-contacts')} />
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

@@ -1,20 +1,20 @@
-import { Avatar, Group, Text } from '@mantine/core';
+import { Avatar, Group, Text } from '@mantine/core'
 
-import Link from 'next/link';
+import Link from 'next/link'
 
 export function UserDisplay({
 	user,
 	noAnchor = false,
 }: {
-	user: { id: string; username?: string; ssoId: string };
-	noAnchor?: boolean;
+	user: { id: string; username?: string; ssoId: string }
+	noAnchor?: boolean
 }) {
 	const groupProps = noAnchor
 		? {}
 		: {
 				component: Link,
 				href: '/am/users/' + user.ssoId,
-			};
+			}
 
 	return (
 		<Group gap="sm" key={user.id || user.ssoId} {...groupProps} c="gray" td="none">
@@ -25,5 +25,5 @@ export function UserDisplay({
 				{user.username || user.ssoId.slice(0, 10)}
 			</Text>
 		</Group>
-	);
+	)
 }

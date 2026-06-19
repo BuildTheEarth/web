@@ -1,10 +1,10 @@
-import { ownerGenerateToken, userEditTeamInfo } from '@/actions/buildTeams';
-import { getUser } from '@/actions/getUser';
-import Anchor from '@/components/core/Anchor';
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
+import { ownerGenerateToken, userEditTeamInfo } from '@/actions/buildTeams'
+import { getUser } from '@/actions/getUser'
+import Anchor from '@/components/core/Anchor'
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
 import {
 	Button,
 	ColorInput,
@@ -17,7 +17,7 @@ import {
 	TextInput,
 	Title,
 	Tooltip,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconAlertTriangle,
 	IconCamera,
@@ -28,17 +28,17 @@ import {
 	IconMessage,
 	IconNote,
 	IconSocial,
-} from '@tabler/icons-react';
-import { Metadata } from 'next';
-import SaveNotification, { RTEWrapper, SocialLinksEditor } from './interactivity';
+} from '@tabler/icons-react'
+import { Metadata } from 'next'
+import SaveNotification, { RTEWrapper, SocialLinksEditor } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Edit Build Team',
-};
+}
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-	const user = await getUser();
-	const slug = (await params).slug;
+	const user = await getUser()
+	const slug = (await params).slug
 
 	const team = await prisma.buildTeam.findFirst({
 		where: { slug },
@@ -62,10 +62,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				},
 			},
 		},
-	});
-	if (!team) throw Error('Could not find Build Team');
+	})
+	if (!team) throw Error('Could not find Build Team')
 
-	const ownerGenerateTokenAction = ownerGenerateToken.bind(null, { id: team.id });
+	const ownerGenerateTokenAction = ownerGenerateToken.bind(null, { id: team.id })
 
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
@@ -326,5 +326,5 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				<SocialLinksEditor teamId={team.id} userId={user.id} socials={team.socials} />
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

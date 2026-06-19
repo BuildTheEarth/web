@@ -1,9 +1,9 @@
-import { ActionIcon, Tooltip, useMantineColorScheme } from '@mantine/core';
-import { IconMoon, IconSun } from '@tabler/icons-react';
+import { ActionIcon, Tooltip, useMantineColorScheme } from '@mantine/core'
+import { IconMoon, IconSun } from '@tabler/icons-react'
 
 export default function ThemeIcon() {
-	const colorScheme = useMantineColorScheme();
-	const Icon = colorScheme.colorScheme === 'dark' ? IconSun : IconMoon;
+	const colorScheme = useMantineColorScheme()
+	const Icon = colorScheme.colorScheme === 'dark' ? IconSun : IconMoon
 	return (
 		<Tooltip label="Toggle Color Scheme" openDelay={500}>
 			<ActionIcon
@@ -15,5 +15,5 @@ export default function ThemeIcon() {
 				<Icon style={{ width: '70%', height: '70%' }} stroke={1.5} />
 			</ActionIcon>
 		</Tooltip>
-	);
+	)
 }

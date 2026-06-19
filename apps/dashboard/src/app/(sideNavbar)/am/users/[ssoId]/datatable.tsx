@@ -1,32 +1,32 @@
-'use client';
+'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, Text, rem } from '@mantine/core';
-import { IconDots, IconEye, IconMessage2 } from '@tabler/icons-react';
+import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, Text, rem } from '@mantine/core'
+import { IconDots, IconEye, IconMessage2 } from '@tabler/icons-react'
 
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
-import { useState } from 'react';
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
+import { useState } from 'react'
 
 export default function ClaimDatatabe({
 	claims,
 }: {
 	claims: {
 		buildTeam: {
-			name: string;
-			icon: string;
-			slug: string;
-		};
-		id: string;
-		name: string;
-		createdAt: Date;
-		center: string | null;
-		size: number;
-		buildings: number;
-		city: string | null;
-	}[];
+			name: string
+			icon: string
+			slug: string
+		}
+		id: string
+		name: string
+		createdAt: Date
+		center: string | null
+		size: number
+		buildings: number
+		city: string | null
+	}[]
 }) {
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(1)
 
 	return (
 		<DataTable
@@ -135,5 +135,5 @@ export default function ClaimDatatabe({
 			height="60vh"
 			style={{ width: '100%' }}
 		/>
-	);
+	)
 }

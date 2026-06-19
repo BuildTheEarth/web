@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { ApplicationQuestion } from '@/util/application';
-import { TextInput } from '@mantine/core';
-import { IconBuildingSkyscraper } from '@tabler/icons-react';
+import { ApplicationQuestion } from '@/util/application'
+import { TextInput } from '@mantine/core'
+import { IconBuildingSkyscraper } from '@tabler/icons-react'
 
 export interface CityQuestionProps extends ApplicationQuestion {
 	additionalData: {
-		country?: string;
-	};
+		country?: string
+	}
 }
 
 function validation(props: CityQuestionProps): (value: string) => void {
 	return (value: string) => {
-		return false;
-	};
+		return false
+	}
 }
 
 const CityQuestion = (props: CityQuestionProps) => {
@@ -32,8 +32,8 @@ const CityQuestion = (props: CityQuestionProps) => {
 			value={props.value}
 			id={props.id}
 		/>
-	);
-};
+	)
+}
 
 const EditQuestion = ({ editingQuestion, handleUpdateEditingQuestion }: any) => {
 	return (
@@ -47,11 +47,11 @@ const EditQuestion = ({ editingQuestion, handleUpdateEditingQuestion }: any) => 
 				onChange={(e) => handleUpdateEditingQuestion({ additionalData: { country: e.target.value } })}
 			/>
 		</>
-	);
-};
+	)
+}
 
-CityQuestion.edit = EditQuestion;
-CityQuestion.mockdata = {};
-CityQuestion.validation = validation;
-CityQuestion.icon = IconBuildingSkyscraper;
-export default CityQuestion;
+CityQuestion.edit = EditQuestion
+CityQuestion.mockdata = {}
+CityQuestion.validation = validation
+CityQuestion.icon = IconBuildingSkyscraper
+export default CityQuestion

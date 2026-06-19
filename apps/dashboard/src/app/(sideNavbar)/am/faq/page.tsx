@@ -1,22 +1,22 @@
-import { getSession, hasRole } from '@/util/auth';
-import { Button, Group, Title } from '@mantine/core';
+import { getSession, hasRole } from '@/util/auth'
+import { Button, Group, Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { IconExternalLink } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import FAQDatatabe from './datatable';
-import { AddFaqQuestionButton } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { IconExternalLink } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import FAQDatatabe from './datatable'
+import { AddFaqQuestionButton } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'FAQ',
-};
+}
 
 export default async function Page() {
-	const faq = await prisma.fAQQuestion.findMany();
-	const session = await getSession();
+	const faq = await prisma.fAQQuestion.findMany()
+	const session = await getSession()
 
 	return (
 		<Protection requiredRole="get-faq">
@@ -40,5 +40,5 @@ export default async function Page() {
 				<FAQDatatabe faq={faq} canEdit={hasRole(session, 'edit-faq')} />
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

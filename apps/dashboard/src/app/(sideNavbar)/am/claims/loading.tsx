@@ -1,11 +1,11 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { IconExternalLink } from '@tabler/icons-react';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
-import { SearchClaims } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { IconExternalLink } from '@tabler/icons-react'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
+import { SearchClaims } from './interactivity'
 
 export default function Page() {
 	return (
@@ -67,5 +67,5 @@ export default function Page() {
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

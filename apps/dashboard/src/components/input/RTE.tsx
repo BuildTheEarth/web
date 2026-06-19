@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Link, RichTextEditor as MRichTextEditor } from '@mantine/tiptap';
-import { useEffect } from 'react';
+import { Link, RichTextEditor as MRichTextEditor } from '@mantine/tiptap'
+import { useEffect } from 'react'
 
-import Highlight from '@tiptap/extension-highlight';
-import SubScript from '@tiptap/extension-subscript';
-import Superscript from '@tiptap/extension-superscript';
-import TextAlign from '@tiptap/extension-text-align';
-import Underline from '@tiptap/extension-underline';
-import { useEditor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+import Highlight from '@tiptap/extension-highlight'
+import SubScript from '@tiptap/extension-subscript'
+import Superscript from '@tiptap/extension-superscript'
+import TextAlign from '@tiptap/extension-text-align'
+import Underline from '@tiptap/extension-underline'
+import { useEditor } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
 
 export default function RichTextEditor({
 	value,
@@ -18,10 +18,10 @@ export default function RichTextEditor({
 	onClick,
 	style,
 }: {
-	value?: string;
-	onChange?: (e: string) => void;
-	onClick?: (e: any) => void;
-	style?: any;
+	value?: string
+	onChange?: (e: string) => void
+	onClick?: (e: any) => void
+	style?: any
 }) {
 	const editor = useEditor({
 		extensions: [
@@ -35,15 +35,15 @@ export default function RichTextEditor({
 		],
 		content: value,
 		onUpdate: (e) => {
-			onChange && onChange(e.editor.getHTML());
-			onClick && onClick(e);
+			onChange && onChange(e.editor.getHTML())
+			onClick && onClick(e)
 		},
 		immediatelyRender: false,
-	});
+	})
 
 	useEffect(() => {
-		editor?.setOptions({ content: value });
-	}, [value]);
+		editor?.setOptions({ content: value })
+	}, [value])
 
 	return (
 		<MRichTextEditor editor={editor} styles={style}>
@@ -82,5 +82,5 @@ export default function RichTextEditor({
 
 			<MRichTextEditor.Content />
 		</MRichTextEditor>
-	);
+	)
 }

@@ -1,18 +1,18 @@
-import { Button, Group, MantineStyleProp, Paper, Text } from '@mantine/core';
-import { IconExternalLink } from '@tabler/icons-react';
-import Link from 'next/link';
+import { Button, Group, MantineStyleProp, Paper, Text } from '@mantine/core'
+import { IconExternalLink } from '@tabler/icons-react'
+import Link from 'next/link'
 
 export function TextCard(props: {
-	title: string;
-	children: React.ReactNode | string;
-	subtitle?: string;
-	icon?: any;
-	isText?: boolean;
-	style?: MantineStyleProp;
-	href?: string;
-	hrefText?: string;
+	title: string
+	children: React.ReactNode | string
+	subtitle?: string
+	icon?: any
+	isText?: boolean
+	style?: MantineStyleProp
+	href?: string
+	hrefText?: string
 }) {
-	const Icon = props.icon;
+	const Icon = props.icon
 	return (
 		<Paper withBorder p="md" radius="md" key={props.title} m={0} style={props.style}>
 			<Group justify="space-between">
@@ -57,5 +57,5 @@ export function TextCard(props: {
 				{props.subtitle}
 			</Text>
 		</Paper>
-	);
+	)
 }

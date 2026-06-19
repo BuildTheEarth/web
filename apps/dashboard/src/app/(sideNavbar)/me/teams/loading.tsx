@@ -1,7 +1,7 @@
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { Card, Grid, GridCol, Group, Skeleton, Stack, Text, Title } from '@mantine/core';
-import { IconCalendar, IconMapPin, IconPolygon, IconTools } from '@tabler/icons-react';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { Card, Grid, GridCol, Group, Skeleton, Stack, Text, Title } from '@mantine/core'
+import { IconCalendar, IconMapPin, IconPolygon, IconTools } from '@tabler/icons-react'
 
 export default async function Page() {
 	return (
@@ -122,9 +122,9 @@ export default async function Page() {
 									</Grid>
 								</Card>
 							</Skeleton>
-						);
+						)
 					})}
 			</Stack>
 		</ContentWrapper>
-	);
+	)
 }

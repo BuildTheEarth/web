@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { adminUserBatchAction } from '@/actions/user';
-import LinkButton from '@/components/core/LinkButton';
-import { Badge, Button, Tooltip } from '@mantine/core';
-import { DataTable } from 'mantine-datatable';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { adminUserBatchAction } from '@/actions/user'
+import LinkButton from '@/components/core/LinkButton'
+import { Badge, Button, Tooltip } from '@mantine/core'
+import { DataTable } from 'mantine-datatable'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export function StepTwoTable({
 	users,
 }: {
-	users: { id: string; ssoId: string; discordId: string; username: string; found: boolean }[];
+	users: { id: string; ssoId: string; discordId: string; username: string; found: boolean }[]
 }) {
-	const [page, setPage] = useState(1);
-	const router = useRouter();
+	const [page, setPage] = useState(1)
+	const router = useRouter()
 
-	console.log(users);
+	console.log(users)
 	return (
 		<>
 			<DataTable
@@ -33,7 +33,7 @@ export function StepTwoTable({
 								<Tooltip label={record.found ? 'User found in database' : 'User not found in database'}>
 									<Badge color={record.found ? 'green' : 'red'}>{record.found ? 'Found' : 'Not Found'}</Badge>
 								</Tooltip>
-							);
+							)
 						},
 					},
 
@@ -61,10 +61,10 @@ export function StepTwoTable({
 				onClick={() =>
 					adminUserBatchAction(null, { step: 'createMissing' }).then((res) => {
 						if (res.status === 'success') {
-							alert(`Users created successfully. Reloading data.`);
-							router.push('?step=3');
+							alert(`Users created successfully. Reloading data.`)
+							router.push('?step=3')
 						} else {
-							alert(`Error creating users: ${res.error}`);
+							alert(`Error creating users: ${res.error}`)
 						}
 					})
 				}
@@ -75,5 +75,5 @@ export function StepTwoTable({
 				Continue
 			</LinkButton>
 		</>
-	);
+	)
 }

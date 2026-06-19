@@ -1,46 +1,46 @@
-import { deleteClaim, saveAdvancedClaim, transferClaim } from '@/actions/claimEditor';
-import { modals } from '@mantine/modals';
-import { showNotification, updateNotification } from '@mantine/notifications';
-import { Prisma } from '@repo/db';
-import { IconCheck, IconX } from '@tabler/icons-react';
-import { redirect } from 'next/navigation';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { deleteClaim, saveAdvancedClaim, transferClaim } from '@/actions/claimEditor'
+import { modals } from '@mantine/modals'
+import { showNotification, updateNotification } from '@mantine/notifications'
+import { Prisma } from '@repo/db'
+import { IconCheck, IconX } from '@tabler/icons-react'
+import { redirect } from 'next/navigation'
+import { create } from 'zustand'
+import { subscribeWithSelector } from 'zustand/middleware'
 
 export type AdvancedClaimEditorClaim = Prisma.ClaimGetPayload<{
 	include: {
-		owner: { select: { ssoId: true; username: true; id: true } };
-		builders: { select: { ssoId: true; username: true; id: true } };
-		buildTeam: { select: { id: true; slug: true; name: true; icon: true } };
-	};
-}>;
+		owner: { select: { ssoId: true; username: true; id: true } }
+		builders: { select: { ssoId: true; username: true; id: true } }
+		buildTeam: { select: { id: true; slug: true; name: true; icon: true } }
+	}
+}>
 interface ClaimEditorState {
-	claim: AdvancedClaimEditorClaim | null;
+	claim: AdvancedClaimEditorClaim | null
 	// The user ID of the current user
-	userId: string | null;
+	userId: string | null
 	// Whether the claim editor is dirty (unsaved changes)
-	isDirty: boolean;
+	isDirty: boolean
 	// Whether the claim editor is loading
-	isLoading: boolean;
+	isLoading: boolean
 	// Any error message
-	error: string | null;
+	error: string | null
 	// Update the selected claim information and set the editor to dirty
-	updateClaim: (claim: Partial<Omit<AdvancedClaimEditorClaim, 'id'>>) => void;
-	setClaim: (claim: AdvancedClaimEditorClaim | null) => void;
+	updateClaim: (claim: Partial<Omit<AdvancedClaimEditorClaim, 'id'>>) => void
+	setClaim: (claim: AdvancedClaimEditorClaim | null) => void
 	// Save the changes of the current claim only if the editor is dirty
-	saveChanges: () => void;
+	saveChanges: () => void
 	// Transfer ownership of the claim to a new user
-	transferOwnership: (newOwner: { id: string; username: string }) => void;
+	transferOwnership: (newOwner: { id: string; username: string }) => void
 	// Delete the currently selected claim
-	delete: () => void;
+	delete: () => void
 	// Set the user ID of the current user
-	setUserId: (userId: string | null) => void;
+	setUserId: (userId: string | null) => void
 	// Set the editor to dirty once changes are made
-	setDirty: (dirty: boolean) => void;
+	setDirty: (dirty: boolean) => void
 	// Set the loading state
-	setLoading: (loading: boolean) => void;
+	setLoading: (loading: boolean) => void
 	// Set potential error messages
-	setError: (error: string | null) => void;
+	setError: (error: string | null) => void
 }
 
 export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
@@ -52,23 +52,23 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 		userId: null,
 
 		updateClaim: (claim) => {
-			const c = get().claim;
+			const c = get().claim
 			if (!c) {
-				return;
+				return
 			}
 			const updatedClaim = {
 				...c,
 				...claim,
-			};
-			set({ claim: updatedClaim, isDirty: true });
+			}
+			set({ claim: updatedClaim, isDirty: true })
 		},
 
 		saveChanges: async () => {
-			const claim = get().claim;
-			const userId = get().userId;
+			const claim = get().claim
+			const userId = get().userId
 
 			if (claim && userId) {
-				set({ isLoading: true });
+				set({ isLoading: true })
 
 				const notifyId = showNotification({
 					title: 'Saving Changes',
@@ -77,7 +77,7 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 					withCloseButton: false,
 					color: 'blue',
 					message: 'Your changes are being saved...',
-				});
+				})
 
 				try {
 					if (get().isDirty) {
@@ -89,7 +89,7 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 							active: claim.active ?? undefined,
 							finished: claim.finished ?? undefined,
 							builders: claim.builders?.map((b) => ({ id: b.id })) || [],
-						});
+						})
 					}
 
 					updateNotification({
@@ -100,9 +100,9 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 						loading: false,
 						autoClose: 2000,
 						icon: <IconCheck size={18} />,
-					});
+					})
 
-					set({ isDirty: false });
+					set({ isDirty: false })
 				} catch (e) {
 					updateNotification({
 						id: notifyId,
@@ -112,27 +112,27 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 						loading: false,
 						autoClose: 5000,
 						icon: <IconX size={18} />,
-					});
+					})
 				}
-				set({ isLoading: false });
+				set({ isLoading: false })
 			} else {
 				showNotification({
 					title: 'No Claim selected',
 					message: 'Please select a claim to save changes.',
 					color: 'red',
-				});
+				})
 			}
 		},
 
 		transferOwnership: async (newOwner: { id: string; username: string }) => {
-			const claim = get().claim;
+			const claim = get().claim
 			if (!claim || get().userId == null) {
 				showNotification({
 					title: 'No Claim selected',
 					message: 'Please select a claim to delete.',
 					color: 'red',
-				});
-				return;
+				})
+				return
 			}
 
 			const confirmTransfer = async () =>
@@ -147,16 +147,16 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 						closeOnConfirm: true,
 						closeOnCancel: true,
 						onClose: () => resolve(false),
-					});
-				});
+					})
+				})
 
-			const confirmed = await confirmTransfer();
+			const confirmed = await confirmTransfer()
 
 			if (!confirmed) {
-				return;
+				return
 			}
 
-			set({ isLoading: true });
+			set({ isLoading: true })
 			const notifyId = showNotification({
 				title: 'Transferring Claim',
 				loading: true,
@@ -164,10 +164,10 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 				withCloseButton: false,
 				color: 'blue',
 				message: 'Your claim is being transferred...',
-			});
+			})
 
 			try {
-				await transferClaim({ id: claim.id, newUserId: newOwner.id });
+				await transferClaim({ id: claim.id, newUserId: newOwner.id })
 				updateNotification({
 					id: notifyId,
 					title: 'Claim Transferred',
@@ -176,9 +176,9 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 					loading: false,
 					autoClose: 2000,
 					icon: <IconCheck size={18} />,
-				});
+				})
 
-				set({ claim: null, isDirty: false, isLoading: false });
+				set({ claim: null, isDirty: false, isLoading: false })
 			} catch (e) {
 				updateNotification({
 					id: notifyId,
@@ -188,22 +188,22 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 					loading: false,
 					autoClose: 5000,
 					icon: <IconX size={18} />,
-				});
+				})
 			} finally {
-				set({ isLoading: false });
-				redirect('/editor');
+				set({ isLoading: false })
+				redirect('/editor')
 			}
 		},
 
 		delete: async () => {
-			const claim = get().claim;
+			const claim = get().claim
 			if (!claim || get().userId == null) {
 				showNotification({
 					title: 'No Claim selected',
 					message: 'Please select a claim to delete.',
 					color: 'red',
-				});
-				return;
+				})
+				return
 			}
 
 			const confirmDeletion = async () =>
@@ -218,21 +218,21 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 						closeOnConfirm: true,
 						closeOnCancel: true,
 						onClose: () => resolve(false),
-					});
-				});
+					})
+				})
 
-			const confirmed = await confirmDeletion();
+			const confirmed = await confirmDeletion()
 
 			if (!confirmed) {
 				showNotification({
 					title: 'Deletion Cancelled',
 					message: 'The claim deletion was cancelled.',
 					color: 'yellow',
-				});
-				return;
+				})
+				return
 			}
 
-			set({ isLoading: true });
+			set({ isLoading: true })
 			const notifyId = showNotification({
 				title: 'Deleting Claim',
 				loading: true,
@@ -240,10 +240,10 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 				withCloseButton: false,
 				color: 'blue',
 				message: 'Your claim is being deleted...',
-			});
+			})
 
 			try {
-				await deleteClaim({ id: claim.id });
+				await deleteClaim({ id: claim.id })
 				updateNotification({
 					id: notifyId,
 					title: 'Claim Deleted',
@@ -252,10 +252,10 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 					loading: false,
 					autoClose: 2000,
 					icon: <IconCheck size={18} />,
-				});
+				})
 
-				set({ claim: null, isDirty: false, isLoading: false });
-				redirect('/editor');
+				set({ claim: null, isDirty: false, isLoading: false })
+				redirect('/editor')
 			} catch (e) {
 				updateNotification({
 					id: notifyId,
@@ -265,9 +265,9 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 					loading: false,
 					autoClose: 5000,
 					icon: <IconX size={18} />,
-				});
+				})
 			}
-			set({ isLoading: false });
+			set({ isLoading: false })
 		},
 
 		setDirty: (dirty) => set({ isDirty: dirty }),
@@ -276,4 +276,4 @@ export const useAdvancedClaimEditorStore = create<ClaimEditorState>()(
 		setUserId: (userId) => set({ userId }),
 		setClaim: (claim) => set({ claim }),
 	})),
-);
+)

@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { ActionIcon, Badge, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem, Tooltip } from '@mantine/core';
-import { IconDots, IconEye, IconId, IconMessage2 } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ActionIcon, Badge, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem, Tooltip } from '@mantine/core'
+import { IconDots, IconEye, IconId, IconMessage2 } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { useClipboard } from '@mantine/hooks';
-import type { User } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
+import { useClipboard } from '@mantine/hooks'
+import type { User } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
 
 export default function UsersDatatabe({ users, count }: { users: User[]; count: number }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<DataTable
@@ -111,5 +111,5 @@ export default function UsersDatatabe({ users, count }: { users: User[]; count: 
 			}
 			noRecordsText="No Users found"
 		/>
-	);
+	)
 }

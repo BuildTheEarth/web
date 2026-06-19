@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { ApplicationQuestion } from '@/util/application';
-import { TextInput } from '@mantine/core';
-import { IconPhoto } from '@tabler/icons-react';
+import { ApplicationQuestion } from '@/util/application'
+import { TextInput } from '@mantine/core'
+import { IconPhoto } from '@tabler/icons-react'
 
 export interface ImageUploadQuestionProps extends ApplicationQuestion {
-	maxSize?: number;
-	maxAmount?: number;
+	maxSize?: number
+	maxAmount?: number
 }
 
 function validation(props: ImageUploadQuestionProps): (value: string) => void {
 	return (value: string) => {
-		return false;
-	};
+		return false
+	}
 }
 
 const ImageUploadQuestion = (props: ImageUploadQuestionProps) => {
@@ -30,13 +30,13 @@ const ImageUploadQuestion = (props: ImageUploadQuestionProps) => {
 			value={props.value}
 			id={props.id}
 		/>
-	);
-};
+	)
+}
 
-const EditQuestion: any = undefined;
+const EditQuestion: any = undefined
 
-ImageUploadQuestion.edit = EditQuestion;
-ImageUploadQuestion.mockdata = { maxSize: 100, maxAmount: 1 };
-ImageUploadQuestion.validation = validation;
-ImageUploadQuestion.icon = IconPhoto;
-export default ImageUploadQuestion;
+ImageUploadQuestion.edit = EditQuestion
+ImageUploadQuestion.mockdata = { maxSize: 100, maxAmount: 1 }
+ImageUploadQuestion.validation = validation
+ImageUploadQuestion.icon = IconPhoto
+export default ImageUploadQuestion

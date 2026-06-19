@@ -1,4 +1,4 @@
-'use server';
+'use server'
 
 import {
 	ActionIcon,
@@ -16,7 +16,7 @@ import {
 	Skeleton,
 	Table,
 	Title,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconCalendar,
 	IconClockExclamation,
@@ -35,18 +35,18 @@ import {
 	IconUserExclamation,
 	IconUsers,
 	IconWorldExclamation,
-} from '@tabler/icons-react';
+} from '@tabler/icons-react'
 
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
 
 const placeholderRows = (rows: number, columns: number) =>
 	Array.from({ length: rows }, (_, rowIndex) =>
 		Array.from({ length: columns }, (_, colIndex) => (
 			<Skeleton key={`row-${rowIndex}-col-${colIndex}`} h={14} w="70%" radius="sm" />
 		)),
-	);
+	)
 
 export default async function Page() {
 	return (
@@ -285,5 +285,5 @@ export default async function Page() {
 				</TextCard>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

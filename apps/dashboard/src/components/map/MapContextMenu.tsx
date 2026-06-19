@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 
-import { MenuDivider, MenuItem, MenuLabel, rem } from '@mantine/core';
+import { MenuDivider, MenuItem, MenuLabel, rem } from '@mantine/core'
 import {
 	IconBrandBing,
 	IconBrandGoogleMaps,
@@ -11,44 +11,44 @@ import {
 	IconPin,
 	IconSquare,
 	IconWorld,
-} from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
-import { ContextMenu, ContextMenuProps } from '../core/ContextMenu';
+} from '@tabler/icons-react'
+import { useEffect, useState } from 'react'
+import { ContextMenu, ContextMenuProps } from '../core/ContextMenu'
 
-import { fromGeoObject } from '@bte-germany/terraconvert';
-import { useClipboard } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import Link from 'next/link';
+import { fromGeoObject } from '@bte-germany/terraconvert'
+import { useClipboard } from '@mantine/hooks'
+import { showNotification } from '@mantine/notifications'
+import Link from 'next/link'
 
 interface MapContextMenuProps extends ContextMenuProps {
-	oLat?: number | null;
-	oLng?: number | null;
+	oLat?: number | null
+	oLng?: number | null
 }
 
 export function MapContextMenu({ contextMenuInfo, setContextMenuInfo, oLat, oLng }: MapContextMenuProps) {
-	const clipboard = useClipboard();
-	const [{ lat, lng }, setCoords] = useState({ lat: oLat, lng: oLng });
-	const [data, setData] = useState<any>();
+	const clipboard = useClipboard()
+	const [{ lat, lng }, setCoords] = useState({ lat: oLat, lng: oLng })
+	const [data, setData] = useState<any>()
 
 	const copy = (text: string) => {
-		clipboard.copy(text);
+		clipboard.copy(text)
 		showNotification({
 			title: 'Coordinates copied',
 			color: 'green',
 			autoClose: 1000,
 			message: 'The coordinates have been copied to your clipboard',
 			icon: <IconCopy style={{ width: rem(18), height: rem(18) }} />,
-		});
-	};
+		})
+	}
 
 	useEffect(() => {
-		setCoords({ lat: oLat, lng: oLng });
+		setCoords({ lat: oLat, lng: oLng })
 		if (oLat && oLng) {
 			setData({
 				mc: fromGeoObject(oLat, oLng),
-			});
+			})
 		}
-	}, [contextMenuInfo]);
+	}, [contextMenuInfo])
 
 	return (
 		<ContextMenu contextMenuInfo={contextMenuInfo} setContextMenuInfo={setContextMenuInfo}>
@@ -125,5 +125,5 @@ export function MapContextMenu({ contextMenuInfo, setContextMenuInfo, oLat, oLng
 				</>
 			)}
 		</ContextMenu>
-	);
+	)
 }

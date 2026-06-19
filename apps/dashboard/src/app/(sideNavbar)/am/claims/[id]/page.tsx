@@ -1,4 +1,4 @@
-'use server';
+'use server'
 
 import {
 	Alert,
@@ -13,32 +13,32 @@ import {
 	ThemeIcon,
 	Title,
 	Tooltip,
-} from '@mantine/core';
+} from '@mantine/core'
 
-import { Protection } from '@/components/Protection';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { TextCard } from '@/components/core/card/TextCard';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { getCountryNames } from '@/util/countries';
-import { toHumanDateTime } from '@/util/date';
-import prisma from '@/util/db';
-import { IconAlertCircle, IconCheck, IconClockExclamation, IconExternalLink } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { EditMenu } from './interactivity';
-import { Map } from './map';
+import { Protection } from '@/components/Protection'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { TextCard } from '@/components/core/card/TextCard'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { getCountryNames } from '@/util/countries'
+import { toHumanDateTime } from '@/util/date'
+import prisma from '@/util/db'
+import { IconAlertCircle, IconCheck, IconClockExclamation, IconExternalLink } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { EditMenu } from './interactivity'
+import { Map } from './map'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params;
+	const { id } = await params
 
 	return {
 		title: 'Claim ' + id.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-	const id = (await params).id;
+	const id = (await params).id
 
 	const claim = await prisma.claim.findUnique({
 		where: { id },
@@ -47,9 +47,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 			buildTeam: { select: { id: true, slug: true, location: true, name: true, icon: true, ip: true } },
 			builders: true,
 		},
-	});
+	})
 
-	if (!claim) throw Error('Could not find Claim');
+	if (!claim) throw Error('Could not find Claim')
 
 	return (
 		<Protection requiredRole="get-claims">
@@ -194,5 +194,5 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				</Box>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

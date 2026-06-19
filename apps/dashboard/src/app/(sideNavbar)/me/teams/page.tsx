@@ -1,22 +1,22 @@
-import { Card, Grid, GridCol, Group, Stack, Text, Title, Tooltip } from '@mantine/core';
+import { Card, Grid, GridCol, Group, Stack, Text, Title, Tooltip } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { getSession } from '@/util/auth';
-import { getCountryNames } from '@/util/countries';
-import { toHumanDate } from '@/util/date';
-import prisma from '@/util/db';
-import { IconCalendar, IconMapPin, IconPencil, IconPolygon, IconStar, IconTools } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { Fragment } from 'react';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { getSession } from '@/util/auth'
+import { getCountryNames } from '@/util/countries'
+import { toHumanDate } from '@/util/date'
+import prisma from '@/util/db'
+import { IconCalendar, IconMapPin, IconPencil, IconPolygon, IconStar, IconTools } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { Fragment } from 'react'
 
 export const metadata: Metadata = {
 	title: 'Build Teams',
-};
+}
 
 export default async function Page() {
-	const session = await getSession();
+	const session = await getSession()
 	const teams = await prisma.buildTeam.findMany({
 		where: { members: { some: { ssoId: session?.user.id } } },
 		select: {
@@ -38,7 +38,7 @@ export default async function Page() {
 				},
 			},
 		},
-	});
+	})
 
 	return (
 		<ContentWrapper maw="50vw">
@@ -226,9 +226,9 @@ export default async function Page() {
 								</Grid>
 							</Card>
 						</Fragment>
-					);
+					)
 				})}
 			</Stack>
 		</ContentWrapper>
-	);
+	)
 }

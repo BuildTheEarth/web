@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { ActionIcon, TextInput } from '@mantine/core';
-import { IconDeviceGamepad, IconExternalLink } from '@tabler/icons-react';
+import { ActionIcon, TextInput } from '@mantine/core'
+import { IconDeviceGamepad, IconExternalLink } from '@tabler/icons-react'
 
-import { ApplicationQuestion } from '@/util/application';
-import Link from 'next/link';
+import { ApplicationQuestion } from '@/util/application'
+import Link from 'next/link'
 
 export interface MinecraftQuestionProps extends ApplicationQuestion {
-	additionalData: {};
+	additionalData: {}
 }
 
 function validation(props: MinecraftQuestionProps): (value: string) => void {
 	return (value: string) => {
-		return /^[a-zA-Z0-9_]{2,16}$/gm.test(value) ? false : 'Not a valid Minecraft Name';
-	};
+		return /^[a-zA-Z0-9_]{2,16}$/gm.test(value) ? false : 'Not a valid Minecraft Name'
+	}
 }
 
 const MinecraftQuestion = (props: MinecraftQuestionProps) => {
@@ -39,13 +39,13 @@ const MinecraftQuestion = (props: MinecraftQuestionProps) => {
 			}
 			id={props.id}
 		/>
-	);
-};
+	)
+}
 
-const EditQuestion: any = undefined;
+const EditQuestion: any = undefined
 
-MinecraftQuestion.edit = EditQuestion;
-MinecraftQuestion.mockdata = {};
-MinecraftQuestion.validation = validation;
-MinecraftQuestion.icon = IconDeviceGamepad;
-export default MinecraftQuestion;
+MinecraftQuestion.edit = EditQuestion
+MinecraftQuestion.mockdata = {}
+MinecraftQuestion.validation = validation
+MinecraftQuestion.icon = IconDeviceGamepad
+export default MinecraftQuestion

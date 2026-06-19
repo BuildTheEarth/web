@@ -7,18 +7,18 @@ export async function sendBotMessage(content: any, users: string[]) {
 				authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
 			},
 			body: JSON.stringify({ params: { text: content }, ids: users }),
-		});
-		const json = await res.json();
-		return json;
+		})
+		const json = await res.json()
+		return json
 	} catch (e) {
-		console.error(e);
+		console.error(e)
 		return {
 			success: [],
 			failure: users,
 			sentMessage: {
 				content,
 			},
-		};
+		}
 	}
 }
 
@@ -31,10 +31,10 @@ export async function updateBuilderRole(user: string, isBuilder: boolean) {
 				Authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
 			},
 			body: JSON.stringify({ add: isBuilder }),
-		});
-		return true;
+		})
+		return true
 	} catch (e) {
-		return false;
+		return false
 	}
 }
 
@@ -48,16 +48,16 @@ export async function getBuilderRole(user: string) {
 	})
 		.then((res) => res.json())
 		.catch((e) => {
-			return { error: 'NOT_FOUND' };
-		});
+			return { error: 'NOT_FOUND' }
+		})
 }
 
 export async function isOnMainBTEServer(user: string) {
-	const res = await getBuilderRole(user);
+	const res = await getBuilderRole(user)
 	if (res?.error == 'NOT_FOUND') {
-		return false;
+		return false
 	}
-	return true;
+	return true
 }
 export async function getUserDiscordPunishments(user: string) {
 	return fetch(process.env.DISCORD_BOT_URL + `/api/v1/punish/${user}`, {
@@ -66,7 +66,7 @@ export async function getUserDiscordPunishments(user: string) {
 			'Content-type': 'application/json',
 			Authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
 		},
-	}).then((res) => res.json());
+	}).then((res) => res.json())
 }
 
 export async function getUserRoles(user: string) {
@@ -76,5 +76,5 @@ export async function getUserRoles(user: string) {
 			'Content-type': 'application/json',
 			Authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
 		},
-	}).then((res) => res.json());
+	}).then((res) => res.json())
 }

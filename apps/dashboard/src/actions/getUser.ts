@@ -1,11 +1,11 @@
-import { getSession } from '@/util/auth';
-import prisma from '@/util/db';
-import keycloakAdmin from '@/util/keycloak';
-import { cache } from 'react';
+import { getSession } from '@/util/auth'
+import prisma from '@/util/db'
+import keycloakAdmin from '@/util/keycloak'
+import { cache } from 'react'
 
 export const getUser = async () => {
-	const session = await getSession();
-	if (!session) throw Error('No session found');
+	const session = await getSession()
+	if (!session) throw Error('No session found')
 
 	const user = await cache(
 		async (id: string) =>
@@ -20,42 +20,42 @@ export const getUser = async () => {
 					avatar: true,
 				},
 			}),
-	)(session.user.id);
+	)(session.user.id)
 
-	if (!user) throw Error('User not found');
+	if (!user) throw Error('User not found')
 
-	return user!;
-};
+	return user!
+}
 
 export const getUserFederatedIdentities = cache(async (ssoId?: string) => {
 	if (!ssoId) {
-		const session = await getSession();
-		if (!session) throw Error('No session found');
-		ssoId = session.user.id;
+		const session = await getSession()
+		if (!session) throw Error('No session found')
+		ssoId = session.user.id
 	}
 
-	const kcUser = await keycloakAdmin.users.findOne({ id: ssoId });
+	const kcUser = await keycloakAdmin.users.findOne({ id: ssoId })
 
-	return kcUser?.federatedIdentities || [];
-});
+	return kcUser?.federatedIdentities || []
+})
 
 export const getUserSessions = cache(async (ssoId?: string) => {
 	if (!ssoId) {
-		const session = await getSession();
-		if (!session) throw Error('No session found');
-		ssoId = session.user.id;
+		const session = await getSession()
+		if (!session) throw Error('No session found')
+		ssoId = session.user.id
 	}
 
-	const sessions = await keycloakAdmin.users.listSessions({ id: ssoId });
+	const sessions = await keycloakAdmin.users.listSessions({ id: ssoId })
 
-	return sessions || [];
-});
+	return sessions || []
+})
 
 export const getUserPermissions = cache(async (ssoId?: string) => {
 	if (!ssoId) {
-		const session = await getSession();
-		if (!session) throw Error('No session found');
-		ssoId = session.user.id;
+		const session = await getSession()
+		if (!session) throw Error('No session found')
+		ssoId = session.user.id
 	}
 
 	const permissions = await prisma.userPermission.findMany({
@@ -66,6 +66,6 @@ export const getUserPermissions = cache(async (ssoId?: string) => {
 			permission: true,
 			buildTeam: { select: { id: true, slug: true, name: true } },
 		},
-	});
-	return permissions;
-});
+	})
+	return permissions
+})

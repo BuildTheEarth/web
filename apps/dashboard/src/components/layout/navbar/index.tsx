@@ -1,12 +1,12 @@
-'use server';
+'use server'
 
-import { hasRole } from '@/util/auth';
-import { navLinks } from '@/util/links';
-import { AppShellNavbar, Divider, ScrollArea, Stack } from '@mantine/core';
-import NavLink from './NavLink';
+import { hasRole } from '@/util/auth'
+import { navLinks } from '@/util/links'
+import { AppShellNavbar, Divider, ScrollArea, Stack } from '@mantine/core'
+import NavLink from './NavLink'
 
 export interface Navbar {
-	roles: string[];
+	roles: string[]
 }
 
 /**
@@ -19,7 +19,7 @@ export default async function Navbar(props: Navbar) {
 				? link.permission.split('|').some((perm) => hasRole({ user: { realm_access: { roles: props.roles } } }, perm))
 				: hasRole({ user: { realm_access: { roles: props.roles } } }, link.permission)
 			: true,
-	);
+	)
 
 	const links = allowedLinks.map((item) =>
 		item.divider ? (
@@ -27,7 +27,7 @@ export default async function Navbar(props: Navbar) {
 		) : (
 			<NavLink key={item.link} {...item} />
 		),
-	);
+	)
 
 	return (
 		<AppShellNavbar p="md">
@@ -35,5 +35,5 @@ export default async function Navbar(props: Navbar) {
 				<Stack gap="xs">{links}</Stack>
 			</ScrollArea>
 		</AppShellNavbar>
-	);
+	)
 }

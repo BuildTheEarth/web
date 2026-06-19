@@ -1,29 +1,29 @@
-import { getUserPermissions } from '@/actions/getUser';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { getSession, hasRole } from '@/util/auth';
-import prisma from '@/util/db';
-import { Group, Title } from '@mantine/core';
-import { Metadata } from 'next';
-import MembersDatatable from './datatable';
-import { AddMemberButton, SearchMembers } from './interactivity';
+import { getUserPermissions } from '@/actions/getUser'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { getSession, hasRole } from '@/util/auth'
+import prisma from '@/util/db'
+import { Group, Title } from '@mantine/core'
+import { Metadata } from 'next'
+import MembersDatatable from './datatable'
+import { AddMemberButton, SearchMembers } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Edit Build Team',
-};
+}
 
 export default async function Page({
 	params,
 	searchParams,
 }: {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{ page?: string; query?: string }>;
+	params: Promise<{ slug: string }>
+	searchParams: Promise<{ page?: string; query?: string }>
 }) {
-	const session = await getSession();
-	const userPermissions = await getUserPermissions(session?.user.id);
-	const slug = (await params).slug;
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
+	const session = await getSession()
+	const userPermissions = await getUserPermissions(session?.user.id)
+	const slug = (await params).slug
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
 
 	const builderCount = await prisma.user.count({
 		where: {
@@ -47,7 +47,7 @@ export default async function Page({
 				},
 			],
 		},
-	});
+	})
 	const builders = await prisma.user.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,
@@ -88,7 +88,7 @@ export default async function Page({
 				select: { permission: { select: { id: true, description: true } } },
 			},
 		},
-	});
+	})
 
 	const availablePermissions = await prisma.permisision.findMany({
 		where: {
@@ -98,7 +98,7 @@ export default async function Page({
 			id: true,
 			description: true,
 		},
-	});
+	})
 
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
@@ -131,5 +131,5 @@ export default async function Page({
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

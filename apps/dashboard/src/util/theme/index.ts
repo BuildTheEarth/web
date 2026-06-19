@@ -1,4 +1,4 @@
-import { createTheme } from '@mantine/core';
+import { createTheme } from '@mantine/core'
 
 /**
  * Main Mantine Theme of the Website
@@ -57,4 +57,4 @@ export const theme = createTheme({
 
 	// autoContrast: true,
 	// luminanceThreshold: 0.33,
-});
+})

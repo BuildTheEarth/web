@@ -1,5 +1,5 @@
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Skeleton, Text, Title } from '@mantine/core';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Skeleton, Text, Title } from '@mantine/core'
 
 export default async function Page() {
 	return (
@@ -18,5 +18,5 @@ export default async function Page() {
 				<Text fz="sm">Loading...</Text>
 			</Skeleton>
 		</ContentWrapper>
-	);
+	)
 }

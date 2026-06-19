@@ -1,12 +1,12 @@
-'use client';
-import { hasRole } from '@/util/auth';
-import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
-import type { Application } from '@repo/db';
-import { IconDots, IconId } from '@tabler/icons-react';
+'use client'
+import { hasRole } from '@/util/auth'
+import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
+import type { Application } from '@repo/db'
+import { IconDots, IconId } from '@tabler/icons-react'
 
 export function EditMenu({ application }: { application: Application }) {
-	const clipboard = useClipboard({ timeout: 500 });
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<Menu>
@@ -25,5 +25,5 @@ export function EditMenu({ application }: { application: Application }) {
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }

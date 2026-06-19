@@ -1,19 +1,19 @@
-'use client';
-import { BuildTeamSelect } from '@/components/input/BuildTeamSelect';
-import { Button, Group, Title } from '@mantine/core';
-import { IconDeviceFloppy, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import { useClaimEditorStore } from './store';
+'use client'
+import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
+import { Button, Group, Title } from '@mantine/core'
+import { IconDeviceFloppy, IconPencil, IconPlus, IconTrash } from '@tabler/icons-react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { useClaimEditorStore } from './store'
 
 export function SaveButtonGroup() {
-	const editorStore = useClaimEditorStore();
-	let claimName = 'None selected';
+	const editorStore = useClaimEditorStore()
+	let claimName = 'None selected'
 	if (editorStore.drawInstance && editorStore.selectedClaimId) {
-		const feature = editorStore.drawInstance?.get(editorStore.selectedClaimId);
+		const feature = editorStore.drawInstance?.get(editorStore.selectedClaimId)
 		if (feature && feature.properties?.name) {
-			claimName = feature.properties.name;
+			claimName = feature.properties.name
 		}
 	}
 	return (
@@ -52,12 +52,12 @@ export function SaveButtonGroup() {
 				</Button>
 			</Group>
 		</Group>
-	);
+	)
 }
 
 export function NewClaimButton() {
-	const editorStore = useClaimEditorStore();
-	const pathname = usePathname();
+	const editorStore = useClaimEditorStore()
+	const pathname = usePathname()
 	return (
 		<Button
 			variant="gradient"
@@ -70,21 +70,21 @@ export function NewClaimButton() {
 			}
 			fullWidth
 			onClick={() => {
-				if (!editorStore.drawInstance) return;
-				editorStore.drawInstance?.changeMode('draw_polygon');
+				if (!editorStore.drawInstance) return
+				editorStore.drawInstance?.changeMode('draw_polygon')
 			}}
 			rightSection={<IconPlus size={16} />}
 		>
 			Create new Claim
 		</Button>
-	);
+	)
 }
 
 export function SelectBuildTeamModal(props: {
-	allowedBuildTeamIds?: string[] | null;
-	continue(buildTeamId: string | false): void;
+	allowedBuildTeamIds?: string[] | null
+	continue(buildTeamId: string | false): void
 }) {
-	const [buildTeamId, setBuildTeamId] = useState<string | null>(null);
+	const [buildTeamId, setBuildTeamId] = useState<string | null>(null)
 	return (
 		<>
 			<BuildTeamSelect
@@ -106,5 +106,5 @@ export function SelectBuildTeamModal(props: {
 				Create Claim
 			</Button>
 		</>
-	);
+	)
 }

@@ -1,4 +1,4 @@
-import { Text, Title } from '@mantine/core';
+import { Text, Title } from '@mantine/core'
 import {
 	IconFileUpload,
 	IconForms,
@@ -16,21 +16,21 @@ import {
 	IconTools,
 	IconUser,
 	IconUsersGroup,
-} from '@tabler/icons-react';
+} from '@tabler/icons-react'
 
-import { ActionsCard } from '@/components/core/card/ActionsCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Greeting } from '@/components/data/Greeting';
-import { getSession } from '@/util/auth';
-import prisma from '@/util/db';
-import { Metadata } from 'next';
+import { ActionsCard } from '@/components/core/card/ActionsCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Greeting } from '@/components/data/Greeting'
+import { getSession } from '@/util/auth'
+import prisma from '@/util/db'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'Your Home',
-};
+}
 
 export default async function Page() {
-	const session = await getSession();
+	const session = await getSession()
 	const websiteData = await prisma.user.findUnique({
 		where: { ssoId: session?.user.id },
 		select: {
@@ -44,7 +44,7 @@ export default async function Page() {
 				},
 			},
 		},
-	});
+	})
 
 	return (
 		<ContentWrapper maw="90vw">
@@ -114,5 +114,5 @@ export default async function Page() {
 				</>
 			)}
 		</ContentWrapper>
-	);
+	)
 }

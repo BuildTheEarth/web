@@ -1,35 +1,35 @@
-'use server';
+'use server'
 
-import { Alert, Box, CheckIcon, Code, Grid, GridCol, Group, SimpleGrid, ThemeIcon, Title } from '@mantine/core';
+import { Alert, Box, CheckIcon, Code, Grid, GridCol, Group, SimpleGrid, ThemeIcon, Title } from '@mantine/core'
 
-import { getUserPermissions } from '@/actions/getUser';
-import { Protection } from '@/components/Protection';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { TextCard } from '@/components/core/card/TextCard';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { ApplicationQuestions } from '@/util/application';
-import { getSession } from '@/util/auth';
-import { toHumanDateTime } from '@/util/date';
-import prisma from '@/util/db';
-import { ApplicationStatus } from '@repo/db';
-import { IconClockCheck, IconClockExclamation, IconClockX, IconInfoCircle } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { EditMenu, ResponseEditor } from './interactivity';
+import { getUserPermissions } from '@/actions/getUser'
+import { Protection } from '@/components/Protection'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { TextCard } from '@/components/core/card/TextCard'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { ApplicationQuestions } from '@/util/application'
+import { getSession } from '@/util/auth'
+import { toHumanDateTime } from '@/util/date'
+import prisma from '@/util/db'
+import { ApplicationStatus } from '@repo/db'
+import { IconClockCheck, IconClockExclamation, IconClockX, IconInfoCircle } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { EditMenu, ResponseEditor } from './interactivity'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params;
+	const { id } = await params
 
 	return {
 		title: 'Application ' + id.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string; slug: string }> }) {
-	const id = (await params).id;
-	const slug = (await params).slug;
-	const session = await getSession();
-	const userPermissions = await getUserPermissions(session?.user.id);
+	const id = (await params).id
+	const slug = (await params).slug
+	const session = await getSession()
+	const userPermissions = await getUserPermissions(session?.user.id)
 
 	const application = await prisma.application.findUnique({
 		where: { buildteam: { slug }, id },
@@ -38,12 +38,12 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 			buildteam: { select: { id: true, slug: true, location: true, name: true, icon: true } },
 			reviewer: true,
 		},
-	});
+	})
 
 	const applicationAnswers = await prisma.applicationAnswer.findMany({
 		where: { applicationId: id },
 		include: { question: true },
-	});
+	})
 
 	const applicationResponseTemplates = await prisma.applicationResponseTemplate.findMany({
 		where: { buildteam: { slug } },
@@ -52,9 +52,9 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 			content: true,
 			name: true,
 		},
-	});
+	})
 
-	if (!application) throw Error('Could not find Application');
+	if (!application) throw Error('Could not find Application')
 
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.application.review', slug }}>
@@ -156,9 +156,9 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 					{applicationAnswers
 						.sort((a: any, b: any) => a.question.sort - b.question.sort)
 						.map((a: any, i: number) => {
-							const d = a.question;
+							const d = a.question
 
-							const Question = ApplicationQuestions[d.type];
+							const Question = ApplicationQuestions[d.type]
 
 							return (
 								<Question
@@ -168,7 +168,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 									readonly={true}
 									value={a.answer}
 								/>
-							);
+							)
 						})}
 					{applicationAnswers.length === 0 && (
 						<Alert
@@ -215,5 +215,5 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 				</Box>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

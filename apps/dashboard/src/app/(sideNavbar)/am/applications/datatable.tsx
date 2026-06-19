@@ -1,29 +1,29 @@
-'use client';
+'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core';
-import { IconDots, IconExternalLink, IconEye, IconId } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core'
+import { IconDots, IconExternalLink, IconEye, IconId } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { ApplicationStatusBadge } from '@/components/data/ApplicationStatusBadge';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { toHumanDateTime } from '@/util/date';
-import { useClipboard } from '@mantine/hooks';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
+import { ApplicationStatusBadge } from '@/components/data/ApplicationStatusBadge'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { toHumanDateTime } from '@/util/date'
+import { useClipboard } from '@mantine/hooks'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
 
 export default function ApplicationsDatatable<A extends { id: string }>({
 	applications,
 	count,
 }: {
-	applications: A[];
-	count: number;
+	applications: A[]
+	count: number
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<DataTable
@@ -120,5 +120,5 @@ export default function ApplicationsDatatable<A extends { id: string }>({
 			}
 			noRecordsText="No Applications found"
 		/>
-	);
+	)
 }

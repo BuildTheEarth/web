@@ -1,40 +1,40 @@
-import { AuthOptions, Session, getServerSession } from 'next-auth';
+import { AuthOptions, Session, getServerSession } from 'next-auth'
 
-import { JWT } from 'next-auth/jwt';
-import KeycloakProvider from 'next-auth/providers/keycloak';
-import { isSessionInvalidated, markSessionAsChecked } from './invalidatedSessions';
+import { JWT } from 'next-auth/jwt'
+import KeycloakProvider from 'next-auth/providers/keycloak'
+import { isSessionInvalidated, markSessionAsChecked } from './invalidatedSessions'
 
-const TOKEN_EXPIRY_SKEW_MS = 15_000;
-const DEFAULT_ACCESS_TOKEN_TTL_SECONDS = 300;
+const TOKEN_EXPIRY_SKEW_MS = 15_000
+const DEFAULT_ACCESS_TOKEN_TTL_SECONDS = 300
 
 const decodeJwtPayload = (jwt: string): Record<string, unknown> | null => {
 	try {
-		const [, payload] = jwt.split('.');
-		if (!payload) return null;
+		const [, payload] = jwt.split('.')
+		if (!payload) return null
 
-		const normalized = payload.replace(/-/g, '+').replace(/_/g, '/');
-		const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4);
-		const decoded = Buffer.from(padded, 'base64').toString('utf-8');
+		const normalized = payload.replace(/-/g, '+').replace(/_/g, '/')
+		const padded = normalized + '='.repeat((4 - (normalized.length % 4)) % 4)
+		const decoded = Buffer.from(padded, 'base64').toString('utf-8')
 
-		return JSON.parse(decoded) as Record<string, unknown>;
+		return JSON.parse(decoded) as Record<string, unknown>
 	} catch {
-		return null;
+		return null
 	}
-};
+}
 
 const getAccessTokenExpiry = (
 	accessToken: string | undefined,
 	fallbackTtlSeconds = DEFAULT_ACCESS_TOKEN_TTL_SECONDS,
 ) => {
-	const payload = accessToken ? decodeJwtPayload(accessToken) : null;
-	const exp = payload?.exp;
+	const payload = accessToken ? decodeJwtPayload(accessToken) : null
+	const exp = payload?.exp
 
 	if (typeof exp === 'number' && exp > 0) {
-		return exp * 1000 - TOKEN_EXPIRY_SKEW_MS;
+		return exp * 1000 - TOKEN_EXPIRY_SKEW_MS
 	}
 
-	return Date.now() + fallbackTtlSeconds * 1000 - TOKEN_EXPIRY_SKEW_MS;
-};
+	return Date.now() + fallbackTtlSeconds * 1000 - TOKEN_EXPIRY_SKEW_MS
+}
 
 /**
  * Refreshes access token to continue the session after token expiration
@@ -43,46 +43,46 @@ const getAccessTokenExpiry = (
  */
 const refreshAccessToken = async (token: JWT) => {
 	try {
-		if (!token.refreshToken) throw new Error('Missing refresh token');
-		if (token.refreshTokenExpired && Date.now() >= token.refreshTokenExpired) throw new Error('Refresh token expired');
+		if (!token.refreshToken) throw new Error('Missing refresh token')
+		if (token.refreshTokenExpired && Date.now() >= token.refreshTokenExpired) throw new Error('Refresh token expired')
 
 		const details = {
 			client_id: process.env.NEXT_PUBLIC_KEYCLOAK_ID,
 			client_secret: process.env.KEYCLOAK_SECRET,
 			grant_type: 'refresh_token',
 			refresh_token: token.refreshToken,
-		};
+		}
 
-		const formBody: string[] = [];
+		const formBody: string[] = []
 		Object.entries(details).forEach(([key, value]: [string, string | undefined]) => {
-			const encodedKey = encodeURIComponent(key);
-			const encodedValue = encodeURIComponent(value ?? '');
-			formBody.push(encodedKey + '=' + encodedValue);
-		});
+			const encodedKey = encodeURIComponent(key)
+			const encodedValue = encodeURIComponent(value ?? '')
+			formBody.push(encodedKey + '=' + encodedValue)
+		})
 
-		const formData = formBody.join('&');
-		const url = `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/protocol/openid-connect/token`;
+		const formData = formBody.join('&')
+		const url = `${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/protocol/openid-connect/token`
 		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
 			},
 			body: formData,
-		});
+		})
 
-		const refreshedTokens = await response.json();
-		if (!response.ok) throw refreshedTokens;
+		const refreshedTokens = await response.json()
+		if (!response.ok) throw refreshedTokens
 
 		const refreshedAccessExpiresIn =
 			typeof refreshedTokens.expires_in === 'number' && refreshedTokens.expires_in > 0
 				? refreshedTokens.expires_in
-				: DEFAULT_ACCESS_TOKEN_TTL_SECONDS;
-		const refreshedRefreshExpiresIn = refreshedTokens.refresh_expires_in ?? 0;
-		const nextAccessToken = refreshedTokens.access_token ?? token.accessToken;
+				: DEFAULT_ACCESS_TOKEN_TTL_SECONDS
+		const refreshedRefreshExpiresIn = refreshedTokens.refresh_expires_in ?? 0
+		const nextAccessToken = refreshedTokens.access_token ?? token.accessToken
 
 		const nextRefreshExpiry = refreshedRefreshExpiresIn
 			? Date.now() + (refreshedRefreshExpiresIn - 15) * 1000
-			: token.refreshTokenExpired;
+			: token.refreshTokenExpired
 
 		return {
 			...token,
@@ -90,15 +90,15 @@ const refreshAccessToken = async (token: JWT) => {
 			accessTokenExpired: getAccessTokenExpiry(nextAccessToken, refreshedAccessExpiresIn),
 			refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
 			refreshTokenExpired: nextRefreshExpiry,
-		};
+		}
 	} catch (error) {
-		console.error('Failed to refresh access token', error);
+		console.error('Failed to refresh access token', error)
 		return {
 			...token,
 			error: 'RefreshAccessTokenError',
-		};
+		}
 	}
-};
+}
 
 export const authOptions: AuthOptions = {
 	secret: process.env.NEXTAUTH_SECRET,
@@ -120,17 +120,17 @@ export const authOptions: AuthOptions = {
 					...profile,
 					username: profile.preferred_username,
 					id: profile.sub,
-				};
+				}
 			},
 		}),
 	],
 	callbacks: {
 		signIn: async ({ user, account }) => {
 			if (account && user) {
-				return true;
+				return true
 			} else {
 				// TODO : Add unauthorized page
-				return '/unauthorized';
+				return '/unauthorized'
 			}
 		},
 
@@ -141,36 +141,36 @@ export const authOptions: AuthOptions = {
 				const accessExpiresIn =
 					typeof account.expires_in === 'number' && account.expires_in > 0
 						? account.expires_in
-						: DEFAULT_ACCESS_TOKEN_TTL_SECONDS;
-				const refreshExpiresIn = account.refresh_expires_in ?? 0;
+						: DEFAULT_ACCESS_TOKEN_TTL_SECONDS
+				const refreshExpiresIn = account.refresh_expires_in ?? 0
 
-				token.accessToken = account.access_token;
-				token.refreshToken = account.refresh_token;
-				token.accessTokenExpired = getAccessTokenExpiry(account.access_token, accessExpiresIn);
-				token.refreshTokenExpired = refreshExpiresIn ? Date.now() + (refreshExpiresIn - 15) * 1000 : undefined;
-				token.sessionId = account.session_state;
-				token.user = user;
-				return token;
+				token.accessToken = account.access_token
+				token.refreshToken = account.refresh_token
+				token.accessTokenExpired = getAccessTokenExpiry(account.access_token, accessExpiresIn)
+				token.refreshTokenExpired = refreshExpiresIn ? Date.now() + (refreshExpiresIn - 15) * 1000 : undefined
+				token.sessionId = account.session_state
+				token.user = user
+				return token
 			}
 
 			// If token already has an error (from previous check), return it immediately
 			if (token.error) {
-				return token;
+				return token
 			}
 
 			// Check if this session was invalidated via back-channel logout
-			const sessionId = token.sessionId as string | undefined;
-			const userId = token.sub;
+			const sessionId = token.sessionId as string | undefined
+			const userId = token.sub
 			if (isSessionInvalidated(sessionId, userId)) {
-				markSessionAsChecked(sessionId, userId);
-				return { ...token, error: 'TokenInvalidated' };
+				markSessionAsChecked(sessionId, userId)
+				return { ...token, error: 'TokenInvalidated' }
 			}
 
 			// Return previous token if the access token has not expired yet
-			if (Date.now() < token.accessTokenExpired || token.accessTokenExpired == null) return token;
+			if (Date.now() < token.accessTokenExpired || token.accessTokenExpired == null) return token
 
 			// Access token has expired, try to update it
-			return refreshAccessToken(token);
+			return refreshAccessToken(token)
 		},
 		session: async ({ session, token }: { session: Session; token: JWT }) => {
 			if (token) {
@@ -180,33 +180,33 @@ export const authOptions: AuthOptions = {
 					return {
 						expires: session.expires,
 						error: 'ForceLogout',
-					} as Session;
+					} as Session
 				}
 
 				// @ts-expect-error shut up typescript
-				session.user = token.user;
-				session.error = token.error;
-				session.accessToken = token.accessToken;
+				session.user = token.user
+				session.error = token.error
+				session.accessToken = token.accessToken
 			}
-			return session;
+			return session
 		},
 	},
-};
+}
 
 /**
  * Helper function to get the session on the server without having to import the authOptions object every single time
  * @returns The session object or null
  */
 export const getSession = async () => {
-	const session = await getServerSession(authOptions);
+	const session = await getServerSession(authOptions)
 
 	// Treat errored/incomplete sessions as unauthenticated everywhere on the server.
 	if (!session || session.error === 'ForceLogout' || !session.user) {
-		return null;
+		return null
 	}
 
-	return session;
-};
+	return session
+}
 
 /**
  * Helper function to check if a user has a specific role
@@ -218,5 +218,5 @@ export function hasRole(
 	session: Session | null | undefined | { user: { realm_access?: { roles: string[] } } },
 	role: string,
 ) {
-	return session?.user?.realm_access?.roles?.includes(role) || false;
+	return session?.user?.realm_access?.roles?.includes(role) || false
 }

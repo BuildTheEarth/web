@@ -1,4 +1,4 @@
-import { useTransition } from 'react';
+import { useTransition } from 'react'
 
 /**
  * Creates a form action with support of a loading state.
@@ -8,20 +8,20 @@ import { useTransition } from 'react';
 export function useFormAction<T = void>(
 	action: (...data: any[]) => Promise<T>,
 ): [(...data: any[]) => Promise<T>, boolean] {
-	const [isPending, startTransition] = useTransition();
+	const [isPending, startTransition] = useTransition()
 
 	const actionWithStatus = async (...data: any[]) => {
-		let result: T;
+		let result: T
 		await new Promise<void>((resolve) => {
 			startTransition(async () => {
-				result = await action(...data);
-				resolve();
-			});
-		});
-		return result!;
-	};
+				result = await action(...data)
+				resolve()
+			})
+		})
+		return result!
+	}
 
-	return [actionWithStatus, isPending];
+	return [actionWithStatus, isPending]
 }
 
 /**
@@ -32,13 +32,13 @@ export function useFormAction<T = void>(
 export function useFormActions(
 	actions: Array<(...data: any[]) => Promise<any>>,
 ): [Array<(...data: any[]) => Promise<any>>, boolean] {
-	const [isPending, startTransition] = useTransition();
+	const [isPending, startTransition] = useTransition()
 
 	const actionsWithStatus = actions.map((action) => async (...data: any[]) => {
 		startTransition(async () => {
-			await action(...data);
-		});
-	});
+			await action(...data)
+		})
+	})
 
-	return [actionsWithStatus, isPending];
+	return [actionsWithStatus, isPending]
 }

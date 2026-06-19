@@ -1,19 +1,19 @@
-import { Badge, Card, Flex, Group, Stack, Text, Title } from '@mantine/core';
+import { Badge, Card, Flex, Group, Stack, Text, Title } from '@mantine/core'
 
-import { getUser, getUserSessions } from '@/actions/getUser';
-import { WebsiteKeycloakUser } from '@/types/User';
-import { IconDevices } from '@tabler/icons-react';
+import { getUser, getUserSessions } from '@/actions/getUser'
+import { WebsiteKeycloakUser } from '@/types/User'
+import { IconDevices } from '@tabler/icons-react'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Metadata } from 'next';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'Active Sessions',
-};
+}
 
 export default async function Page() {
-	const user = await getUser();
-	const data = await getUserSessions(user.ssoId);
+	const user = await getUser()
+	const data = await getUserSessions(user.ssoId)
 
 	return (
 		<ContentWrapper>
@@ -30,7 +30,7 @@ export default async function Page() {
 				))}
 			</Stack>
 		</ContentWrapper>
-	);
+	)
 }
 
 function UserSession({ session, key }: { session: WebsiteKeycloakUser['sessions'][0]; key: number }) {
@@ -71,5 +71,5 @@ function UserSession({ session, key }: { session: WebsiteKeycloakUser['sessions'
 				</Flex>
 			</Flex>
 		</Card>
-	);
+	)
 }

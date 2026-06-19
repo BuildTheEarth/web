@@ -1,4 +1,4 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 import {
 	IconBrandDocker,
 	IconBrandGoogleAnalytics,
@@ -15,16 +15,16 @@ import {
 	IconServer,
 	IconUserScan,
 	IconWebhook,
-} from '@tabler/icons-react';
+} from '@tabler/icons-react'
 
-import { ActionsCard } from '@/components/core/card/ActionsCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { Metadata } from 'next';
+import { ActionsCard } from '@/components/core/card/ActionsCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'Tools',
-};
+}
 
 export default async function Page() {
 	return (
@@ -93,5 +93,5 @@ export default async function Page() {
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

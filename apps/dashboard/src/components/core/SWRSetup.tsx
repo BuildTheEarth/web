@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { LoadingOverlay } from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-import { useSession } from 'next-auth/react';
-import { SWRConfig } from 'swr';
+import { LoadingOverlay } from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import { useSession } from 'next-auth/react'
+import { SWRConfig } from 'swr'
 
 export default function SWRSetup({ children }: any) {
-	const session = useSession();
+	const session = useSession()
 	if (session.status == 'loading') {
-		return <LoadingOverlay visible />;
+		return <LoadingOverlay visible />
 	}
 	return (
 		<SWRConfig
@@ -23,21 +23,21 @@ export default function SWRSetup({ children }: any) {
 				revalidateOnReconnect: false,
 				onError: (err, key) => {
 					if (process.env.NODE_ENV == 'development') {
-						console.error(`'${err}' on request to ${key} (${err.cause})`);
+						console.error(`'${err}' on request to ${key} (${err.cause})`)
 					}
 					if (err.cause != 401) {
 						showNotification({
 							title: 'Error during request',
 							message: err.message.replace('Error: ', ''),
 							color: 'red',
-						});
+						})
 					}
 				},
 			}}
 		>
 			{children}
 		</SWRConfig>
-	);
+	)
 }
 
 /**
@@ -52,14 +52,14 @@ export const swrFetcher = async (resource: any, init: any) => {
 				...init?.headers,
 			},
 			...init,
-		});
+		})
 
-		const json = await res.json();
+		const json = await res.json()
 
 		if (!res.ok || json.error) {
-			throw new Error(json.message, { cause: res.status });
+			throw new Error(json.message, { cause: res.status })
 		}
 
-		return json;
+		return json
 	}
-};
+}

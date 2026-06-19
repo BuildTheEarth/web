@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { ActionIcon, Group, GroupProps, Select, TextInput, rem } from '@mantine/core';
-import { IconSearch, IconX } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { ActionIcon, Group, GroupProps, Select, TextInput, rem } from '@mantine/core'
+import { IconSearch, IconX } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { useDebouncedValue } from '@mantine/hooks';
+import { useDebouncedValue } from '@mantine/hooks'
 
 export function SearchApplications(props: GroupProps) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
 
-	const [searchValue, setSearchValue] = useState(() => params.get('query') || '');
-	const [searchType, setSearchType] = useState(() => params.get('searchType') || 'applicant');
-	const [onlyPending, setOnlyPending] = useState(() => params.get('onlyPending') === 'true');
-	const [debouncedValue] = useDebouncedValue(searchValue, 500);
+	const [searchValue, setSearchValue] = useState(() => params.get('query') || '')
+	const [searchType, setSearchType] = useState(() => params.get('searchType') || 'applicant')
+	const [onlyPending, setOnlyPending] = useState(() => params.get('onlyPending') === 'true')
+	const [debouncedValue] = useDebouncedValue(searchValue, 500)
 
 	const searchTypes = [
 		{
@@ -33,22 +33,22 @@ export function SearchApplications(props: GroupProps) {
 			label: 'Build Team',
 			example: 'Build Team Name, Country, IP, Invite, Slug...',
 		},
-	];
+	]
 
 	useEffect(() => {
-		const currentQuery = params.get('query') || '';
-		const currentType = params.get('searchType') || 'applicant';
-		const currentPending = params.get('onlyPending') === 'true';
+		const currentQuery = params.get('query') || ''
+		const currentType = params.get('searchType') || 'applicant'
+		const currentPending = params.get('onlyPending') === 'true'
 		if (debouncedValue !== currentQuery || searchType !== currentType || onlyPending !== currentPending) {
 			if (debouncedValue) {
-				router.push(`${pathname}?query=${debouncedValue}&searchType=${searchType}&onlyPending=${onlyPending}&page=1`);
+				router.push(`${pathname}?query=${debouncedValue}&searchType=${searchType}&onlyPending=${onlyPending}&page=1`)
 			} else {
-				router.push(`${pathname}?page=${params.get('page') || 1}`);
+				router.push(`${pathname}?page=${params.get('page') || 1}`)
 			}
 		}
 		// Only run when debouncedValue, searchType, onlyPending, pathname, or router changes
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [debouncedValue, searchType, onlyPending, pathname, router]);
+	}, [debouncedValue, searchType, onlyPending, pathname, router])
 
 	return (
 		<Group gap="sm" {...props} w="100%">
@@ -75,5 +75,5 @@ export function SearchApplications(props: GroupProps) {
 				onChange={(event) => setSearchValue(event.currentTarget.value)}
 			/>
 		</Group>
-	);
+	)
 }

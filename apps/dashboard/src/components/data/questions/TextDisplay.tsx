@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import { ApplicationQuestion } from '@/util/application';
-import { Text } from '@mantine/core';
-import { IconLetterT } from '@tabler/icons-react';
+import { ApplicationQuestion } from '@/util/application'
+import { Text } from '@mantine/core'
+import { IconLetterT } from '@tabler/icons-react'
 
 export interface TextDisplayProps extends ApplicationQuestion {
-	additionalData: {};
+	additionalData: {}
 }
 
 function validation(props: TextDisplayProps): (value: string) => void {
 	return (value: string) => {
-		return false;
-	};
+		return false
+	}
 }
 
 const TextDisplay = (props: TextDisplayProps) => {
@@ -26,13 +26,13 @@ const TextDisplay = (props: TextDisplayProps) => {
 				</Text>
 			)}
 		</>
-	);
-};
+	)
+}
 
-const EditQuestion: any = undefined;
+const EditQuestion: any = undefined
 
-TextDisplay.edit = EditQuestion;
-TextDisplay.mockdata = {};
-TextDisplay.validation = validation;
-TextDisplay.icon = IconLetterT;
-export default TextDisplay;
+TextDisplay.edit = EditQuestion
+TextDisplay.mockdata = {}
+TextDisplay.validation = validation
+TextDisplay.icon = IconLetterT
+export default TextDisplay

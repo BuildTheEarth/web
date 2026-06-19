@@ -1,19 +1,19 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { Metadata } from 'next';
-import UsersDatatabe from './datatable';
-import { SearchUsers } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { Metadata } from 'next'
+import UsersDatatabe from './datatable'
+import { SearchUsers } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Website Users',
-};
+}
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
 	const userCount = await prisma.user.count({
 		where: searchQuery
 			? {
@@ -25,7 +25,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 					],
 				}
 			: undefined,
-	});
+	})
 	const users = await prisma.user.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,
@@ -39,7 +39,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 					],
 				}
 			: undefined,
-	});
+	})
 
 	return (
 		<Protection requiredRole="get-users">
@@ -51,5 +51,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				<UsersDatatabe users={users} count={userCount} />
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

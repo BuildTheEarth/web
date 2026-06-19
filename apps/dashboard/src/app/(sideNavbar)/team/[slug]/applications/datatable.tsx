@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	ActionIcon,
@@ -18,22 +18,22 @@ import {
 	Textarea,
 	ThemeIcon,
 	Tooltip,
-} from '@mantine/core';
-import { IconCheck, IconDots, IconEye, IconId, IconTrash } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+} from '@mantine/core'
+import { IconCheck, IconDots, IconEye, IconId, IconTrash } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { removeMember } from '@/actions/buildTeams';
-import { ApplicationStatusBadge } from '@/components/data/ApplicationStatusBadge';
-import { UserDisplay } from '@/components/data/User';
-import { useActiveBuildTeam } from '@/hooks/useBuildTeamData';
-import { toHumanDate } from '@/util/date';
-import { useClipboard } from '@mantine/hooks';
-import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
-import type { ApplicationStatus } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import moment from 'moment';
-import Link from 'next/link';
+import { removeMember } from '@/actions/buildTeams'
+import { ApplicationStatusBadge } from '@/components/data/ApplicationStatusBadge'
+import { UserDisplay } from '@/components/data/User'
+import { useActiveBuildTeam } from '@/hooks/useBuildTeamData'
+import { toHumanDate } from '@/util/date'
+import { useClipboard } from '@mantine/hooks'
+import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
+import type { ApplicationStatus } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import moment from 'moment'
+import Link from 'next/link'
 
 export default function ApplicationsDatatable({
 	applications,
@@ -43,33 +43,33 @@ export default function ApplicationsDatatable({
 	slug,
 }: {
 	applications: {
-		id: string;
-		status: ApplicationStatus;
-		createdAt: Date;
-		reviewedAt: Date | null;
+		id: string
+		status: ApplicationStatus
+		createdAt: Date
+		reviewedAt: Date | null
 		user: {
-			id: string;
-			username: string | null;
-			ssoId: string;
-		};
+			id: string
+			username: string | null
+			ssoId: string
+		}
 		reviewer: {
-			id: string;
-			username: string | null;
-			ssoId: string;
-		} | null;
-		trial: boolean;
-	}[];
-	count: number;
-	userId: string;
-	permissions?: string[];
-	slug: string;
+			id: string
+			username: string | null
+			ssoId: string
+		} | null
+		trial: boolean
+	}[]
+	count: number
+	userId: string
+	permissions?: string[]
+	slug: string
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
-	const activeBuildTeam = useActiveBuildTeam();
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
+	const activeBuildTeam = useActiveBuildTeam()
 
 	return (
 		<DataTable
@@ -85,7 +85,7 @@ export default function ApplicationsDatatable({
 				{
 					accessor: 'user',
 					render: ({ user }) => {
-						return <UserDisplay user={{ id: user.id, username: user.username || '', ssoId: user.ssoId }} noAnchor />;
+						return <UserDisplay user={{ id: user.id, username: user.username || '', ssoId: user.ssoId }} noAnchor />
 					},
 				},
 				{
@@ -156,5 +156,5 @@ export default function ApplicationsDatatable({
 			}
 			noRecordsText="No Applications found"
 		/>
-	);
+	)
 }

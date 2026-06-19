@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	ActionIcon,
@@ -13,30 +13,30 @@ import {
 	Text,
 	Tooltip,
 	rem,
-} from '@mantine/core';
-import { IconDots, IconExternalLink, IconEye, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+} from '@mantine/core'
+import { IconDots, IconExternalLink, IconEye, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { UserDisplay } from '@/components/data/User';
-import { useClipboard } from '@mantine/hooks';
-import type { BuildTeam } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
+import { UserDisplay } from '@/components/data/User'
+import { useClipboard } from '@mantine/hooks'
+import type { BuildTeam } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
 
-type BuildTeamWithCreator = BuildTeam & { creator: { ssoId: string; id: string; username: string | null } };
+type BuildTeamWithCreator = BuildTeam & { creator: { ssoId: string; id: string; username: string | null } }
 
 export default function BuildTeamsDatatable({
 	buildTeams,
 	count,
 }: {
-	buildTeams: BuildTeamWithCreator[];
-	count: number;
+	buildTeams: BuildTeamWithCreator[]
+	count: number
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<DataTable
@@ -176,5 +176,5 @@ export default function BuildTeamsDatatable({
 			}
 			noRecordsText="No BuildTeams found"
 		/>
-	);
+	)
 }

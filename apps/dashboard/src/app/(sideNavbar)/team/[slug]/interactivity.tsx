@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { hasRole } from '@/util/auth';
-import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem } from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
-import type { BuildTeam } from '@repo/db';
-import { IconDots, IconExternalLink, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { hasRole } from '@/util/auth'
+import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
+import type { BuildTeam } from '@repo/db'
+import { IconDots, IconExternalLink, IconId } from '@tabler/icons-react'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 export function EditMenu({ team }: { team: BuildTeam }) {
-	const session = useSession();
-	const clipboard = useClipboard({ timeout: 500 });
+	const session = useSession()
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<Menu>
@@ -44,5 +44,5 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }

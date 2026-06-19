@@ -1,4 +1,4 @@
-'use client';
+'use client'
 import {
 	Avatar,
 	Combobox,
@@ -9,16 +9,16 @@ import {
 	Loader,
 	TextInput,
 	useCombobox,
-} from '@mantine/core';
-import { useDebouncedValue } from '@mantine/hooks';
-import React, { useEffect, useRef, useState } from 'react';
-import { UserDisplay } from '../data/User';
+} from '@mantine/core'
+import { useDebouncedValue } from '@mantine/hooks'
+import React, { useEffect, useRef, useState } from 'react'
+import { UserDisplay } from '../data/User'
 
 function getData(searchQuery: string, signal: AbortSignal) {
 	return new Promise<string[]>((resolve, reject) => {
 		signal.addEventListener('abort', () => {
-			reject(new Error('Request aborted'));
-		});
+			reject(new Error('Request aborted'))
+		})
 
 		fetch(
 			`/api/usersearch?query=${searchQuery}&includeDiscord=true&includeAvatar=true&includeMinecraft=true&limit=10`,
@@ -29,22 +29,22 @@ function getData(searchQuery: string, signal: AbortSignal) {
 		)
 			.then((response) => {
 				if (!response.ok) {
-					throw new Error(`Network response was not ok (${response.status})`, { cause: response.status });
+					throw new Error(`Network response was not ok (${response.status})`, { cause: response.status })
 				}
-				return response.json();
+				return response.json()
 			})
 			.then((data) => {
-				resolve(data);
+				resolve(data)
 			})
 			.catch((error) => {
 				if (error.name === 'AbortError') {
-					console.log('Request aborted');
+					console.log('Request aborted')
 				} else {
-					console.error('Fetch error:', error);
-					reject(error);
+					console.error('Fetch error:', error)
+					reject(error)
 				}
-			});
-	});
+			})
+	})
 }
 
 export function UserSelect(
@@ -52,75 +52,75 @@ export function UserSelect(
 		onChange?: (
 			value: { id: string; username: string; discordId: string; minecraft: string } | null,
 			reset: () => void,
-		) => void;
+		) => void
 	},
 ) {
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
-	});
+	})
 
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false)
 	const [data, setData] = useState<{ id: string; username: string; discordId: string; minecraft: string }[] | null>(
 		null,
-	);
-	const [value, setValue] = useState('');
+	)
+	const [value, setValue] = useState('')
 	const [selectedUser, setSelectedUser] = useState<{
-		id: string;
-		username: string;
-		discordId: string;
-		minecraft: string;
-	} | null>(null);
-	const [debounced] = useDebouncedValue(value, 300);
-	const [empty, setEmpty] = useState(false);
-	const abortController = useRef<AbortController>(undefined);
+		id: string
+		username: string
+		discordId: string
+		minecraft: string
+	} | null>(null)
+	const [debounced] = useDebouncedValue(value, 300)
+	const [empty, setEmpty] = useState(false)
+	const abortController = useRef<AbortController>(undefined)
 
 	const fetchOptions = (query: string) => {
-		abortController.current?.abort();
-		abortController.current = new AbortController();
-		setLoading(true);
+		abortController.current?.abort()
+		abortController.current = new AbortController()
+		setLoading(true)
 
 		getData(query, abortController.current.signal)
 			.then((result) => {
-				setData(result as any[]);
-				setLoading(false);
-				setEmpty(result.length === 0);
-				abortController.current = undefined;
+				setData(result as any[])
+				setLoading(false)
+				setEmpty(result.length === 0)
+				abortController.current = undefined
 			})
-			.catch(() => {});
-	};
+			.catch(() => {})
+	}
 
 	useEffect(() => {
 		if (!debounced) {
-			setData(null);
-			return;
+			setData(null)
+			return
 		}
 		if (debounced.length < 3) {
-			setData(null);
-			return;
+			setData(null)
+			return
 		}
 
-		fetchOptions(debounced);
-	}, [debounced]);
+		fetchOptions(debounced)
+	}, [debounced])
 
 	const options = (data || []).map((item) => (
 		<ComboboxOption value={item.id} key={item.id}>
 			<UserDisplay user={{ id: item.id, username: item.username || item.minecraft, ssoId: '' }} noAnchor />
 		</ComboboxOption>
-	));
+	))
 
 	return (
 		<Combobox
 			onOptionSubmit={(optionValue) => {
-				const user = data?.find((item) => item.id === optionValue) || null;
-				setSelectedUser(user);
-				setValue(user?.username || '');
+				const user = data?.find((item) => item.id === optionValue) || null
+				setSelectedUser(user)
+				setValue(user?.username || '')
 				props.onChange?.(user, () => {
-					setSelectedUser(null);
-					combobox.resetSelectedOption();
-					setValue('');
-					setEmpty(true);
-				});
-				combobox.closeDropdown();
+					setSelectedUser(null)
+					combobox.resetSelectedOption()
+					setValue('')
+					setEmpty(true)
+				})
+				combobox.closeDropdown()
 			}}
 			withinPortal={false}
 			store={combobox}
@@ -132,16 +132,16 @@ export function UserSelect(
 					{...props}
 					value={selectedUser?.username || value}
 					onChange={(event) => {
-						setValue(event.currentTarget.value);
-						setSelectedUser(null);
-						combobox.resetSelectedOption();
-						combobox.openDropdown();
+						setValue(event.currentTarget.value)
+						setSelectedUser(null)
+						combobox.resetSelectedOption()
+						combobox.openDropdown()
 					}}
 					onClick={() => combobox.openDropdown()}
 					onFocus={() => {
-						combobox.openDropdown();
+						combobox.openDropdown()
 						if (data === null) {
-							fetchOptions(value);
+							fetchOptions(value)
 						}
 					}}
 					onBlur={() => combobox.closeDropdown()}
@@ -163,5 +163,5 @@ export function UserSelect(
 				</ComboboxOptions>
 			</ComboboxDropdown>
 		</Combobox>
-	);
+	)
 }

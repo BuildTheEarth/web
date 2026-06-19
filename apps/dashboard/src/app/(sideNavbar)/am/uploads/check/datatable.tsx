@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Badge, Button, ButtonGroup, Code, Text, Tooltip } from '@mantine/core';
-import { IconCheck, IconTrash } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Badge, Button, ButtonGroup, Code, Text, Tooltip } from '@mantine/core'
+import { IconCheck, IconTrash } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { useDisclosure } from '@mantine/hooks';
-import { openConfirmModal } from '@mantine/modals';
-import type { Upload } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import Image from 'next/image';
-import Link from 'next/link';
+import { useDisclosure } from '@mantine/hooks'
+import { openConfirmModal } from '@mantine/modals'
+import type { Upload } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export default function UploadsDatatable({
 	uploads,
@@ -17,16 +17,16 @@ export default function UploadsDatatable({
 	onCheckAction,
 	onDeleteAction,
 }: {
-	uploads: ({ createdAt: string } & Omit<Upload, 'createdAt'>)[];
-	count: number;
-	onCheckAction: (id: string) => void;
-	onDeleteAction: (id: string) => void;
+	uploads: ({ createdAt: string } & Omit<Upload, 'createdAt'>)[]
+	count: number
+	onCheckAction: (id: string) => void
+	onDeleteAction: (id: string) => void
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const [showImages, { toggle }] = useDisclosure(false);
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const [showImages, { toggle }] = useDisclosure(false)
 
 	return (
 		<DataTable
@@ -36,7 +36,7 @@ export default function UploadsDatatable({
 					accessor: 'Image',
 					width: 500,
 					render: ({ hash, name, width, height }) => {
-						const res = Math.floor((width / height) * 200);
+						const res = Math.floor((width / height) * 200)
 						return (
 							<Image
 								src={`https://cdn.buildtheearth.net/uploads/${name}`}
@@ -46,7 +46,7 @@ export default function UploadsDatatable({
 								blurDataURL={hash}
 								style={{ aspectRatio: `${width}/${height}` }}
 							/>
-						);
+						)
 					},
 				},
 				{
@@ -82,14 +82,14 @@ export default function UploadsDatatable({
 					accessor: 'resolution',
 					title: 'Resolution',
 					render: ({ width, height }) => {
-						const res = Math.floor((width / height) * 100);
+						const res = Math.floor((width / height) * 100)
 						return (
 							<Tooltip label={`This image does ${res != 177 ? 'not ' : ''}match the 16:9 format`}>
 								<Badge variant="light" color={res == 177 ? 'green' : 'gray'}>
 									{width} x {height}
 								</Badge>
 							</Tooltip>
-						);
+						)
 					},
 				},
 				{
@@ -123,7 +123,7 @@ export default function UploadsDatatable({
 									Delete
 								</Button>
 							</ButtonGroup>
-						);
+						)
 					},
 				},
 			]}
@@ -136,5 +136,5 @@ export default function UploadsDatatable({
 			}
 			noRecordsText="No Uploads found"
 		/>
-	);
+	)
 }

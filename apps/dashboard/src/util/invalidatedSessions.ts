@@ -5,31 +5,31 @@
 
 declare global {
 	// eslint-disable-next-line no-var
-	var invalidatedSessions: Set<string> | undefined;
+	var invalidatedSessions: Set<string> | undefined
 }
 
 export function isSessionInvalidated(sessionId: string | undefined, userId: string | undefined): boolean {
 	if (!globalThis.invalidatedSessions) {
-		return false;
+		return false
 	}
 
 	if (sessionId && globalThis.invalidatedSessions.has(sessionId)) {
-		return true;
+		return true
 	}
 
 	if (userId && globalThis.invalidatedSessions.has(userId)) {
-		return true;
+		return true
 	}
 
-	return false;
+	return false
 }
 
 export function markSessionAsChecked(sessionId: string | undefined, userId: string | undefined): void {
 	// Remove from invalidated sessions after checking to prevent memory buildup
 	if (sessionId) {
-		globalThis.invalidatedSessions?.delete(sessionId);
+		globalThis.invalidatedSessions?.delete(sessionId)
 	}
 	if (userId) {
-		globalThis.invalidatedSessions?.delete(userId);
+		globalThis.invalidatedSessions?.delete(userId)
 	}
 }

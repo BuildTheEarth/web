@@ -1,6 +1,6 @@
-import { Box, Group, Title } from '@mantine/core';
+import { Box, Group, Title } from '@mantine/core'
 
-import { Protection } from '@/components/Protection';
+import { Protection } from '@/components/Protection'
 
 export default async function Page({}: {}) {
 	return (
@@ -11,5 +11,5 @@ export default async function Page({}: {}) {
 				</Group>
 			</Box>
 		</Protection>
-	);
+	)
 }

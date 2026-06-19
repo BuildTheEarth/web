@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core';
-import { IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react';
-import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core'
+import { IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react'
+import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { adminDeleteClaim } from '@/actions/claims';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { useClipboard } from '@mantine/hooks';
-import { openConfirmModal } from '@mantine/modals';
-import type { Claim } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
+import { adminDeleteClaim } from '@/actions/claims'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { useClipboard } from '@mantine/hooks'
+import { openConfirmModal } from '@mantine/modals'
+import type { Claim } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
 
 export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; count: number }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<DataTable
@@ -112,8 +112,8 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 												),
 												labels: { confirm: 'Delete', cancel: 'Cancel' },
 												onConfirm: () => {
-													adminDeleteClaim({ claimId: claim.id });
-													redirect('/am/claims');
+													adminDeleteClaim({ claimId: claim.id })
+													redirect('/am/claims')
 												},
 											})
 										}
@@ -135,5 +135,5 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 			}
 			noRecordsText="No Claims found"
 		/>
-	);
+	)
 }

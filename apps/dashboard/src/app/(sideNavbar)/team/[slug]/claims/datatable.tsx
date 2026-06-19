@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core';
-import { IconBlendMode, IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react';
-import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core'
+import { IconBlendMode, IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react'
+import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { deleteClaim } from '@/actions/buildTeams';
-import { adminDeleteClaim } from '@/actions/claims';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { useClipboard } from '@mantine/hooks';
-import { closeAllModals, openConfirmModal } from '@mantine/modals';
-import type { Claim } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
+import { deleteClaim } from '@/actions/buildTeams'
+import { adminDeleteClaim } from '@/actions/claims'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { useClipboard } from '@mantine/hooks'
+import { closeAllModals, openConfirmModal } from '@mantine/modals'
+import type { Claim } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
 
 export default function ClaimsDatatable({
 	claims,
@@ -21,17 +21,17 @@ export default function ClaimsDatatable({
 	permissions,
 	buildTeamSlug,
 }: {
-	claims: Claim[];
-	count: number;
-	buildTeamSlug: string;
-	userId: string;
-	permissions?: string[];
+	claims: Claim[]
+	count: number
+	buildTeamSlug: string
+	userId: string
+	permissions?: string[]
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<DataTable
@@ -129,8 +129,8 @@ export default function ClaimsDatatable({
 												),
 												labels: { confirm: 'Delete', cancel: 'Cancel' },
 												onConfirm: () => {
-													deleteClaim({ removeId: claim.id, buildTeamSlug });
-													closeAllModals();
+													deleteClaim({ removeId: claim.id, buildTeamSlug })
+													closeAllModals()
 												},
 											})
 										}
@@ -152,5 +152,5 @@ export default function ClaimsDatatable({
 			}
 			noRecordsText="No Claims found"
 		/>
-	);
+	)
 }

@@ -1,22 +1,22 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 
-import { adminCheckUpload, adminDeleteUpload } from '@/actions/uploads';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { Metadata } from 'next';
-import UploadsDatatable from './datatable';
+import { adminCheckUpload, adminDeleteUpload } from '@/actions/uploads'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { Metadata } from 'next'
+import UploadsDatatable from './datatable'
 
 export const metadata: Metadata = {
 	title: 'Check Uploads',
-};
+}
 export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
-	const page = (await searchParams).page;
+	const page = (await searchParams).page
 	const uploadCount = await prisma.upload.count({
 		where: {
 			checked: false,
 		},
-	});
+	})
 	const uploads = await prisma.upload.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,
@@ -33,7 +33,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 			name: true,
 			checked: true,
 		},
-	});
+	})
 
 	return (
 		<Protection requiredRole="review-uploads">
@@ -49,5 +49,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

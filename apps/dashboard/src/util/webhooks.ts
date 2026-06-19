@@ -8,11 +8,11 @@ export async function sendBtWebhook(url: string | null, type: WebhookType, conte
 					Accept: 'application/json',
 				},
 				body: JSON.stringify({ type, data: content }),
-			});
-			console.info(`Sent ${type} to ${url}`);
+			})
+			console.info(`Sent ${type} to ${url}`)
 		} catch (e) {
-			console.error(`Failed to send ${type} to ${url}: ${e}`);
-			return false;
+			console.error(`Failed to send ${type} to ${url}: ${e}`)
+			return false
 		}
 	}
 }
@@ -23,6 +23,6 @@ export const WebhookType = {
 	CLAIM_CREATE: 'CLAIM_CREATE',
 	CLAIM_UPDATE: 'CLAIM_UPDATE',
 	CLAIM_DELETE: 'CLAIM_DELETE',
-};
+}
 
-export type WebhookType = (typeof WebhookType)[keyof typeof WebhookType];
+export type WebhookType = (typeof WebhookType)[keyof typeof WebhookType]

@@ -1,31 +1,31 @@
-'use server';
+'use server'
 
-import { Alert, Box, Grid, GridCol, Group, Title } from '@mantine/core';
+import { Alert, Box, Grid, GridCol, Group, Title } from '@mantine/core'
 
-import { Protection } from '@/components/Protection';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { TextCard } from '@/components/core/card/TextCard';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { ApplicationQuestions } from '@/util/application';
-import { getSession } from '@/util/auth';
-import { toHumanDateTime } from '@/util/date';
-import prisma from '@/util/db';
-import { IconClockExclamation } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { EditMenu } from './interactivity';
+import { Protection } from '@/components/Protection'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { TextCard } from '@/components/core/card/TextCard'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { ApplicationQuestions } from '@/util/application'
+import { getSession } from '@/util/auth'
+import { toHumanDateTime } from '@/util/date'
+import prisma from '@/util/db'
+import { IconClockExclamation } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { EditMenu } from './interactivity'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params;
+	const { id } = await params
 
 	return {
 		title: 'Application ' + id.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-	const session = await getSession();
-	const id = (await params).id;
+	const session = await getSession()
+	const id = (await params).id
 
 	const application = await prisma.application.findUnique({
 		where: { id },
@@ -34,14 +34,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 			buildteam: { select: { id: true, slug: true, location: true, name: true, icon: true } },
 			reviewer: true,
 		},
-	});
+	})
 
 	const applicationAnswers = await prisma.applicationAnswer.findMany({
 		where: { applicationId: id },
 		include: { question: true },
-	});
+	})
 
-	if (!application) throw Error('Could not find User');
+	if (!application) throw Error('Could not find User')
 
 	return (
 		<Protection requiredRole="get-applications">
@@ -106,9 +106,9 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 					{applicationAnswers
 						.sort((a: any, b: any) => a.question.sort - b.question.sort)
 						.map((a: any, i: number) => {
-							const d = a.question;
+							const d = a.question
 
-							const Question = ApplicationQuestions[d.type];
+							const Question = ApplicationQuestions[d.type]
 
 							return (
 								<Question
@@ -118,10 +118,10 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 									readonly={true}
 									value={a.answer}
 								/>
-							);
+							)
 						})}
 				</Box>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

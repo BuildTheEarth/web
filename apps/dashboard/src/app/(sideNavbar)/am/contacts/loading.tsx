@@ -1,8 +1,8 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { DataTable } from 'mantine-datatable';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { DataTable } from 'mantine-datatable'
 
 export default async function Page() {
 	return (
@@ -41,5 +41,5 @@ export default async function Page() {
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

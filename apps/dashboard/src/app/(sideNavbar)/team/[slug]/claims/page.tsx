@@ -1,32 +1,32 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title } from '@mantine/core'
 
-import { getUserPermissions } from '@/actions/getUser';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { getSession } from '@/util/auth';
-import prisma from '@/util/db';
-import { IconExternalLink } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import ClaimsDatatable from './datatable';
-import { SearchClaims } from './interactivity';
+import { getUserPermissions } from '@/actions/getUser'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { getSession } from '@/util/auth'
+import prisma from '@/util/db'
+import { IconExternalLink } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import ClaimsDatatable from './datatable'
+import { SearchClaims } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Claims',
-};
+}
 
 export default async function Page({
 	params,
 	searchParams,
 }: {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{ page?: string; query?: string }>;
+	params: Promise<{ slug: string }>
+	searchParams: Promise<{ page?: string; query?: string }>
 }) {
-	const session = await getSession();
-	const userPermissions = await getUserPermissions(session?.user.id);
-	const slug = (await params).slug;
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
+	const session = await getSession()
+	const userPermissions = await getUserPermissions(session?.user.id)
+	const slug = (await params).slug
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
 	const claimCount = await prisma.claim.count({
 		where: searchQuery
 			? {
@@ -46,7 +46,7 @@ export default async function Page({
 			: {
 					buildTeam: { slug },
 				},
-	});
+	})
 	const claims = await prisma.claim.findMany({
 		take: 20,
 		skip: (Number(page || '1') - 1) * 20,
@@ -70,7 +70,7 @@ export default async function Page({
 				},
 		include: { owner: true },
 		orderBy: { createdAt: 'desc' },
-	});
+	})
 
 	return (
 		<Protection requiredRole="get-claims">
@@ -102,5 +102,5 @@ export default async function Page({
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

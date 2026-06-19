@@ -1,7 +1,7 @@
-import { Skeleton, Title } from '@mantine/core';
+import { Skeleton, Title } from '@mantine/core'
 
-import { Protection } from '@/components/Protection';
-import ContentWrapper from '@/components/core/ContentWrapper';
+import { Protection } from '@/components/Protection'
+import ContentWrapper from '@/components/core/ContentWrapper'
 
 export default async function Page() {
 	return (
@@ -14,5 +14,5 @@ export default async function Page() {
 				</Skeleton>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

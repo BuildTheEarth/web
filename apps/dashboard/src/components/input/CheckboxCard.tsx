@@ -1,13 +1,13 @@
-import { Checkbox, Text, UnstyledButton } from '@mantine/core';
+import { Checkbox, Text, UnstyledButton } from '@mantine/core'
 
-import classes from '@/styles/CheckboxCard.module.css';
+import classes from '@/styles/CheckboxCard.module.css'
 
 export function CheckboxCard(props: {
-	title: string;
-	subtitle: string;
-	onChange: (value: boolean) => void;
-	checked: boolean;
-	disabled?: boolean;
+	title: string
+	subtitle: string
+	onChange: (value: boolean) => void
+	checked: boolean
+	disabled?: boolean
 }) {
 	return (
 		<UnstyledButton onClick={() => !props.disabled && props.onChange(!props.checked)} className={classes.button}>
@@ -31,5 +31,5 @@ export function CheckboxCard(props: {
 				</Text>
 			</div>
 		</UnstyledButton>
-	);
+	)
 }

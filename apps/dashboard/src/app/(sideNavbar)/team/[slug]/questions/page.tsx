@@ -1,14 +1,14 @@
-import { saveBuildTeamApplicationQuestions } from '@/actions/buildTeams';
-import { getUser } from '@/actions/getUser';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { Group, Title } from '@mantine/core';
-import QuestionsEditor from './interactivity';
+import { saveBuildTeamApplicationQuestions } from '@/actions/buildTeams'
+import { getUser } from '@/actions/getUser'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { Group, Title } from '@mantine/core'
+import QuestionsEditor from './interactivity'
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-	const user = await getUser();
-	const slug = (await params).slug;
+	const user = await getUser()
+	const slug = (await params).slug
 
 	const team = await prisma.buildTeam.findFirst({
 		where: { slug },
@@ -18,8 +18,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 			applicationQuestions: true,
 			allowTrial: true,
 		},
-	});
-	if (!team) throw Error('Could not find Build Team');
+	})
+	if (!team) throw Error('Could not find Build Team')
 
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.application.edit', slug }}>
@@ -39,5 +39,5 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

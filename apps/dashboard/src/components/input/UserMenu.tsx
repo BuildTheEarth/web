@@ -1,8 +1,8 @@
-import { Menu, MenuDropdown, MenuItem, MenuTarget } from '@mantine/core';
-import { IconLogout, IconMap, IconSettings, IconWorld } from '@tabler/icons-react';
+import { Menu, MenuDropdown, MenuItem, MenuTarget } from '@mantine/core'
+import { IconLogout, IconMap, IconSettings, IconWorld } from '@tabler/icons-react'
 
-import { signOut } from 'next-auth/react';
-import Link from 'next/link';
+import { signOut } from 'next-auth/react'
+import Link from 'next/link'
 
 const UserMenu = ({ children }: { children: any }) => {
 	return (
@@ -33,15 +33,15 @@ const UserMenu = ({ children }: { children: any }) => {
 					leftSection={<IconLogout size={14} />}
 					color="red"
 					onClick={() => {
-						window.localStorage.removeItem('auth-permission-state');
-						signOut({ callbackUrl: '/', redirect: true });
+						window.localStorage.removeItem('auth-permission-state')
+						signOut({ callbackUrl: '/', redirect: true })
 					}}
 				>
 					Sign out
 				</Menu.Item>
 			</MenuDropdown>
 		</Menu>
-	);
-};
+	)
+}
 
-export default UserMenu;
+export default UserMenu

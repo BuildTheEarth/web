@@ -1,65 +1,65 @@
-import { createClaim, deleteClaim, getPersonalClaims, saveClaim } from '@/actions/claimEditor';
-import { modals } from '@mantine/modals';
-import { showNotification, updateNotification } from '@mantine/notifications';
-import MapboxDraw from '@mapbox/mapbox-gl-draw';
-import { IconCheck, IconX } from '@tabler/icons-react';
+import { createClaim, deleteClaim, getPersonalClaims, saveClaim } from '@/actions/claimEditor'
+import { modals } from '@mantine/modals'
+import { showNotification, updateNotification } from '@mantine/notifications'
+import MapboxDraw from '@mapbox/mapbox-gl-draw'
+import { IconCheck, IconX } from '@tabler/icons-react'
 import {
 	SnapDirectSelect,
 	SnapLineMode,
 	SnapModeDrawStyles,
 	SnapPointMode,
 	SnapPolygonMode,
-} from 'mapbox-gl-draw-snap-mode';
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
-import { SelectBuildTeamModal } from './interactivity';
+} from 'mapbox-gl-draw-snap-mode'
+import { create } from 'zustand'
+import { subscribeWithSelector } from 'zustand/middleware'
+import { SelectBuildTeamModal } from './interactivity'
 
-type ClaimEditorClaim = Awaited<ReturnType<typeof getPersonalClaims>>[0];
+type ClaimEditorClaim = Awaited<ReturnType<typeof getPersonalClaims>>[0]
 interface ClaimEditorState {
 	// Draw instance
-	drawInstance?: any;
+	drawInstance?: any
 	// The currently selected claim ID
-	selectedClaimId: string | null;
+	selectedClaimId: string | null
 	// Coordinates to zoom into (center of claim)
-	coordinates: [number, number] | null;
+	coordinates: [number, number] | null
 	// All claims of the current user
-	claims: ClaimEditorClaim[];
+	claims: ClaimEditorClaim[]
 	// Allowed build team IDs for the current user
-	allowedBuildTeamIds?: string[] | null;
+	allowedBuildTeamIds?: string[] | null
 	// The user ID of the current user
-	userId: string | null;
+	userId: string | null
 	// Whether the claim editor is dirty (unsaved changes)
-	isDirty: boolean;
+	isDirty: boolean
 	// Whether the claim editor is loading
-	isLoading: boolean;
+	isLoading: boolean
 	// Any error message
-	error: string | null;
+	error: string | null
 	// Set the selected claim by ID (uses Draw feature properties)
-	setSelectedClaim: (claimId: string | null, opts?: { keepPosition?: boolean }) => boolean;
+	setSelectedClaim: (claimId: string | null, opts?: { keepPosition?: boolean }) => boolean
 	// Change the selected claim and ask for confirmation if the editor is dirty
-	switchClaim: (claimId: string | null, opts?: { keepPosition?: boolean }) => Promise<boolean>;
+	switchClaim: (claimId: string | null, opts?: { keepPosition?: boolean }) => Promise<boolean>
 	// Update the selected claim information and set the editor to dirty
-	updateClaim: (claim: Partial<Omit<ClaimEditorClaim, 'id'>>) => void;
+	updateClaim: (claim: Partial<Omit<ClaimEditorClaim, 'id'>>) => void
 	// Save the changes of the current claim only if the editor is dirty
-	saveChanges: () => void;
+	saveChanges: () => void
 	// Create a new claim shell (empty claim) and set the draw mode to true
-	createClaimShell: (feature: any) => void;
+	createClaimShell: (feature: any) => void
 	// Set the draw instance (used for drawing new claims)
-	setDrawInstance: (drawInstance: any) => void;
+	setDrawInstance: (drawInstance: any) => void
 	// Delete the currently selected claim
-	delete: () => void;
+	delete: () => void
 	// Set the claims of the current user
-	setClaims: (claims: ClaimEditorClaim[]) => void;
+	setClaims: (claims: ClaimEditorClaim[]) => void
 	// Set the allowed build team IDs for the current user
-	setAllowedBuildTeamIds: (allowedBuildTeamIds: string[] | null) => void;
+	setAllowedBuildTeamIds: (allowedBuildTeamIds: string[] | null) => void
 	// Set the user ID of the current user
-	setUserId: (userId: string | null) => void;
+	setUserId: (userId: string | null) => void
 	// Set the editor to dirty once changes are made
-	setDirty: (dirty: boolean) => void;
+	setDirty: (dirty: boolean) => void
 	// Set the loading state
-	setLoading: (loading: boolean) => void;
+	setLoading: (loading: boolean) => void
 	// Set potential error messages
-	setError: (error: string | null) => void;
+	setError: (error: string | null) => void
 }
 
 export const useClaimEditorStore = create<ClaimEditorState>()(
@@ -93,15 +93,15 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 		error: null,
 
 		setSelectedClaim: (claimId, opts) => {
-			const draw = get().drawInstance;
-			if (!draw) return false;
+			const draw = get().drawInstance
+			if (!draw) return false
 			if (!claimId) {
-				set({ selectedClaimId: null, isDirty: false, coordinates: null });
-				return true;
+				set({ selectedClaimId: null, isDirty: false, coordinates: null })
+				return true
 			}
 
-			const feature = draw.get(claimId);
-			const claim = get().claims.find((c) => c.id === claimId);
+			const feature = draw.get(claimId)
+			const claim = get().claims.find((c) => c.id === claimId)
 
 			if (claim || feature.properties?.new == true) {
 				set({
@@ -110,66 +110,66 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					coordinates: opts?.keepPosition
 						? undefined
 						: (() => {
-								return claim && claim.center ? (claim.center.split(', ').map(Number) as [number, number]) : null;
+								return claim && claim.center ? (claim.center.split(', ').map(Number) as [number, number]) : null
 							})(),
-				});
-				draw.changeMode('simple_select', { featureIds: [claimId] });
-				return true;
+				})
+				draw.changeMode('simple_select', { featureIds: [claimId] })
+				return true
 			} else {
 				showNotification({
 					title: 'Permission Denied',
 					message: 'You dont have permission to edit this claim.',
 					color: 'red',
-				});
-				return false;
+				})
+				return false
 			}
 		},
 		switchClaim: (claimId, opts) => {
 			return new Promise<boolean>((resolve) => {
-				if (claimId == get().selectedClaimId) return resolve(true);
+				if (claimId == get().selectedClaimId) return resolve(true)
 				if (get().isDirty) {
 					modals.openConfirmModal({
 						title: 'Unsaved Changes',
 						children: 'You have unsaved changes. Do you want to save them before switching?',
 						labels: { confirm: 'Save', cancel: 'Discard' },
 						onConfirm: () => {
-							get().saveChanges();
-							resolve(get().setSelectedClaim(claimId, opts));
+							get().saveChanges()
+							resolve(get().setSelectedClaim(claimId, opts))
 						},
 						onCancel: () => {
-							resolve(get().setSelectedClaim(claimId, opts));
+							resolve(get().setSelectedClaim(claimId, opts))
 						},
 						closeOnConfirm: true,
 						closeOnCancel: true,
-					});
+					})
 				} else {
-					resolve(get().setSelectedClaim(claimId, opts));
+					resolve(get().setSelectedClaim(claimId, opts))
 				}
-			});
+			})
 		},
 
 		updateClaim: (claim) => {
-			const draw = get().drawInstance;
-			const id = get().selectedClaimId;
+			const draw = get().drawInstance
+			const id = get().selectedClaimId
 			if (draw && id) {
 				Object.entries(claim).forEach(([key, value]) => {
-					draw.setFeatureProperty(id, key, value);
-				});
-				set({ isDirty: true });
+					draw.setFeatureProperty(id, key, value)
+				})
+				set({ isDirty: true })
 			}
 		},
 
 		saveChanges: async () => {
-			const draw = get().drawInstance;
-			const id = get().selectedClaimId;
-			const userId = get().userId;
+			const draw = get().drawInstance
+			const id = get().selectedClaimId
+			const userId = get().userId
 
 			if (draw && id && userId && get().isDirty) {
-				set({ isLoading: true });
-				get().updateClaim;
-				const feature = draw.get(id);
-				const props = feature?.properties || {};
-				const isNew = props.new == true;
+				set({ isLoading: true })
+				get().updateClaim
+				const feature = draw.get(id)
+				const props = feature?.properties || {}
+				const isNew = props.new == true
 
 				const notifyId = showNotification({
 					title: isNew ? 'Creating Claim' : 'Saving Changes',
@@ -178,7 +178,7 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					withCloseButton: false,
 					color: 'blue',
 					message: isNew ? 'Your claim is being created...' : 'Your changes are being saved...',
-				});
+				})
 
 				try {
 					if (isNew) {
@@ -191,16 +191,16 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 										<SelectBuildTeamModal
 											allowedBuildTeamIds={get().allowedBuildTeamIds}
 											continue={(result) => {
-												modals.closeAll();
-												resolve(result);
+												modals.closeAll()
+												resolve(result)
 											}}
 										/>
 									),
 									onClose: () => resolve(false),
-								});
-							});
+								})
+							})
 
-						const buildTeamId = await selectBuildTeam();
+						const buildTeamId = await selectBuildTeam()
 
 						if (buildTeamId === false) {
 							updateNotification({
@@ -211,21 +211,21 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 								loading: false,
 								autoClose: 2000,
 								icon: <IconX size={18} />,
-							});
-							set({ isLoading: false });
-							return;
+							})
+							set({ isLoading: false })
+							return
 						}
 
 						await createClaim({
 							id,
 							area: props.area,
 							buildTeamId: buildTeamId,
-						});
+						})
 					} else {
 						await saveClaim({
 							id,
 							area: props.area,
-						});
+						})
 					}
 
 					updateNotification({
@@ -236,9 +236,9 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 						loading: false,
 						autoClose: 2000,
 						icon: <IconCheck size={18} />,
-					});
+					})
 
-					set({ isDirty: false });
+					set({ isDirty: false })
 				} catch (e) {
 					updateNotification({
 						id: notifyId,
@@ -248,28 +248,28 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 						loading: false,
 						autoClose: 5000,
 						icon: <IconX size={18} />,
-					});
+					})
 				}
-				set({ isLoading: false });
+				set({ isLoading: false })
 			} else {
 				showNotification({
 					title: 'No Claim selected',
 					message: 'Please select a claim to save changes.',
 					color: 'red',
-				});
+				})
 			}
 		},
 
 		delete: async () => {
-			const draw = get().drawInstance;
-			const id = get().selectedClaimId;
+			const draw = get().drawInstance
+			const id = get().selectedClaimId
 			if (!id || get().userId == null) {
 				showNotification({
 					title: 'No Claim selected',
 					message: 'Please select a claim to delete.',
 					color: 'red',
-				});
-				return;
+				})
+				return
 			}
 
 			const confirmDeletion = async () =>
@@ -286,21 +286,21 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 						closeOnConfirm: true,
 						closeOnCancel: true,
 						onClose: () => resolve(false),
-					});
-				});
+					})
+				})
 
-			const confirmed = await confirmDeletion();
+			const confirmed = await confirmDeletion()
 
 			if (!confirmed) {
 				showNotification({
 					title: 'Deletion Cancelled',
 					message: 'The claim deletion was cancelled.',
 					color: 'yellow',
-				});
-				return;
+				})
+				return
 			}
 
-			set({ isLoading: true });
+			set({ isLoading: true })
 			const notifyId = showNotification({
 				title: 'Deleting Claim',
 				loading: true,
@@ -308,10 +308,10 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 				withCloseButton: false,
 				color: 'blue',
 				message: 'Your claim is being deleted...',
-			});
+			})
 
 			try {
-				await deleteClaim({ id });
+				await deleteClaim({ id })
 				updateNotification({
 					id: notifyId,
 					title: 'Claim Deleted',
@@ -320,10 +320,10 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					loading: false,
 					autoClose: 2000,
 					icon: <IconCheck size={18} />,
-				});
+				})
 
-				set({ isDirty: false, selectedClaimId: null });
-				draw.delete(id);
+				set({ isDirty: false, selectedClaimId: null })
+				draw.delete(id)
 			} catch (e) {
 				updateNotification({
 					id: notifyId,
@@ -333,15 +333,15 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					loading: false,
 					autoClose: 5000,
 					icon: <IconX size={18} />,
-				});
+				})
 			}
-			set({ isLoading: false });
+			set({ isLoading: false })
 		},
 
 		createClaimShell: (feature: any) => {
-			const uuid = crypto.randomUUID();
-			const draw = get().drawInstance;
-			if (!draw) return;
+			const uuid = crypto.randomUUID()
+			const draw = get().drawInstance
+			if (!draw) return
 
 			// Clone the feature and assign the new UUID as its id
 			const newFeature = {
@@ -353,10 +353,10 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					new: true,
 					area: feature.geometry.coordinates[0].map((c: [number, number]) => c.join(', ')),
 				},
-			};
+			}
 
-			draw.add(newFeature);
-			draw.delete(feature.id);
+			draw.add(newFeature)
+			draw.delete(feature.id)
 		},
 		setDrawInstance: (drawInstance) => set({ drawInstance }),
 		setAllowedBuildTeamIds: (allowedBuildTeamIds) => set({ allowedBuildTeamIds }),
@@ -366,4 +366,4 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 		setLoading: (loading) => set({ isLoading: loading }),
 		setError: (error) => set({ error }),
 	})),
-);
+)

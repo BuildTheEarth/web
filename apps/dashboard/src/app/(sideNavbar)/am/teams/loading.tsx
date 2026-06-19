@@ -1,9 +1,9 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { IconExternalLink } from '@tabler/icons-react';
-import Link from 'next/link';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { IconExternalLink } from '@tabler/icons-react'
+import Link from 'next/link'
 
 export default function Page() {
 	return (
@@ -26,5 +26,5 @@ export default function Page() {
 				</Group>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

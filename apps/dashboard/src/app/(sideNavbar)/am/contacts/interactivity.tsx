@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { ActionIcon, Button, Group, TextInput } from '@mantine/core';
-import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react';
+import { ActionIcon, Button, Group, TextInput } from '@mantine/core'
+import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react'
 
-import { adminAddContact, adminDeleteContact, adminEditContact } from '@/actions/contacts';
-import { useFormActions } from '@/hooks/useFormAction';
-import { useForm } from '@mantine/form';
-import { modals } from '@mantine/modals';
-import type { Contact } from '@repo/db';
+import { adminAddContact, adminDeleteContact, adminEditContact } from '@/actions/contacts'
+import { useFormActions } from '@/hooks/useFormAction'
+import { useForm } from '@mantine/form'
+import { modals } from '@mantine/modals'
+import type { Contact } from '@repo/db'
 
 export function AddContactButton({ disabled }: { disabled?: boolean }) {
 	return (
@@ -27,7 +27,7 @@ export function AddContactButton({ disabled }: { disabled?: boolean }) {
 		>
 			Add New
 		</Button>
-	);
+	)
 }
 
 export function EditContactButton({ disabled, ...props }: Contact & { disabled?: boolean }) {
@@ -50,12 +50,12 @@ export function EditContactButton({ disabled, ...props }: Contact & { disabled?:
 		>
 			<IconEdit size={16} />
 		</ActionIcon>
-	);
+	)
 }
 
 function EditContactModal(
 	props: {
-		isAdd?: boolean;
+		isAdd?: boolean
 	} & Contact,
 ) {
 	const form = useForm({
@@ -67,21 +67,21 @@ function EditContactModal(
 			discord: props.discord,
 			avatar: '',
 		},
-	});
+	})
 	const [[addContactAction, editContactAction, deleteContactAction], isPending] = useFormActions([
 		adminAddContact,
 		adminEditContact,
 		adminDeleteContact,
-	]);
+	])
 
 	const handleSubmit = (values: Contact) => {
 		if (props.isAdd) {
-			addContactAction(values);
+			addContactAction(values)
 		} else {
-			editContactAction(values);
+			editContactAction(values)
 		}
-		modals.closeAll();
-	};
+		modals.closeAll()
+	}
 
 	return (
 		<form onSubmit={form.onSubmit(handleSubmit)}>
@@ -109,8 +109,8 @@ function EditContactModal(
 					<Button
 						variant="outline"
 						onClick={() => {
-							deleteContactAction(props.id);
-							modals.closeAll();
+							deleteContactAction(props.id)
+							modals.closeAll()
 						}}
 						leftSection={<IconTrash size={14} />}
 						color="red"
@@ -125,5 +125,5 @@ function EditContactModal(
 				</Button>
 			)}
 		</form>
-	);
+	)
 }

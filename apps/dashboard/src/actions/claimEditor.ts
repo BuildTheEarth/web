@@ -1,25 +1,25 @@
-'use server';
+'use server'
 
-import { getSession } from '@/util/auth';
-import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.geojson/query';
-import turf, { toPolygon } from '@/util/coordinates';
-import prisma from '@/util/db';
-import { updateClaimBuildingCount, updateClaimOSMDetails } from '@/util/geojsonHelpers';
-import { Prisma } from '@repo/db';
-import { revalidatePath } from 'next/cache';
+import { getSession } from '@/util/auth'
+import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.geojson/query'
+import turf, { toPolygon } from '@/util/coordinates'
+import prisma from '@/util/db'
+import { updateClaimBuildingCount, updateClaimOSMDetails } from '@/util/geojsonHelpers'
+import { Prisma } from '@repo/db'
+import { revalidatePath } from 'next/cache'
 
 export const getPersonalClaims = async () => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
-	const claims = await prisma.claim.findMany(constructClaimGeoJSONQuery({ user: userId, extended: true }));
-	return claims;
-};
+	const claims = await prisma.claim.findMany(constructClaimGeoJSONQuery({ user: userId, extended: true }))
+	return claims
+}
 export const getAllowedBuildTeams = async () => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
 	const buildTeams = await prisma.buildTeam.findMany({
 		where: {
@@ -33,44 +33,44 @@ export const getAllowedBuildTeams = async () => {
 		select: {
 			id: true,
 		},
-	});
-	return buildTeams.map((bt: { id: string }) => bt.id);
-};
+	})
+	return buildTeams.map((bt: { id: string }) => bt.id)
+}
 
 export const saveClaim = async (data: { id: string; area?: string[] }): Promise<void> => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
 	try {
 		const claim = await prisma.claim.findFirst({
 			where: { id: data.id, owner: { ssoId: userId } },
-		});
+		})
 
 		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to edit this claim.');
+			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
 		}
 
-		let center = undefined;
+		let center = undefined
 		if (data.area && data.area.length > 0) {
-			center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ');
+			center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ')
 		}
 
-		const buildingCount = data.area && (await updateClaimBuildingCount({ area: data.area }));
+		const buildingCount = data.area && (await updateClaimBuildingCount({ area: data.area }))
 
 		if (typeof buildingCount !== 'number') {
 			if (buildingCount && typeof (buildingCount as { message?: string }).message === 'string') {
-				return Promise.reject((buildingCount as { message: string }).message);
+				return Promise.reject((buildingCount as { message: string }).message)
 			}
-			return Promise.reject('Failed to update building count for claim.');
+			return Promise.reject('Failed to update building count for claim.')
 		}
 
-		let osmDetails = undefined;
+		let osmDetails = undefined
 
 		if (center) {
-			osmDetails = await updateClaimOSMDetails({ id: data.id, name: claim.name, center });
+			osmDetails = await updateClaimOSMDetails({ id: data.id, name: claim.name, center })
 			if (!osmDetails) {
-				return Promise.reject('Failed to update OSM details for claim.');
+				return Promise.reject('Failed to update OSM details for claim.')
 			}
 		}
 
@@ -82,41 +82,41 @@ export const saveClaim = async (data: { id: string; area?: string[] }): Promise<
 				buildings: buildingCount,
 				...osmDetails,
 			},
-		});
+		})
 
-		revalidatePath('/editor');
-		return;
+		revalidatePath('/editor')
+		return
 	} catch (e) {
-		let msg = 'Unknown error';
+		let msg = 'Unknown error'
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code;
+			msg = e.code
 			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to edit this claim.';
+				msg = 'Claim not found or you do not have permission to edit this claim.'
 			}
 		}
-		return Promise.reject(msg);
+		return Promise.reject(msg)
 	}
-};
+}
 export const saveAdvancedClaim = async (data: {
-	id: string;
-	name?: string;
-	description?: string;
-	city?: string;
-	finished?: boolean;
-	active?: boolean;
-	builders?: { id: string }[];
+	id: string
+	name?: string
+	description?: string
+	city?: string
+	finished?: boolean
+	active?: boolean
+	builders?: { id: string }[]
 }): Promise<void> => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
 	try {
 		const claim = await prisma.claim.findFirst({
 			where: { id: data.id, owner: { ssoId: userId } },
-		});
+		})
 
 		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to edit this claim.');
+			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
 		}
 
 		const claim2 = await prisma.claim.update({
@@ -129,55 +129,55 @@ export const saveAdvancedClaim = async (data: {
 				active: data.active,
 				builders: data.builders ? { set: data.builders.map((b) => ({ id: b.id })) } : undefined,
 			},
-		});
+		})
 
-		revalidatePath(`/editor/${data.id}`);
-		return;
+		revalidatePath(`/editor/${data.id}`)
+		return
 	} catch (e) {
-		let msg = 'Unknown error';
+		let msg = 'Unknown error'
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code;
+			msg = e.code
 			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to edit this claim.';
+				msg = 'Claim not found or you do not have permission to edit this claim.'
 			}
 		}
-		return Promise.reject(msg);
+		return Promise.reject(msg)
 	}
-};
+}
 export const createClaim = async (data: { id: string; area: string[]; buildTeamId: string }): Promise<void> => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
 	try {
 		const buildTeam = await prisma.buildTeam.findFirst({
 			where: { id: data.buildTeamId, members: { some: { ssoId: userId } }, allowBuilderClaim: true },
-		});
+		})
 
 		if (!buildTeam) {
-			return Promise.reject('You do not have permission to create a claim in this BuildTeam.');
+			return Promise.reject('You do not have permission to create a claim in this BuildTeam.')
 		}
 
-		let center = undefined;
+		let center = undefined
 		if (data.area?.length > 0) {
-			center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ');
+			center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ')
 		}
 
-		const buildingCount = await updateClaimBuildingCount({ area: data.area });
+		const buildingCount = await updateClaimBuildingCount({ area: data.area })
 
 		if (typeof buildingCount !== 'number') {
 			if (buildingCount && typeof (buildingCount as { message?: string }).message === 'string') {
-				return Promise.reject((buildingCount as { message: string }).message);
+				return Promise.reject((buildingCount as { message: string }).message)
 			}
-			return Promise.reject('Failed to set building count for claim.');
+			return Promise.reject('Failed to set building count for claim.')
 		}
 
-		let osmDetails = undefined;
+		let osmDetails = undefined
 
 		if (center) {
-			osmDetails = await updateClaimOSMDetails({ id: data.id, center });
+			osmDetails = await updateClaimOSMDetails({ id: data.id, center })
 			if (!osmDetails) {
-				return Promise.reject('Failed to set OSM details for claim.');
+				return Promise.reject('Failed to set OSM details for claim.')
 			}
 		}
 
@@ -193,69 +193,69 @@ export const createClaim = async (data: { id: string; area: string[]; buildTeamI
 				finished: false,
 				...osmDetails,
 			},
-		});
+		})
 
-		revalidatePath('/editor');
-		return;
+		revalidatePath('/editor')
+		return
 	} catch (e) {
-		let msg = 'Unknown error';
+		let msg = 'Unknown error'
 		if (e instanceof Error) {
-			msg = e.message;
-			throw e;
+			msg = e.message
+			throw e
 		}
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code;
+			msg = e.code
 			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to edit this claim.';
+				msg = 'Claim not found or you do not have permission to edit this claim.'
 			}
 		}
-		return Promise.reject(msg);
+		return Promise.reject(msg)
 	}
-};
+}
 export const deleteClaim = async (data: { id: string }): Promise<void> => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
 	try {
 		const claim = await prisma.claim.findFirst({
 			where: { id: data.id, owner: { ssoId: userId } },
-		});
+		})
 
 		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to delete this claim.');
+			return Promise.reject('Claim not found or you do not have permission to delete this claim.')
 		}
 
 		await prisma.claim.delete({
 			where: { id: data.id, owner: { ssoId: userId } },
-		});
+		})
 
-		revalidatePath('/editor');
-		return;
+		revalidatePath('/editor')
+		return
 	} catch (e) {
-		let msg = 'Unknown error';
+		let msg = 'Unknown error'
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code;
+			msg = e.code
 			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to delete this claim.';
+				msg = 'Claim not found or you do not have permission to delete this claim.'
 			}
 		}
-		return Promise.reject(msg);
+		return Promise.reject(msg)
 	}
-};
+}
 export const transferClaim = async (data: { id: string; newUserId: string }): Promise<void> => {
-	const session = await getSession();
-	if (!session) throw new Error('Unauthorized');
-	const userId = session.user.id;
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
 
 	try {
 		const claim = await prisma.claim.findFirst({
 			where: { id: data.id, owner: { ssoId: userId } },
 			include: { builders: { select: { id: true } } },
-		});
+		})
 
 		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to edit this claim.');
+			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
 		}
 
 		await prisma.claim.update({
@@ -269,21 +269,21 @@ export const transferClaim = async (data: { id: string; newUserId: string }): Pr
 					],
 				},
 			},
-		});
+		})
 
-		revalidatePath('/editor');
-		return;
+		revalidatePath('/editor')
+		return
 	} catch (e) {
-		let msg = 'Unknown error';
+		let msg = 'Unknown error'
 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code;
+			msg = e.code
 			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to delete this claim.';
+				msg = 'Claim not found or you do not have permission to delete this claim.'
 			}
 		}
-		return Promise.reject(msg);
+		return Promise.reject(msg)
 	}
-};
+}
 
 // export const createClaim = async (data: {
 // 	id: string;

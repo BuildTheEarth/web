@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { hasRole } from '@/util/auth';
-import { navLinks } from '@/util/links';
-import { Burger, Divider, Drawer, Group, Stack, Text } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
-import Image from 'next/image';
-import NavLink from '../navbar/NavLink';
+import { hasRole } from '@/util/auth'
+import { navLinks } from '@/util/links'
+import { Burger, Divider, Drawer, Group, Stack, Text } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
+import Image from 'next/image'
+import NavLink from '../navbar/NavLink'
 
 const MobileLinkDrawer = (props: { roles: string[] }) => {
-	const [opened, { toggle, close }] = useDisclosure();
+	const [opened, { toggle, close }] = useDisclosure()
 
 	const allowedLinks = navLinks.filter((link) =>
 		link.permission ? hasRole({ user: { realm_access: { roles: props.roles } } }, link.permission) : true,
-	);
+	)
 
 	const links = allowedLinks.map((item) =>
 		item.divider ? (
@@ -20,7 +20,7 @@ const MobileLinkDrawer = (props: { roles: string[] }) => {
 		) : (
 			<NavLink key={item.link} {...item} />
 		),
-	);
+	)
 
 	return (
 		<>
@@ -41,7 +41,7 @@ const MobileLinkDrawer = (props: { roles: string[] }) => {
 				<Stack gap="xs">{links}</Stack>
 			</Drawer>
 		</>
-	);
-};
+	)
+}
 
-export default MobileLinkDrawer;
+export default MobileLinkDrawer

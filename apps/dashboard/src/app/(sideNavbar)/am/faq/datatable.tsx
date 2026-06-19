@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { ActionIcon, Code, Group } from '@mantine/core';
+import { ActionIcon, Code, Group } from '@mantine/core'
 
-import type { FAQQuestion } from '@repo/db';
-import { IconExternalLink } from '@tabler/icons-react';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
-import { EditFaqQuestionButton } from './interactivity';
+import type { FAQQuestion } from '@repo/db'
+import { IconExternalLink } from '@tabler/icons-react'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
+import { EditFaqQuestionButton } from './interactivity'
 
 export default function FAQDatatabe({ faq, canEdit }: { faq: FAQQuestion[]; canEdit?: boolean }) {
 	return (
@@ -50,5 +50,5 @@ export default function FAQDatatabe({ faq, canEdit }: { faq: FAQQuestion[]; canE
 			]}
 			records={faq}
 		/>
-	);
+	)
 }

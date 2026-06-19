@@ -1,6 +1,6 @@
-'use client';
-import { UserDisplay } from '@/components/data/User';
-import { UserSelect } from '@/components/input/UserSelect';
+'use client'
+import { UserDisplay } from '@/components/data/User'
+import { UserSelect } from '@/components/input/UserSelect'
 import {
 	ActionIcon,
 	Badge,
@@ -20,23 +20,23 @@ import {
 	Textarea,
 	TextInput,
 	Title,
-} from '@mantine/core';
-import { IconDeviceFloppy, IconDots, IconTransfer, IconTrash } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
-import { AdvancedClaimEditorClaim, useAdvancedClaimEditorStore } from './store';
+} from '@mantine/core'
+import { IconDeviceFloppy, IconDots, IconTransfer, IconTrash } from '@tabler/icons-react'
+import { useSession } from 'next-auth/react'
+import { useEffect } from 'react'
+import { AdvancedClaimEditorClaim, useAdvancedClaimEditorStore } from './store'
 
 export function AdvancedEditor({ initialClaim }: { initialClaim: AdvancedClaimEditorClaim | null }) {
-	const { claim, setClaim, setUserId, updateClaim, saveChanges, transferOwnership } = useAdvancedClaimEditorStore();
-	const session = useSession();
+	const { claim, setClaim, setUserId, updateClaim, saveChanges, transferOwnership } = useAdvancedClaimEditorStore()
+	const session = useSession()
 
 	useEffect(() => {
 		if (initialClaim && initialClaim.id != claim?.id) {
-			setClaim(initialClaim);
-			setUserId(session?.data?.user.id || 'XXXXX');
+			setClaim(initialClaim)
+			setUserId(session?.data?.user.id || 'XXXXX')
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [initialClaim]);
+	}, [initialClaim])
 
 	return (
 		<SimpleGrid cols={{ base: 1, md: 2 }} spacing="xl" w="100%">
@@ -136,7 +136,7 @@ export function AdvancedEditor({ initialClaim }: { initialClaim: AdvancedClaimEd
 												onClick={() => {
 													updateClaim({
 														builders: claim?.builders?.filter((b) => b.ssoId !== builder.ssoId) || [],
-													});
+													})
 												}}
 											>
 												Remove Builder
@@ -154,14 +154,14 @@ export function AdvancedEditor({ initialClaim }: { initialClaim: AdvancedClaimEd
 									label=""
 									placeholder="Add builder..."
 									onChange={(d, reset) => {
-										console.log(d);
+										console.log(d)
 										updateClaim({
 											builders: [
 												...(claim?.builders || []),
 												{ ssoId: `XXX-newly-added-XXX-${d?.id}`, id: d?.id || '', username: d?.username || '' },
 											],
-										});
-										reset();
+										})
+										reset()
 									}}
 								/>
 							</Table.Td>
@@ -236,5 +236,5 @@ export function AdvancedEditor({ initialClaim }: { initialClaim: AdvancedClaimEd
 				</Table>
 			</Box>
 		</SimpleGrid>
-	);
+	)
 }

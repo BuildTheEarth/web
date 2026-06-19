@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import Question, { EditQuestion } from '@/components/data/questions/Question';
-import { ApplicationQuestions, toReadable } from '@/util/application';
+import Question, { EditQuestion } from '@/components/data/questions/Question'
+import { ApplicationQuestions, toReadable } from '@/util/application'
 import {
 	ActionIcon,
 	Anchor,
@@ -19,9 +19,9 @@ import {
 	Title,
 	Tooltip,
 	useMantineTheme,
-} from '@mantine/core';
-import { showNotification } from '@mantine/notifications';
-import type { ApplicationQuestion, ApplicationQuestionType, Prisma } from '@repo/db';
+} from '@mantine/core'
+import { showNotification } from '@mantine/notifications'
+import type { ApplicationQuestion, ApplicationQuestionType, Prisma } from '@repo/db'
 import {
 	IconCheck,
 	IconChevronDown,
@@ -30,37 +30,37 @@ import {
 	IconLetterT,
 	IconPlus,
 	IconTrash,
-} from '@tabler/icons-react';
-import Link from 'next/link';
-import { useMemo, useState } from 'react';
+} from '@tabler/icons-react'
+import Link from 'next/link'
+import { useMemo, useState } from 'react'
 
 type EditableQuestion = Omit<ApplicationQuestion, 'additionalData' | 'type'> & {
-	type: ApplicationQuestionType;
-	additionalData: Prisma.JsonValue;
-};
+	type: ApplicationQuestionType
+	additionalData: Prisma.JsonValue
+}
 
 function reduceSortValues(data: EditableQuestion[]) {
 	const trialQuestions = data
 		.filter((question) => question.trial === true && question.sort >= 0)
 		.sort((left, right) => left.sort - right.sort)
-		.map((question, index) => ({ ...question, sort: index }));
+		.map((question, index) => ({ ...question, sort: index }))
 
 	const builderQuestions = data
 		.filter((question) => question.trial === false && question.sort >= 0)
 		.sort((left, right) => left.sort - right.sort)
-		.map((question, index) => ({ ...question, sort: index }));
+		.map((question, index) => ({ ...question, sort: index }))
 
-	return [...builderQuestions, ...trialQuestions];
+	return [...builderQuestions, ...trialQuestions]
 }
 
 type QuestionsEditorProps = {
-	teamId: string;
-	userId: string;
-	buildTeamSlug: string;
-	initialQuestions: EditableQuestion[];
-	saveQuestionsAction: any;
-	allowTrial?: boolean;
-};
+	teamId: string
+	userId: string
+	buildTeamSlug: string
+	initialQuestions: EditableQuestion[]
+	saveQuestionsAction: any
+	allowTrial?: boolean
+}
 
 export default function QuestionsEditor({
 	teamId,
@@ -70,14 +70,14 @@ export default function QuestionsEditor({
 	saveQuestionsAction,
 	allowTrial,
 }: QuestionsEditorProps) {
-	const theme = useMantineTheme();
-	const [trial, setTrial] = useState(false);
-	const [saveLoading, setSaveLoading] = useState(false);
+	const theme = useMantineTheme()
+	const [trial, setTrial] = useState(false)
+	const [saveLoading, setSaveLoading] = useState(false)
 	const [questions, setQuestions] = useState<EditableQuestion[]>(() =>
 		reduceSortValues(initialQuestions.filter((question) => question.sort >= 0)),
-	);
-	const [deletedQuestions, setDeletedQuestions] = useState<EditableQuestion[]>([]);
-	const [editingQuestion, setEditingQuestion] = useState<EditableQuestion | null>(null);
+	)
+	const [deletedQuestions, setDeletedQuestions] = useState<EditableQuestion[]>([])
+	const [editingQuestion, setEditingQuestion] = useState<EditableQuestion | null>(null)
 
 	const visibleQuestions = useMemo(
 		() =>
@@ -85,62 +85,62 @@ export default function QuestionsEditor({
 				.filter((question) => question.trial === trial && question.sort >= 0)
 				.sort((left, right) => left.sort - right.sort),
 		[questions, trial],
-	);
+	)
 
 	const recalculate = (nextQuestions?: EditableQuestion[]) => {
-		const recalculated = reduceSortValues(nextQuestions || questions);
-		setQuestions(recalculated);
+		const recalculated = reduceSortValues(nextQuestions || questions)
+		setQuestions(recalculated)
 		if (editingQuestion) {
-			const refreshedQuestion = recalculated.find((question) => question.id === editingQuestion.id);
-			if (refreshedQuestion) setEditingQuestion(refreshedQuestion);
+			const refreshedQuestion = recalculated.find((question) => question.id === editingQuestion.id)
+			if (refreshedQuestion) setEditingQuestion(refreshedQuestion)
 		}
-	};
+	}
 
 	const handleUpdateQuestion = (questionId: string, question: EditableQuestion, skipRecalculate?: boolean) => {
 		const updatedQuestions = questions.map((entry) => {
-			if (entry.id === questionId) return { ...entry, ...question };
-			return entry;
-		});
+			if (entry.id === questionId) return { ...entry, ...question }
+			return entry
+		})
 
 		if (skipRecalculate) {
-			setQuestions(updatedQuestions);
-			return;
+			setQuestions(updatedQuestions)
+			return
 		}
 
-		recalculate(updatedQuestions);
-	};
+		recalculate(updatedQuestions)
+	}
 
 	const handleMove = (fromIndex: number, offset: -1 | 1) => {
-		const scopedQuestions = [...visibleQuestions];
-		const targetIndex = fromIndex + offset;
+		const scopedQuestions = [...visibleQuestions]
+		const targetIndex = fromIndex + offset
 
-		if (targetIndex < 0 || targetIndex >= scopedQuestions.length) return;
+		if (targetIndex < 0 || targetIndex >= scopedQuestions.length) return
 
-		const [moved] = scopedQuestions.splice(fromIndex, 1);
-		scopedQuestions.splice(targetIndex, 0, moved);
+		const [moved] = scopedQuestions.splice(fromIndex, 1)
+		scopedQuestions.splice(targetIndex, 0, moved)
 
-		const reorderedScoped = scopedQuestions.map((question, index) => ({ ...question, sort: index }));
-		const otherScoped = questions.filter((question) => question.trial !== trial);
-		recalculate([...otherScoped, ...reorderedScoped]);
-	};
+		const reorderedScoped = scopedQuestions.map((question, index) => ({ ...question, sort: index }))
+		const otherScoped = questions.filter((question) => question.trial !== trial)
+		recalculate([...otherScoped, ...reorderedScoped])
+	}
 
 	const handleDeleteQuestion = (questionId: string) => {
-		const toDelete = questions.find((question) => question.id === questionId);
-		if (!toDelete) return;
+		const toDelete = questions.find((question) => question.id === questionId)
+		if (!toDelete) return
 
-		const nextQuestions = questions.filter((question) => question.id !== questionId);
-		setQuestions(reduceSortValues(nextQuestions));
-		setDeletedQuestions((current) => [...current, { ...toDelete, sort: -1 }]);
+		const nextQuestions = questions.filter((question) => question.id !== questionId)
+		setQuestions(reduceSortValues(nextQuestions))
+		setDeletedQuestions((current) => [...current, { ...toDelete, sort: -1 }])
 		if (editingQuestion?.id === questionId) {
-			setEditingQuestion(null);
+			setEditingQuestion(null)
 		}
-	};
+	}
 
 	const handleUpdateEditingQuestion = (
 		question: Partial<EditableQuestion> | Record<string, any>,
 		additional?: boolean,
 	) => {
-		if (!editingQuestion) return;
+		if (!editingQuestion) return
 
 		if (additional) {
 			setEditingQuestion({
@@ -149,18 +149,18 @@ export default function QuestionsEditor({
 					...((editingQuestion.additionalData as object) || {}),
 					...question,
 				},
-			});
-			return;
+			})
+			return
 		}
 
-		setEditingQuestion({ ...editingQuestion, ...question });
-	};
+		setEditingQuestion({ ...editingQuestion, ...question })
+	}
 
 	const handleAddQuestion = (type: ApplicationQuestionType) => {
-		const questionType = ApplicationQuestions[type];
-		if (!questionType) return;
+		const questionType = ApplicationQuestions[type]
+		if (!questionType) return
 
-		const nextSort = visibleQuestions.length;
+		const nextSort = visibleQuestions.length
 		const newQuestion: EditableQuestion = {
 			id: crypto.randomUUID(),
 			title: 'New Question',
@@ -173,43 +173,43 @@ export default function QuestionsEditor({
 			buildTeamId: teamId,
 			sort: nextSort,
 			trial,
-		};
+		}
 
-		setQuestions((current) => [...current, newQuestion]);
-		setEditingQuestion(newQuestion);
-	};
+		setQuestions((current) => [...current, newQuestion])
+		setEditingQuestion(newQuestion)
+	}
 
 	const handleSave = async () => {
-		setSaveLoading(true);
-		const recalculated = reduceSortValues(questions);
-		setQuestions(recalculated);
+		setSaveLoading(true)
+		const recalculated = reduceSortValues(questions)
+		setQuestions(recalculated)
 
 		try {
-			const payload = [...recalculated, ...deletedQuestions];
+			const payload = [...recalculated, ...deletedQuestions]
 			await saveQuestionsAction({
 				buildTeamSlug,
 				questions: payload,
-			});
+			})
 
-			setQuestions(recalculated);
-			setDeletedQuestions([]);
-			setEditingQuestion(null);
+			setQuestions(recalculated)
+			setDeletedQuestions([])
+			setEditingQuestion(null)
 			showNotification({
 				title: 'Settings updated',
 				message: 'Application questions were saved successfully.',
 				color: 'green',
 				icon: <IconCheck size={16} />,
-			});
+			})
 		} catch (error) {
 			showNotification({
 				title: 'Update failed',
 				message: error instanceof Error ? error.message : 'Could not save application questions.',
 				color: 'red',
-			});
+			})
 		} finally {
-			setSaveLoading(false);
+			setSaveLoading(false)
 		}
-	};
+	}
 
 	return (
 		<>
@@ -276,9 +276,9 @@ export default function QuestionsEditor({
 				<Group mt="md">
 					<Button
 						onClick={() => {
-							if (!editingQuestion) return;
-							handleUpdateQuestion(editingQuestion.id, editingQuestion);
-							setEditingQuestion(null);
+							if (!editingQuestion) return
+							handleUpdateQuestion(editingQuestion.id, editingQuestion)
+							setEditingQuestion(null)
 						}}
 					>
 						Save
@@ -287,8 +287,8 @@ export default function QuestionsEditor({
 						variant="outline"
 						leftSection={<IconTrash size={16} />}
 						onClick={() => {
-							if (!editingQuestion) return;
-							handleDeleteQuestion(editingQuestion.id);
+							if (!editingQuestion) return
+							handleDeleteQuestion(editingQuestion.id)
 						}}
 					>
 						Delete
@@ -332,9 +332,9 @@ export default function QuestionsEditor({
 						</Menu.Target>
 						<Menu.Dropdown>
 							{(Object.keys(ApplicationQuestions) as ApplicationQuestionType[]).map((questionType) => {
-								const QuestionType = ApplicationQuestions[questionType];
-								const QuestionIcon = QuestionType.icon || IconLetterT;
-								const isDisabled = questionType.toLowerCase() === 'city' || questionType.toLowerCase() === 'image';
+								const QuestionType = ApplicationQuestions[questionType]
+								const QuestionIcon = QuestionType.icon || IconLetterT
+								const isDisabled = questionType.toLowerCase() === 'city' || questionType.toLowerCase() === 'image'
 
 								return (
 									<Menu.Item
@@ -345,7 +345,7 @@ export default function QuestionsEditor({
 									>
 										{toReadable(QuestionType)}
 									</Menu.Item>
-								);
+								)
 							})}
 						</Menu.Dropdown>
 					</Menu>
@@ -396,5 +396,5 @@ export default function QuestionsEditor({
 				</Card>
 			))}
 		</>
-	);
+	)
 }

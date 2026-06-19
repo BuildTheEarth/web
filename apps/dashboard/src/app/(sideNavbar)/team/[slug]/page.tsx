@@ -1,14 +1,12 @@
-import Anchor from '@/components/core/Anchor';
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { Protection } from '@/components/Protection';
-import { getReviewActivityScore } from '@/util/application/reviewActivity';
-import { getSession } from '@/util/auth';
-import { toHumanDate } from '@/util/date';
-import prisma from '@/util/db';
-import { applicationStatusToColor } from '@/util/transformers';
+import Anchor from '@/components/core/Anchor'
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { getSession } from '@/util/auth'
+import { getCountryNames } from '@/util/countries'
+import { toHumanDate } from '@/util/date'
+import prisma from '@/util/db'
 import {
 	Alert,
 	Button,
@@ -18,29 +16,18 @@ import {
 	Group,
 	Image,
 	NumberFormatter,
-	Rating,
-	RingProgress,
 	ScrollAreaAutosize,
 	SimpleGrid,
 	Text,
-	ThemeIcon,
 	Title,
-	Tooltip,
-} from '@mantine/core';
-import { ApplicationStatus } from '@repo/db';
+} from '@mantine/core'
 import {
 	IconAlertCircle,
 	IconBrandDiscord,
 	IconBrandMinecraft,
 	IconCalendar,
 	IconCamera,
-	IconChecklist,
-	IconClock,
-	IconClockCheck,
-	IconClockExclamation,
-	IconClockHour11,
 	IconEdit,
-	IconExternalLink,
 	IconForms,
 	IconInfoSmall,
 	IconMap,
@@ -49,23 +36,22 @@ import {
 	IconTag,
 	IconUser,
 	IconUsers,
-} from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { EditMenu } from './interactivity';
-import { getCountryNames } from '@/util/countries';
+} from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { EditMenu } from './interactivity'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-	const { slug: id } = await params;
+	const { slug: id } = await params
 
 	return {
 		title: 'Build Team ' + id.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-	const slug = (await params).slug;
-	const session = await getSession();
+	const slug = (await params).slug
+	const session = await getSession()
 
 	const team = await prisma.buildTeam.findFirst({
 		where: { slug },
@@ -93,8 +79,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				},
 			},
 		},
-	});
-	if (!team) throw Error('Could not find Build Team');
+	})
+	if (!team) throw Error('Could not find Build Team')
 
 	return (
 		<ContentWrapper maw="90vw">
@@ -133,7 +119,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-yellow-outline)' }}
 					color="yellow"
 					mb="md"
-					radius="md"
 					title="Disabled Applications"
 					icon={<IconForms />}
 				>
@@ -232,5 +217,5 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				</GridCol>
 			</Grid>
 		</ContentWrapper>
-	);
+	)
 }

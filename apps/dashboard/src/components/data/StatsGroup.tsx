@@ -1,6 +1,6 @@
-import { Box, BoxComponentProps, Text } from '@mantine/core';
+import { Box, BoxComponentProps, Text } from '@mantine/core'
 
-import classes from '@/styles/StatsGroup.module.css';
+import classes from '@/styles/StatsGroup.module.css'
 
 export function StatsGroup({
 	data,
@@ -12,10 +12,10 @@ export function StatsGroup({
 			<Text className={classes.title}>{stat.title}</Text>
 			<Text className={classes.description}>{stat.description}</Text>
 		</div>
-	));
+	))
 	return (
 		<Box className={classes.root} {...props}>
 			{stats}
 		</Box>
-	);
+	)
 }

@@ -1,24 +1,24 @@
-import { getUserPermissions } from '@/actions/getUser';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import { getSession } from '@/util/auth';
-import prisma from '@/util/db';
-import { Group, Title } from '@mantine/core';
-import ApplicationsDatatable from './datatable';
-import { SearchApplications } from './interactivity';
+import { getUserPermissions } from '@/actions/getUser'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import { getSession } from '@/util/auth'
+import prisma from '@/util/db'
+import { Group, Title } from '@mantine/core'
+import ApplicationsDatatable from './datatable'
+import { SearchApplications } from './interactivity'
 
 export default async function Page({
 	params,
 	searchParams,
 }: {
-	params: Promise<{ slug: string }>;
-	searchParams: Promise<{ page?: string; query?: string }>;
+	params: Promise<{ slug: string }>
+	searchParams: Promise<{ page?: string; query?: string }>
 }) {
-	const session = await getSession();
-	const userPermissions = await getUserPermissions(session?.user.id);
-	const slug = (await params).slug;
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
+	const session = await getSession()
+	const userPermissions = await getUserPermissions(session?.user.id)
+	const slug = (await params).slug
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
 
 	const applicationCount = await prisma.application.count({
 		where: {
@@ -38,7 +38,7 @@ export default async function Page({
 				},
 			],
 		},
-	});
+	})
 	const applications = await prisma.application.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,
@@ -83,7 +83,7 @@ export default async function Page({
 			},
 			trial: true,
 		},
-	});
+	})
 
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
@@ -105,5 +105,5 @@ export default async function Page({
 				/>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

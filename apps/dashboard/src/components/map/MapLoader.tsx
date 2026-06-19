@@ -1,4 +1,4 @@
-import { Center, LoadingOverlay } from '@mantine/core';
+import { Center, LoadingOverlay } from '@mantine/core'
 
 function MapLoader() {
 	return (
@@ -14,7 +14,7 @@ function MapLoader() {
 		>
 			<LoadingOverlay visible={true} />
 		</Center>
-	);
+	)
 }
 
-export default MapLoader;
+export default MapLoader

@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { adminChangeTeam, adminDeleteClaim } from '@/actions/claims';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { BuildTeamSelect } from '@/components/input/BuildTeamSelect';
-import { useFormAction } from '@/hooks/useFormAction';
-import { hasRole } from '@/util/auth';
+import { adminChangeTeam, adminDeleteClaim } from '@/actions/claims'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
+import { useFormAction } from '@/hooks/useFormAction'
+import { hasRole } from '@/util/auth'
 import {
 	ActionIcon,
 	Button,
@@ -17,18 +17,18 @@ import {
 	rem,
 	Text,
 	Title,
-} from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
-import { modals, openConfirmModal } from '@mantine/modals';
-import type { BuildTeam, Claim } from '@repo/db';
-import { IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { redirect } from 'next/navigation';
-import { useState } from 'react';
+} from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
+import { modals, openConfirmModal } from '@mantine/modals'
+import type { BuildTeam, Claim } from '@repo/db'
+import { IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
+import { useState } from 'react'
 
 export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } }) {
-	const session = useSession();
-	const clipboard = useClipboard({ timeout: 500 });
+	const session = useSession()
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<Menu>
@@ -62,7 +62,7 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 							title: 'Change assigned Build Team',
 							size: 'lg',
 							children: <ChangeBuildTeamModal claim={claim} />,
-						});
+						})
 					}}
 				>
 					Change Build Team
@@ -85,8 +85,8 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 							),
 							labels: { confirm: 'Delete', cancel: 'Cancel' },
 							onConfirm: () => {
-								adminDeleteClaim({ claimId: claim.id });
-								redirect('/am/claims');
+								adminDeleteClaim({ claimId: claim.id })
+								redirect('/am/claims')
 							},
 						})
 					}
@@ -95,12 +95,12 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }
 
 export function ChangeBuildTeamModal({ claim }: { claim: Claim & { buildTeam: BuildTeam } }) {
-	const [changeTeamAction, isPending] = useFormAction(adminChangeTeam);
-	const [destinationTeam, setDestinationTeam] = useState<string | null>(null);
+	const [changeTeamAction, isPending] = useFormAction(adminChangeTeam)
+	const [destinationTeam, setDestinationTeam] = useState<string | null>(null)
 	return (
 		<>
 			<Title order={5} mb="sm">
@@ -126,12 +126,12 @@ export function ChangeBuildTeamModal({ claim }: { claim: Claim & { buildTeam: Bu
 				loading={isPending}
 				disabled={!destinationTeam}
 				onClick={() => {
-					changeTeamAction({ claimId: claim.id, teamId: destinationTeam });
-					modals.closeAll();
+					changeTeamAction({ claimId: claim.id, teamId: destinationTeam })
+					modals.closeAll()
 				}}
 			>
 				Change Build Team
 			</Button>
 		</>
-	);
+	)
 }

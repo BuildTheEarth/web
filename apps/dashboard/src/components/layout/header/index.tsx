@@ -1,9 +1,9 @@
-import { AppShellHeader, Divider, Group, Text } from '@mantine/core';
+import { AppShellHeader, Divider, Group, Text } from '@mantine/core'
 
-import Image from 'next/image';
-import HeaderBuildTeamSelector from './HeaderBuildTeamSelector';
-import HeaderProfile from './HeaderProfile';
-import MobileLinkDrawer from './MobileLinkDrawer';
+import Image from 'next/image'
+import HeaderBuildTeamSelector from './HeaderBuildTeamSelector'
+import HeaderProfile from './HeaderProfile'
+import MobileLinkDrawer from './MobileLinkDrawer'
 
 export interface Header {}
 
@@ -29,7 +29,7 @@ const Header = (props: { roles: string[]; hideTeamSelector?: boolean; hideProfil
 				</Group>
 			</Group>
 		</AppShellHeader>
-	);
-};
+	)
+}
 
-export default Header;
+export default Header

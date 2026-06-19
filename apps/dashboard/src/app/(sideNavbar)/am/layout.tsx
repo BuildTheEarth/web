@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: {
@@ -10,8 +10,8 @@ export const metadata: Metadata = {
 		follow: false,
 		nocache: true,
 	},
-};
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	return children;
+	return children
 }

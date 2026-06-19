@@ -1,9 +1,9 @@
 export function constructClaimGeoJSONQuery(filters: {
-	finished?: boolean;
-	active?: boolean;
-	user?: string | null;
-	extended?: boolean;
-	id?: string | null;
+	finished?: boolean
+	active?: boolean
+	user?: string | null
+	extended?: boolean
+	id?: string | null
 }) {
 	return {
 		where: {
@@ -56,5 +56,5 @@ export function constructClaimGeoJSONQuery(filters: {
 					},
 				}
 			: { id: true, area: true, center: true, name: true, owner: { select: { id: true, ssoId: true } } },
-	};
+	}
 }

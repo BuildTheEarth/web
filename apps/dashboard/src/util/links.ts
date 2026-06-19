@@ -1,4 +1,4 @@
-import { IconList, IconTool, IconUsersGroup } from '@tabler/icons-react';
+import { IconList, IconTool, IconUsersGroup } from '@tabler/icons-react'
 
 /**
  * These links are used for navigation between buildteam related pages
@@ -7,7 +7,7 @@ export const teamNavLinks: NavLink[] = [
 	{ link: '/team', label: 'Team Overview', icon: IconList },
 	{ link: '/team/members', label: 'Members', icon: IconUsersGroup },
 	{ link: '/team/tools', label: 'Debug Tools', icon: IconTool },
-];
+]
 
 /**
  * These links are used for navigation between tool pages
@@ -147,9 +147,9 @@ export const meNavLinks: NavLink[] = [
 		permission: 'get-config',
 		icon: 'Settings',
 	},
-];
+]
 
-export const navLinks = meNavLinks;
+export const navLinks = meNavLinks
 
 /**
  * Converts a NavLink array to an array of href links
@@ -157,16 +157,16 @@ export const navLinks = meNavLinks;
  * @returns a array of only the href itself
  */
 export function toBlankLink(links: NavLink[]): string[] {
-	return links.filter((l) => !l.divider).map((link) => link.link);
+	return links.filter((l) => !l.divider).map((link) => link.link)
 }
 
 type NavLink = {
-	link: string;
-	label: string;
-	icon: any;
-	permission?: string;
-	divider?: boolean;
-};
+	link: string
+	label: string
+	icon: any
+	permission?: string
+	divider?: boolean
+}
 interface NavLinkGroup {
-	[section: string]: NavLink[];
+	[section: string]: NavLink[]
 }

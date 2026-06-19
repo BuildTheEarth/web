@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	ActionIcon,
@@ -20,7 +20,7 @@ import {
 	Textarea,
 	ThemeIcon,
 	Tooltip,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconCheck,
 	IconCrown,
@@ -30,19 +30,19 @@ import {
 	IconId,
 	IconPassword,
 	IconTrash,
-} from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+} from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { removeMember, removeMembers, setMemberPermissions } from '@/actions/buildTeams';
-import { toHumanDate } from '@/util/date';
-import { useClipboard } from '@mantine/hooks';
-import { closeAllModals, openModal } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
-import type { ApplicationStatus } from '@repo/db';
-import { DataTable } from 'mantine-datatable';
-import moment from 'moment';
-import Link from 'next/link';
-import { useState } from 'react';
+import { removeMember, removeMembers, setMemberPermissions } from '@/actions/buildTeams'
+import { toHumanDate } from '@/util/date'
+import { useClipboard } from '@mantine/hooks'
+import { closeAllModals, openModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
+import type { ApplicationStatus } from '@repo/db'
+import { DataTable } from 'mantine-datatable'
+import moment from 'moment'
+import Link from 'next/link'
+import { useState } from 'react'
 
 export default function MembersDatatable({
 	builders,
@@ -54,32 +54,32 @@ export default function MembersDatatable({
 	slug,
 }: {
 	builders: {
-		id: string;
-		ssoId: string;
-		discordId: string | null;
-		username: string | null;
-		minecraft: string | null;
+		id: string
+		ssoId: string
+		discordId: string | null
+		username: string | null
+		minecraft: string | null
 		applications: {
-			id: string;
-			status: ApplicationStatus;
-			reviewedAt: Date | null;
-		}[];
-		permissions: { permission: { id: string; description: string } }[];
-		createdBuildTeams: { id: string }[];
-	}[];
-	availablePermissions: { id: string; description: string }[];
-	count: number;
-	isAdmin?: boolean;
-	userId: string;
-	permissions?: string[];
-	slug: string;
+			id: string
+			status: ApplicationStatus
+			reviewedAt: Date | null
+		}[]
+		permissions: { permission: { id: string; description: string } }[]
+		createdBuildTeams: { id: string }[]
+	}[]
+	availablePermissions: { id: string; description: string }[]
+	count: number
+	isAdmin?: boolean
+	userId: string
+	permissions?: string[]
+	slug: string
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const clipboard = useClipboard({ timeout: 500 });
-	const [selectedRecords, setSelectedRecords] = useState<typeof builders>([]);
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const clipboard = useClipboard({ timeout: 500 })
+	const [selectedRecords, setSelectedRecords] = useState<typeof builders>([])
 
 	return (
 		<DataTable
@@ -87,9 +87,9 @@ export default function MembersDatatable({
 			onSelectedRecordsChange={setSelectedRecords}
 			minHeight={500}
 			rowBackgroundColor={({ permissions, createdBuildTeams }) => {
-				if (createdBuildTeams.length > 0) return '#c4c53b0c';
-				if (permissions.length > 0) return '#835bf20c';
-				return undefined;
+				if (createdBuildTeams.length > 0) return '#c4c53b0c'
+				if (permissions.length > 0) return '#835bf20c'
+				return undefined
 			}}
 			isRecordSelectable={(record) => record.createdBuildTeams.length === 0 && record.permissions.length === 0}
 			columns={[
@@ -136,19 +136,19 @@ export default function MembersDatatable({
 					title: 'Discord #',
 					visibleMediaQuery: '(min-width: 64em)', // md
 					render: ({ discordId }) => {
-						return <Code>{discordId || 'N/A'}</Code>;
+						return <Code>{discordId || 'N/A'}</Code>
 					},
 				},
 				{
 					accessor: 'Member Since',
 					render: ({ applications }) => {
-						if (applications.length === 0) return <>&gt; 3 years</>;
+						if (applications.length === 0) return <>&gt; 3 years</>
 						return (
 							<>
 								{toHumanDate(applications[0]?.reviewedAt)} /{' '}
 								{moment.duration(moment(applications[0]?.reviewedAt).diff(moment())).humanize()}
 							</>
-						);
+						)
 					},
 				},
 				{
@@ -197,8 +197,8 @@ export default function MembersDatatable({
 										aria-label="Change Permissions"
 										disabled={!(permissions?.includes('permission.remove') && permissions?.includes('permission.add'))}
 										onClick={() => {
-											let newPermissions = user.permissions.map((p) => p.permission.id);
-											let notifyUser = true;
+											let newPermissions = user.permissions.map((p) => p.permission.id)
+											let notifyUser = true
 
 											let changeUserPermissions = () => {
 												setMemberPermissions({
@@ -207,18 +207,18 @@ export default function MembersDatatable({
 													permissions: newPermissions,
 													buildTeamSlug: slug,
 												}).then(() => {
-													closeAllModals();
+													closeAllModals()
 													showNotification({
 														title: 'Permissions Updated',
 														message: 'The user permissions have been updated successfully.',
 														color: 'green',
 														autoClose: 2000,
 														icon: <IconCheck size={18} />,
-													});
-													closeAllModals();
-													router.refresh();
-												});
-											};
+													})
+													closeAllModals()
+													router.refresh()
+												})
+											}
 
 											openModal({
 												title: 'Change User Permissions',
@@ -233,8 +233,8 @@ export default function MembersDatatable({
 															data={availablePermissions.map((p) => p.id)}
 															defaultValue={newPermissions}
 															onChange={(values) => {
-																notifyUser = true;
-																newPermissions = values;
+																notifyUser = true
+																newPermissions = values
 															}}
 														/>
 
@@ -254,7 +254,7 @@ export default function MembersDatatable({
 														</Group>
 													</>
 												),
-											});
+											})
 										}}
 									>
 										Change Permissions
@@ -269,8 +269,8 @@ export default function MembersDatatable({
 											user.permissions.length > 0
 										}
 										onClick={() => {
-											let removeReason: string | undefined = undefined;
-											let notifyUser = true;
+											let removeReason: string | undefined = undefined
+											let notifyUser = true
 
 											let removeUser = () => {
 												removeMember({
@@ -279,17 +279,17 @@ export default function MembersDatatable({
 													notifyUser: notifyUser,
 													buildTeamSlug: slug,
 												}).then(() => {
-													closeAllModals();
+													closeAllModals()
 													showNotification({
 														title: 'User Removed',
 														message: 'The user has been removed successfully.',
 														color: 'green',
 														autoClose: 2000,
 														icon: <IconCheck size={18} />,
-													});
-													router.refresh();
-												});
-											};
+													})
+													router.refresh()
+												})
+											}
 
 											openModal({
 												title: 'Remove User from BuildTeam',
@@ -323,7 +323,7 @@ export default function MembersDatatable({
 														</Group>
 													</>
 												),
-											});
+											})
 										}}
 									>
 										Remove from BuildTeam
@@ -335,9 +335,9 @@ export default function MembersDatatable({
 											color="red"
 											disabled={!permissions?.includes('permission.remove')}
 											onClick={() => {
-												let removeReason: string | undefined = undefined;
-												let allowNotify = selectedRecords.length <= 10;
-												let notifyUsers = allowNotify ? true : false;
+												let removeReason: string | undefined = undefined
+												let allowNotify = selectedRecords.length <= 10
+												let notifyUsers = allowNotify ? true : false
 
 												let removeUsers = () => {
 													removeMembers({
@@ -346,18 +346,18 @@ export default function MembersDatatable({
 														notifyUsers,
 														buildTeamSlug: slug,
 													}).then(() => {
-														closeAllModals();
-														setSelectedRecords([]);
+														closeAllModals()
+														setSelectedRecords([])
 														showNotification({
 															title: 'Users Removed',
 															message: 'The users have been removed successfully.',
 															color: 'green',
 															autoClose: 2000,
 															icon: <IconCheck size={18} />,
-														});
-														router.refresh();
-													});
-												};
+														})
+														router.refresh()
+													})
+												}
 
 												openModal({
 													title: `Remove ${selectedRecords.length} Users from BuildTeam`,
@@ -400,7 +400,7 @@ export default function MembersDatatable({
 															</Group>
 														</>
 													),
-												});
+												})
 											}}
 										>
 											Remove all {selectedRecords.length} from BuildTeam
@@ -421,5 +421,5 @@ export default function MembersDatatable({
 			}
 			noRecordsText="No Users found"
 		/>
-	);
+	)
 }

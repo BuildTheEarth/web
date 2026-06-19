@@ -4,5 +4,7 @@
 	"singleQuote": true,
 	"quoteProps": "as-needed",
 	"trailingComma": "all",
-	"endOfLine": "lf"
+	"endOfLine": "lf",
+	"semi": false,
+	"bracketSpacing": true
 }

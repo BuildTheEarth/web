@@ -1,18 +1,18 @@
-import { Alert, Text, Title } from '@mantine/core';
+import { Alert, Text, Title } from '@mantine/core'
 
-import { adminApproveShowcase } from '@/actions/uploads';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { IconInfoCircle } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import UploadsDatatable from './datatable';
+import { adminApproveShowcase } from '@/actions/uploads'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { IconInfoCircle } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import UploadsDatatable from './datatable'
 
 export const metadata: Metadata = {
 	title: 'Check Uploads',
-};
+}
 export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
-	const page = (await searchParams).page;
+	const page = (await searchParams).page
 	const lastApprovedShowcase = await prisma.showcase.findFirst({
 		where: {
 			approved: true,
@@ -23,7 +23,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 		select: {
 			createdAt: true,
 		},
-	});
+	})
 
 	const showcaseCount = await prisma.showcase.count({
 		where: {
@@ -35,7 +35,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				checked: true,
 			},
 		},
-	});
+	})
 	const showcases = await prisma.showcase.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,
@@ -68,7 +68,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				select: { name: true, slug: true, id: true, icon: true },
 			},
 		},
-	});
+	})
 
 	return (
 		<Protection requiredRole="review-uploads">
@@ -108,5 +108,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				)}
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

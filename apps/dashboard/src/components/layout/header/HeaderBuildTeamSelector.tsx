@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import useSelectableBuildTeams from '@/hooks/useBuildTeamData';
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import useSelectableBuildTeams from '@/hooks/useBuildTeamData'
 import {
 	Box,
 	Combobox,
@@ -13,29 +13,29 @@ import {
 	InputBase,
 	InputPlaceholder,
 	useCombobox,
-} from '@mantine/core';
+} from '@mantine/core'
 
 interface BuildTeamOption {
-	id: string;
-	slug: string;
-	name: string;
-	icon: string;
+	id: string
+	slug: string
+	name: string
+	icon: string
 }
 
 const HeaderBuildTeamSelector = () => {
-	const [buildteams, activeBuildTeam, selectBuildTeam] = useSelectableBuildTeams();
+	const [buildteams, activeBuildTeam, selectBuildTeam] = useSelectableBuildTeams()
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
-	});
+	})
 
 	const options = buildteams.map((team) => (
 		<ComboboxOption value={team.id} key={team.id} py="xs">
 			<BuildTeamDisplay team={team} noAnchor />
 		</ComboboxOption>
-	));
+	))
 
-	if (buildteams.length === 0) return null;
-	if (!activeBuildTeam) return null;
+	if (buildteams.length === 0) return null
+	if (!activeBuildTeam) return null
 
 	return (
 		<>
@@ -43,8 +43,8 @@ const HeaderBuildTeamSelector = () => {
 				store={combobox}
 				withinPortal={false}
 				onOptionSubmit={(val) => {
-					selectBuildTeam(val);
-					combobox.closeDropdown();
+					selectBuildTeam(val)
+					combobox.closeDropdown()
 				}}
 			>
 				<ComboboxTarget>
@@ -74,7 +74,7 @@ const HeaderBuildTeamSelector = () => {
 			</Combobox>
 			<Divider orientation="vertical" />
 		</>
-	);
-};
+	)
+}
 
-export default HeaderBuildTeamSelector;
+export default HeaderBuildTeamSelector

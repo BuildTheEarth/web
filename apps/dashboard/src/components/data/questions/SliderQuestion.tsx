@@ -1,37 +1,37 @@
-'use client';
+'use client'
 
-import { Group, Input, NumberInput, Slider, Stack, TextInput } from '@mantine/core';
-import { useMemo, useState } from 'react';
+import { Group, Input, NumberInput, Slider, Stack, TextInput } from '@mantine/core'
+import { useMemo, useState } from 'react'
 
-import { ApplicationQuestion } from '@/util/application';
-import { IconAdjustments } from '@tabler/icons-react';
+import { ApplicationQuestion } from '@/util/application'
+import { IconAdjustments } from '@tabler/icons-react'
 
 export interface SliderQuestionProps extends ApplicationQuestion {
 	additionalData: {
-		steps?: number;
-		max?: number;
-		min?: number;
-		unit?: string;
-	};
+		steps?: number
+		max?: number
+		min?: number
+		unit?: string
+	}
 }
 
 function validation(props: SliderQuestionProps): (value: string) => void {
 	return (value: string) => {
-		return false;
-	};
+		return false
+	}
 }
 
 const SliderQuestion = (props: SliderQuestionProps) => {
 	const initialValue = useMemo(() => {
-		if (typeof props.value === 'number') return props.value;
+		if (typeof props.value === 'number') return props.value
 		if (typeof props.value === 'string') {
-			const parsed = Number(props.value);
-			if (!Number.isNaN(parsed)) return parsed;
+			const parsed = Number(props.value)
+			if (!Number.isNaN(parsed)) return parsed
 		}
-		if (typeof props.additionalData.min === 'number') return props.additionalData.min;
-		return 0;
-	}, [props.value, props.additionalData.min]);
-	const [value, setValue] = useState(initialValue);
+		if (typeof props.additionalData.min === 'number') return props.additionalData.min
+		return 0
+	}, [props.value, props.additionalData.min])
+	const [value, setValue] = useState(initialValue)
 
 	return (
 		<Stack style={props.style} gap={0}>
@@ -44,9 +44,9 @@ const SliderQuestion = (props: SliderQuestionProps) => {
 				min={props.additionalData.min}
 				step={props.additionalData.steps}
 				onChange={(e) => {
-					if (props.readonly) return;
-					setValue(e);
-					props.onChange && props.onChange(e);
+					if (props.readonly) return
+					setValue(e)
+					props.onChange && props.onChange(e)
 				}}
 				disabled={props.disabled}
 				value={value}
@@ -54,8 +54,8 @@ const SliderQuestion = (props: SliderQuestionProps) => {
 			/>
 			<Input.Error mt={4}>{props.error}</Input.Error>
 		</Stack>
-	);
-};
+	)
+}
 
 const EditQuestion = ({ editingQuestion, handleUpdateEditingQuestion }: any) => {
 	return (
@@ -84,11 +84,11 @@ const EditQuestion = ({ editingQuestion, handleUpdateEditingQuestion }: any) => 
 				onChange={(e) => handleUpdateEditingQuestion({ unit: e.target.value }, true)}
 			/>
 		</>
-	);
-};
+	)
+}
 
-SliderQuestion.edit = EditQuestion;
-SliderQuestion.mockdata = { steps: 1, max: 100, min: 0 };
-SliderQuestion.validation = validation;
-SliderQuestion.icon = IconAdjustments;
-export default SliderQuestion;
+SliderQuestion.edit = EditQuestion
+SliderQuestion.mockdata = { steps: 1, max: 100, min: 0 }
+SliderQuestion.validation = validation
+SliderQuestion.icon = IconAdjustments
+export default SliderQuestion

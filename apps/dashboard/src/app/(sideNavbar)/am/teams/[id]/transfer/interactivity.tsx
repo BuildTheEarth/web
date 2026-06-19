@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Alert, Box, Button, Checkbox, SimpleGrid, Stepper, Text, Title, rem } from '@mantine/core';
+import { Alert, Box, Button, Checkbox, SimpleGrid, Stepper, Text, Title, rem } from '@mantine/core'
 import {
 	Icon,
 	IconBrandDiscord,
@@ -16,26 +16,26 @@ import {
 	IconTrash,
 	IconUsers,
 	IconUsersGroup,
-} from '@tabler/icons-react';
-import { ForwardRefExoticComponent, RefAttributes, startTransition, useActionState, useState } from 'react';
+} from '@tabler/icons-react'
+import { ForwardRefExoticComponent, RefAttributes, startTransition, useActionState, useState } from 'react'
 
-import { adminChangeTeamOwner, adminTransferTeam } from '@/actions/buildTeams';
-import { BuildTeamSelect } from '@/components/input/BuildTeamSelect';
-import { UserSelect } from '@/components/input/UserSelect';
-import { CodeHighlight } from '@mantine/code-highlight';
-import { openConfirmModal } from '@mantine/modals';
+import { adminChangeTeamOwner, adminTransferTeam } from '@/actions/buildTeams'
+import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
+import { UserSelect } from '@/components/input/UserSelect'
+import { CodeHighlight } from '@mantine/code-highlight'
+import { openConfirmModal } from '@mantine/modals'
 
 export function TransferStepper({ id }: { id: string }) {
-	const [activeStep, setActiveStep] = useState(0);
-	const [destinationTeam, setDestinationTeam] = useState<string | null>(null);
-	const [curentState, transferTeamAction, isLoading] = useActionState(adminTransferTeam, {});
+	const [activeStep, setActiveStep] = useState(0)
+	const [destinationTeam, setDestinationTeam] = useState<string | null>(null)
+	const [curentState, transferTeamAction, isLoading] = useActionState(adminTransferTeam, {})
 
 	const steps: {
-		id: string;
-		icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>;
-		title: string;
-		description: string;
-		button: string;
+		id: string
+		icon: ForwardRefExoticComponent<IconProps & RefAttributes<Icon>>
+		title: string
+		description: string
+		button: string
 	}[] = [
 		{
 			id: 'move-claims',
@@ -121,7 +121,7 @@ export function TransferStepper({ id }: { id: string }) {
 			description: `Refreshes all data on the destination Build Team.`,
 			button: 'Reload & Finish',
 		},
-	];
+	]
 
 	return (
 		<SimpleGrid cols={{ base: 1, lg: 2 }} spacing={'md'}>
@@ -158,13 +158,13 @@ export function TransferStepper({ id }: { id: string }) {
 							),
 							labels: { confirm: 'Confirm', cancel: 'Cancel' },
 							onConfirm: () => {
-								if (!destinationTeam) return;
+								if (!destinationTeam) return
 
 								startTransition(() => {
-									transferTeamAction({ id, destinationId: destinationTeam, step: steps[activeStep].id });
-								});
+									transferTeamAction({ id, destinationId: destinationTeam, step: steps[activeStep].id })
+								})
 
-								setActiveStep(activeStep + 1);
+								setActiveStep(activeStep + 1)
 							},
 						})
 					}
@@ -200,18 +200,18 @@ export function TransferStepper({ id }: { id: string }) {
 				</Stepper>
 			</Box>
 		</SimpleGrid>
-	);
+	)
 }
 
 export function ChangeOwner({ id }: { id: string }) {
-	const [newOwner, setNewOwner] = useState<string | null>(null);
-	const [grantNewPermissions, setGrantNewPermissions] = useState(false);
-	const [removeOldPermissions, setRemoveOldPermissions] = useState(false);
+	const [newOwner, setNewOwner] = useState<string | null>(null)
+	const [grantNewPermissions, setGrantNewPermissions] = useState(false)
+	const [removeOldPermissions, setRemoveOldPermissions] = useState(false)
 
 	const [curentState, changeOwnerAction, isLoading] = useActionState(adminChangeTeamOwner, {
 		status: 'pending',
 		error: '',
-	});
+	})
 
 	return (
 		<Box maw={{ base: '100%', sm: '80%', md: '60%', xl: '40%' }}>
@@ -244,10 +244,10 @@ export function ChangeOwner({ id }: { id: string }) {
 						children: <Text size="sm">Are you sure you want to perform this action?</Text>,
 						labels: { confirm: 'Confirm', cancel: 'Cancel' },
 						onConfirm: () => {
-							if (!newOwner) return;
+							if (!newOwner) return
 							startTransition(() => {
-								changeOwnerAction({ id, newOwnerId: newOwner, grantNewPermissions, removeOldPermissions });
-							});
+								changeOwnerAction({ id, newOwnerId: newOwner, grantNewPermissions, removeOldPermissions })
+							})
 						},
 					})
 				}
@@ -259,5 +259,5 @@ export function ChangeOwner({ id }: { id: string }) {
 			</Text>
 			<CodeHighlight code={JSON.stringify(curentState, null, 2)} language="json" mb="md"></CodeHighlight>
 		</Box>
-	);
+	)
 }

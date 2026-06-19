@@ -1,20 +1,20 @@
-import { Button, Group, Title } from '@mantine/core';
+import { Button, Group, Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { IconExternalLink } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import BuildTeamsDatatable from './datatable';
-import { SearchBuildTeams } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { IconExternalLink } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import BuildTeamsDatatable from './datatable'
+import { SearchBuildTeams } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Build Teams',
-};
+}
 export default async function Page({ searchParams }: { searchParams: Promise<{ page?: string; query?: string }> }) {
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
 	const buildTeamCount = await prisma.buildTeam.count({
 		where: searchQuery
 			? {
@@ -29,7 +29,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 					],
 				}
 			: undefined,
-	});
+	})
 	const buildTeams = await prisma.buildTeam.findMany({
 		take: 20,
 		skip: (Number(page || '1') - 1) * 20,
@@ -47,7 +47,7 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				}
 			: undefined,
 		include: { creator: { select: { id: true, username: true, ssoId: true } } },
-	});
+	})
 
 	return (
 		<Protection requiredRole="get-teams">
@@ -71,5 +71,5 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				<BuildTeamsDatatable buildTeams={buildTeams} count={buildTeamCount} />
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

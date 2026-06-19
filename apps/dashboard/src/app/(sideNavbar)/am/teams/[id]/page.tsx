@@ -1,13 +1,13 @@
-import Anchor from '@/components/core/Anchor';
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { Protection } from '@/components/Protection';
-import { getReviewActivityScore } from '@/util/application/reviewActivity';
-import { toHumanDateTime } from '@/util/date';
-import prisma from '@/util/db';
-import { applicationStatusToColor } from '@/util/transformers';
+import Anchor from '@/components/core/Anchor'
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { Protection } from '@/components/Protection'
+import { getReviewActivityScore } from '@/util/application/reviewActivity'
+import { toHumanDateTime } from '@/util/date'
+import prisma from '@/util/db'
+import { applicationStatusToColor } from '@/util/transformers'
 import {
 	Alert,
 	Button,
@@ -25,8 +25,8 @@ import {
 	ThemeIcon,
 	Title,
 	Tooltip,
-} from '@mantine/core';
-import { ApplicationStatus } from '@repo/db';
+} from '@mantine/core'
+import { ApplicationStatus } from '@repo/db'
 import {
 	IconAlertCircle,
 	IconBrandDiscord,
@@ -46,21 +46,21 @@ import {
 	IconTag,
 	IconUser,
 	IconUsers,
-} from '@tabler/icons-react';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { EditMenu } from './interactivity';
+} from '@tabler/icons-react'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { EditMenu } from './interactivity'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params;
+	const { id } = await params
 
 	return {
 		title: 'Build Team ' + id.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-	const id = (await params).id;
+	const id = (await params).id
 
 	const team = await prisma.buildTeam.findFirst({
 		where: { id },
@@ -84,15 +84,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				},
 			},
 		},
-	});
-	if (!team) throw Error('Could not find Build Team');
+	})
+	if (!team) throw Error('Could not find Build Team')
 
 	const teamApplicationsByStatus = await prisma.application.groupBy({
 		where: { buildteamId: id },
 		by: ['status'],
 		_count: true,
-	});
-	const reviewActivity = await getReviewActivityScore(id);
+	})
+	const reviewActivity = await getReviewActivityScore(id)
 
 	return (
 		<Protection requiredRole="get-teams">
@@ -329,5 +329,5 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				</Grid>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

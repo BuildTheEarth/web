@@ -1,16 +1,16 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 
-import { getUser, getUserFederatedIdentities } from '@/actions/getUser';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { SocialAccountStack } from '@/components/data/SocialAccount';
-import { Metadata } from 'next';
+import { getUser, getUserFederatedIdentities } from '@/actions/getUser'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { SocialAccountStack } from '@/components/data/SocialAccount'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'Social Connections',
-};
+}
 export default async function Page() {
-	const user = await getUser();
-	const federatedIdentities = await getUserFederatedIdentities(user.ssoId);
+	const user = await getUser()
+	const federatedIdentities = await getUserFederatedIdentities(user.ssoId)
 
 	return (
 		<ContentWrapper>
@@ -19,5 +19,5 @@ export default async function Page() {
 			</Title>
 			<SocialAccountStack identities={federatedIdentities} withUnlinked />
 		</ContentWrapper>
-	);
+	)
 }

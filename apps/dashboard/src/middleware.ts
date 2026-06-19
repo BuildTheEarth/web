@@ -1,4 +1,4 @@
-import { withAuth } from 'next-auth/middleware';
+import { withAuth } from 'next-auth/middleware'
 
 export default withAuth({
 	callbacks: {
@@ -9,16 +9,16 @@ export default withAuth({
 				token?.error === 'TokenInvalidated' ||
 				token?.error === 'ForceLogout'
 			) {
-				return false;
+				return false
 			}
-			return !!token;
+			return !!token
 		},
 	},
 	pages: {
 		signIn: '/auth/signin',
 	},
-});
+})
 
 export const config = {
 	matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|auth).*)'],
-};
+}

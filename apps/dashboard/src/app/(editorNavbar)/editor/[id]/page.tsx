@@ -1,15 +1,15 @@
-'use server';
+'use server'
 
-import { getSession } from '@/util/auth';
-import prisma from '@/util/db';
-import { Box, Button, Divider, Group, Title } from '@mantine/core';
-import { IconMap } from '@tabler/icons-react';
-import Link from 'next/link';
-import { AdvancedEditor } from './interactivity';
+import { getSession } from '@/util/auth'
+import prisma from '@/util/db'
+import { Box, Button, Divider, Group, Title } from '@mantine/core'
+import { IconMap } from '@tabler/icons-react'
+import Link from 'next/link'
+import { AdvancedEditor } from './interactivity'
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
-	const id = (await params).id;
-	const session = await getSession();
+	const id = (await params).id
+	const session = await getSession()
 
 	const claim = await prisma.claim.findFirst({
 		where: { id, owner: { ssoId: session?.user.id } },
@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 			builders: { select: { ssoId: true, username: true, id: true } },
 			buildTeam: { select: { id: true, slug: true, name: true, icon: true } },
 		},
-	});
+	})
 
 	return (
 		<Box w="100%" h="calc(100vh - var(--app-shell-header-height) - 4 * var(--mantine-spacing-md) - 5px)">
@@ -42,5 +42,5 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 			<Divider />
 			<AdvancedEditor initialClaim={claim} />
 		</Box>
-	);
+	)
 }

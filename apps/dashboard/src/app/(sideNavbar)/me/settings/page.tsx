@@ -1,16 +1,16 @@
-'use client';
-import { editOwnProfile } from '@/actions/user';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { UserDisplay } from '@/components/data/User';
-import { Button, Paper, Text, TextInput, Title, Tooltip } from '@mantine/core';
+'use client'
+import { editOwnProfile } from '@/actions/user'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { UserDisplay } from '@/components/data/User'
+import { Button, Paper, Text, TextInput, Title, Tooltip } from '@mantine/core'
 
-import { useForm } from '@mantine/form';
-import { IconQuestionMark } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { startTransition, useActionState } from 'react';
+import { useForm } from '@mantine/form'
+import { IconQuestionMark } from '@tabler/icons-react'
+import { useSession } from 'next-auth/react'
+import { startTransition, useActionState } from 'react'
 
 export default function Page() {
-	const session = useSession();
+	const session = useSession()
 	const form = useForm({
 		initialValues: {
 			email: session?.data?.user.email || '',
@@ -20,21 +20,21 @@ export default function Page() {
 			email: (value: string) => (/^\S+@\S+$/.test(value) ? null : 'Invalid email'),
 			username: (value: string) => {
 				if (value.length < 3) {
-					return 'Username must be at least 3 characters long';
+					return 'Username must be at least 3 characters long'
 				}
 				if (value.length > 25) {
-					return 'Username must be at most 25 characters long';
+					return 'Username must be at most 25 characters long'
 				}
 				if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-					return 'Username can only contain letters, numbers and underscores';
+					return 'Username can only contain letters, numbers and underscores'
 				}
 			},
 		},
-	});
+	})
 	const [curentState, changeOwnerAction, isLoading] = useActionState(editOwnProfile, {
 		status: 'pending',
 		error: '',
-	});
+	})
 
 	return (
 		<ContentWrapper>
@@ -74,5 +74,5 @@ export default function Page() {
 				</Button>
 			</form>
 		</ContentWrapper>
-	);
+	)
 }

@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	ActionIcon,
@@ -15,36 +15,36 @@ import {
 	Textarea,
 	TextInput,
 	TextInputProps,
-} from '@mantine/core';
-import { IconCheck, IconChevronDown, IconSearch, IconUserPlus, IconUsersPlus, IconX } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+} from '@mantine/core'
+import { IconCheck, IconChevronDown, IconSearch, IconUserPlus, IconUsersPlus, IconX } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { addMember, addMembers } from '@/actions/buildTeams';
-import { useDebouncedValue } from '@mantine/hooks';
-import { closeAllModals, openModal } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
+import { addMember, addMembers } from '@/actions/buildTeams'
+import { useDebouncedValue } from '@mantine/hooks'
+import { closeAllModals, openModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
 
 export function SearchMembers(props: TextInputProps) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
 
-	const [value, setValue] = useState(() => params.get('query') || '');
-	const [debounced] = useDebouncedValue(value, 500);
+	const [value, setValue] = useState(() => params.get('query') || '')
+	const [debounced] = useDebouncedValue(value, 500)
 
 	useEffect(() => {
-		const currentQuery = params.get('query') || '';
+		const currentQuery = params.get('query') || ''
 		if (debounced !== currentQuery) {
 			if (debounced) {
-				router.push(`${pathname}?query=${debounced}&page=1`);
+				router.push(`${pathname}?query=${debounced}&page=1`)
 			} else {
-				router.push(`${pathname}?page=1`);
+				router.push(`${pathname}?page=1`)
 			}
 		}
 		// Only run when debounced, pathname, or router changes
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [debounced, pathname, router]);
+	}, [debounced, pathname, router])
 
 	return (
 		<TextInput
@@ -62,7 +62,7 @@ export function SearchMembers(props: TextInputProps) {
 			onChange={(event) => setValue(event.currentTarget.value)}
 			{...props}
 		/>
-	);
+	)
 }
 
 export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean; userId: string; slug: string }) {
@@ -74,9 +74,9 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 				leftSection={<IconUserPlus size={14} />}
 				style={{ borderTopRightRadius: 0, borderBottomRightRadius: 0 }}
 				onClick={() => {
-					let addMessage: string | undefined = undefined;
-					let notifyUser = true;
-					let user = '';
+					let addMessage: string | undefined = undefined
+					let notifyUser = true
+					let user = ''
 
 					let addUser = () => {
 						addMember({
@@ -85,16 +85,16 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 							notifyUser: notifyUser,
 							buildTeamSlug: slug,
 						}).then(() => {
-							closeAllModals();
+							closeAllModals()
 							showNotification({
 								title: 'Builder Added',
 								message: 'The builder has been added successfully.',
 								color: 'green',
 								autoClose: 2000,
 								icon: <IconCheck size={18} />,
-							});
-						});
-					};
+							})
+						})
+					}
 
 					openModal({
 						title: 'Add Builder to BuildTeam',
@@ -133,7 +133,7 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 								</Group>
 							</>
 						),
-					});
+					})
 				}}
 			>
 				Add Builder
@@ -159,9 +159,9 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 					<MenuItem
 						leftSection={<IconUsersPlus size={14} stroke={1.5} />}
 						onClick={() => {
-							let addMessage: string | undefined = undefined;
-							let notifyUsers = true;
-							let users: string[] = [];
+							let addMessage: string | undefined = undefined
+							let notifyUsers = true
+							let users: string[] = []
 
 							let addUsers = () => {
 								addMembers({
@@ -170,16 +170,16 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 									notifyUsers: notifyUsers,
 									buildTeamSlug: slug,
 								}).then(() => {
-									closeAllModals();
+									closeAllModals()
 									showNotification({
 										title: 'Builders Added',
 										message: 'The builders have been added successfully.',
 										color: 'green',
 										autoClose: 2000,
 										icon: <IconCheck size={18} />,
-									});
-								});
-							};
+									})
+								})
+							}
 
 							openModal({
 								title: 'Add Builders to BuildTeam',
@@ -219,7 +219,7 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 										</Group>
 									</>
 								),
-							});
+							})
 						}}
 					>
 						Add multiple Builders
@@ -227,5 +227,5 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 				</MenuDropdown>
 			</Menu>
 		</Group>
-	);
+	)
 }

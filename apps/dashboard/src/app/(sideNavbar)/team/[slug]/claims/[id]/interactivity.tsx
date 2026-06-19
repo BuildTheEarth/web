@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { deleteClaim } from '@/actions/buildTeams';
-import { adminChangeTeam } from '@/actions/claims';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { BuildTeamSelect } from '@/components/input/BuildTeamSelect';
-import { useFormAction } from '@/hooks/useFormAction';
-import { hasRole } from '@/util/auth';
+import { deleteClaim } from '@/actions/buildTeams'
+import { adminChangeTeam } from '@/actions/claims'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
+import { useFormAction } from '@/hooks/useFormAction'
+import { hasRole } from '@/util/auth'
 import {
 	ActionIcon,
 	Button,
@@ -18,25 +18,25 @@ import {
 	rem,
 	Text,
 	Title,
-} from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
-import { closeAllModals, modals, openConfirmModal } from '@mantine/modals';
-import type { BuildTeam, Claim } from '@repo/db';
-import { IconBlendMode, IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+} from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
+import { closeAllModals, modals, openConfirmModal } from '@mantine/modals'
+import type { BuildTeam, Claim } from '@repo/db'
+import { IconBlendMode, IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react'
+import { useSession } from 'next-auth/react'
+import { useState } from 'react'
 
 export function EditMenu({
 	buildTeamSlug,
 	userId,
 	claim,
 }: {
-	claim: Claim & { buildTeam: BuildTeam };
-	buildTeamSlug: string;
-	userId: string;
+	claim: Claim & { buildTeam: BuildTeam }
+	buildTeamSlug: string
+	userId: string
 }) {
-	const session = useSession();
-	const clipboard = useClipboard({ timeout: 500 });
+	const session = useSession()
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<Menu>
@@ -85,8 +85,8 @@ export function EditMenu({
 							),
 							labels: { confirm: 'Delete', cancel: 'Cancel' },
 							onConfirm: () => {
-								deleteClaim({ removeId: claim.id, buildTeamSlug });
-								closeAllModals();
+								deleteClaim({ removeId: claim.id, buildTeamSlug })
+								closeAllModals()
 							},
 						})
 					}
@@ -95,12 +95,12 @@ export function EditMenu({
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }
 
 export function ChangeBuildTeamModal({ claim }: { claim: Claim & { buildTeam: BuildTeam } }) {
-	const [changeTeamAction, isPending] = useFormAction(adminChangeTeam);
-	const [destinationTeam, setDestinationTeam] = useState<string | null>(null);
+	const [changeTeamAction, isPending] = useFormAction(adminChangeTeam)
+	const [destinationTeam, setDestinationTeam] = useState<string | null>(null)
 	return (
 		<>
 			<Title order={5} mb="sm">
@@ -126,12 +126,12 @@ export function ChangeBuildTeamModal({ claim }: { claim: Claim & { buildTeam: Bu
 				loading={isPending}
 				disabled={!destinationTeam}
 				onClick={() => {
-					changeTeamAction({ claimId: claim.id, teamId: destinationTeam });
-					modals.closeAll();
+					changeTeamAction({ claimId: claim.id, teamId: destinationTeam })
+					modals.closeAll()
 				}}
 			>
 				Change Build Team
 			</Button>
 		</>
-	);
+	)
 }

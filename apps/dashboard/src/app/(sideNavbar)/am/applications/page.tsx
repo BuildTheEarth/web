@@ -1,27 +1,27 @@
-import { Title } from '@mantine/core';
+import { Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { Prisma } from '@repo/db';
-import { Metadata } from 'next';
-import ApplicationsDatatable from './datatable';
-import { SearchApplications } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { Prisma } from '@repo/db'
+import { Metadata } from 'next'
+import ApplicationsDatatable from './datatable'
+import { SearchApplications } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Applications',
-};
+}
 
 export default async function Page({
 	searchParams,
 }: {
-	searchParams: Promise<{ page?: string; query?: string; onlyPending?: string; searchType?: string }>;
+	searchParams: Promise<{ page?: string; query?: string; onlyPending?: string; searchType?: string }>
 }) {
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
-	const onlyPending = (await searchParams).onlyPending;
-	const searchType = (await searchParams).searchType;
-	let dbFilter: Prisma.ApplicationWhereInput[] = [];
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
+	const onlyPending = (await searchParams).onlyPending
+	const searchType = (await searchParams).searchType
+	let dbFilter: Prisma.ApplicationWhereInput[] = []
 
 	switch ((searchType || 'applicant').toLowerCase()) {
 		case 'applicant':
@@ -30,16 +30,16 @@ export default async function Page({
 				{ user: { minecraft: { contains: searchQuery || undefined } } },
 				{ user: { discordId: { contains: searchQuery || undefined } } },
 				{ user: { ssoId: { contains: searchQuery || undefined } } },
-			];
-			break;
+			]
+			break
 		case 'reviewer':
 			dbFilter = [
 				{ reviewer: { username: { contains: searchQuery || undefined } } },
 				{ reviewer: { minecraft: { contains: searchQuery || undefined } } },
 				{ reviewer: { discordId: { contains: searchQuery || undefined } } },
 				{ reviewer: { ssoId: { contains: searchQuery || undefined } } },
-			];
-			break;
+			]
+			break
 		case 'team':
 			dbFilter = [
 				{ buildteam: { name: { contains: searchQuery || undefined } } },
@@ -47,8 +47,8 @@ export default async function Page({
 				{ buildteam: { location: { contains: searchQuery || undefined } } },
 				{ buildteam: { invite: { contains: searchQuery || undefined } } },
 				{ buildteam: { ip: { contains: searchQuery || undefined } } },
-			];
-			break;
+			]
+			break
 	}
 
 	const applicationCount = await prisma.application.count({
@@ -57,7 +57,7 @@ export default async function Page({
 					OR: [...dbFilter, { id: { contains: searchQuery || undefined } }],
 				}
 			: undefined,
-	});
+	})
 	const applications = await prisma.application.findMany({
 		take: 50,
 		skip: (Number(page || '1') - 1) * 50,
@@ -75,7 +75,7 @@ export default async function Page({
 			createdAt: true,
 		},
 		orderBy: { createdAt: 'desc' },
-	});
+	})
 
 	return (
 		<Protection requiredRole="get-applications">
@@ -87,5 +87,5 @@ export default async function Page({
 				<ApplicationsDatatable applications={applications} count={applicationCount} />
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }

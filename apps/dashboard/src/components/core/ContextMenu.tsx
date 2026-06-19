@@ -1,54 +1,54 @@
-import { Button, Menu, MenuProps, Portal } from '@mantine/core';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Menu, MenuProps, Portal } from '@mantine/core'
+import React, { useCallback, useEffect, useState } from 'react'
 
 interface ContextMenuInfo {
-	x: number;
-	y: number;
-	opened: boolean;
+	x: number
+	y: number
+	opened: boolean
 }
 
 export function useContextMenu({
 	disableEventPosition = false,
 	offset,
 }: {
-	disableEventPosition?: boolean;
+	disableEventPosition?: boolean
 	offset?: {
-		x: number;
-		y: number;
-	};
+		x: number
+		y: number
+	}
 }): [ContextMenuInfo, React.Dispatch<React.SetStateAction<ContextMenuInfo>>, React.MouseEventHandler] {
-	const [info, setInfo] = useState<ContextMenuInfo>({ x: 0, y: 0, opened: false });
+	const [info, setInfo] = useState<ContextMenuInfo>({ x: 0, y: 0, opened: false })
 
 	const contextMenuHandler = useCallback<React.MouseEventHandler>(
 		(e) => {
-			e.preventDefault();
+			e.preventDefault()
 			if (!disableEventPosition) {
-				setInfo({ x: e.clientX + (offset ? offset.x : 0), y: e.clientY + (offset ? offset.y : 0), opened: true });
+				setInfo({ x: e.clientX + (offset ? offset.x : 0), y: e.clientY + (offset ? offset.y : 0), opened: true })
 			} else {
-				setInfo({ ...info, opened: true });
+				setInfo({ ...info, opened: true })
 			}
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[setInfo, disableEventPosition, info],
-	);
+	)
 
-	return [info, setInfo, contextMenuHandler];
+	return [info, setInfo, contextMenuHandler]
 }
 
 export interface ContextMenuProps extends MenuProps {
-	contextMenuInfo: ContextMenuInfo;
-	setContextMenuInfo: (i: ContextMenuInfo) => void;
+	contextMenuInfo: ContextMenuInfo
+	setContextMenuInfo: (i: ContextMenuInfo) => void
 }
 
 export function ContextMenu({ contextMenuInfo, setContextMenuInfo, children, ...other }: ContextMenuProps) {
 	const onClose = useCallback(
 		() => setContextMenuInfo({ ...contextMenuInfo, opened: false }),
 		[contextMenuInfo, setContextMenuInfo],
-	);
+	)
 
-	const [opened, setOpened] = useState<boolean>(false);
+	const [opened, setOpened] = useState<boolean>(false)
 
-	useEffect(() => setOpened(contextMenuInfo.opened), [contextMenuInfo.opened]);
+	useEffect(() => setOpened(contextMenuInfo.opened), [contextMenuInfo.opened])
 
 	return (
 		<Menu
@@ -80,5 +80,5 @@ export function ContextMenu({ contextMenuInfo, setContextMenuInfo, children, ...
 				<Menu.Dropdown>{children}</Menu.Dropdown>
 			</Portal>
 		</Menu>
-	);
+	)
 }

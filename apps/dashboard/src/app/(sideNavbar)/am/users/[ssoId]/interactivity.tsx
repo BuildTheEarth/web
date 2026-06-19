@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	ActionIcon,
@@ -13,7 +13,7 @@ import {
 	rem,
 	Text,
 	TextInput,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconCopy,
 	IconDevices,
@@ -25,8 +25,8 @@ import {
 	IconTrash,
 	IconUsersMinus,
 	IconUsersPlus,
-} from '@tabler/icons-react';
-import { startTransition, useActionState } from 'react';
+} from '@tabler/icons-react'
+import { startTransition, useActionState } from 'react'
 
 import {
 	adminAddPermissions,
@@ -34,14 +34,14 @@ import {
 	adminInvalidateUserSessions,
 	adminRemoveFromTeam,
 	adminRemovePermission,
-} from '@/actions/user';
-import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals';
-import { showNotification } from '@mantine/notifications';
-import type { Permisision, User } from '@repo/db';
-import Link from 'next/link';
+} from '@/actions/user'
+import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
+import type { Permisision, User } from '@repo/db'
+import Link from 'next/link'
 
 export function BuildTeamMenu(props: { team: { slug: string; name: string }; ssoId: string; canEdit: boolean }) {
-	const [curentState, removeFromTeamAction, isLoading] = useActionState(adminRemoveFromTeam, {});
+	const [curentState, removeFromTeamAction, isLoading] = useActionState(adminRemoveFromTeam, {})
 
 	return (
 		<Menu key={props.team.slug} position="bottom-end">
@@ -70,33 +70,33 @@ export function BuildTeamMenu(props: { team: { slug: string; name: string }; sso
 							),
 							labels: { confirm: 'Confirm', cancel: 'Cancel' },
 							onConfirm: async () => {
-								if (!props.team.slug || !props.ssoId) return;
+								if (!props.team.slug || !props.ssoId) return
 
 								await new Promise<void>((resolve) => {
 									startTransition(() => {
-										removeFromTeamAction({ slug: props.team.slug, ssoId: props.ssoId });
-										resolve();
-									});
-								});
+										removeFromTeamAction({ slug: props.team.slug, ssoId: props.ssoId })
+										resolve()
+									})
+								})
 
 								showNotification({
 									title: 'Success',
 									message: `Successfully removed from ${props.team.name}`,
 									color: 'green',
-								});
+								})
 							},
-						});
+						})
 					}}
 				>
 					Remove from Team
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }
 
 export function PermissionMenu(props: { permission: { id: string; key: string }; ssoId: string; canEdit: boolean }) {
-	const [curentState, removePermissionAction, isLoading] = useActionState(adminRemovePermission, {});
+	const [curentState, removePermissionAction, isLoading] = useActionState(adminRemovePermission, {})
 
 	return (
 		<Menu key={props.permission.id} position="bottom-end">
@@ -125,29 +125,29 @@ export function PermissionMenu(props: { permission: { id: string; key: string };
 							),
 							labels: { confirm: 'Confirm', cancel: 'Cancel' },
 							onConfirm: async () => {
-								if (!props.permission.id || !props.ssoId) return;
+								if (!props.permission.id || !props.ssoId) return
 
 								await new Promise<void>((resolve) => {
 									startTransition(() => {
-										removePermissionAction({ userPermission: props.permission.id, ssoId: props.ssoId });
-										resolve();
-									});
-								});
+										removePermissionAction({ userPermission: props.permission.id, ssoId: props.ssoId })
+										resolve()
+									})
+								})
 
 								showNotification({
 									title: 'Success',
 									message: `Successfully removed permission ${props.permission.key}`,
 									color: 'green',
-								});
+								})
 							},
-						});
+						})
 					}}
 				>
 					Remove Permission
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }
 
 export function UserMenu({
@@ -155,11 +155,11 @@ export function UserMenu({
 	availablePermissions,
 	canEdit,
 }: {
-	user: User;
-	availablePermissions: Permisision[];
-	canEdit: boolean;
+	user: User
+	availablePermissions: Permisision[]
+	canEdit: boolean
 }) {
-	const [__, invalidateSessionsAction, _] = useActionState(adminInvalidateUserSessions, {});
+	const [__, invalidateSessionsAction, _] = useActionState(adminInvalidateUserSessions, {})
 
 	return (
 		<Menu>
@@ -198,7 +198,7 @@ export function UserMenu({
 					color="red"
 					disabled={!canEdit}
 					onClick={async () => {
-						if (!user.ssoId) return;
+						if (!user.ssoId) return
 
 						openConfirmModal({
 							title: 'Confirm Action',
@@ -214,18 +214,18 @@ export function UserMenu({
 							onConfirm: async () => {
 								await new Promise<void>((resolve) => {
 									startTransition(() => {
-										invalidateSessionsAction(user.ssoId);
-										resolve();
-									});
-								});
+										invalidateSessionsAction(user.ssoId)
+										resolve()
+									})
+								})
 
 								showNotification({
 									title: 'Success',
 									message: `Successfully invalidated all sessions for ${user.username || user.ssoId}`,
 									color: 'green',
-								});
+								})
 							},
-						});
+						})
 					}}
 				>
 					Log out of all sessions
@@ -236,7 +236,7 @@ export function UserMenu({
 					leftSection={<IconUsersPlus style={{ width: rem(14), height: rem(14) }} />}
 					disabled={!canEdit}
 					onClick={() => {
-						let teamSlug = '';
+						let teamSlug = ''
 						openModal({
 							title: 'Add to Build Team',
 							centered: true,
@@ -253,25 +253,25 @@ export function UserMenu({
 									</Button>
 								</>
 							),
-						});
+						})
 
 						const confirmAddToTeam = async () => {
-							if (!teamSlug) return;
+							if (!teamSlug) return
 							await new Promise<void>((resolve) => {
 								startTransition(() => {
-									adminAddToTeam({}, { ssoId: user.ssoId, slug: teamSlug });
-									resolve();
-								});
-							});
+									adminAddToTeam({}, { ssoId: user.ssoId, slug: teamSlug })
+									resolve()
+								})
+							})
 
 							showNotification({
 								title: 'Success',
 								message: `Successfully added user to BuildTeam`,
 								color: 'green',
-							});
+							})
 
-							closeAllModals();
-						};
+							closeAllModals()
+						}
 					}}
 				>
 					Add to BuildTeam
@@ -280,7 +280,7 @@ export function UserMenu({
 					leftSection={<IconUsersMinus style={{ width: rem(14), height: rem(14) }} />}
 					disabled={!canEdit}
 					onClick={() => {
-						let teamSlug = '';
+						let teamSlug = ''
 						openModal({
 							title: 'Remove from Build Team',
 							centered: true,
@@ -297,25 +297,25 @@ export function UserMenu({
 									</Button>
 								</>
 							),
-						});
+						})
 
 						const confirmRemoveFromTeam = async () => {
-							if (!teamSlug) return;
+							if (!teamSlug) return
 							await new Promise<void>((resolve) => {
 								startTransition(() => {
-									adminRemoveFromTeam({}, { ssoId: user.ssoId, slug: teamSlug });
-									resolve();
-								});
-							});
+									adminRemoveFromTeam({}, { ssoId: user.ssoId, slug: teamSlug })
+									resolve()
+								})
+							})
 
 							showNotification({
 								title: 'Success',
 								message: `Successfully removed user from BuildTeam`,
 								color: 'green',
-							});
+							})
 
-							closeAllModals();
-						};
+							closeAllModals()
+						}
 					}}
 				>
 					Remove from BuildTeam
@@ -334,8 +334,8 @@ export function UserMenu({
 					leftSection={<IconFilePlus style={{ width: rem(14), height: rem(14) }} />}
 					disabled={!canEdit}
 					onClick={() => {
-						let teamSlug = '';
-						let permissions: string[] = [];
+						let teamSlug = ''
+						let permissions: string[] = []
 						openModal({
 							title: 'Add Permissions',
 							centered: true,
@@ -368,25 +368,25 @@ export function UserMenu({
 									</Button>
 								</>
 							),
-						});
+						})
 
 						const confirmAddPermissions = async () => {
-							if (permissions.length == 0) return;
+							if (permissions.length == 0) return
 							await new Promise<void>((resolve) => {
 								startTransition(() => {
-									adminAddPermissions({}, { ssoId: user.ssoId, team: teamSlug, permissions });
-									resolve();
-								});
-							});
+									adminAddPermissions({}, { ssoId: user.ssoId, team: teamSlug, permissions })
+									resolve()
+								})
+							})
 
 							showNotification({
 								title: 'Success',
 								message: `Successfully added permissions to user`,
 								color: 'green',
-							});
+							})
 
-							closeAllModals();
-						};
+							closeAllModals()
+						}
 					}}
 				>
 					Add permissions
@@ -405,12 +405,12 @@ export function UserMenu({
 								</Text>
 							),
 							labels: { confirm: 'Okay', cancel: 'Cancel' },
-						});
+						})
 					}}
 				>
 					Remove permission
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }

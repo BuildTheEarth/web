@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Flex, Stack, Tabs, TabsList, TabsPanel, TabsTab, Text, Title, rem } from '@mantine/core';
+import { Alert, Button, Card, Flex, Stack, Tabs, TabsList, TabsPanel, TabsTab, Text, Title, rem } from '@mantine/core'
 import {
 	IconBrandMinecraft,
 	IconChevronRight,
@@ -9,23 +9,23 @@ import {
 	IconSocial,
 	IconTable,
 	IconUser,
-} from '@tabler/icons-react';
+} from '@tabler/icons-react'
 
-import { getUser, getUserPermissions } from '@/actions/getUser';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { getSession } from '@/util/auth';
-import { navLinks } from '@/util/links';
-import { CodeHighlight } from '@mantine/code-highlight';
-import { Metadata } from 'next';
-import Link from 'next/link';
+import { getUser, getUserPermissions } from '@/actions/getUser'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { getSession } from '@/util/auth'
+import { navLinks } from '@/util/links'
+import { CodeHighlight } from '@mantine/code-highlight'
+import { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
 	title: 'Your Data',
-};
+}
 export default async function Page() {
-	const user = await getUser();
-	const session = await getSession();
-	const userPermissions = await getUserPermissions(session?.user.id);
+	const user = await getUser()
+	const session = await getSession()
+	const userPermissions = await getUserPermissions(session?.user.id)
 
 	return (
 		<ContentWrapper>
@@ -216,5 +216,5 @@ export default async function Page() {
 				</TabsPanel>
 			</Tabs>
 		</ContentWrapper>
-	);
+	)
 }

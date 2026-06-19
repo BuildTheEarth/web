@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { userEditTeamSocials } from '@/actions/buildTeams';
-import { TextCard } from '@/components/core/card/TextCard';
-import RTE from '@/components/input/RTE';
-import { hasRole } from '@/util/auth';
+import { userEditTeamSocials } from '@/actions/buildTeams'
+import { TextCard } from '@/components/core/card/TextCard'
+import RTE from '@/components/input/RTE'
+import { hasRole } from '@/util/auth'
 import {
 	ActionIcon,
 	Button,
@@ -20,15 +20,15 @@ import {
 	Title,
 	Tooltip,
 	rem,
-} from '@mantine/core';
-import { useClipboard } from '@mantine/hooks';
-import { showNotification } from '@mantine/notifications';
-import type { BuildTeam } from '@repo/db';
-import { IconCheck, IconDeviceFloppy, IconDots, IconId, IconPlus, IconSocial, IconTrash } from '@tabler/icons-react';
-import { useSession } from 'next-auth/react';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useActionState, useEffect, useState } from 'react';
+} from '@mantine/core'
+import { useClipboard } from '@mantine/hooks'
+import { showNotification } from '@mantine/notifications'
+import type { BuildTeam } from '@repo/db'
+import { IconCheck, IconDeviceFloppy, IconDots, IconId, IconPlus, IconSocial, IconTrash } from '@tabler/icons-react'
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useActionState, useEffect, useState } from 'react'
 
 const socialOptions = [
 	{ value: 'twitter', label: 'Twitter' },
@@ -39,21 +39,21 @@ const socialOptions = [
 	{ value: 'youtube', label: 'YouTube' },
 	{ value: 'github', label: 'GitHub' },
 	{ value: 'website', label: 'Website' },
-] as const;
+] as const
 
 type SocialRow = {
-	clientId: string;
-	id?: string;
-	name: string;
-	url: string;
-};
+	clientId: string
+	id?: string
+	name: string
+	url: string
+}
 
 function createEmptySocialRow(): SocialRow {
 	return {
 		clientId: crypto.randomUUID(),
 		name: 'website',
 		url: '',
-	};
+	}
 }
 
 export function SocialLinksEditor({
@@ -61,9 +61,9 @@ export function SocialLinksEditor({
 	userId,
 	socials,
 }: {
-	teamId: string;
-	userId: string;
-	socials: Array<{ id: string; name: string; url: string }>;
+	teamId: string
+	userId: string
+	socials: Array<{ id: string; name: string; url: string }>
 }) {
 	const [rows, setRows] = useState<SocialRow[]>(() =>
 		socials.length > 0
@@ -74,11 +74,11 @@ export function SocialLinksEditor({
 					url: social.url,
 				}))
 			: [createEmptySocialRow()],
-	);
+	)
 	const [currentState, saveSocialsAction, isPending] = useActionState(userEditTeamSocials, {
 		status: 'idle',
 		error: '',
-	});
+	})
 
 	return (
 		<form action={saveSocialsAction}>
@@ -166,12 +166,12 @@ export function SocialLinksEditor({
 				</Stack>
 			</TextCard>
 		</form>
-	);
+	)
 }
 
 export function EditMenu({ team }: { team: BuildTeam }) {
-	const session = useSession();
-	const clipboard = useClipboard({ timeout: 500 });
+	const session = useSession()
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<Menu>
@@ -196,7 +196,7 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
-	);
+	)
 }
 
 export function RTEWrapper({ content }: { content: string | null }) {
@@ -204,8 +204,8 @@ export function RTEWrapper({ content }: { content: string | null }) {
 		<RTE
 			value={content ?? ''}
 			onChange={(c) => {
-				document.querySelector('input[name="about"]')!.setAttribute('value', c || '');
-				console.log('changed', document.querySelector('input[name="about"]')!.getAttribute('value'));
+				document.querySelector('input[name="about"]')!.setAttribute('value', c || '')
+				console.log('changed', document.querySelector('input[name="about"]')!.getAttribute('value'))
 			}}
 			style={{
 				root: {
@@ -221,39 +221,39 @@ export function RTEWrapper({ content }: { content: string | null }) {
 				},
 			}}
 		/>
-	);
+	)
 }
 
 export default function SaveNotification() {
-	const sp = useSearchParams();
-	const saved = sp.get('saved');
+	const sp = useSearchParams()
+	const saved = sp.get('saved')
 
 	useEffect(() => {
 		if (saved === '1') {
 			try {
-				const key = 'bte:team-edit-saved';
+				const key = 'bte:team-edit-saved'
 				if (!sessionStorage.getItem(key)) {
 					showNotification({
 						title: 'Saved',
 						message: 'Your changes were saved',
 						color: 'green',
 						icon: <IconCheck />,
-					});
+					})
 					// mark shown so Strict Mode remounts don't duplicate
-					sessionStorage.setItem(key, '1');
+					sessionStorage.setItem(key, '1')
 					// clear shortly so future saves can notify again
-					setTimeout(() => sessionStorage.removeItem(key), 3000);
+					setTimeout(() => sessionStorage.removeItem(key), 3000)
 				}
 
 				// remove the query param without triggering a router navigation
-				const url = new URL(window.location.href);
-				url.searchParams.delete('saved');
-				window.history.replaceState({}, '', url.toString());
+				const url = new URL(window.location.href)
+				url.searchParams.delete('saved')
+				window.history.replaceState({}, '', url.toString())
 			} catch (e) {
 				// ignore
 			}
 		}
-	}, [saved]);
+	}, [saved])
 
-	return null;
+	return null
 }

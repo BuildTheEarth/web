@@ -1,17 +1,17 @@
-'use server';
+'use server'
 
-import prisma from '@/util/db';
-import { Select } from '@mantine/core';
+import prisma from '@/util/db'
+import { Select } from '@mantine/core'
 
 export async function BuildTeamSelect(
 	props: Omit<React.ComponentProps<typeof Select>, 'filter' | 'data'> & {
 		filter?: (buildTeam: {
-			id: string;
-			slug: string;
-			name: string;
-			location: string;
-			allowBuilderClaim: boolean | null;
-		}) => boolean;
+			id: string
+			slug: string
+			name: string
+			location: string
+			allowBuilderClaim: boolean | null
+		}) => boolean
 	},
 ) {
 	const data = await prisma.buildTeam.findMany({
@@ -22,7 +22,7 @@ export async function BuildTeamSelect(
 			location: true,
 			allowBuilderClaim: true,
 		},
-	});
+	})
 
 	return (
 		<Select
@@ -33,5 +33,5 @@ export async function BuildTeamSelect(
 			disabled={!data}
 			{...{ ...props, filter: undefined }}
 		/>
-	);
+	)
 }

@@ -10,30 +10,30 @@ import {
 	Group,
 	Text,
 	Title,
-} from '@mantine/core';
+} from '@mantine/core'
 
-import { applyToBuildTeam } from '@/actions/buildTeams';
-import { ApplyForm } from '@/app/(sideNavbar)/apply/[slug]/interactivity';
-import Anchor from '@/components/core/Anchor';
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import ErrorDisplay from '@/components/core/ErrorDisplay';
-import { Greeting } from '@/components/data/Greeting';
-import { getSession } from '@/util/auth';
-import { getCountryNames } from '@/util/countries';
-import { toHumanDate } from '@/util/date';
-import prisma from '@/util/db';
-import { ApplicationStatus } from '@repo/db';
-import { IconArrowForward, IconCheck, IconClock, IconConfetti, IconX } from '@tabler/icons-react';
-import { Metadata } from 'next';
+import { applyToBuildTeam } from '@/actions/buildTeams'
+import { ApplyForm } from '@/app/(sideNavbar)/apply/[slug]/interactivity'
+import Anchor from '@/components/core/Anchor'
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import ErrorDisplay from '@/components/core/ErrorDisplay'
+import { Greeting } from '@/components/data/Greeting'
+import { getSession } from '@/util/auth'
+import { getCountryNames } from '@/util/countries'
+import { toHumanDate } from '@/util/date'
+import prisma from '@/util/db'
+import { ApplicationStatus } from '@repo/db'
+import { IconArrowForward, IconCheck, IconClock, IconConfetti, IconX } from '@tabler/icons-react'
+import { Metadata } from 'next'
 
 export const metadata: Metadata = {
 	title: 'Apply to Build Team',
-};
+}
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
-	const session = await getSession();
-	const slug = (await params).slug;
+	const session = await getSession()
+	const slug = (await params).slug
 	const joiningBuildTeam = await prisma.buildTeam.findUnique({
 		where: {
 			slug,
@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				where: { sort: { gt: 0 } },
 			},
 		},
-	});
+	})
 	const user = await prisma.user.findUnique({
 		where: {
 			ssoId: session?.user.id,
@@ -68,9 +68,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				orderBy: { createdAt: 'desc' },
 			},
 		},
-	});
+	})
 
-	const isNewbie = true || (user?._count.joinedBuildTeams === 0 && user?._count.createdBuildTeams === 0);
+	const isNewbie = true || (user?._count.joinedBuildTeams === 0 && user?._count.createdBuildTeams === 0)
 
 	if (!joiningBuildTeam) {
 		return (
@@ -78,17 +78,17 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				title="We couldn't find that Build Team"
 				message="The Build Team you want to apply to does not seem to exist. Are you sure the address is correct? If you think this is an error, please contact us."
 			/>
-		);
+		)
 	}
 
 	if (!user) {
-		throw Error('User not found');
+		throw Error('User not found')
 	}
 
-	const applyToBuildTeamBinded = applyToBuildTeam.bind(null, { userId: session?.user.id || '', buildTeamSlug: slug });
+	const applyToBuildTeamBinded = applyToBuildTeam.bind(null, { userId: session?.user.id || '', buildTeamSlug: slug })
 
 	if (user?.applications.length > 0) {
-		const latestApplication = user.applications[0];
+		const latestApplication = user.applications[0]
 		if (latestApplication.status === ApplicationStatus.ACCEPTED) {
 			return (
 				<ContentWrapper maw="90vw">
@@ -130,7 +130,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</Text>
 					</Box>
 				</ContentWrapper>
-			);
+			)
 		}
 	}
 
@@ -296,5 +296,5 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				/>
 			</Box>
 		</ContentWrapper>
-	);
+	)
 }

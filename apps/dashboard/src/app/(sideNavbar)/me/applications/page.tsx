@@ -1,30 +1,30 @@
-import { Card, Grid, GridCol, Group, Stack, Text, ThemeIcon, Title, Tooltip } from '@mantine/core';
+import { Card, Grid, GridCol, Group, Stack, Text, ThemeIcon, Title, Tooltip } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { getSession } from '@/util/auth';
-import { toHumanDateTime } from '@/util/date';
-import prisma from '@/util/db';
-import { applicationStatusToColor, applicationStatusToIcon, applicationStatusToTooltip } from '@/util/transformers';
-import { Application } from '@repo/db';
-import { IconCalendar, IconCalendarCheck } from '@tabler/icons-react';
-import moment from 'moment';
-import { Metadata } from 'next';
-import Link from 'next/link';
-import { ApplicationPagination, SearchApplications } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { getSession } from '@/util/auth'
+import { toHumanDateTime } from '@/util/date'
+import prisma from '@/util/db'
+import { applicationStatusToColor, applicationStatusToIcon, applicationStatusToTooltip } from '@/util/transformers'
+import { Application } from '@repo/db'
+import { IconCalendar, IconCalendarCheck } from '@tabler/icons-react'
+import moment from 'moment'
+import { Metadata } from 'next'
+import Link from 'next/link'
+import { ApplicationPagination, SearchApplications } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Your Applications',
-};
+}
 
 export default async function Page({
 	searchParams,
 }: {
-	searchParams: Promise<{ page: string | undefined; query: string | undefined }>;
+	searchParams: Promise<{ page: string | undefined; query: string | undefined }>
 }) {
-	const session = await getSession();
-	const page = (await searchParams).page;
-	const searchQuery = (await searchParams).query;
+	const session = await getSession()
+	const page = (await searchParams).page
+	const searchQuery = (await searchParams).query
 
 	const applicationCount = await prisma.application.count({
 		where: {
@@ -46,7 +46,7 @@ export default async function Page({
 					}
 				: undefined,
 		},
-	});
+	})
 
 	const applications = await prisma.application.findMany({
 		take: 10,
@@ -80,7 +80,7 @@ export default async function Page({
 			reason: true,
 		},
 		orderBy: { createdAt: 'desc' },
-	});
+	})
 
 	return (
 		<ContentWrapper>
@@ -97,7 +97,7 @@ export default async function Page({
 				{applications
 					.sort((a, b) => (a.status === 'SEND' ? -1 : b.status === 'SEND' ? 1 : 0))
 					.map((application) => {
-						const Icon = applicationStatusToIcon(application.status);
+						const Icon = applicationStatusToIcon(application.status)
 						return (
 							<Card
 								key={application.id}
@@ -156,10 +156,10 @@ export default async function Page({
 									</GridCol>
 								</Grid>
 							</Card>
-						);
+						)
 					})}
 			</Stack>
 			<ApplicationPagination applicationCount={applicationCount} pageSize={10} mt="lg" />
 		</ContentWrapper>
-	);
+	)
 }

@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import { NumberInput, Textarea } from '@mantine/core';
+import { NumberInput, Textarea } from '@mantine/core'
 
-import { ApplicationQuestion } from '@/util/application';
-import { IconTextSize } from '@tabler/icons-react';
+import { ApplicationQuestion } from '@/util/application'
+import { IconTextSize } from '@tabler/icons-react'
 
 export interface TextQuestionProps extends ApplicationQuestion {
 	additionalData: {
-		length?: number;
-	};
+		length?: number
+	}
 }
 
 function validation(props: TextQuestionProps): (value: string) => void {
 	return (value: string) => {
 		return value.split('').length > (props.additionalData.length || 200)
 			? `Text is too long, please reduce it to ${props.additionalData.length || 200} characters`
-			: false;
-	};
+			: false
+	}
 }
 
 const TextQuestion = (props: TextQuestionProps) => {
@@ -38,8 +38,8 @@ const TextQuestion = (props: TextQuestionProps) => {
 			value={props.value}
 			id={props.id}
 		/>
-	);
-};
+	)
+}
 
 const EditQuestion = ({ editingQuestion, handleUpdateEditingQuestion }: any) => {
 	return (
@@ -52,11 +52,11 @@ const EditQuestion = ({ editingQuestion, handleUpdateEditingQuestion }: any) => 
 				onChange={(e) => handleUpdateEditingQuestion({ length: e }, true)}
 			/>
 		</>
-	);
-};
+	)
+}
 
-TextQuestion.edit = EditQuestion;
-TextQuestion.mockdata = {};
-TextQuestion.validation = validation;
-TextQuestion.icon = IconTextSize;
-export default TextQuestion;
+TextQuestion.edit = EditQuestion
+TextQuestion.mockdata = {}
+TextQuestion.validation = validation
+TextQuestion.icon = IconTextSize
+export default TextQuestion

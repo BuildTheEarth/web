@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { ActionIcon, Code, Group } from '@mantine/core';
+import { ActionIcon, Code, Group } from '@mantine/core'
 
-import Anchor from '@/components/core/Anchor';
-import type { Contact } from '@repo/db';
-import { IconExternalLink } from '@tabler/icons-react';
-import { DataTable } from 'mantine-datatable';
-import Link from 'next/link';
-import { EditContactButton } from './interactivity';
+import Anchor from '@/components/core/Anchor'
+import type { Contact } from '@repo/db'
+import { IconExternalLink } from '@tabler/icons-react'
+import { DataTable } from 'mantine-datatable'
+import Link from 'next/link'
+import { EditContactButton } from './interactivity'
 
 export default function ContactsDatatable({ contacts, canEdit }: { contacts: Contact[]; canEdit?: boolean }) {
 	return (
@@ -55,5 +55,5 @@ export default function ContactsDatatable({ contacts, canEdit }: { contacts: Con
 			]}
 			records={contacts}
 		/>
-	);
+	)
 }

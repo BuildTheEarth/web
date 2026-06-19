@@ -1,10 +1,10 @@
-import { Alert, SimpleGrid, Skeleton, Text, Title } from '@mantine/core';
+import { Alert, SimpleGrid, Skeleton, Text, Title } from '@mantine/core'
 
-import { TextCard } from '@/components/core/card/TextCard';
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { applicationStatusToAlert } from '@/util/transformers';
-import { ApplicationStatus } from '@repo/db';
+import { TextCard } from '@/components/core/card/TextCard'
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { applicationStatusToAlert } from '@/util/transformers'
+import { ApplicationStatus } from '@repo/db'
 
 export default async function Page() {
 	return (
@@ -53,5 +53,5 @@ export default async function Page() {
 				</TextCard>
 			</Skeleton>
 		</ContentWrapper>
-	);
+	)
 }

@@ -17,11 +17,11 @@
 												</Badge>
 											)}*/
 
-import { Badge, BadgeProps } from '@mantine/core';
+import { Badge, BadgeProps } from '@mantine/core'
 
-import { applicationStatusToGradient } from '@/util/transformers';
+import { applicationStatusToGradient } from '@/util/transformers'
 
-type ApplicationStatus = 'SEND' | 'REVIEWING' | 'TRIAL' | 'DECLINED' | 'ACCEPTED';
+type ApplicationStatus = 'SEND' | 'REVIEWING' | 'TRIAL' | 'DECLINED' | 'ACCEPTED'
 
 const APPLICATION_STATUS = {
 	SEND: 'SEND',
@@ -29,34 +29,34 @@ const APPLICATION_STATUS = {
 	TRIAL: 'TRIAL',
 	DECLINED: 'DECLINED',
 	ACCEPTED: 'ACCEPTED',
-} as const;
+} as const
 
 export function ApplicationStatusBadge({ status, ...props }: { status: ApplicationStatus } & BadgeProps) {
-	let text = '';
+	let text = ''
 
 	switch (status) {
 		case APPLICATION_STATUS.SEND:
-			text = 'Needs Review';
-			break;
+			text = 'Needs Review'
+			break
 		case APPLICATION_STATUS.REVIEWING:
-			text = 'Reviewing';
-			break;
+			text = 'Reviewing'
+			break
 		case APPLICATION_STATUS.TRIAL:
-			text = 'Trial';
-			break;
+			text = 'Trial'
+			break
 		case APPLICATION_STATUS.DECLINED:
-			text = 'Rejected';
-			break;
+			text = 'Rejected'
+			break
 		case APPLICATION_STATUS.ACCEPTED:
-			text = 'Accepted';
-			break;
+			text = 'Accepted'
+			break
 		default:
-			text = 'Unknown';
+			text = 'Unknown'
 	}
 
 	return (
 		<Badge {...props} variant="gradient" gradient={applicationStatusToGradient(status)}>
 			{text}
 		</Badge>
-	);
+	)
 }

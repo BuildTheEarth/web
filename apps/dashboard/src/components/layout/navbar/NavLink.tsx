@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
 	IconBubble,
@@ -16,25 +16,25 @@ import {
 	IconSend,
 	IconSettings,
 	IconUsersGroup,
-} from '@tabler/icons-react';
+} from '@tabler/icons-react'
 
-import { useActiveBuildTeam } from '@/hooks/useBuildTeamData';
-import classes from '@/styles/Navbar.module.css';
-import { Anchor } from '@mantine/core';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useActiveBuildTeam } from '@/hooks/useBuildTeamData'
+import classes from '@/styles/Navbar.module.css'
+import { Anchor } from '@mantine/core'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 export interface NavLink {
-	label: string;
-	link: string;
-	icon: string;
+	label: string
+	link: string
+	icon: string
 }
 
 export default function NavLink(props: NavLink) {
-	const pathname = usePathname();
-	const activeBuildTeam = useActiveBuildTeam();
+	const pathname = usePathname()
+	const activeBuildTeam = useActiveBuildTeam()
 
-	const Icon = getIcon(props.icon);
+	const Icon = getIcon(props.icon)
 
 	return (
 		<Anchor
@@ -47,40 +47,40 @@ export default function NavLink(props: NavLink) {
 			<Icon stroke={1.5} className={classes.navbarLinkIcon} />
 			<span>{props.label}</span>
 		</Anchor>
-	);
+	)
 }
 
 function getIcon(name: string) {
 	switch (name) {
 		case 'Home':
-			return IconHome;
+			return IconHome
 		case 'UsersGroup':
-			return IconUsersGroup;
+			return IconUsersGroup
 		case 'Forms':
-			return IconForms;
+			return IconForms
 		case 'Polygon':
-			return IconPolygon;
+			return IconPolygon
 		case 'ChartPie':
-			return IconChartPie;
+			return IconChartPie
 		case 'PlugConnected':
-			return IconPlugConnected;
+			return IconPlugConnected
 		case 'DeviceDesktop':
-			return IconDeviceDesktop;
+			return IconDeviceDesktop
 		case 'Settings':
-			return IconSettings;
+			return IconSettings
 		case 'Send':
-			return IconSend;
+			return IconSend
 		case 'Mail':
-			return IconMail;
+			return IconMail
 		case 'Upload':
-			return IconFileUpload;
+			return IconFileUpload
 		case 'Bubble':
-			return IconBubble;
+			return IconBubble
 		case 'FileInfo':
-			return IconFileInfo;
+			return IconFileInfo
 		case 'Search':
-			return IconSearch;
+			return IconSearch
 		default:
-			return IconQuestionMark;
+			return IconQuestionMark
 	}
 }

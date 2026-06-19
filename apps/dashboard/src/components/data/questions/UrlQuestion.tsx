@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { ActionIcon, TextInput } from '@mantine/core';
-import { IconExternalLink, IconLink } from '@tabler/icons-react';
+import { ActionIcon, TextInput } from '@mantine/core'
+import { IconExternalLink, IconLink } from '@tabler/icons-react'
 
-import { ApplicationQuestion } from '@/util/application';
-import Link from 'next/link';
+import { ApplicationQuestion } from '@/util/application'
+import Link from 'next/link'
 
 export interface UrlQuestionProps extends ApplicationQuestion {
-	additionalData: {};
+	additionalData: {}
 }
 
 function validation(props: UrlQuestionProps): (value: string) => void {
@@ -16,8 +16,8 @@ function validation(props: UrlQuestionProps): (value: string) => void {
 			value,
 		)
 			? false
-			: 'Not a valid URL';
-	};
+			: 'Not a valid URL'
+	}
 }
 
 const UrlQuestion = (props: UrlQuestionProps) => {
@@ -43,13 +43,13 @@ const UrlQuestion = (props: UrlQuestionProps) => {
 			}
 			id={props.id}
 		/>
-	);
-};
+	)
+}
 
-const EditQuestion: any = undefined;
+const EditQuestion: any = undefined
 
-UrlQuestion.edit = EditQuestion;
-UrlQuestion.mockdata = {};
-UrlQuestion.validation = validation;
-UrlQuestion.icon = IconLink;
-export default UrlQuestion;
+UrlQuestion.edit = EditQuestion
+UrlQuestion.mockdata = {}
+UrlQuestion.validation = validation
+UrlQuestion.icon = IconLink
+export default UrlQuestion

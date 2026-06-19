@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { Badge, Button, ButtonGroup, Code, Text, Tooltip } from '@mantine/core';
-import { IconCheck } from '@tabler/icons-react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Badge, Button, ButtonGroup, Code, Text, Tooltip } from '@mantine/core'
+import { IconCheck } from '@tabler/icons-react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { useDisclosure } from '@mantine/hooks';
-import { DataTable } from 'mantine-datatable';
-import Image from 'next/image';
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { useDisclosure } from '@mantine/hooks'
+import { DataTable } from 'mantine-datatable'
+import Image from 'next/image'
 
 export default function UploadsDatatable({
 	showcases,
@@ -15,27 +15,27 @@ export default function UploadsDatatable({
 	onApproveAction,
 }: {
 	showcases: {
-		buildTeamName: string;
-		buildTeamSlug: string;
-		buildTeamId: string;
-		buildTeamIcon: string;
-		id: string;
-		createdAt: string;
-		title: string;
-		city: string;
-		imageSrc: string;
-		imageId: string;
-		imageWidth: number;
-		imageHeight: number;
-	}[];
-	count: number;
-	onApproveAction: (id: string) => void;
+		buildTeamName: string
+		buildTeamSlug: string
+		buildTeamId: string
+		buildTeamIcon: string
+		id: string
+		createdAt: string
+		title: string
+		city: string
+		imageSrc: string
+		imageId: string
+		imageWidth: number
+		imageHeight: number
+	}[]
+	count: number
+	onApproveAction: (id: string) => void
 }) {
-	const router = useRouter();
-	const params = useSearchParams();
-	const pathname = usePathname();
-	const page = Number(params.get('page')) || 1;
-	const [showImages, { toggle }] = useDisclosure(false);
+	const router = useRouter()
+	const params = useSearchParams()
+	const pathname = usePathname()
+	const page = Number(params.get('page')) || 1
+	const [showImages, { toggle }] = useDisclosure(false)
 
 	return (
 		<DataTable
@@ -45,8 +45,8 @@ export default function UploadsDatatable({
 					accessor: 'Image',
 					width: 500,
 					render: ({ imageSrc, imageWidth, imageHeight }) => {
-						const res = Math.floor((imageWidth / imageHeight) * 200);
-						return <Image src={imageSrc} alt="" width={res} height={200} />;
+						const res = Math.floor((imageWidth / imageHeight) * 200)
+						return <Image src={imageSrc} alt="" width={res} height={200} />
 					},
 				},
 				{
@@ -83,14 +83,14 @@ export default function UploadsDatatable({
 					accessor: 'resolution',
 					title: 'Resolution',
 					render: ({ imageWidth, imageHeight }) => {
-						const res = Math.floor((imageWidth / imageHeight) * 100);
+						const res = Math.floor((imageWidth / imageHeight) * 100)
 						return (
 							<Tooltip label={`This image does ${res != 177 ? 'not ' : ''}match the 16:9 format`}>
 								<Badge variant="light" color={res == 177 ? 'green' : 'gray'}>
 									{imageWidth} x {imageHeight}
 								</Badge>
 							</Tooltip>
-						);
+						)
 					},
 				},
 				{
@@ -103,7 +103,7 @@ export default function UploadsDatatable({
 									Approve
 								</Button>
 							</ButtonGroup>
-						);
+						)
 					},
 				},
 			]}
@@ -116,5 +116,5 @@ export default function UploadsDatatable({
 			}
 			noRecordsText="No Showcase Images found"
 		/>
-	);
+	)
 }

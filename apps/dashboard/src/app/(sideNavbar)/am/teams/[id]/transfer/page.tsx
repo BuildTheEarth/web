@@ -1,34 +1,34 @@
-import { Alert, Box, Tabs, TabsList, TabsPanel, TabsTab, Title } from '@mantine/core';
+import { Alert, Box, Tabs, TabsList, TabsPanel, TabsTab, Title } from '@mantine/core'
 
-import ContentWrapper from '@/components/core/ContentWrapper';
-import { Protection } from '@/components/Protection';
-import prisma from '@/util/db';
-import { IconExclamationCircle, IconTransfer, IconUserCog } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { ChangeOwner, TransferStepper } from './interactivity';
+import ContentWrapper from '@/components/core/ContentWrapper'
+import { Protection } from '@/components/Protection'
+import prisma from '@/util/db'
+import { IconExclamationCircle, IconTransfer, IconUserCog } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { ChangeOwner, TransferStepper } from './interactivity'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params;
+	const { id } = await params
 
 	return {
 		title: 'Transfer Build Team ' + id.split('-')[0],
-	};
+	}
 }
 
 export default async function Page({
 	params,
 	searchParams,
 }: {
-	params: Promise<{ id: string }>;
-	searchParams: Promise<{ ref?: string }>;
+	params: Promise<{ id: string }>
+	searchParams: Promise<{ ref?: string }>
 }) {
-	const id = (await params).id;
-	const ref = (await searchParams).ref || 'change';
+	const id = (await params).id
+	const ref = (await searchParams).ref || 'change'
 
 	const team = await prisma.buildTeam.findFirst({
 		where: { id },
 		include: { creator: { select: { id: true, username: true, ssoId: true } } },
-	});
+	})
 
 	if (!team) {
 		return (
@@ -38,7 +38,7 @@ export default async function Page({
 				</Title>
 				<Alert title="Team not found" icon={<IconExclamationCircle />} mb="lg" />
 			</Box>
-		);
+		)
 	}
 
 	return (
@@ -67,5 +67,5 @@ export default async function Page({
 				</Tabs>
 			</ContentWrapper>
 		</Protection>
-	);
+	)
 }
