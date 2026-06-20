@@ -6,19 +6,19 @@ import { AppModule } from "./app.module";
 import { ExceptionsFilter } from "./common/interceptors/error.interceptor";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const { httpAdapter } = app.get(HttpAdapterHost);
 
   app.enableShutdownHooks();
   app.enableCors();
   app.use(helmet());
+
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: "2",
   });
 
-  // Add global pipes, filters, and interceptors
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -29,10 +29,10 @@ async function bootstrap() {
       },
     }),
   );
+
   app.useGlobalFilters(new ExceptionsFilter(httpAdapter));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
-  // Add Swagger UI
   const config = new DocumentBuilder()
     .setTitle("BuildTheEarth API")
     .setDescription(
@@ -47,7 +47,9 @@ async function bootstrap() {
       bearerFormat: "JWT",
     })
     .build();
+
   const documentFactory = () => SwaggerModule.createDocument(app, config);
+
   SwaggerModule.setup("/v2/docs", app, documentFactory, {
     jsonDocumentUrl: "/v2/docs.json",
     yamlDocumentUrl: "/v2/docs.yaml",
@@ -56,4 +58,6 @@ async function bootstrap() {
   await app.listen(process.env.PORT ?? 8080);
 }
 
-bootstrap();
+if (require.main === module) {
+  bootstrap();
+}
