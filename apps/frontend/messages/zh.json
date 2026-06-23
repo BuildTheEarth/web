@@ -124,6 +124,7 @@
 			"BuildTheEarth 被劃分為多個子團隊，分別建造世界上特定的國家或地區。",
 			"每個團隊都有各自的 Minecraft 伺服器，您可以加入並開始建造。"
 		],
+		"viewTeamOnMap": "在地圖上探索團隊",
 		"tooltip": {
 			"location": "該團隊建設的國家列表",
 			"members": "該團隊的成員數量"
@@ -408,6 +409,17 @@
 		"seo": {
 			"title": "專案地圖",
 			"description": "在互動式世界地圖上探索 BuildTheEarth 進行中和已完成的建案。"
+		},
+		"teams": {
+			"seo": {
+				"title": "建築團隊地圖",
+				"description": "探索 BuildTheEarth 團隊，尋找您要的地區，並加入 Minecraft 伺服器開始貢獻。"
+			},
+			"infoNotice": {
+				"title": "注: {country}",
+				"description": "您點擊的國家或地區目前沒有任何建築團隊進駐。我們正在解決這個問題，在此期間，如果您想幫忙，請考慮加入其他的建築團隊！",
+				"descriptionUs": "美國目前由多個建築團隊共同建設。如果您想幫忙，請考慮加入下列其中一個在美國進行建設的建築團隊："
+			}
 		}
 	},
 	"attribution": {
