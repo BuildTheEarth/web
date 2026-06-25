@@ -1,3 +1,4 @@
+'use server'
 import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
 import keycloakAdmin from '@/util/keycloak'

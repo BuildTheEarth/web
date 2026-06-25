@@ -10,19 +10,15 @@ import {
 	ComboboxOptions,
 	ComboboxTarget,
 	Divider,
+	Group,
 	InputBase,
 	InputPlaceholder,
+	Text,
 	useCombobox,
 } from '@mantine/core'
+import { IconSelector } from '@tabler/icons-react'
 
-interface BuildTeamOption {
-	id: string
-	slug: string
-	name: string
-	icon: string
-}
-
-const HeaderBuildTeamSelector = () => {
+const BuildTeamSelector = () => {
 	const [buildteams, activeBuildTeam, selectBuildTeam] = useSelectableBuildTeams()
 	const combobox = useCombobox({
 		onDropdownClose: () => combobox.resetSelectedOption(),
@@ -35,7 +31,6 @@ const HeaderBuildTeamSelector = () => {
 	))
 
 	if (buildteams.length === 0) return null
-	if (!activeBuildTeam) return null
 
 	return (
 		<>
@@ -50,20 +45,36 @@ const HeaderBuildTeamSelector = () => {
 				<ComboboxTarget>
 					<InputBase
 						component="button"
+						style={{
+							display: 'block',
+							padding: 'var(--mantine-spacing-md)',
+							borderBottom: ' 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
+						}}
 						type="button"
 						pointer
-						rightSection={<Combobox.Chevron />}
 						onClick={() => combobox.toggleDropdown()}
 						rightSectionPointerEvents="none"
+						rightSection={''}
 						multiline
 						variant="unstyled"
 					>
 						{activeBuildTeam ? (
-							<Box py="xs">
-								<BuildTeamDisplay team={activeBuildTeam} noAnchor />
-							</Box>
+							// <Box py="xs">
+							<BuildTeamDisplay team={activeBuildTeam} noAnchor />
 						) : (
-							<InputPlaceholder>Pick value</InputPlaceholder>
+							// </Box>
+							<InputPlaceholder>
+								{' '}
+								<Group>
+									<div style={{ flex: 1 }}>
+										<Text size="sm" fw={500}>
+											Select BuildTeam
+										</Text>
+									</div>
+
+									<IconSelector size={14} stroke={1.5} />
+								</Group>
+							</InputPlaceholder>
 						)}
 					</InputBase>
 				</ComboboxTarget>
@@ -77,4 +88,4 @@ const HeaderBuildTeamSelector = () => {
 	)
 }
 
-export default HeaderBuildTeamSelector
+export default BuildTeamSelector

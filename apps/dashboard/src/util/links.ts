@@ -1,22 +1,16 @@
-import { IconList, IconTool, IconUsersGroup } from '@tabler/icons-react'
-
-/**
- * These links are used for navigation between buildteam related pages
- */
-export const teamNavLinks: NavLink[] = [
-	{ link: '/team', label: 'Team Overview', icon: IconList },
-	{ link: '/team/members', label: 'Members', icon: IconUsersGroup },
-	{ link: '/team/tools', label: 'Debug Tools', icon: IconTool },
-]
-
 /**
  * These links are used for navigation between tool pages
  */
-export const meNavLinks: NavLink[] = [
+export const navLinks: NavLink[] = [
 	{
 		link: '/',
 		label: 'My Home',
 		icon: 'Home',
+	},
+	{
+		link: '/editor',
+		label: 'Claim Editor',
+		icon: 'Polygon',
 	},
 	{
 		link: '/me/teams',
@@ -28,69 +22,44 @@ export const meNavLinks: NavLink[] = [
 		label: 'Your Applications',
 		icon: 'Forms',
 	},
-	{
-		link: '/editor',
-		label: 'Claim Editor',
-		icon: 'Polygon',
-	},
-
 	// ---- BuildTeam Specific ----
 	{
 		link: '',
 		label: 'Your BuildTeams',
 		icon: null,
 		divider: true,
-		permission: 'team|get-team|get-team-questions|review-team|get-team-members',
+		teamPermission: 'get-teams',
 	},
 	{
 		link: '/team/[team_slug]',
 		label: 'Info Overview',
 		icon: 'FileInfo',
-		permission: 'get-team',
+		teamPermission: 'get-team',
 	},
 	{
 		link: '/team/[team_slug]/questions',
 		label: 'Application Questions',
 		icon: 'Send',
-		permission: 'review-team',
+		teamPermission: 'get-team-questions',
 	},
 	{
 		link: '/team/[team_slug]/applications',
 		label: 'Applications',
 		icon: 'Search',
-		permission: 'review-team',
+		teamPermission: 'review-team',
 	},
 	{
 		link: '/team/[team_slug]/claims',
 		label: 'Claims',
 		icon: 'Polygon',
-		permission: 'review-team',
+		teamPermission: 'review-team',
 	},
 	{
 		link: '/team/[team_slug]/members',
 		label: 'Members',
 		icon: 'UsersGroup',
-		permission: 'get-team-members',
+		teamPermission: 'get-team-members',
 	},
-
-	// ---- Account Links ----
-	{ link: '', label: 'Your Account', icon: null, divider: true },
-	{
-		link: '/me/connections',
-		label: 'Social Connections',
-		icon: 'PlugConnected',
-	},
-	{
-		link: '/me/sessions',
-		label: 'Active Sessions',
-		icon: 'DeviceDesktop',
-	},
-	{
-		link: '/me/settings',
-		label: 'Profile Settings',
-		icon: 'Settings',
-	},
-
 	// ---- Staff Links ----
 	{
 		link: '',
@@ -149,8 +118,6 @@ export const meNavLinks: NavLink[] = [
 	},
 ]
 
-export const navLinks = meNavLinks
-
 /**
  * Converts a NavLink array to an array of href links
  * @param links Links to convert to blank links
@@ -165,8 +132,6 @@ type NavLink = {
 	label: string
 	icon: any
 	permission?: string
+	teamPermission?: string
 	divider?: boolean
-}
-interface NavLinkGroup {
-	[section: string]: NavLink[]
 }

@@ -2,6 +2,7 @@
 
 import { getUserBuildTeams } from '@/actions/user'
 import { useLocalStorage } from '@mantine/hooks'
+import { showNotification } from '@mantine/notifications'
 import { useSession } from 'next-auth/react'
 import { useCallback } from 'react'
 import useSWR from 'swr'
@@ -17,7 +18,7 @@ export default function useSelectableBuildTeams() {
 	const { data: session } = useSession()
 	const userId = session?.user.id
 
-	const [activeBuildTeam, setActiveBuildTeam] = useLocalStorage<BuildTeam>({
+	const [activeBuildTeam, setActiveBuildTeam] = useLocalStorage<BuildTeam | null>({
 		key: 'bte-active-build-team',
 	})
 
@@ -33,11 +34,23 @@ export default function useSelectableBuildTeams() {
 
 	const selectBuildTeam = useCallback(
 		(id: string) => {
-			if (id !== activeBuildTeam.id) {
+			if (activeBuildTeam ? id !== activeBuildTeam.id : true) {
 				const team = buildteams.find((buildTeam) => buildTeam.id === id)
 				if (team) {
 					setActiveBuildTeam(team)
+					showNotification({
+						title: 'BuildTeam selected',
+						message: `Now showing data for ${team.name}`,
+						color: 'green',
+					})
 				}
+			} else if (activeBuildTeam && id === activeBuildTeam.id) {
+				setActiveBuildTeam(null)
+				showNotification({
+					title: 'BuildTeam deselected',
+					message: `No BuildTeam data will be shown`,
+					color: 'blue',
+				})
 			}
 		},
 		[buildteams, activeBuildTeam, setActiveBuildTeam],

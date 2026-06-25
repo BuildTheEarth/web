@@ -215,8 +215,43 @@ export const getSession = async () => {
  * @returns If the User has the required role
  */
 export function hasRole(
-	session: Session | null | undefined | { user: { realm_access?: { roles: string[] } } },
+	session: Session | null | undefined | { user?: { realm_access?: { roles: string[] } } },
 	role: string,
 ) {
 	return session?.user?.realm_access?.roles?.includes(role) || false
+}
+
+export function hasBuildTeamPermission(
+	permissions: { permission: { id: string }; buildTeam?: { id: string; slug: string } | null }[],
+	requiredBuildTeam: (({ id: string } | { slug: string }) & { permission: string }) | null,
+) {
+	if (!requiredBuildTeam) {
+		return false
+	}
+	const hasPermission = permissions.some((perm) => {
+		// 1. user has global permission (no buildteam referenced)
+		if (requiredBuildTeam?.permission === perm.permission.id && !perm.buildTeam) {
+			return true
+		}
+		// 2. user has permission for buildteam with id
+		if (
+			'id' in requiredBuildTeam &&
+			perm.buildTeam &&
+			requiredBuildTeam.permission === perm.permission.id &&
+			requiredBuildTeam.id === perm.buildTeam.id
+		) {
+			return true
+		}
+		// 3. user has permission for buildteam with slug
+		if (
+			'slug' in requiredBuildTeam &&
+			perm.buildTeam &&
+			requiredBuildTeam.permission === perm.permission.id &&
+			requiredBuildTeam.slug === perm.buildTeam.slug
+		) {
+			return true
+		}
+	})
+
+	return hasPermission
 }
