@@ -1,4 +1,4 @@
-import { Queue } from 'bullmq'
+import { Job, JobType, Queue } from 'bullmq'
 import IORedis from 'ioredis'
 import { AnyRedisEvent } from './redisEvents'
 
@@ -94,19 +94,20 @@ export class RedisEventQueue {
 		})
 	}
 
-	async getWaitingJobs() {
-		return await this.queue.getJobs(['waiting', 'active', 'delayed'])
+	async getJobs(types?: JobType[], hideRecurring?: boolean): Promise<(Job & { state: JobType })[]> {
+		const jobs: Record<string, (any & { state: string })[]> = {}
+		for (const type of types || ['waiting', 'active', 'completed', 'failed', 'delayed']) {
+			const jobsOfType = await this.queue.getJobs([type])
+			jobs[type] = jobsOfType.map((job) => ({ ...job, state: type }))
+
+			if (hideRecurring) {
+				jobs[type] = jobs[type].filter((job) => !job.repeatJobKey)
+			}
+		}
+		return Object.values(jobs).flat() as (Job & { state: JobType })[]
 	}
 
-	async getFailedJobs() {
-		return await this.queue.getJobs(['failed'])
-	}
-
-	async getCompletedJobs() {
-		return await this.queue.getJobs(['completed'])
-	}
-
-	async getCronJobs() {
+	async getJobSchedulers() {
 		return await this.queue.getJobSchedulers()
 	}
 

@@ -1,7 +1,6 @@
 'use client'
 
 import ErrorDisplay from '@/components/core/ErrorDisplay'
-import Header from '@/components/layout/header'
 import { AppShell, AppShellMain, Button } from '@mantine/core'
 import { useLocalStorage } from '@mantine/hooks'
 import { signIn, useSession } from 'next-auth/react'
