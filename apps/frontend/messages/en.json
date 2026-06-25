@@ -7,7 +7,7 @@
 		"description": "Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
 		"title": {
 			"template": "%s | BuildTheEarth",
-			"default": "Builiding the Earth in Minecraft 1:1 | BuildTheEarth"
+			"default": "Building the Earth in Minecraft 1:1 | BuildTheEarth"
 		},
 		"keywords": [
 			"BuildTheEarth",
@@ -170,7 +170,7 @@
 			},
 			"locationsList": {
 				"label": "Locations",
-				"description": "{buildTeam} is building in multiple countires. You can find the full list of countries below. If you want to view this list on a map, click the button below.",
+				"description": "{buildTeam} is building in multiple countries. You can find the full list of countries below. If you want to view this list on a map, click the button below.",
 				"viewOnMap": "View on Map"
 			}
 		}
@@ -214,7 +214,7 @@
 			"description": "have already been constructed on the entire globe.",
 			"total": {
 				"label": "Total Buildings",
-				"description": "haven been created."
+				"description": "have been created."
 			},
 			"active": {
 				"label": "Active Buildings",
@@ -231,11 +231,11 @@
 		},
 		"claims": {
 			"label": "Claims",
-			"description": "are beeing build or are already finished.",
+			"description": "are being built or are already finished.",
 			"sectionTitle": "Claims",
 			"total": {
 				"label": "Total Claims",
-				"description": "haven been created."
+				"description": "have been created."
 			},
 			"active": {
 				"label": "Active Claims",
@@ -417,7 +417,7 @@
 			},
 			"infoNotice": {
 				"title": "Note: {country}",
-				"description": "The country or region you clicked is currently not beeing build by any BuildTeam. We are in the process of fixing this, but in the meantime, if you want to help out, please consider joining a different BuildTeam!",
+				"description": "The country or region you clicked is currently not being built by any BuildTeam. We are in the process of fixing this, but in the meantime, if you want to help out, please consider joining a different BuildTeam!",
 				"descriptionUs": "The United States is currently being built by multiple BuildTeams. If you want to help out, please consider joining one of the following BuildTeams that are building in the US:"
 			}
 		}
