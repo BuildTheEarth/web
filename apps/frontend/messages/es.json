@@ -121,6 +121,7 @@
 			"description": "Explora los equipos de BuildTheEarth, encuentra tu región y únete a un servidor de Minecraft para comenzar a participar."
 		},
 		"title": "Equipos de construcción",
+		"viewTeamOnMap": "Explora los equipos en el mapa",
 		"description": [
 			"BuildTheEarth se divide en equipos de construcción, que construyen países o áreas específicas del mundo.",
 			"Cada equipo tiene su propio servidor de Minecraft, donde puedes unirte y comenzar a construir."
