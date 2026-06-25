@@ -1,0 +1,33 @@
+{
+	"name": "@repo/shared",
+	"version": "0.0.0",
+	"private": true,
+	"packageManager": "yarn@4.9.1",
+	"license": "MIT",
+	"publishConfig": {
+		"access": "public"
+	},
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc"
+	},
+	"dependencies": {
+		"@repo/typescript-config": "*",
+		"bullmq": "^5.77.0",
+		"ioredis": "^5.10.1"
+	},
+	"devDependencies": {
+		"typescript": "^5.6.3"
+	},
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"default": "./src/index.ts"
+		},
+		"./utils": {
+			"types": "./src/utils/index.ts",
+			"default": "./src/utils/index.ts"
+		}
+	}
+}

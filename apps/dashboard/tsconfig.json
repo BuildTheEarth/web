@@ -17,6 +17,8 @@
 			// "@/utils/*": ["src/utils/*"],
 			// "@/src/*": ["src/*"],
 			// "@/public/*": ["public/*"],
+			"@repo/shared": ["../../packages/shared/src"],
+			"@repo/shared/*": ["../../packages/shared/src/*"],
 			"@repo/*": ["../../packages/*/src"]
 		},
 		"lib": ["dom", "dom.iterable", "esnext"]

@@ -2983,6 +2983,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@repo/shared@npm:*, @repo/shared@workspace:packages/shared":
+  version: 0.0.0-use.local
+  resolution: "@repo/shared@workspace:packages/shared"
+  dependencies:
+    "@repo/typescript-config": "npm:*"
+    bullmq: "npm:^5.77.0"
+    ioredis: "npm:^5.10.1"
+    typescript: "npm:^5.6.3"
+  languageName: unknown
+  linkType: soft
+
 "@repo/typescript-config@npm:*, @repo/typescript-config@workspace:^, @repo/typescript-config@workspace:packages/typescript-config":
   version: 0.0.0-use.local
   resolution: "@repo/typescript-config@workspace:packages/typescript-config"
@@ -8360,6 +8371,7 @@ __metadata:
     "@prisma/adapter-pg": "npm:^7.8.0"
     "@repo/db": "npm:*"
     "@repo/prettier-config": "npm:*"
+    "@repo/shared": "npm:*"
     "@repo/typescript-config": "npm:*"
     "@tabler/icons-react": "npm:^3.9.0"
     "@tiptap/core": "npm:^2.11.7"
@@ -17345,6 +17357,7 @@ __metadata:
     tsx: "npm:^4.22.3"
     typescript: "npm:^5.6.3"
     winston: "npm:^3.19.0"
+    zod: "npm:^4.1.13"
   languageName: unknown
   linkType: soft
 
@@ -17477,6 +17490,13 @@ __metadata:
   version: 4.1.13
   resolution: "zod@npm:4.1.13"
   checksum: 10c0/d7e74e82dba81a91ffc3239cd85bc034abe193a28f7087a94ab258a3e48e9a7ca4141920cac979a0d781495b48fc547777394149f26be04c3dc642f58bbc3941
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.1.13":
+  version: 4.4.3
+  resolution: "zod@npm:4.4.3"
+  checksum: 10c0/7ea31b558e88f9faf44f31dd185e2e1cbf51fed3081787fb96cc2534749b50c0acfc6da7f0922a7353ed092dd358c7d50c28ea96c94d04af64191bd33152eca3
   languageName: node
   linkType: hard
 
