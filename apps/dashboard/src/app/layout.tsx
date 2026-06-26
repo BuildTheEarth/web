@@ -55,6 +55,10 @@ export const metadata: Metadata = {
 	authors: [{ name: 'BuildTheEarth', url: 'https://buildtheearth.net' }],
 	referrer: 'origin-when-cross-origin',
 	keywords: ['BuildTheEarth', 'Minecraft', 'MyBuildTheEarth', 'Community', 'World', 'Map', 'Dashboard'],
+	robots: {
+		index: false,
+		follow: false,
+	},
 }
 
 export const viewport: Viewport = {

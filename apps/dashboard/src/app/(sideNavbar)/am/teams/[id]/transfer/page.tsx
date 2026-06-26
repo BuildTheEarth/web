@@ -7,12 +7,8 @@ import { IconExclamationCircle, IconTransfer, IconUserCog } from '@tabler/icons-
 import { Metadata } from 'next'
 import { ChangeOwner, TransferStepper } from './interactivity'
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params
-
-	return {
-		title: 'Transfer Build Team ' + id.split('-')[0],
-	}
+export const metadata: Metadata = {
+	title: 'Transfer Build Team',
 }
 
 export default async function Page({

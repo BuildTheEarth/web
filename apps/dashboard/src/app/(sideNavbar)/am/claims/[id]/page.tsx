@@ -29,12 +29,8 @@ import Link from 'next/link'
 import { EditMenu } from './interactivity'
 import { Map } from './map'
 
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-	const { id } = await params
-
-	return {
-		title: 'Claim ' + id.split('-')[0],
-	}
+export const metadata: Metadata = {
+	title: 'Claim Details',
 }
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {

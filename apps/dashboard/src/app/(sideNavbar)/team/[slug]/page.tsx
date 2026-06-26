@@ -41,12 +41,8 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { EditMenu } from './interactivity'
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-	const { slug: id } = await params
-
-	return {
-		title: 'Build Team ' + id.split('-')[0],
-	}
+export const metadata: Metadata = {
+	title: 'Build Team',
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

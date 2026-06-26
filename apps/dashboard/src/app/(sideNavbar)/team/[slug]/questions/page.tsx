@@ -4,7 +4,12 @@ import ContentWrapper from '@/components/core/ContentWrapper'
 import { Protection } from '@/components/Protection'
 import prisma from '@/util/db'
 import { Group, Title } from '@mantine/core'
+import { Metadata } from 'next'
 import QuestionsEditor from './interactivity'
+
+export const metadata: Metadata = {
+	title: 'Application Questions',
+}
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
 	const user = await getUser()

@@ -4,8 +4,13 @@ import { Protection } from '@/components/Protection'
 import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
 import { Group, Title } from '@mantine/core'
+import { Metadata } from 'next'
 import ApplicationsDatatable from './datatable'
 import { SearchApplications } from './interactivity'
+
+export const metadata: Metadata = {
+	title: 'Applications',
+}
 
 export default async function Page({
 	params,

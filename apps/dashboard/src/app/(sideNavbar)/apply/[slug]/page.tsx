@@ -25,10 +25,24 @@ import { toHumanDate } from '@/util/date'
 import prisma from '@/util/db'
 import { ApplicationStatus } from '@repo/db'
 import { IconArrowForward, IconCheck, IconClock, IconConfetti, IconX } from '@tabler/icons-react'
-import { Metadata } from 'next'
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+	const { slug } = await params
+	const team = await prisma.buildTeam.findUnique({
+		where: { slug },
+		select: { name: true },
+	})
 
-export const metadata: Metadata = {
-	title: 'Apply to Build Team',
+	if (!team) {
+		return {
+			title: 'Apply to Build Team',
+			description: 'Apply to join a Build Team on MyBuildTheEarth!',
+		}
+	}
+
+	return {
+		title: `Apply to ${team.name}`,
+		description: `Apply to join the ${team.name} build team on MyBuildTheEarth!`,
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {

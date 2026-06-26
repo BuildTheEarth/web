@@ -4,8 +4,13 @@ import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
 import { Box, Button, Divider, Group, Title } from '@mantine/core'
 import { IconMap } from '@tabler/icons-react'
+import { Metadata } from 'next'
 import Link from 'next/link'
 import { AdvancedEditor } from './interactivity'
+
+export const metadata: Metadata = {
+	title: 'Edit Claim',
+}
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
 	const id = (await params).id

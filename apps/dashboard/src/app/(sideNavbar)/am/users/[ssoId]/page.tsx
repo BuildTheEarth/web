@@ -62,17 +62,8 @@ import { Fragment, Key } from 'react'
 import ClaimDatatabe from './datatable'
 import { BuildTeamMenu, PermissionMenu, UserMenu } from './interactivity'
 
-export async function generateMetadata({ params }: { params: Promise<{ ssoId: string }> }): Promise<Metadata> {
-	const { ssoId } = await params
-
-	const username = await prisma.user.findUnique({
-		where: { ssoId },
-		select: { username: true },
-	})
-
-	return {
-		title: 'User ' + username?.username || ssoId.split('-')[0],
-	}
+export const metadata: Metadata = {
+	title: 'User Details',
 }
 
 export default async function Page({ params }: { params: Promise<{ ssoId: string }> }) {

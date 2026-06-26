@@ -9,7 +9,7 @@ import MembersDatatable from './datatable'
 import { AddMemberButton, SearchMembers } from './interactivity'
 
 export const metadata: Metadata = {
-	title: 'Edit Build Team',
+	title: 'Members',
 }
 
 export default async function Page({
