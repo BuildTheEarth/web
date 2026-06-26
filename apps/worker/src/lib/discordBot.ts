@@ -1,9 +1,9 @@
-import { z } from 'zod';
+import { z } from 'zod'
 
 export type DiscordDmResult = {
-	success: string[];
-	failure: string[];
-};
+	success: string[]
+	failure: string[]
+}
 
 export enum DiscordBotEmojisRaw {
 	WARN = '<:warn:1441532241628102686>',
@@ -41,19 +41,21 @@ export const discordBotMessageMessageSchema = z.object({
 	emoji: z.nativeEnum(DiscordBotEmojis),
 	body: z.string(),
 	footer: z.string().optional(),
-});
+})
 
 export async function sendDiscordDm(
 	message: string | z.infer<typeof discordBotMessageMessageSchema>,
 	users: string[],
 ): Promise<DiscordDmResult> {
 	try {
-		const content =
-			typeof message === 'string'
-				? message
-				: `## ${DiscordBotEmojisRaw[message.emoji]} ${message.title}\n\n${message.body}${
-						message.footer ? `\n\n-# ${message.footer}` : ''
-					}`;
+		if (typeof message === 'string') {
+			message = {
+				body: message,
+				title: 'You recieved a message',
+				emoji: DiscordBotEmojis.INFORMATION,
+			}
+		}
+		const content = `## ${DiscordBotEmojisRaw[message.emoji]} ${message.title}\n\n${message.body}${message.footer ? `\n\n-# ${message.footer}` : ''}`
 
 		const res = await fetch(process.env.DISCORD_BOT_API_URL + '/api/v1/website/message/blank', {
 			method: 'POST',
@@ -62,17 +64,39 @@ export async function sendDiscordDm(
 				authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
 			},
 			body: JSON.stringify({ params: { text: content }, ids: users }),
-		});
-		const json = await res.json();
+		})
+		const json = await res.json()
 		return {
 			success: json.success || [],
 			failure: json.failed || [],
-		};
+		}
 	} catch (e) {
-		console.error(e);
+		console.error(e)
 		return {
 			success: [],
 			failure: users,
-		};
+		}
+	}
+}
+
+export async function updateBuilderRole(discordId: string, isBuilder: boolean): Promise<boolean> {
+	try {
+		const res = await fetch(process.env.DISCORD_BOT_API_URL + '/api/v1/builder/' + discordId, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
+			},
+			body: JSON.stringify({ add: isBuilder }),
+		})
+
+		if (!res.ok) {
+			const text = await res.text().catch(() => '')
+			throw new Error(`Status ${res.status} - ${text}`)
+		}
+		return true
+	} catch (e) {
+		console.error(e)
+		return false
 	}
 }
