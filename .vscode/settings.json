@@ -32,7 +32,8 @@
 		"frontend/mobile",
 		"worker",
 		"worker/tasks",
-		"dash/auth"
+		"dash/auth",
+		"shared"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }

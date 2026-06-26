@@ -2,8 +2,7 @@
 import { getSession, hasRole } from '@/util/auth'
 import { revalidateWebsitePaths } from '@/util/data'
 import prisma from '@/util/db'
-import { sendBotMessage } from '@/util/discordIntegration'
-import { sendBtWebhook, WebhookType } from '@/util/webhooks'
+import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { Application, ApplicationQuestionType, ApplicationStatus } from '@repo/db'
 import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
@@ -442,12 +441,14 @@ export const ownerGenerateToken = async ({ id }: { id: string }): Promise<void> 
 		},
 	})
 
-	sendBotMessage(
-		`## <:inprogress:1441532224473268234> ${userIsOwner.name} has a new API Token` +
-			`\n\nYou requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.` +
-			`\n\nToken: ||${token}|| \nSlug: \`${userIsOwner.slug}\``,
-		[userIsOwner.creator.discordId!],
-	)
+	await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+		discordIds: [userIsOwner.creator.discordId!],
+		content: {
+			title: `${userIsOwner.name} Token Generated`,
+			body: 'You requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.\n\nToken: ||${token}|| \nSlug: \`${userIsOwner.slug}\`',
+			emoji: 'FORWARDED',
+		},
+	})
 }
 
 export const removeMember = async ({
@@ -500,13 +501,17 @@ export const removeMember = async ({
 	})
 
 	if (notifyUser) {
-		sendBotMessage(
-			`## <:warn:1441532241628102686> You have been removed from ${buildTeam.name}` +
-				`\n\nThe Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
-				(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
-				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
-			[memberToRemove?.discordId!],
-		)
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: [memberToRemove?.discordId!],
+			content: {
+				title: `You have been removed from ${buildTeam.name}`,
+				body:
+					`The Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
+					(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
+					'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+				emoji: 'WARN',
+			},
+		})
 	}
 
 	revalidatePath(`/am/users/${removeId}`)
@@ -564,13 +569,17 @@ export const removeMembers = async ({
 	})
 
 	if (notifyUsers) {
-		sendBotMessage(
-			`## <:warn:1441532241628102686> You have been removed from ${buildTeam.name}` +
-				`\n\nThe Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
-				(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
-				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
-			membersToRemove.map((member) => member.discordId!).filter((id): id is string => !!id),
-		)
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: membersToRemove.map((member) => member.discordId!).filter((id): id is string => !!id),
+			content: {
+				title: `You have been removed from ${buildTeam.name}`,
+				body:
+					`The Build Team  \`${buildTeam.name}\` has removed you as a builder from their team. This means you are no longer part of their group and will not be able to create and manage claims for them. Additionally, you will not be able to apply to this Build Team again as long as your past application status is set to 'Accepted'.` +
+					(reason ? ` The team has provided the following reason for your removal: \n \n${reason}` : '') +
+					'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+				emoji: 'WARN',
+			},
+		})
 	}
 
 	revalidatePath(`/team/${buildTeam.slug}/members`)
@@ -630,14 +639,21 @@ export const addMember = async ({
 	})
 
 	if (notifyUser) {
-		sendBotMessage(
-			`## <:approved:1441532214562128034> You have been added to ${buildTeam.name}` +
-				`\n\nThe Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
-				(message ? ` The team has provided the following message: \n \n${message}` : '') +
-				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
-			[memberToAdd?.discordId!],
-		)
-		// TODO: possibly add discord role if this is the first BT the user joins
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: [memberToAdd?.discordId!],
+			content: {
+				title: `${buildTeam.name} has added you as a member`,
+				body:
+					`The Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
+					(message ? ` The team has provided the following message: \n \n${message}` : '') +
+					'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+				emoji: 'APPROVED',
+			},
+		})
+		await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
+			discordId: memberToAdd?.discordId!,
+			isBuilder: true,
+		})
 	}
 
 	revalidatePath(`/am/users/${addId}`)
@@ -706,14 +722,23 @@ export const addMembers = async ({
 	})
 
 	if (notifyUsers) {
-		sendBotMessage(
-			`## <:approved:1441532214562128034> You have been added to ${buildTeam.name}` +
-				`\n\nThe Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
-				(message ? ` The team has provided the following message: \n \n${message}` : '') +
-				'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
-			membersToAdd.map((member) => member.discordId!).filter((id): id is string => !!id),
-		)
-		// TODO: possibly add discord role if this is the first BT the user joins
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: membersToAdd.map((member) => member.discordId!).filter((id): id is string => !!id),
+			content: {
+				title: `${buildTeam.name} has added you as a member`,
+				body:
+					`The Build Team  \`${buildTeam.name}\` has added you as a builder to their team. You did not have to fill out an application.` +
+					(message ? ` The team has provided the following message: \n \n${message}` : '') +
+					'\n\nIf you believe this was a mistake, please reach out to the Build Team directly for more information.',
+				emoji: 'APPROVED',
+			},
+		})
+		for (const member of membersToAdd) {
+			await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
+				discordId: member.discordId!!,
+				isBuilder: true,
+			})
+		}
 	}
 
 	for (const member of membersToAdd) {
@@ -799,13 +824,16 @@ export const setMemberPermissions = async ({
 	})
 
 	if (notifyUser) {
-		sendBotMessage(
-			`## <:unban:1441532232627130548> Your permissions for ${buildTeam.name} changed` +
-				`\n\nYour permissions for the BuildTeam  \`${buildTeam.name}\` have been changed. You now have the following additional permissions:` +
-				`\n\n${permissions.length > 0 ? permissions.map((p) => `- ${p}`).join('\n') : ' `none`'}`,
-			[userToChange?.discordId!],
-		)
-		// TODO: possibly add discord role if this is the first BT the user joins
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: [userToChange?.discordId!],
+			content: {
+				title: `Your permissions for ${buildTeam.name} changed`,
+				body:
+					`Your permissions for the BuildTeam  \`${buildTeam.name}\` have been changed. You now have the following additional permissions:` +
+					`\n\n${permissions.length > 0 ? permissions.map((p) => `- ${p}`).join('\n') : ' `none`'}`,
+				emoji: 'UNBAN',
+			},
+		})
 	}
 
 	revalidatePath(`/team/${buildTeam.slug}/members`)
@@ -920,17 +948,19 @@ export const reviewApplication = async ({
 			},
 		})
 
-		sendBotMessage(
-			parseApplicationMessage(
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: [application.user.discordId!],
+			content: parseApplicationMessage(
 				application.buildteam.acceptionMessage,
 				application,
 				application.user,
 				application.buildteam,
 			),
-			[application.user.discordId!],
-		)
-
-		// TODO: possibly add discord role if this is the first BT the user joins and they got accepted to it
+		})
+		await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
+			discordId: application.user.discordId!,
+			isBuilder: true,
+		})
 	}
 
 	if (status === ApplicationStatus.DECLINED) {
@@ -941,23 +971,53 @@ export const reviewApplication = async ({
 			},
 		})
 
-		sendBotMessage(
-			parseApplicationMessage(
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: [application.user.discordId!],
+			content: parseApplicationMessage(
 				application.buildteam.rejectionMessage,
 				application,
 				application.user,
 				application.buildteam,
 			),
-			[application.user.discordId!],
-		)
+		})
 
 		//TODO: remove discord role if this is the only BT the user is in and they got declined from it
 	}
 
-	// TODO: send webhook to staff dc
+	await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_LOG, {
+		embeds: [
+			{
+				title: `${application.id.split('-')[0]} - ${application.buildteam.name}`,
+				color: 16711884,
+				fields: [
+					{
+						name: 'Trial Application',
+						inline: true,
+						value: application.trial ? 'Yes' : 'No',
+					},
+					{
+						name: 'Application Status',
+						inline: true,
+						value: status,
+					},
+					{
+						name: 'Reason',
+						value: reason || '-/-',
+					},
+				],
+				author: {
+					name: 'Application reviewed',
+				},
+			},
+		],
+	})
 
 	if (application.buildteam.webhook) {
-		sendBtWebhook(application.buildteam.webhook, WebhookType.APPLICATION, application)
+		await redisEventQueue.addJob(RedisEvent.BUILDTEAM_WEBHOOK, {
+			type: 'APPLICATION',
+			data: application,
+			destination: [{ url: application.buildteam.webhook }],
+		})
 	}
 
 	revalidatePath(`/team/${buildTeamSlug}/applications`)
@@ -1033,9 +1093,15 @@ export const applyToBuildTeam = async (
 			},
 		})
 
-		sendBotMessage(parseApplicationMessage(buildteam.acceptionMessage, application, user, buildteam), [user.discordId!])
+		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+			discordIds: [user.discordId!],
+			content: parseApplicationMessage(buildteam.acceptionMessage, application, user, buildteam),
+		})
 
-		// TODO: possibly add discord role if this is the first BT the user joins
+		await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
+			discordId: user.discordId!,
+			isBuilder: true,
+		})
 
 		revalidatePath(`/team/${buildteam.slug}/applications`)
 		return
@@ -1107,14 +1173,22 @@ export const applyToBuildTeam = async (
 		select: { user: { select: { id: true, discordId: true } } },
 	})
 
-	await sendBotMessage(
-		`**${buildteam.name}** \\nNew Application from <@${user.discordId}> (${user.username}). Review it [here](${process.env.FRONTEND_URL}/team/${buildteam.slug}/applications/${application.id})`,
-		reviewers.map((r) => r.user.discordId!),
-	)
+	await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
+		discordIds: reviewers.map((r) => r.user.discordId!),
+		content: {
+			title: `New Application for ${buildteam.name}`,
+			body: `A new application has been submitted for the Build Team \`${buildteam.name}\`.\n\n[Review Application](https://buildtheearth.net/team/${buildteam.slug}/applications/${application.id})`,
+			emoji: 'INFORMATION',
+		},
+	})
 
 	// Send Webhook to BuildTeam
 	if (buildteam.webhook) {
-		sendBtWebhook(buildteam.webhook, WebhookType.APPLICATION_SEND, application)
+		await redisEventQueue.addJob(RedisEvent.BUILDTEAM_WEBHOOK, {
+			type: 'APPLICATION_SEND',
+			data: application,
+			destination: [{ url: buildteam.webhook }],
+		})
 	}
 
 	revalidatePath(`/team/${buildteam.slug}/applications`)

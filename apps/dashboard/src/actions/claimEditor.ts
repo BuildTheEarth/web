@@ -2,9 +2,8 @@
 
 import { getSession } from '@/util/auth'
 import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.geojson/query'
-import turf, { toPolygon } from '@/util/coordinates'
 import prisma from '@/util/db'
-import { updateClaimBuildingCount, updateClaimOSMDetails } from '@/util/geojsonHelpers'
+import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { Prisma } from '@repo/db'
 import { revalidatePath } from 'next/cache'
 
@@ -51,37 +50,15 @@ export const saveClaim = async (data: { id: string; area?: string[] }): Promise<
 			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
 		}
 
-		let center = undefined
-		if (data.area && data.area.length > 0) {
-			center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ')
-		}
-
-		const buildingCount = data.area && (await updateClaimBuildingCount({ area: data.area }))
-
-		if (typeof buildingCount !== 'number') {
-			if (buildingCount && typeof (buildingCount as { message?: string }).message === 'string') {
-				return Promise.reject((buildingCount as { message: string }).message)
-			}
-			return Promise.reject('Failed to update building count for claim.')
-		}
-
-		let osmDetails = undefined
-
-		if (center) {
-			osmDetails = await updateClaimOSMDetails({ id: data.id, name: claim.name, center })
-			if (!osmDetails) {
-				return Promise.reject('Failed to update OSM details for claim.')
-			}
-		}
-
 		const claim2 = await prisma.claim.update({
 			where: { id: data.id, owner: { ssoId: userId } },
 			data: {
 				area: data.area,
-				center: center,
-				buildings: buildingCount,
-				...osmDetails,
 			},
+		})
+
+		await redisEventQueue.addJob(RedisEvent.SYNC_CLAIM_OSM, {
+			claimId: data.id,
 		})
 
 		revalidatePath('/editor')
@@ -158,41 +135,19 @@ export const createClaim = async (data: { id: string; area: string[]; buildTeamI
 			return Promise.reject('You do not have permission to create a claim in this BuildTeam.')
 		}
 
-		let center = undefined
-		if (data.area?.length > 0) {
-			center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ')
-		}
-
-		const buildingCount = await updateClaimBuildingCount({ area: data.area })
-
-		if (typeof buildingCount !== 'number') {
-			if (buildingCount && typeof (buildingCount as { message?: string }).message === 'string') {
-				return Promise.reject((buildingCount as { message: string }).message)
-			}
-			return Promise.reject('Failed to set building count for claim.')
-		}
-
-		let osmDetails = undefined
-
-		if (center) {
-			osmDetails = await updateClaimOSMDetails({ id: data.id, center })
-			if (!osmDetails) {
-				return Promise.reject('Failed to set OSM details for claim.')
-			}
-		}
-
 		const claim = await prisma.claim.create({
 			data: {
 				id: data.id,
 				owner: { connect: { ssoId: userId } },
 				buildTeam: { connect: { id: data.buildTeamId } },
 				area: data.area,
-				center: center,
-				buildings: buildingCount,
 				active: true,
 				finished: false,
-				...osmDetails,
 			},
+		})
+
+		await redisEventQueue.addJob(RedisEvent.SYNC_CLAIM_OSM, {
+			claimId: data.id,
 		})
 
 		revalidatePath('/editor')

@@ -1,7 +1,7 @@
 'use server'
 import { getSession, hasRole } from '@/util/auth'
 import prisma from '@/util/db'
-import { updateBuilderRole } from '@/util/discordIntegration'
+import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import keycloakAdmin from '@/util/keycloak'
 import { revalidatePath } from 'next/cache'
 
@@ -460,21 +460,23 @@ export const adminUserBatchAction = async (
 
 			for (const u of newBuilders) {
 				if (!u.discordId) continue
-				if (!(await updateBuilderRole(u.discordId, true))) {
-					console.error(`Failed to update builder role for user ${u.ssoId} (${u.discordId})`)
+				try {
+					await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
+						discordId: u.discordId,
+						isBuilder: true,
+					})
+				} catch (err: any) {
+					console.error(`Failed to queue builder role update for user ${u.ssoId} (${u.discordId}): ${err.message}`)
 				}
 			}
 
-			await fetch(process.env.REPORTS_WEBHOOK || '', {
-				body: JSON.stringify({
+			try {
+				await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_LOG, {
 					content: `Batch operation completed: ${usersToAdd.length} users added to team ${team.name}, also gave builder role to ${newBuilders.length} new builders.`,
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-					'User-Agent': 'Build Team Dashboard',
-				},
-				method: 'POST',
-			})
+				})
+			} catch (err: any) {
+				console.error(`Failed to queue reports log: ${err.message}`)
+			}
 
 			console.log(`Batch operation completed: ${usersToAdd.length} users added to team ${team.name}`)
 
