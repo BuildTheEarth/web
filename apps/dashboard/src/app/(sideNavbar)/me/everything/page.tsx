@@ -1,218 +1,37 @@
-import { Alert, Button, Card, Flex, Stack, Tabs, TabsList, TabsPanel, TabsTab, Text, Title, rem } from '@mantine/core'
-import {
-	IconBrandMinecraft,
-	IconChevronRight,
-	IconCode,
-	IconFreeRights,
-	IconId,
-	IconInfoCircle,
-	IconSocial,
-	IconTable,
-	IconUser,
-} from '@tabler/icons-react'
+import { Alert, Tabs, TabsList, TabsPanel, TabsTab, Text, Title } from '@mantine/core'
+import { IconInfoCircle } from '@tabler/icons-react'
 
-import { getUser, getUserPermissions } from '@/actions/getUser'
 import ContentWrapper from '@/components/core/ContentWrapper'
-import { getSession } from '@/util/auth'
-import { navLinks } from '@/util/links'
-import { CodeHighlight } from '@mantine/code-highlight'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import { LocalData } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Your Data',
 }
 export default async function Page() {
-	const user = await getUser()
-	const session = await getSession()
-	const userPermissions = await getUserPermissions(session?.user.id)
-
 	return (
 		<ContentWrapper>
 			<Title order={1} mt="xl" mb="md">
-				Your Data
+				Your Data at BuildTheEarth
 			</Title>
-			<Alert variant="outline" color="orange" title="Disclaimer" icon={<IconInfoCircle />}>
-				On this page, you will find all data and user information we have stored of your account. This is meant for
-				debugging purposes. If you wish to remove specific information, please message us on Discord.
+
+			<Alert icon={<IconInfoCircle size="1rem" />} title="Disclaimer" color="orange" mb="md">
+				This is a list of all the data we have on file for your account. The list may not be exhaustive, and some data
+				may be missing. Use it to provide us with debugging information, or to request deletion of your data. If you
+				have any questions, please contact us.
 			</Alert>
 
-			<Tabs color="teal" defaultValue="parsed" mt="md" variant="pills">
+			<Tabs defaultValue="local" mb="md">
 				<TabsList>
-					<TabsTab value="parsed" leftSection={<IconTable style={{ width: rem(12), height: rem(12) }} />}>
-						Pretty
-					</TabsTab>
-					<TabsTab value="raw" leftSection={<IconCode style={{ width: rem(12), height: rem(12) }} />}>
-						Raw
-					</TabsTab>
+					<TabsTab value="local">Local Data</TabsTab>
 				</TabsList>
 
-				<TabsPanel value="parsed" mt="md">
-					<Stack gap="sm">
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconId size={'2rem'} />
-								<Text>
-									<b>User Id:</b> {user.id}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconSocial size={'2rem'} />
-								<Text>
-									<b>Single Sign On Id:</b> {user.ssoId}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconUser size={'2rem'} />
-								<Text>
-									<b>Username:</b> {user.username}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconBrandMinecraft size={'2rem'} />
-								<Text>
-									<b>Minecraft Username:</b> {user.minecraft}
-								</Text>
-							</Flex>
-						</Card>
-
-						{/* <Text mt="sm" fw="bold" fz="lg">
-							Authentication Data
-						</Text>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconCalendar size={'2rem'} />
-								<Text>
-									<b>Account Created:</b> {new Date(data.createdTimestamp).toUTCString()}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconCheck size={'2rem'} />
-								<Text>
-									<b>Account Status:</b> {data.enabled ? 'Enabled' : 'Disabled'}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconDeviceWatch size={'2rem'} />
-								<Text>
-									<b>TOTP:</b> {data.totp ? 'Set' : 'Not Set'}
-								</Text>
-							</Flex>
-						</Card> */}
-						{/* <Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconUsers size={'2rem'} />
-								<Text>
-									<b>Linked Accounts:</b> {data.federatedIdentities.map((idp) => idp.identityProvider).join(', ')}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconLicense size={'2rem'} />
-								<Text>
-									<b>Manage Group Membership:</b> {data.access.manageGroupMembership ? 'Yes' : 'No'}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconLicense size={'2rem'} />
-								<Text>
-									<b>Can Impersonate:</b> {data.access.impersonate ? 'Yes' : 'No'}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconLicense size={'2rem'} />
-								<Text>
-									<b>Manage Self:</b> {data.access.manage ? 'Yes' : 'No'}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconLicense size={'2rem'} />
-								<Text>
-									<b>Map Roles:</b> {data.access.mapRoles ? 'Yes' : 'No'}
-								</Text>
-							</Flex>
-						</Card>
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconLicense size={'2rem'} />
-								<Text>
-									<b>View Self:</b> {data.access.view ? 'Yes' : 'No'}
-								</Text>
-							</Flex>
-						</Card> */}
-					</Stack>
-
-					<Text my="sm" fw="bold" fz="lg">
-						Other Data
+				<TabsPanel value="local" pt="md">
+					<Text c="dimmed" fz="sm" mb="sm">
+						All data in this tab is stored locally in your browser. This is primarily used for storing your
+						authentication state.
 					</Text>
-					<Stack gap="sm">
-						<Card>
-							<Flex align={'center'} gap={'md'}>
-								<IconFreeRights size={'2rem'} />
-								<Text>
-									<b>BT Permission Keys:</b>{' '}
-									{userPermissions
-										.map((p) => p.permission.id)
-										.filter((id, index, allIds) => allIds.indexOf(id) === index && id.includes('team.'))
-										.join(', ')}
-								</Text>
-							</Flex>
-						</Card>
-					</Stack>
-					<Button component={Link} href="/me/sessions" rightSection={<IconChevronRight />} mr="md" mb="md">
-						View active Sessions
-					</Button>
-					<Button component={Link} href="/me/connections" rightSection={<IconChevronRight />} mr="md" mb="md">
-						List Social Connections
-					</Button>
-				</TabsPanel>
-
-				<TabsPanel value="raw" mt="md">
-					<Text fw="bold">User Data</Text>
-					<CodeHighlight code={JSON.stringify(user, null, 2)} language="json" withCopyButton={false} />
-					{/* <Text fw="bold" mt="sm"> */}
-					{/* Authentication Data */}
-					{/* </Text> */}
-					{/* <CodeHighlight code={JSON.stringify(data, null, 2)} language="json" withCopyButton={false} /> */}
-					<Text fw="bold" mt="sm">
-						Session Data
-					</Text>
-					<CodeHighlight code={JSON.stringify(session, null, 2)} language="json" withCopyButton={false} />
-					<Text fw="bold" mt="sm">
-						BuildTeam Permissions
-					</Text>
-					<CodeHighlight code={JSON.stringify(userPermissions, null, 2)} language="json" withCopyButton={false} />
-					<Text fw="bold" mt="sm">
-						Allowed Navigation Links
-					</Text>
-					<CodeHighlight
-						code={JSON.stringify(
-							navLinks
-								.filter((link) => !link.permission || session?.user.realm_access.roles.includes(link.permission))
-								.map((i) => i.link),
-							null,
-							2,
-						)}
-						language="json"
-						withCopyButton={false}
-					/>
+					<LocalData />
 				</TabsPanel>
 			</Tabs>
 		</ContentWrapper>
