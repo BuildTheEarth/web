@@ -1,23 +1,23 @@
-import { QueryPagination } from '@/components/core/Pagination';
-import { QuerySearchInput } from '@/components/core/SearchInput';
-import Wrapper from '@/components/layout/Wrapper';
-import { Link } from '@/i18n/navigation';
-import { Button, Group, SimpleGrid, Skeleton, Stack, Text, Tooltip } from '@mantine/core';
-import { IconPin, IconUsers } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { QueryPagination } from '@/components/core/Pagination'
+import { QuerySearchInput } from '@/components/core/SearchInput'
+import Wrapper from '@/components/layout/Wrapper'
+import { Link } from '@/i18n/navigation'
+import { Button, Group, SimpleGrid, Skeleton, Stack, Text, Tooltip } from '@mantine/core'
+import { IconPin, IconUsers } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 export const metadata: Metadata = {
 	title: 'Build Teams',
 	description:
 		"Explore BuildTheEarth by choosing a Team and visiting it's Minecraft server. BuildTheEarth is divided into subteams, which build specific countries or areas of the world.",
-};
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params)?.locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('teams');
+	const locale = (await params)?.locale
+	setRequestLocale(locale)
+	const t = await getTranslations('teams')
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
@@ -74,10 +74,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									</div>
 								</Group>
 							</Link>
-						);
+						)
 					})}
 			</SimpleGrid>
 			<QueryPagination itemCount={0} my="xl" />
 		</Wrapper>
-	);
+	)
 }

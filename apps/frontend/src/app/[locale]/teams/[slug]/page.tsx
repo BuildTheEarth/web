@@ -1,10 +1,10 @@
-import BackgroundImage from '@/components/core/BackgroundImage';
-import SmartImage from '@/components/core/SmartImage';
-import Wrapper from '@/components/layout/Wrapper';
-import { Link } from '@/i18n/navigation';
-import { getCountryNames } from '@/util/countries';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
+import BackgroundImage from '@/components/core/BackgroundImage'
+import SmartImage from '@/components/core/SmartImage'
+import Wrapper from '@/components/layout/Wrapper'
+import { Link } from '@/i18n/navigation'
+import { getCountryNames } from '@/util/countries'
+import prisma from '@/util/db'
+import { getLanguageAlternates } from '@/util/seo'
 import {
 	Avatar,
 	Badge,
@@ -21,27 +21,27 @@ import {
 	Stack,
 	Text,
 	Title,
-} from '@mantine/core';
-import { IconAddressBook, IconBrandMinecraft, IconChevronRight, IconMap, IconUsers } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
-import JoinServerGuide from './interactivity';
+} from '@mantine/core'
+import { IconAddressBook, IconBrandMinecraft, IconChevronRight, IconMap, IconUsers } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
+import JoinServerGuide from './interactivity'
 
 export async function generateMetadata({
 	params,
 }: {
-	params: Promise<{ locale: Locale; slug: string }>;
+	params: Promise<{ locale: Locale; slug: string }>
 }): Promise<Metadata> {
-	const { locale, slug } = await params;
+	const { locale, slug } = await params
 	const t = (await getTranslations({ locale, namespace: 'teams.ownPage.seo' })) as (
 		key: 'notFoundTitle' | 'notFoundDescription' | 'defaultOgImage',
-	) => string;
+	) => string
 
 	const buildTeam = await prisma.buildTeam.findUnique({
 		where: { slug },
 		select: { name: true, about: true, backgroundImage: true },
-	});
+	})
 	if (!buildTeam) {
 		return {
 			title: t('notFoundTitle'),
@@ -49,7 +49,7 @@ export async function generateMetadata({
 			alternates: {
 				languages: getLanguageAlternates(`/teams/${slug}`),
 			},
-		};
+		}
 	}
 
 	return {
@@ -59,21 +59,21 @@ export async function generateMetadata({
 			languages: getLanguageAlternates(`/teams/${slug}`),
 		},
 		openGraph: { images: [buildTeam.backgroundImage || t('defaultOgImage')] },
-	};
+	}
 }
 export async function generateStaticParams() {
-	const teams = await prisma.buildTeam.findMany({ select: { slug: true } });
-	return teams;
+	const teams = await prisma.buildTeam.findMany({ select: { slug: true } })
+	return teams
 }
-export const dynamicParams = false;
-export const dynamic = 'force-static';
-export const revalidate = 3600; // 60 minutes
+export const dynamicParams = false
+export const dynamic = 'force-static'
+export const revalidate = 3600 // 60 minutes
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale; slug: string }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('teams.ownPage');
-	const format = await getFormatter();
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('teams.ownPage')
+	const format = await getFormatter()
 
 	const buildTeam = await prisma.buildTeam.findUnique({
 		where: { slug: (await params).slug },
@@ -90,13 +90,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			_count: { select: { members: true, claims: true } },
 			showcases: { take: 2, include: { image: { select: { name: true, src: true } } } },
 		},
-	});
+	})
 	if (!buildTeam)
 		return (
 			<Wrapper offsetHeader={false}>
 				<Paper p="md">{t('notFoundFallback')}</Paper>
 			</Wrapper>
-		);
+		)
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -328,5 +328,5 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				</Grid>
 			</Container>
 		</Wrapper>
-	);
+	)
 }

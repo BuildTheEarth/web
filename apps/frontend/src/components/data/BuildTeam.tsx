@@ -1,23 +1,23 @@
-'use client';
+'use client'
 
-import { Avatar, Group, Text } from '@mantine/core';
-import { IconGlobe } from '@tabler/icons-react';
+import { Avatar, Group, Text } from '@mantine/core'
+import { IconGlobe } from '@tabler/icons-react'
 
-import Link from 'next/link';
+import Link from 'next/link'
 
 export function BuildTeamDisplay({
 	team,
 	noAnchor = false,
 }: {
-	team: { id?: string; name: string; slug: string; icon: string };
-	noAnchor?: boolean;
+	team: { id?: string; name: string; slug: string; icon: string }
+	noAnchor?: boolean
 }) {
 	const groupProps = noAnchor
 		? {}
 		: {
 				component: Link,
 				href: '/teams/' + team.slug,
-			};
+			}
 
 	return (
 		<Group gap="sm" key={team.id || team.slug} {...groupProps} c="dark.0" td="none">
@@ -28,5 +28,5 @@ export function BuildTeamDisplay({
 				{team.name}
 			</Text>
 		</Group>
-	);
+	)
 }

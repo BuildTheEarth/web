@@ -4,4 +4,4 @@ export const headerLinks = [
 	{ link: '/map', key: 'map' },
 	{ link: '/faq', key: 'faq' },
 	{ link: '/contact', key: 'contact' },
-];
+]

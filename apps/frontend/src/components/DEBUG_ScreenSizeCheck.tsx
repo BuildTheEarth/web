@@ -1,6 +1,6 @@
-'use client';
-import { Box, useMatches } from '@mantine/core';
-import React from 'react';
+'use client'
+import { Box, useMatches } from '@mantine/core'
+import React from 'react'
 
 const DEBUG_ScreenSizeCheck: React.FC = () => {
 	const config = {
@@ -10,14 +10,14 @@ const DEBUG_ScreenSizeCheck: React.FC = () => {
 		lg: 'grape.8',
 		xl: 'red.8',
 		base: 'yellow.8',
-	};
-	const color = useMatches(config);
+	}
+	const color = useMatches(config)
 
 	return (
 		<Box bg={color} style={{ position: 'fixed', bottom: 0, right: 0, zIndex: 9999 }} p="md" m="md">
 			{Object.keys(config).find((key) => config[key as keyof typeof config] === color)}
 		</Box>
-	);
-};
+	)
+}
 
-export default DEBUG_ScreenSizeCheck;
+export default DEBUG_ScreenSizeCheck

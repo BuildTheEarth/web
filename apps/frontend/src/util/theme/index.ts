@@ -1,7 +1,7 @@
-'use client';
-import classes from '@/styles/ResponsiveContainer.module.css';
-import { Button, colorsTuple, Container, createTheme } from '@mantine/core';
-import cx from 'clsx';
+'use client'
+import classes from '@/styles/ResponsiveContainer.module.css'
+import { Button, colorsTuple, Container, createTheme } from '@mantine/core'
+import cx from 'clsx'
 /**
  * Main Mantine Theme of the Website
  */
@@ -188,4 +188,4 @@ export const theme = createTheme({
 	},
 	autoContrast: true,
 	luminanceThreshold: 0.3,
-});
+})

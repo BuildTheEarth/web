@@ -1,4 +1,4 @@
-import Core from '../Core.js';
+import Core from '../Core.js'
 
 export async function sendBtWebhook(core: Core, url: string, type: WebhookType, content: any) {
 	if (url) {
@@ -10,11 +10,11 @@ export async function sendBtWebhook(core: Core, url: string, type: WebhookType, 
 					Accept: 'application/json',
 				},
 				body: JSON.stringify({ type, data: content }),
-			});
-			core.getLogger().info(`Sent ${type} to ${url}`);
+			})
+			core.getLogger().info(`Sent ${type} to ${url}`)
 		} catch (e) {
-			core.getLogger().error(`Failed to send ${type} to ${url}: ${e}`);
-			return false;
+			core.getLogger().error(`Failed to send ${type} to ${url}: ${e}`)
+			return false
 		}
 	}
 }
@@ -25,10 +25,10 @@ export async function sendWebhook(core: Core, type: WebhookType, team: { slug: b
 		select: {
 			webhook: true,
 		},
-	});
+	})
 
 	if (webhook) {
-		return await sendBtWebhook(core, webhook, type, content);
+		return await sendBtWebhook(core, webhook, type, content)
 	}
 }
 
@@ -38,6 +38,6 @@ export const WebhookType = {
 	CLAIM_CREATE: 'CLAIM_CREATE',
 	CLAIM_UPDATE: 'CLAIM_UPDATE',
 	CLAIM_DELETE: 'CLAIM_DELETE',
-};
+}
 
-export type WebhookType = (typeof WebhookType)[keyof typeof WebhookType];
+export type WebhookType = (typeof WebhookType)[keyof typeof WebhookType]

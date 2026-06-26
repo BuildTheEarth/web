@@ -1,16 +1,16 @@
-import AppearAnimation from '@/components/animations/AppearAnimation';
-import LottieAnimation from '@/components/animations/LottieAnimation';
-import SplitTextAnimation from '@/components/animations/SplitText';
-import LinkButton from '@/components/core/LinkButton';
-import { OutreachArticle, OutreachArticleCard } from '@/components/data/OutreachArticle';
-import Wrapper from '@/components/layout/Wrapper';
-import { Link } from '@/i18n/navigation';
-import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
-import prisma from '@/util/db';
-import directus from '@/util/directus';
-import { getLanguageAlternates } from '@/util/seo';
-import { readItems } from '@directus/sdk';
-import { Carousel, CarouselSlide } from '@mantine/carousel';
+import AppearAnimation from '@/components/animations/AppearAnimation'
+import LottieAnimation from '@/components/animations/LottieAnimation'
+import SplitTextAnimation from '@/components/animations/SplitText'
+import LinkButton from '@/components/core/LinkButton'
+import { OutreachArticle, OutreachArticleCard } from '@/components/data/OutreachArticle'
+import Wrapper from '@/components/layout/Wrapper'
+import { Link } from '@/i18n/navigation'
+import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
+import prisma from '@/util/db'
+import directus from '@/util/directus'
+import { getLanguageAlternates } from '@/util/seo'
+import { readItems } from '@directus/sdk'
+import { Carousel, CarouselSlide } from '@mantine/carousel'
 import {
 	BackgroundImage,
 	Box,
@@ -28,7 +28,7 @@ import {
 	StepperStep,
 	Text,
 	Title,
-} from '@mantine/core';
+} from '@mantine/core'
 import {
 	IconBuildingSkyscraper,
 	IconChevronRight,
@@ -38,19 +38,19 @@ import {
 	IconMapPin,
 	IconMapSearch,
 	IconUsersGroup,
-} from '@tabler/icons-react';
-import * as motion from 'motion/react-client';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
-import { Fragment } from 'react';
+} from '@tabler/icons-react'
+import * as motion from 'motion/react-client'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
+import { Fragment } from 'react'
 
-export const dynamic = 'force-static';
-export const revalidate = 7200;
+export const dynamic = 'force-static'
+export const revalidate = 7200
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'home.seo' })) as (key: 'title' | 'description') => string;
+	const locale = (await params).locale
+	const t = (await getTranslations({ locale, namespace: 'home.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
@@ -58,20 +58,20 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/'),
 		},
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('home');
-	const formatter = await getFormatter();
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('home')
+	const formatter = await getFormatter()
 
 	const statClaims = await prisma.claim.aggregate({
 		_sum: { buildings: true, size: true },
 		where: { active: true, finished: true },
-	});
-	const statUsers = await prisma.user.count({ where: { ssoId: { not: { contains: 'o_' } } } });
+	})
+	const statUsers = await prisma.user.count({ where: { ssoId: { not: { contains: 'o_' } } } })
 
 	const showcaseImages = await prisma.showcase.findMany({
 		where: { approved: true },
@@ -83,11 +83,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			city: true,
 			image: { select: { name: true, hash: true } },
 		},
-	});
+	})
 
 	const outreachArticles: OutreachArticle[] = (await directus.request(
 		readItems('outreach', { limit: 4, sort: '-date', fields: ['*'] }),
-	)) as unknown as OutreachArticle[];
+	)) as unknown as OutreachArticle[]
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -514,5 +514,5 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				</Container>
 			</div>
 		</Wrapper>
-	);
+	)
 }

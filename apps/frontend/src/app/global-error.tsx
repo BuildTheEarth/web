@@ -1,5 +1,5 @@
-'use client';
-import { Button, Center, MantineProvider } from '@mantine/core';
+'use client'
+import { Button, Center, MantineProvider } from '@mantine/core'
 
 export default function GlobalError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
 	return (
@@ -59,5 +59,5 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
 				</MantineProvider>
 			</body>
 		</html>
-	);
+	)
 }

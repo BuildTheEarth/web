@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { Box, Progress, Text } from '@mantine/core';
+import { Box, Progress, Text } from '@mantine/core'
 
 interface ProgressCardProps {
-	title: string;
-	value: string;
-	percentage: number;
-	color: string;
-	description: string;
-	span?: { base?: number; md?: number };
+	title: string
+	value: string
+	percentage: number
+	color: string
+	description: string
+	span?: { base?: number; md?: number }
 }
 
 export default function ProgressCard({
@@ -38,5 +38,5 @@ export default function ProgressCard({
 				{description}
 			</Text>
 		</Box>
-	);
+	)
 }

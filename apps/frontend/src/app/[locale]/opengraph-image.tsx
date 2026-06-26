@@ -1,24 +1,24 @@
-import { routing } from '@/i18n/routing';
-import { getTranslations } from 'next-intl/server';
-import { ImageResponse } from 'next/og';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { routing } from '@/i18n/routing'
+import { getTranslations } from 'next-intl/server'
+import { ImageResponse } from 'next/og'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
-export const alt = 'BuildTheEarth';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+export const alt = 'BuildTheEarth'
+export const size = { width: 1200, height: 630 }
+export const contentType = 'image/png'
 
 export function generateStaticParams() {
-	return routing.locales.map((locale) => ({ locale }));
+	return routing.locales.map((locale) => ({ locale }))
 }
 
 export default async function Image({ params }: { params: Promise<{ locale: string }> }) {
-	const cairoBlackFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Black.ttf'));
-	const cairoMediumFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Medium.ttf'));
+	const cairoBlackFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Black.ttf'))
+	const cairoMediumFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Medium.ttf'))
 
-	const locale = (await params).locale;
+	const locale = (await params).locale
 
-	const t = (await getTranslations({ locale, namespace: 'seo.og' })) as (key: 'title' | 'subtitle') => string;
+	const t = (await getTranslations({ locale, namespace: 'seo.og' })) as (key: 'title' | 'subtitle') => string
 
 	return new ImageResponse(
 		(
@@ -89,5 +89,5 @@ export default async function Image({ params }: { params: Promise<{ locale: stri
 				{ name: 'Cairo', data: cairoMediumFont, weight: 400, style: 'normal' },
 			],
 		},
-	);
+	)
 }

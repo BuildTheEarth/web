@@ -1,17 +1,17 @@
-import Wrapper from '@/components/layout/Wrapper';
-import { List, ListItem, Text, Title } from '@mantine/core';
-import { Locale } from 'next-intl';
-import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server';
+import Wrapper from '@/components/layout/Wrapper'
+import { List, ListItem, Text, Title } from '@mantine/core'
+import { Locale } from 'next-intl'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-static'
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('attribution');
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('attribution')
 
-	const tMessages = await getMessages();
-	const keys = Object.keys(tMessages.attribution.translations) as (keyof typeof tMessages.attribution.translations)[];
+	const tMessages = await getMessages()
+	const keys = Object.keys(tMessages.attribution.translations) as (keyof typeof tMessages.attribution.translations)[]
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: 'Public Attributions', src: '/thumbs/home.webp' }}>
@@ -167,5 +167,5 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				</ListItem>
 			</List>
 		</Wrapper>
-	);
+	)
 }

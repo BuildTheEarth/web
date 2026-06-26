@@ -1,6 +1,6 @@
-'use server';
+'use server'
 
-import prisma from '@/util/db';
+import prisma from '@/util/db'
 
 export async function getClaimData(id: string) {
 	const res = await prisma.claim.findUnique({
@@ -62,7 +62,7 @@ export async function getClaimData(id: string) {
 				},
 			},
 		},
-	});
+	})
 
-	return res;
+	return res
 }

@@ -445,7 +445,7 @@ export const ownerGenerateToken = async ({ id }: { id: string }): Promise<void> 
 		discordIds: [userIsOwner.creator.discordId!],
 		content: {
 			title: `${userIsOwner.name} Token Generated`,
-			body: 'You requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.\n\nToken: ||${token}|| \nSlug: \`${userIsOwner.slug}\`',
+			body: 'You requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.\n\nToken: ||${token}|| \nSlug: `${userIsOwner.slug}`',
 			emoji: 'FORWARDED',
 		},
 	})

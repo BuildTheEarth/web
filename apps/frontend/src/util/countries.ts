@@ -250,17 +250,17 @@ const isoCountries: { [key: string]: string } = {
 	GLB: 'Globe', // Not a country, but i need this!!!
 	OST: 'Overseas Territories', // !!
 	CDP: 'Crown Dependencies', // !!
-};
+}
 
 export default function getCountryName(countryCode: string): string {
-	const code = countryCode.toUpperCase();
+	const code = countryCode.toUpperCase()
 	if (isoCountries.hasOwnProperty(code)) {
-		return isoCountries[code];
+		return isoCountries[code]
 	} else {
-		return 'Globe';
+		return 'Globe'
 	}
 }
 
 export function getCountryNames(countryCodes: string[]): string[] {
-	return countryCodes.map((code) => getCountryName(code));
+	return countryCodes.map((code) => getCountryName(code))
 }

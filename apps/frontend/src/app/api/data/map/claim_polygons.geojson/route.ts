@@ -1,5 +1,5 @@
-import prisma from '@/util/db';
-import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/util/db'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
 	try {
@@ -7,14 +7,14 @@ export async function GET(request: NextRequest) {
 		const claims = await prisma.claim.findMany({
 			where: { active: true, center: { not: null } },
 			select: { id: true, center: true, finished: true, size: true, name: true, buildings: true, area: true },
-		});
+		})
 
 		const geojson = {
 			type: 'FeatureCollection',
 			features: claims.map((claim) => {
-				const mapped = claim.area?.map((p: string) => p.split(', ').map(Number));
+				const mapped = claim.area?.map((p: string) => p.split(', ').map(Number))
 				if (claim.area[0] != claim.area[claim.area.length - 1]) {
-					mapped.push(mapped[0]);
+					mapped.push(mapped[0])
 				}
 				return {
 					type: 'Feature',
@@ -30,13 +30,13 @@ export async function GET(request: NextRequest) {
 						finished: claim.finished,
 						buildings: claim.buildings,
 					},
-				};
+				}
 			}),
-		};
+		}
 
-		return NextResponse.json(geojson);
+		return NextResponse.json(geojson)
 	} catch (error) {
-		console.error('Failed to fetch claims:', error);
-		return NextResponse.json({ error: 'Failed to fetch claims data' }, { status: 500 });
+		console.error('Failed to fetch claims:', error)
+		return NextResponse.json({ error: 'Failed to fetch claims data' }, { status: 500 })
 	}
 }

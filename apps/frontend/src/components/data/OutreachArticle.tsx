@@ -1,18 +1,18 @@
-'use server';
-import directus from '@/util/directus';
-import { Card, CardSection, Group, Image, Text, Tooltip } from '@mantine/core';
-import { IconCalendar, IconChevronRight } from '@tabler/icons-react';
-import { getFormatter } from 'next-intl/server';
-import LinkButton from '../core/LinkButton';
+'use server'
+import directus from '@/util/directus'
+import { Card, CardSection, Group, Image, Text, Tooltip } from '@mantine/core'
+import { IconCalendar, IconChevronRight } from '@tabler/icons-react'
+import { getFormatter } from 'next-intl/server'
+import LinkButton from '../core/LinkButton'
 
 export interface OutreachArticle {
-	id: string;
-	headline: string;
-	content_preview: string;
-	thumbnail: string;
-	publisher: string;
-	link: string;
-	date: string;
+	id: string
+	headline: string
+	content_preview: string
+	thumbnail: string
+	publisher: string
+	link: string
+	date: string
 }
 
 export async function OutreachArticleCard({
@@ -20,9 +20,9 @@ export async function OutreachArticleCard({
 	formatter,
 	ctaText,
 }: {
-	article: OutreachArticle;
-	formatter: Awaited<ReturnType<typeof getFormatter>>;
-	ctaText?: string;
+	article: OutreachArticle
+	formatter: Awaited<ReturnType<typeof getFormatter>>
+	ctaText?: string
 }) {
 	return (
 		<Card key={article.id + '-lg'} withBorder maw={{ sm: '40vw', md: '32vw', xl: '20vw' }} radius={0} className="anim">
@@ -78,5 +78,5 @@ export async function OutreachArticleCard({
 				{ctaText || 'Continue reading'}
 			</LinkButton>
 		</Card>
-	);
+	)
 }

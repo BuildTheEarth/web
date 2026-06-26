@@ -1,4 +1,4 @@
-import { createDirectus, rest } from '@directus/sdk';
+import { createDirectus, rest } from '@directus/sdk'
 
 const directus = createDirectus(process.env.CMS_URL!).with(
 	rest({
@@ -10,6 +10,6 @@ const directus = createDirectus(process.env.CMS_URL!).with(
 			},
 		}),
 	}),
-);
+)
 
-export default directus;
+export default directus

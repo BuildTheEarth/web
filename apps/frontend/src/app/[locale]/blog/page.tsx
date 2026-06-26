@@ -1,20 +1,20 @@
-import LinkButton from '@/components/core/LinkButton';
-import Wrapper from '@/components/layout/Wrapper';
-import directus from '@/util/directus';
-import { getLanguageAlternates } from '@/util/seo';
-import { readItems } from '@directus/sdk';
-import { Card, CardSection, Group, Image, SimpleGrid, Text, Title, Tooltip } from '@mantine/core';
-import { IconCalendar, IconChevronRight } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
+import LinkButton from '@/components/core/LinkButton'
+import Wrapper from '@/components/layout/Wrapper'
+import directus from '@/util/directus'
+import { getLanguageAlternates } from '@/util/seo'
+import { readItems } from '@directus/sdk'
+import { Card, CardSection, Group, Image, SimpleGrid, Text, Title, Tooltip } from '@mantine/core'
+import { IconCalendar, IconChevronRight } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 
-export const dynamic = 'force-static';
-export const revalidate = 86400; // 24h
+export const dynamic = 'force-static'
+export const revalidate = 86400 // 24h
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'blog.seo' })) as (key: 'title' | 'description') => string;
+	const locale = (await params).locale
+	const t = (await getTranslations({ locale, namespace: 'blog.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
@@ -22,30 +22,30 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/blog'),
 		},
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const formatter = await getFormatter();
-	const t = await getTranslations('blog');
-	const tSeo = await getTranslations('blog.seo');
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const formatter = await getFormatter()
+	const t = await getTranslations('blog')
+	const tSeo = await getTranslations('blog.seo')
 
 	const posts: {
-		slug: string;
-		title: string;
-		thumbnail: string;
-		summary: string;
-		published_at: string;
-		user_created: { display_name?: string };
+		slug: string
+		title: string
+		thumbnail: string
+		summary: string
+		published_at: string
+		user_created: { display_name?: string }
 	}[] = (await directus.request(
 		readItems('blog', {
 			limit: 99,
 			sort: '-published_at',
 			fields: ['slug', 'title', 'thumbnail', 'summary', 'published_at', { user_created: ['display_name'] }],
 		}),
-	)) as any[];
+	)) as any[]
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: tSeo('title'), src: '/thumbs/home.webp' }}>
@@ -121,5 +121,5 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				))}
 			</SimpleGrid>
 		</Wrapper>
-	);
+	)
 }

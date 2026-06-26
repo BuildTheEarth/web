@@ -1,6 +1,6 @@
-'use server';
+'use server'
 
-import BackgroundImage from '../core/BackgroundImage';
+import BackgroundImage from '../core/BackgroundImage'
 
 /**
  * Optional page head for widescreen image with title
@@ -11,10 +11,10 @@ export default async function PageHead({
 	title,
 	src,
 }: {
-	children?: React.ReactNode;
-	title: string;
-	src: string;
-	style?: React.CSSProperties;
+	children?: React.ReactNode
+	title: string
+	src: string
+	style?: React.CSSProperties
 }) {
 	return (
 		<BackgroundImage
@@ -54,5 +54,5 @@ export default async function PageHead({
 				</h1>
 			</div>
 		</BackgroundImage>
-	);
+	)
 }

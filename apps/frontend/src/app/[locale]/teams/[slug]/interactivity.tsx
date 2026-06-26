@@ -1,10 +1,10 @@
-'use client';
-import Anchor from '@/components/core/Anchor';
-import { Alert, Box, Code, Kbd, List, ListItem, SimpleGrid, Text, Title } from '@mantine/core';
-import { useTranslations } from 'next-intl';
+'use client'
+import Anchor from '@/components/core/Anchor'
+import { Alert, Box, Code, Kbd, List, ListItem, SimpleGrid, Text, Title } from '@mantine/core'
+import { useTranslations } from 'next-intl'
 
 export default function JoinServerGuide(props: { ip: string; version: string; name: string; slug: string }) {
-	const t = useTranslations('teams.ownPage.joinServer');
+	const t = useTranslations('teams.ownPage.joinServer')
 
 	const tags = {
 		...props,
@@ -31,7 +31,7 @@ export default function JoinServerGuide(props: { ip: string; version: string; na
 			</Anchor>
 		),
 		kbd: (c: string) => <Kbd>{c}</Kbd>,
-	};
+	}
 
 	return (
 		<Box
@@ -75,5 +75,5 @@ export default function JoinServerGuide(props: { ip: string; version: string; na
 				</Box>
 			</SimpleGrid>
 		</Box>
-	);
+	)
 }

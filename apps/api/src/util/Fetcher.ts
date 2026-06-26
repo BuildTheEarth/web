@@ -9,5 +9,5 @@ export default async function runFetch(path: string, body: any, opts?: any) {
 		...opts,
 	})
 		.then((res) => res.json())
-		.catch((e) => console.error(`runFetch Error: ${path} with ${body} ${opts}`));
+		.catch((e) => console.error(`runFetch Error: ${path} with ${body} ${opts}`))
 }

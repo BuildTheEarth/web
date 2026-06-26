@@ -1,17 +1,17 @@
-import { getTranslations } from 'next-intl/server';
-import { ImageResponse } from 'next/og';
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { getTranslations } from 'next-intl/server'
+import { ImageResponse } from 'next/og'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 
-export const alt = 'BuildTheEarth';
-export const size = { width: 1200, height: 630 };
-export const contentType = 'image/png';
+export const alt = 'BuildTheEarth'
+export const size = { width: 1200, height: 630 }
+export const contentType = 'image/png'
 
 export default async function Image() {
-	const cairoBlackFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Black.ttf'));
-	const cairoMediumFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Medium.ttf'));
+	const cairoBlackFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Black.ttf'))
+	const cairoMediumFont = await readFile(join(process.cwd(), 'public/fonts/Cairo-Medium.ttf'))
 
-	const t = (await getTranslations({ locale: 'en', namespace: 'seo.og' })) as (key: 'title' | 'subtitle') => string;
+	const t = (await getTranslations({ locale: 'en', namespace: 'seo.og' })) as (key: 'title' | 'subtitle') => string
 
 	return new ImageResponse(
 		(
@@ -82,5 +82,5 @@ export default async function Image() {
 				{ name: 'Cairo', data: cairoMediumFont, weight: 400, style: 'normal' },
 			],
 		},
-	);
+	)
 }

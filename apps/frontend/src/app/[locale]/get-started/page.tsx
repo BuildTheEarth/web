@@ -1,16 +1,16 @@
-import AppearAnimation from '@/components/animations/AppearAnimation';
-import LottieAnimation from '@/components/animations/LottieAnimation';
-import SplitTextAnimation from '@/components/animations/SplitText';
-import LinkButton from '@/components/core/LinkButton';
-import { QuerySearchInput } from '@/components/core/SearchInput';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import EarthBackground from '@/components/layout/EarthBackground';
-import Wrapper from '@/components/layout/Wrapper';
-import { Link } from '@/i18n/navigation';
-import chevronBounceLottie from '@/public/animations/chevron-bounce.json';
-import getCountryName from '@/util/countries';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
+import AppearAnimation from '@/components/animations/AppearAnimation'
+import LottieAnimation from '@/components/animations/LottieAnimation'
+import SplitTextAnimation from '@/components/animations/SplitText'
+import LinkButton from '@/components/core/LinkButton'
+import { QuerySearchInput } from '@/components/core/SearchInput'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import EarthBackground from '@/components/layout/EarthBackground'
+import Wrapper from '@/components/layout/Wrapper'
+import { Link } from '@/i18n/navigation'
+import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
+import getCountryName from '@/util/countries'
+import prisma from '@/util/db'
+import { getLanguageAlternates } from '@/util/seo'
 import {
 	BackgroundImage,
 	Box,
@@ -28,23 +28,23 @@ import {
 	Stack,
 	Text,
 	Title,
-} from '@mantine/core';
-import { IconBrandDiscord, IconChevronRight } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import ReactCountryFlag from 'react-country-flag';
-import JoinServerGuide from '../teams/[slug]/interactivity';
+} from '@mantine/core'
+import { IconBrandDiscord, IconChevronRight } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import ReactCountryFlag from 'react-country-flag'
+import JoinServerGuide from '../teams/[slug]/interactivity'
 
-import * as motion from 'motion/react-client';
+import * as motion from 'motion/react-client'
 
-export const revalidate = 3600; // 60m
+export const revalidate = 3600 // 60m
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
+	const locale = (await params).locale
 	const t = (await getTranslations({ locale, namespace: 'get-started.seo' })) as (
 		key: 'title' | 'description',
-	) => string;
+	) => string
 
 	return {
 		title: t('title'),
@@ -52,21 +52,21 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/get-started'),
 		},
-	};
+	}
 }
 
 export default async function Page({
 	params,
 	searchParams,
 }: {
-	params: Promise<{ locale: Locale }>;
-	searchParams: Promise<{ qex?: string; cex?: string; qbu?: string; cbu?: string }>;
+	params: Promise<{ locale: Locale }>
+	searchParams: Promise<{ qex?: string; cex?: string; qbu?: string; cbu?: string }>
 }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('get-started');
-	const qex = (await searchParams).qex || '';
-	const qbu = (await searchParams).qbu || '';
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('get-started')
+	const qex = (await searchParams).qex || ''
+	const qbu = (await searchParams).qbu || ''
 
 	const teams = await prisma.buildTeam.findMany({
 		select: {
@@ -81,18 +81,18 @@ export default async function Page({
 			invite: true,
 		},
 		orderBy: { slug: 'asc' },
-	});
+	})
 	const locations: {
-		location: string;
-		raw: string;
-		team: string;
-		tid: string;
-		ip: string;
-		slug: string;
-		icon: string;
-		version: string;
-		discord: string;
-	}[] = [];
+		location: string
+		raw: string
+		team: string
+		tid: string
+		ip: string
+		slug: string
+		icon: string
+		version: string
+		discord: string
+	}[] = []
 	teams?.forEach((element) =>
 		!element.location.includes('glb')
 			? element.location.split(', ').map((part: any) =>
@@ -109,13 +109,13 @@ export default async function Page({
 					}),
 				)
 			: null,
-	);
+	)
 
-	const cex = (await searchParams).cex;
-	const selectedEx = cex ? teams.find((t) => t.slug === cex) : undefined;
+	const cex = (await searchParams).cex
+	const selectedEx = cex ? teams.find((t) => t.slug === cex) : undefined
 
-	const cbu = (await searchParams).cbu;
-	const selectedBu = cbu ? teams.find((t) => t.slug === cbu) : undefined;
+	const cbu = (await searchParams).cbu
+	const selectedBu = cbu ? teams.find((t) => t.slug === cbu) : undefined
 
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
@@ -503,5 +503,5 @@ export default async function Page({
 				</Container>
 			</div>
 		</Wrapper>
-	);
+	)
 }

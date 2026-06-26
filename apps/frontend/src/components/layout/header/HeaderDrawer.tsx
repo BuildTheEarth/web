@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import { Burger, Button, Drawer, Flex, Group, ScrollArea, Stack } from '@mantine/core';
+import { Burger, Button, Drawer, Flex, Group, ScrollArea, Stack } from '@mantine/core'
 
-import { Link } from '@/i18n/navigation';
-import classes from '@/styles/layout/Header.module.css';
-import { useDisclosure } from '@mantine/hooks';
-import { IconChevronRight } from '@tabler/icons-react';
-import { useTranslations } from 'next-intl';
-import { headerLinks } from './links';
+import { Link } from '@/i18n/navigation'
+import classes from '@/styles/layout/Header.module.css'
+import { useDisclosure } from '@mantine/hooks'
+import { IconChevronRight } from '@tabler/icons-react'
+import { useTranslations } from 'next-intl'
+import { headerLinks } from './links'
 
 export function HeaderDrawer() {
-	const t = useTranslations('common.header');
-	const tLinks = useTranslations('common.links');
+	const t = useTranslations('common.header')
+	const tLinks = useTranslations('common.links')
 
-	const [opened, { toggle, close }] = useDisclosure();
+	const [opened, { toggle, close }] = useDisclosure()
 	const items = headerLinks.map((link) => (
 		<Link key={link.key} href={link.link} className={classes.drawerLink}>
 			{tLinks(link.key)}
 		</Link>
-	));
+	))
 	return (
 		<>
 			<Burger className={classes.drawerControl} opened={opened} onClick={toggle} aria-label={t('toggleNavigation')} />
@@ -52,7 +52,7 @@ export function HeaderDrawer() {
 				</Flex>
 			</Drawer>
 		</>
-	);
+	)
 }
 
-export default HeaderDrawer;
+export default HeaderDrawer

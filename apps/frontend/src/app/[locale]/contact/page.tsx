@@ -1,8 +1,8 @@
-import Anchor from '@/components/core/Anchor';
-import Wrapper from '@/components/layout/Wrapper';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
-import { ActionIcon, Box, Group, Paper, SimpleGrid, Text, Title } from '@mantine/core';
+import Anchor from '@/components/core/Anchor'
+import Wrapper from '@/components/layout/Wrapper'
+import prisma from '@/util/db'
+import { getLanguageAlternates } from '@/util/seo'
+import { ActionIcon, Box, Group, Paper, SimpleGrid, Text, Title } from '@mantine/core'
 import {
 	IconAt,
 	IconBrandDiscord,
@@ -12,17 +12,17 @@ import {
 	IconBrandTwitch,
 	IconBrandX,
 	IconBrandYoutube,
-} from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+} from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
-export const dynamic = 'force-static';
-export const revalidate = 86400;
+export const dynamic = 'force-static'
+export const revalidate = 86400
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'contact.seo' })) as (key: 'title' | 'description') => string;
+	const locale = (await params).locale
+	const t = (await getTranslations({ locale, namespace: 'contact.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
@@ -30,13 +30,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/contact'),
 		},
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('contact');
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('contact')
 
 	const contacts = await prisma.contact.findMany({
 		select: {
@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			discord: true,
 			email: true,
 		},
-	});
+	})
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
@@ -74,7 +74,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							link: 'https://www.linkedin.com/company/build-the-earth',
 						},
 					].map((social) => {
-						const Icon = social.icon;
+						const Icon = social.icon
 						return (
 							<ActionIcon
 								size="xl"
@@ -89,7 +89,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							>
 								<Icon size={26} stroke={2} />
 							</ActionIcon>
-						);
+						)
 					})}
 				</Group>
 				<Title order={2} mb="md" mt="xl">
@@ -142,5 +142,5 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				</Text>
 			</Box>
 		</Wrapper>
-	);
+	)
 }

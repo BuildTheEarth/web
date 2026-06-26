@@ -1,5 +1,5 @@
-'use client';
-import { motion } from 'motion/react';
+'use client'
+import { motion } from 'motion/react'
 export default function EarthBackground(props: any) {
 	return (
 		<motion.img
@@ -17,5 +17,5 @@ export default function EarthBackground(props: any) {
 				...props?.style,
 			}}
 		/>
-	);
+	)
 }

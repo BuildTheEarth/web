@@ -1,20 +1,20 @@
-import { QueryPagination } from '@/components/core/Pagination';
-import { QuerySearchInput } from '@/components/core/SearchInput';
-import Wrapper from '@/components/layout/Wrapper';
-import { Link } from '@/i18n/navigation';
-import { getCountryNames } from '@/util/countries';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
-import { Avatar, Button, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core';
-import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { unstable_cache } from 'next/cache';
+import { QueryPagination } from '@/components/core/Pagination'
+import { QuerySearchInput } from '@/components/core/SearchInput'
+import Wrapper from '@/components/layout/Wrapper'
+import { Link } from '@/i18n/navigation'
+import { getCountryNames } from '@/util/countries'
+import prisma from '@/util/db'
+import { getLanguageAlternates } from '@/util/seo'
+import { Avatar, Button, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core'
+import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { unstable_cache } from 'next/cache'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'teams.seo' })) as (key: 'title' | 'description') => string;
+	const locale = (await params).locale
+	const t = (await getTranslations({ locale, namespace: 'teams.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/teams'),
 		},
-	};
+	}
 }
 
 const getBuildTeams = unstable_cache(
@@ -41,22 +41,22 @@ const getBuildTeams = unstable_cache(
 		}),
 	[],
 	{ tags: ['buildTeams'], revalidate: 3600 },
-);
+)
 
 export default async function Page({
 	searchParams,
 	params,
 }: {
-	params: Promise<{ locale: Locale }>;
-	searchParams: Promise<{ q?: string; page?: string }>;
+	params: Promise<{ locale: Locale }>
+	searchParams: Promise<{ q?: string; page?: string }>
 }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('teams');
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('teams')
 
-	const search = (await searchParams).q || '';
-	const page = parseInt((await searchParams).page || '1');
-	const buildTeams = await getBuildTeams();
+	const search = (await searchParams).q || ''
+	const page = parseInt((await searchParams).page || '1')
+	const buildTeams = await getBuildTeams()
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
@@ -77,7 +77,7 @@ export default async function Page({
 			<SimpleGrid cols={{ base: 1, lg: 2 }} spacing="xl" mb="xl">
 				{buildTeams
 					.filter((element) => {
-						if (search.length < 3) return true;
+						if (search.length < 3) return true
 						return (
 							element.name.toLowerCase().includes(search.toLowerCase()) ||
 							element.location.toLowerCase().includes(search.toLowerCase()) ||
@@ -86,12 +86,12 @@ export default async function Page({
 							getCountryNames(element.location.split(', ')).some((country) =>
 								country.toLowerCase().includes(search.toLowerCase()),
 							)
-						);
+						)
 					})
 					.sort((a, b) => b._count.members - a._count.members)
 					.slice((page - 1) * 10, page * 10)
 					.map((element) => {
-						const location = getCountryNames(element.location.split(', '));
+						const location = getCountryNames(element.location.split(', '))
 						return (
 							<Link
 								key={element.id}
@@ -151,13 +151,13 @@ export default async function Page({
 									</div>
 								</Group>
 							</Link>
-						);
+						)
 					})}
 			</SimpleGrid>
 			<QueryPagination
 				itemCount={
 					buildTeams.filter((element) => {
-						if (search.length < 3) return true;
+						if (search.length < 3) return true
 						return (
 							element.name.toLowerCase().includes(search.toLowerCase()) ||
 							element.location.toLowerCase().includes(search.toLowerCase()) ||
@@ -166,11 +166,11 @@ export default async function Page({
 							getCountryNames(element.location.split(', ')).some((country) =>
 								country.toLowerCase().includes(search.toLowerCase()),
 							)
-						);
+						)
 					}).length
 				}
 				my="xl"
 			/>
 		</Wrapper>
-	);
+	)
 }

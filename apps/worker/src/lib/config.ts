@@ -2,7 +2,7 @@
  * Static constant configuration values
  */
 
-import { remove } from 'winston';
+import { remove } from 'winston'
 
 export const config = {
 	// The number of worker threads to spawn for processing background jobs
@@ -28,4 +28,4 @@ export const config = {
 		errorReporting: process.env.DISCORD_WEBHOOK_ERRORS || '',
 		logging: process.env.DISCORD_WEBHOOK_LOGGING || '',
 	},
-};
+}

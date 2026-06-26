@@ -1,32 +1,32 @@
-import { Request, Response } from 'express';
-import { sendBtWebhook, WebhookType } from '../util/BtWebhooks.js';
-import turf, { toPolygon } from '../util/Coordinates.js';
-import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js';
+import { Request, Response } from 'express'
+import { sendBtWebhook, WebhookType } from '../util/BtWebhooks.js'
+import turf, { toPolygon } from '../util/Coordinates.js'
+import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js'
 
-import { ApplicationStatus } from '@prisma/client';
-import { validationResult } from 'express-validator';
-import Core from '../Core.js';
-import { parseApplicationStatus } from '../util/Parser.js';
+import { ApplicationStatus } from '@prisma/client'
+import { validationResult } from 'express-validator'
+import Core from '../Core.js'
+import { parseApplicationStatus } from '../util/Parser.js'
 
 class TokenRouteContoller {
-	private core: Core;
+	private core: Core
 
 	constructor(core: Core) {
-		this.core = core;
+		this.core = core
 	}
 
 	/**
 	 * Gets all claims of a build team based on the team and optional pagination
 	 */
 	public async getClaims(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		// With Pagination
 		if (req.query && req.query.page) {
-			let page = parseInt(req.query.page as string);
+			let page = parseInt(req.query.page as string)
 			const claims = await this.core.getPrisma().claim.findMany({
 				skip: page * 10,
 				take: 10,
@@ -40,9 +40,9 @@ class TokenRouteContoller {
 					owner: { select: { id: true, discordId: true, ssoId: true } },
 					builders: req.query.withBuilders ? { select: { id: true, discordId: true, ssoId: true } } : undefined,
 				},
-			});
-			let count = await this.core.getPrisma().claim.count();
-			res.send({ pages: Math.ceil(count / 10), data: claims });
+			})
+			let count = await this.core.getPrisma().claim.count()
+			res.send({ pages: Math.ceil(count / 10), data: claims })
 
 			// Without Pagination
 		} else {
@@ -57,8 +57,8 @@ class TokenRouteContoller {
 					owner: { select: { id: true, discordId: true, ssoId: true } },
 					builders: req.query.withBuilders ? { select: { id: true, discordId: true, ssoId: true } } : undefined,
 				},
-			});
-			res.send(claims);
+			})
+			res.send(claims)
 		}
 	}
 
@@ -77,11 +77,11 @@ class TokenRouteContoller {
 				owner: { select: { id: true, discordId: true, ssoId: true } },
 				builders: req.query.withBuilders ? { select: { id: true, discordId: true, ssoId: true } } : undefined,
 			},
-		});
+		})
 		if (claim) {
-			res.send(claim);
+			res.send(claim)
 		} else {
-			ERROR_GENERIC(req, res, 404, 'Claim does not exist.');
+			ERROR_GENERIC(req, res, 404, 'Claim does not exist.')
 		}
 	}
 
@@ -89,18 +89,18 @@ class TokenRouteContoller {
 	 * Creates a new claim for a build team
 	 */
 	public async createClaim(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		let { owner: _owner, area, active, finished, name, externalId, description, buildings, city, builders } = req.body;
+		let { owner: _owner, area, active, finished, name, externalId, description, buildings, city, builders } = req.body
 
 		if (area[0] != area[area.length - 1]) {
-			area.push(area[0]);
+			area.push(area[0])
 		}
 
-		const owner = _owner && (await this.core.getPrisma().user.findFirst({ where: _owner }));
+		const owner = _owner && (await this.core.getPrisma().user.findFirst({ where: _owner }))
 
 		if (_owner && !owner) {
 			return ERROR_GENERIC(
@@ -108,12 +108,12 @@ class TokenRouteContoller {
 				res,
 				404,
 				`Could not find an owner with the following properties: ${Object.keys(_owner).join(', ')}`,
-			);
+			)
 		}
 
-		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ');
+		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
 
-		const osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center });
+		const osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center })
 
 		const data = {
 			owner: owner ? { connect: { id: owner.id } } : undefined,
@@ -130,17 +130,17 @@ class TokenRouteContoller {
 			osmName: osmDetails.osmName,
 			size: area && turf.area(toPolygon(area)),
 			center: center,
-		};
+		}
 
 		try {
 			const claim = await this.core.getPrisma().claim.create({
 				data,
-			});
+			})
 
-			this.core.getDiscord().sendClaimUpdate(claim);
-			res.send(claim);
+			this.core.getDiscord().sendClaimUpdate(claim)
+			res.send(claim)
 		} catch (e) {
-			ERROR_GENERIC(req, res, 500, e.message);
+			ERROR_GENERIC(req, res, 500, e.message)
 		}
 	}
 
@@ -192,18 +192,18 @@ class TokenRouteContoller {
 	 * Updates a claim from a build team based on the claim id
 	 */
 	public async updateClaim(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		let { owner: _owner, area, active, finished, name, externalId, description, buildings, city, builders } = req.body;
+		let { owner: _owner, area, active, finished, name, externalId, description, buildings, city, builders } = req.body
 
 		if (area[0] != area[area.length - 1]) {
-			area.push(area[0]);
+			area.push(area[0])
 		}
 
-		const owner = _owner && (await this.core.getPrisma().user.findFirst({ where: _owner }));
+		const owner = _owner && (await this.core.getPrisma().user.findFirst({ where: _owner }))
 
 		if (_owner && !owner) {
 			return ERROR_GENERIC(
@@ -211,13 +211,12 @@ class TokenRouteContoller {
 				res,
 				404,
 				`Could not find an owner with the following properties: ${Object.keys(_owner).join(', ')}`,
-			);
+			)
 		}
 
-		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ');
+		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
 
-		const osmDetails =
-			area && (await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center }));
+		const osmDetails = area && (await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center }))
 
 		const data = {
 			owner: owner && { connect: { id: owner.id } },
@@ -234,7 +233,7 @@ class TokenRouteContoller {
 			osmName: osmDetails.osmName,
 			size: area && turf.area(toPolygon(area)),
 			center: center,
-		};
+		}
 
 		try {
 			const claim = await this.core.getPrisma().claim.update({
@@ -243,43 +242,43 @@ class TokenRouteContoller {
 					: { id: req.params.id, buildTeamId: req.team.id },
 
 				data,
-			});
+			})
 
-			res.send(claim);
+			res.send(claim)
 		} catch (e) {
-			ERROR_GENERIC(req, res, 500, e.message);
+			ERROR_GENERIC(req, res, 500, e.message)
 		}
 	}
 
 	public async deleteClaim(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const claim = await this.core.getPrisma().claim.findFirst({
 			where: req.query.external
 				? { externalId: req.params.id, buildTeamId: req.team.id }
 				: { id: req.params.id, buildTeamId: req.team.id },
-		});
+		})
 
 		if (!claim || !claim.id) {
-			return ERROR_GENERIC(req, res, 404, 'Claim does not exist.');
+			return ERROR_GENERIC(req, res, 404, 'Claim does not exist.')
 		}
 
-		await this.core.getPrisma().claim.delete({ where: { id: claim.id } });
+		await this.core.getPrisma().claim.delete({ where: { id: claim.id } })
 
-		this.core.getDiscord().sendClaimUpdate(claim);
-		res.send(claim);
+		this.core.getDiscord().sendClaimUpdate(claim)
+		res.send(claim)
 	}
 
 	public async getApplications(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 		if (req.query && req.query.page) {
-			let page = parseInt(req.query.page as string);
+			let page = parseInt(req.query.page as string)
 			const applications = await this.core.getPrisma().application.findMany({
 				skip: page * 10,
 				take: 10,
@@ -292,9 +291,9 @@ class TokenRouteContoller {
 					},
 					user: { select: { id: true, discordId: true, ssoId: true } },
 				},
-			});
-			let count = await this.core.getPrisma().application.count();
-			res.send({ pages: Math.ceil(count / 10), data: applications });
+			})
+			let count = await this.core.getPrisma().application.count()
+			res.send({ pages: Math.ceil(count / 10), data: applications })
 		} else {
 			const applications = await this.core.getPrisma().application.findMany({
 				where: {
@@ -306,14 +305,14 @@ class TokenRouteContoller {
 					},
 					user: { select: { id: true, discordId: true, ssoId: true } },
 				},
-			});
-			res.send(applications);
+			})
+			res.send(applications)
 		}
 	}
 	public async getApplication(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const application = await this.core.getPrisma().application.findFirst({
@@ -336,7 +335,7 @@ class TokenRouteContoller {
 					select: { id: true, discordId: true, ssoId: true, username: true },
 				},
 			},
-		});
+		})
 
 		if (application) {
 			res.send({
@@ -346,25 +345,25 @@ class TokenRouteContoller {
 					discordName: application.reviewer.username,
 				},
 				user: { ...application.user, discordName: application.user.username },
-			});
+			})
 		} else {
-			ERROR_GENERIC(req, res, 404, 'Application does not exist.');
+			ERROR_GENERIC(req, res, 404, 'Application does not exist.')
 		}
-		return;
+		return
 	}
 
 	public async review(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		const { status, reason, reviewer: reviewerId } = req.body;
+		const { status, reason, reviewer: reviewerId } = req.body
 
-		const reviewer = await this.core.getPrisma().user.findFirst({ where: { id: reviewerId } });
+		const reviewer = await this.core.getPrisma().user.findFirst({ where: { id: reviewerId } })
 
 		if (!reviewer) {
-			return ERROR_GENERIC(req, res, 404, 'Reviewer does not exist.');
+			return ERROR_GENERIC(req, res, 404, 'Reviewer does not exist.')
 		}
 
 		const application = await this.core.getPrisma().application.update({
@@ -408,7 +407,7 @@ class TokenRouteContoller {
 					},
 				},
 			},
-		});
+		})
 
 		if (parseApplicationStatus(status) == ApplicationStatus.ACCEPTED) {
 			const user = await this.core.getPrisma().user.update({
@@ -417,7 +416,7 @@ class TokenRouteContoller {
 					joinedBuildTeams: { connect: { id: application.buildteamId } },
 				},
 				select: { discordId: true },
-			});
+			})
 
 			await this.core
 				.getDiscord()
@@ -433,13 +432,13 @@ class TokenRouteContoller {
 						),
 					[user.discordId],
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
-			await this.core.getDiscord().updateBuilderRole(user.discordId, true);
+				)
+			await this.core.getDiscord().updateBuilderRole(user.discordId, true)
 		} else if (parseApplicationStatus(status) == ApplicationStatus.TRIAL) {
 			const user = await this.core.getPrisma().user.findFirst({
 				where: { id: application.userId },
 				select: { discordId: true },
-			});
+			})
 			await this.core
 				.getDiscord()
 				.sendBotMessage(
@@ -454,7 +453,7 @@ class TokenRouteContoller {
 						),
 					[user.discordId],
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
+				)
 		} else {
 			const user = await this.core.getPrisma().user.update({
 				where: { id: application.userId },
@@ -467,7 +466,7 @@ class TokenRouteContoller {
 						select: { joinedBuildTeams: true },
 					},
 				},
-			});
+			})
 
 			await this.core
 				.getDiscord()
@@ -483,21 +482,21 @@ class TokenRouteContoller {
 						),
 					[user.discordId],
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
+				)
 
 			if (user._count.joinedBuildTeams < 1) {
-				await this.core.getDiscord().updateBuilderRole(user.discordId, false, (e) => ERROR_GENERIC(req, res, 500, e));
+				await this.core.getDiscord().updateBuilderRole(user.discordId, false, (e) => ERROR_GENERIC(req, res, 500, e))
 			}
 		}
 
-		await this.core.getDiscord().sendApplicationUpdate(application);
+		await this.core.getDiscord().sendApplicationUpdate(application)
 
 		if (application.buildteam.webhook) {
-			await sendBtWebhook(this.core, application.buildteam.webhook, WebhookType.APPLICATION, application);
+			await sendBtWebhook(this.core, application.buildteam.webhook, WebhookType.APPLICATION, application)
 		}
 
-		res.send(application);
+		res.send(application)
 	}
 }
 
-export default TokenRouteContoller;
+export default TokenRouteContoller

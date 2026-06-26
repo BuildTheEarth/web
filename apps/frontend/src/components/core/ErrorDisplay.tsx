@@ -1,16 +1,16 @@
-import { Box, Button, Text, Title } from '@mantine/core';
-import AppearAnimation from '../animations/AppearAnimation';
-import SplitTextAnimation from '../animations/SplitText';
-import EarthBackground from '../layout/EarthBackground';
+import { Box, Button, Text, Title } from '@mantine/core'
+import AppearAnimation from '../animations/AppearAnimation'
+import SplitTextAnimation from '../animations/SplitText'
+import EarthBackground from '../layout/EarthBackground'
 
 export default function ErrorDisplay({
 	title = 'Something is not right...',
 	message = 'The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. ',
 	backButton = true,
 }: {
-	title?: string;
-	message?: string;
-	backButton?: boolean | string;
+	title?: string
+	message?: string
+	backButton?: boolean | string
 }) {
 	return (
 		<Box
@@ -42,5 +42,5 @@ export default function ErrorDisplay({
 				)}
 			</AppearAnimation>
 		</Box>
-	);
+	)
 }

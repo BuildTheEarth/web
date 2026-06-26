@@ -1,5 +1,5 @@
-import prisma from '@/util/db';
-import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/util/db'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
 	try {
@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
 		const claims = await prisma.claim.findMany({
 			where: { active: true, center: { not: null } },
 			select: { id: true, center: true, finished: true, size: true, name: true, buildings: true },
-		});
+		})
 
 		const geojson = {
 			type: 'FeatureCollection',
@@ -23,11 +23,11 @@ export async function GET(request: NextRequest) {
 					buildings: claim.buildings,
 				},
 			})),
-		};
+		}
 
-		return NextResponse.json(geojson);
+		return NextResponse.json(geojson)
 	} catch (error) {
-		console.error('Failed to fetch claims:', error);
-		return NextResponse.json({ error: 'Failed to fetch claims data' }, { status: 500 });
+		console.error('Failed to fetch claims:', error)
+		return NextResponse.json({ error: 'Failed to fetch claims data' }, { status: 500 })
 	}
 }

@@ -1,17 +1,17 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 
-import showdown from 'showdown';
-import Core from '../Core.js';
+import showdown from 'showdown'
+import Core from '../Core.js'
 
 class BlogController {
-	private core: Core;
-	private outlineUrl: string;
-	private outlineKey: string;
+	private core: Core
+	private outlineUrl: string
+	private outlineKey: string
 
 	constructor(core: Core) {
-		this.core = core;
-		this.outlineUrl = process.env.OUTLINE_URL;
-		this.outlineKey = process.env.OUTLINE_KEY;
+		this.core = core
+		this.outlineUrl = process.env.OUTLINE_URL
+		this.outlineKey = process.env.OUTLINE_KEY
 	}
 
 	public async getBlogPosts(_req: Request, res: Response) {
@@ -31,18 +31,18 @@ class BlogController {
 					},
 					...(await this.parseBlogContent(post.text, true)),
 					content: undefined,
-				}));
-				const resolvedData = await Promise.all(promises);
-				return resolvedData;
-			});
+				}))
+				const resolvedData = await Promise.all(promises)
+				return resolvedData
+			})
 
-		data = data.filter((post: any) => post.metadata?.unpublished !== 'true');
+		data = data.filter((post: any) => post.metadata?.unpublished !== 'true')
 
-		res.send(data);
+		res.send(data)
 	}
 
 	public async getBlogPost(req: Request, res: Response) {
-		let postId = req.params.id;
+		let postId = req.params.id
 
 		// if (req.query.slug) {
 		// 	postId = this.postCache[req.params.id as string];
@@ -61,7 +61,7 @@ class BlogController {
 			await this.makeOutlineRequest('documents.info', {
 				id: postId,
 			})
-		).data;
+		).data
 
 		res.send({
 			title: post.title,
@@ -74,7 +74,7 @@ class BlogController {
 			},
 			...(await this.parseBlogContent(post.text)),
 			text: post.text,
-		});
+		})
 	}
 
 	/**
@@ -97,10 +97,10 @@ class BlogController {
 				Authorization: `Bearer ${this.outlineKey}`,
 			},
 			body: JSON.stringify(body),
-		});
+		})
 
-		return opts?.dontParseJson ? (response as unknown as T) : await response.json();
-	};
+		return opts?.dontParseJson ? (response as unknown as T) : await response.json()
+	}
 
 	/**
 	 * Parses the raw Markdown content of a blog post to html and valid images
@@ -112,10 +112,10 @@ class BlogController {
 		content: string,
 		onlyThumbnail?: boolean,
 	): Promise<{
-		content: string;
-		thumbnail: string | undefined;
-		metadata: showdown.Metadata | string;
-		imageStore: any;
+		content: string
+		thumbnail: string | undefined
+		metadata: showdown.Metadata | string
+		imageStore: any
 	}> {
 		const converter = new showdown.Converter({
 			parseImgDimensions: true,
@@ -130,37 +130,37 @@ class BlogController {
 			requireSpaceBeforeHeadingText: true,
 			tasklists: true,
 			underline: true,
-		});
-		const regex = /!\[.*?\]\(\/api\/attachments\.redirect\?id=.*?(\s+"full-width")?\)/g;
+		})
+		const regex = /!\[.*?\]\(\/api\/attachments\.redirect\?id=.*?(\s+"full-width")?\)/g
 
-		let thumbnail: string | undefined = undefined;
-		const imageStore: { [original: string]: string } = {};
+		let thumbnail: string | undefined = undefined
+		const imageStore: { [original: string]: string } = {}
 
 		let parsedContent = content.replace(regex, (match, p1) => {
-			const imageUrl = match.match(/\/api\/attachments\.redirect\?id=.*?(?=\))/)[0];
+			const imageUrl = match.match(/\/api\/attachments\.redirect\?id=.*?(?=\))/)[0]
 			if (p1 && !thumbnail) {
-				thumbnail = `${this.outlineUrl}${imageUrl.split(' ')[0]}`;
-				imageStore[thumbnail] = '';
+				thumbnail = `${this.outlineUrl}${imageUrl.split(' ')[0]}`
+				imageStore[thumbnail] = ''
 
-				return '';
+				return ''
 			} else {
 				if (!onlyThumbnail) {
-					imageStore[`${this.outlineUrl}${imageUrl}`] = '';
+					imageStore[`${this.outlineUrl}${imageUrl}`] = ''
 				}
 
-				return `![image](${this.outlineUrl}${imageUrl})`;
+				return `![image](${this.outlineUrl}${imageUrl})`
 			}
-		});
+		})
 
 		for (const originalUrl in imageStore) {
 			const response = await this.makeOutlineRequest<any>(
 				'attachments.redirect',
 				{ id: originalUrl.split('=')[1].split(' ')[0] },
 				{ dontParseJson: true },
-			);
+			)
 
-			imageStore[originalUrl] = response.url.split('?')[0];
-			parsedContent = parsedContent.replace(originalUrl, response.url.split('?')[0]);
+			imageStore[originalUrl] = response.url.split('?')[0]
+			parsedContent = parsedContent.replace(originalUrl, response.url.split('?')[0])
 		}
 
 		// parsedContent = parsedContent.replace(/\\/g, '');
@@ -170,7 +170,7 @@ class BlogController {
 			thumbnail: imageStore[thumbnail ?? ''],
 			metadata: converter.getMetadata(),
 			imageStore,
-		};
+		}
 	}
 }
-export default BlogController;
+export default BlogController

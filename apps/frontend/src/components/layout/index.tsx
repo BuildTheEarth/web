@@ -1,11 +1,11 @@
-'use server';
+'use server'
 
-import { Box } from '@mantine/core';
-import Footer from './footer';
-import Header from './header';
+import { Box } from '@mantine/core'
+import Footer from './footer'
+import Header from './header'
 
 export interface LayoutProps {
-	children: React.ReactNode;
+	children: React.ReactNode
 }
 
 /**
@@ -28,5 +28,5 @@ export default async function AppLayout(props: LayoutProps) {
 			<Box style={{ flex: 1, display: 'flex', flexDirection: 'column', width: '100%' }}>{props.children}</Box>
 			<Footer />
 		</Box>
-	);
+	)
 }

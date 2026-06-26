@@ -1,7 +1,7 @@
-'use server';
+'use server'
 
-import { Box, Container } from '@mantine/core';
-import PageHead from './PageHead';
+import { Box, Container } from '@mantine/core'
+import PageHead from './PageHead'
 
 /**
  * Root wrapper of Pages
@@ -13,14 +13,14 @@ export default async function Wrapper({
 	style,
 	head,
 }: {
-	children: React.ReactNode;
-	offsetHeader?: boolean;
-	style?: React.CSSProperties;
+	children: React.ReactNode
+	offsetHeader?: boolean
+	style?: React.CSSProperties
 	head?: {
-		title: string;
-		src: string;
-	};
-	padded?: boolean;
+		title: string
+		src: string
+	}
+	padded?: boolean
 }) {
 	return (
 		<Box
@@ -53,5 +53,5 @@ export default async function Wrapper({
 				children
 			)}
 		</Box>
-	);
+	)
 }

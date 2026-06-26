@@ -1,19 +1,19 @@
-import { ApplicationStatus } from '@prisma/client';
+import { ApplicationStatus } from '@prisma/client'
 
 export function parseApplicationStatus(status: string, isTrial?: boolean): ApplicationStatus {
 	switch (status.toLowerCase()) {
 		case 'send':
-			return ApplicationStatus.SEND;
+			return ApplicationStatus.SEND
 		case 'reviewing':
-			return ApplicationStatus.REVIEWING;
+			return ApplicationStatus.REVIEWING
 		case 'accepted':
-			if (isTrial) return ApplicationStatus.TRIAL;
-			return ApplicationStatus.ACCEPTED;
+			if (isTrial) return ApplicationStatus.TRIAL
+			return ApplicationStatus.ACCEPTED
 		case 'declined':
-			return ApplicationStatus.DECLINED;
+			return ApplicationStatus.DECLINED
 		case 'trial':
-			return ApplicationStatus.TRIAL;
+			return ApplicationStatus.TRIAL
 		default:
-			return ApplicationStatus.SEND;
+			return ApplicationStatus.SEND
 	}
 }

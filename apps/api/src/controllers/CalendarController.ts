@@ -1,24 +1,24 @@
-import { Request, Response } from 'express';
+import { Request, Response } from 'express'
 
-import { validationResult } from 'express-validator';
-import Core from '../Core.js';
-import { ERROR_VALIDATION } from '../util/Errors.js';
-import { rerenderFrontend } from '../util/Frontend.js';
+import { validationResult } from 'express-validator'
+import Core from '../Core.js'
+import { ERROR_VALIDATION } from '../util/Errors.js'
+import { rerenderFrontend } from '../util/Frontend.js'
 
 class CalendarController {
-	private core: Core;
+	private core: Core
 
 	constructor(core: Core) {
-		this.core = core;
+		this.core = core
 	}
 
 	public async getCalendarEvents(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 		if (req.query && req.query.page) {
-			let page = parseInt(req.query.page as string);
+			let page = parseInt(req.query.page as string)
 			const events = await this.core.getPrisma().calendarEvent.findMany({
 				skip: page * 10,
 				take: 10,
@@ -27,9 +27,9 @@ class CalendarController {
 						select: { slug: true, name: true, location: true, icon: true },
 					},
 				},
-			});
-			let count = await this.core.getPrisma().calendarEvent.count();
-			res.send({ pages: Math.ceil(count / 10), data: events });
+			})
+			let count = await this.core.getPrisma().calendarEvent.count()
+			res.send({ pages: Math.ceil(count / 10), data: events })
 		} else {
 			const events = await this.core.getPrisma().calendarEvent.findMany({
 				include: {
@@ -37,25 +37,25 @@ class CalendarController {
 						select: { slug: true, name: true, location: true, icon: true },
 					},
 				},
-			});
-			res.send(events);
+			})
+			res.send(events)
 		}
 	}
 
 	public async getCalendarEvent(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		const event = await this.core.getPrisma().calendarEvent.findFirst({ where: { id: req.params.id } });
-		res.send(event);
+		const event = await this.core.getPrisma().calendarEvent.findFirst({ where: { id: req.params.id } })
+		res.send(event)
 	}
 
 	public async addCalendarEvent(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 		const event = await this.core.getPrisma().calendarEvent.create({
 			data: {
@@ -70,11 +70,11 @@ class CalendarController {
 					connect: req.query.slug ? { slug: req.body.buildTeam } : { id: req.body.buildTeam },
 				},
 			},
-		});
+		})
 
-		rerenderFrontend('/calendar', {});
+		rerenderFrontend('/calendar', {})
 
-		res.send(event);
+		res.send(event)
 	}
 
 	// public async editFaqQuestion(req: Request, res: Response) {
@@ -110,4 +110,4 @@ class CalendarController {
 	// }
 }
 
-export default CalendarController;
+export default CalendarController

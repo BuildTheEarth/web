@@ -1,65 +1,65 @@
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 
-import crypto from 'crypto';
-import { getPlaiceholder } from 'plaiceholder';
-import sharp from 'sharp';
-import Core from '../Core.js';
+import crypto from 'crypto'
+import { getPlaiceholder } from 'plaiceholder'
+import sharp from 'sharp'
+import Core from '../Core.js'
 
 class AmazonAWS {
-	private s3Client: S3Client;
-	private core: Core;
+	private s3Client: S3Client
+	private core: Core
 
 	constructor(core: Core) {
-		this.core = core;
+		this.core = core
 		this.s3Client = new S3Client({
 			credentials: this.getCredentials(),
 			region: this.getRegion(),
-		});
-		this.core.getLogger().debug('AWS S3 Client is connected.');
+		})
+		this.core.getLogger().debug('AWS S3 Client is connected.')
 	}
 
 	public getS3Client() {
-		return this.s3Client;
+		return this.s3Client
 	}
 
 	public getCredentials() {
 		return {
 			accessKeyId: process.env.AWS_ACCESS_KEY,
 			secretAccessKey: process.env.AWS_SECRET_KEY,
-		};
+		}
 	}
 
 	public getRegion() {
-		return process.env.AWS_REGION;
+		return process.env.AWS_REGION
 	}
 
 	public getS3Bucket() {
-		return process.env.AWS_BUCKET_NAME;
+		return process.env.AWS_BUCKET_NAME
 	}
 
 	public getS3Folder(_static: boolean, fileKey?: string) {
 		if (_static) {
-			return process.env.AWS_STATIC_FOLDER_NAME + (fileKey ? `/${fileKey}` : '');
+			return process.env.AWS_STATIC_FOLDER_NAME + (fileKey ? `/${fileKey}` : '')
 		}
-		return process.env.AWS_UPLOAD_FOLDER_NAME + (fileKey ? `/${fileKey}` : '');
+		return process.env.AWS_UPLOAD_FOLDER_NAME + (fileKey ? `/${fileKey}` : '')
 	}
 
 	public async uploadFile(file: any, opts?: any) {
-		const fileKey = crypto.randomBytes(32).toString('hex');
+		const fileKey = crypto.randomBytes(32).toString('hex')
 
 		const { data: fileBuffer, info: fileInfo } = await sharp(file.buffer)
 			.ensureAlpha()
 			.resize(1920, 1080, { fit: 'cover' })
 			.raw()
-			.toBuffer({ resolveWithObject: true });
+			.toBuffer({ resolveWithObject: true })
 
 		const command = new PutObjectCommand({
 			Bucket: this.core.getAWS().getS3Bucket(),
 			Key: this.getS3Folder(false, fileKey),
 			Body: file.buffer,
 			ContentType: file.mimetype,
-		});
-		await this.core.getAWS().getS3Client().send(command);
+		})
+		await this.core.getAWS().getS3Client().send(command)
 
 		const upload = await this.core.getPrisma().upload.create({
 			data: {
@@ -70,27 +70,27 @@ class AmazonAWS {
 				// hash: "",
 				...opts,
 			},
-		});
-		return upload;
+		})
+		return upload
 	}
 
 	public async deleteFile(folder: string, fileKey: string) {
-		const upload = await this.core.getPrisma().upload.delete({ where: { id: fileKey } });
+		const upload = await this.core.getPrisma().upload.delete({ where: { id: fileKey } })
 		const command = new DeleteObjectCommand({
 			Bucket: this.getS3Bucket(),
 			Key: this.getS3Folder(folder === 'static', fileKey),
-		});
-		await this.core.getAWS().getS3Client().send(command);
+		})
+		await this.core.getAWS().getS3Client().send(command)
 
-		return upload;
+		return upload
 	}
 
 	public async getFile(folder: string, fileKey: string) {
 		const command = new GetObjectCommand({
 			Bucket: this.getS3Bucket(),
 			Key: this.getS3Folder(folder === 'static', fileKey),
-		});
-		return await this.core.getAWS().getS3Client().send(command);
+		})
+		return await this.core.getAWS().getS3Client().send(command)
 	}
 }
-export default AmazonAWS;
+export default AmazonAWS

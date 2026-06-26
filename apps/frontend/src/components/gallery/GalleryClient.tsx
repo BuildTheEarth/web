@@ -1,58 +1,58 @@
-'use client';
+'use client'
 
-import { QueryPagination } from '@/components/core/Pagination';
-import SmartImage from '@/components/core/SmartImage';
-import { AspectRatio, Avatar, Badge, Box, Button, Card, Grid, GridCol, Group, Stack, Text } from '@mantine/core';
-import * as motion from 'motion/react-client';
-import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { QueryPagination } from '@/components/core/Pagination'
+import SmartImage from '@/components/core/SmartImage'
+import { AspectRatio, Avatar, Badge, Box, Button, Card, Grid, GridCol, Group, Stack, Text } from '@mantine/core'
+import * as motion from 'motion/react-client'
+import Link from 'next/link'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 export type GalleryShowcase = {
-	id: string;
-	title: string;
-	city: string;
-	createdAt: string;
-	imageSrc: string;
-	imageWidth: number | null;
-	imageHeight: number | null;
-	imageHash: string | null;
-	buildTeamName: string | null;
-	buildTeamSlug: string | null;
-	buildTeamIcon: string | null;
-};
+	id: string
+	title: string
+	city: string
+	createdAt: string
+	imageSrc: string
+	imageWidth: number | null
+	imageHeight: number | null
+	imageHash: string | null
+	buildTeamName: string | null
+	buildTeamSlug: string | null
+	buildTeamIcon: string | null
+}
 
 export default function GalleryClient({
 	locale,
 	approvedShowcases,
 	allShowcases,
 }: {
-	locale: string;
-	approvedShowcases: GalleryShowcase[];
-	allShowcases: GalleryShowcase[];
+	locale: string
+	approvedShowcases: GalleryShowcase[]
+	allShowcases: GalleryShowcase[]
 }) {
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const showAll = searchParams.get('all') === '1';
-	const visibleShowcases = showAll ? allShowcases : approvedShowcases;
-	const pageSize = 25;
-	const rawPage = Number(searchParams.get('page') || '1');
-	const currentPage = Number.isFinite(rawPage) && rawPage > 0 ? Math.floor(rawPage) : 1;
-	const pagedShowcases = visibleShowcases.slice((currentPage - 1) * pageSize, currentPage * pageSize);
-	const eagerImageCount = 6;
-	const formatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' });
-	const [firstShowcase, ...remainingShowcases] = pagedShowcases;
+	const pathname = usePathname()
+	const searchParams = useSearchParams()
+	const showAll = searchParams.get('all') === '1'
+	const visibleShowcases = showAll ? allShowcases : approvedShowcases
+	const pageSize = 25
+	const rawPage = Number(searchParams.get('page') || '1')
+	const currentPage = Number.isFinite(rawPage) && rawPage > 0 ? Math.floor(rawPage) : 1
+	const pagedShowcases = visibleShowcases.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+	const eagerImageCount = 6
+	const formatter = new Intl.DateTimeFormat(locale, { dateStyle: 'medium' })
+	const [firstShowcase, ...remainingShowcases] = pagedShowcases
 	const blocks = Array.from({ length: Math.ceil(remainingShowcases.length / 6) }, (_, blockIndex) =>
 		remainingShowcases.slice(blockIndex * 6, blockIndex * 6 + 6),
-	);
+	)
 
-	const params = new URLSearchParams(searchParams.toString());
-	params.delete('page');
+	const params = new URLSearchParams(searchParams.toString())
+	params.delete('page')
 	if (showAll) {
-		params.set('all', '0');
+		params.set('all', '0')
 	} else {
-		params.set('all', '1');
+		params.set('all', '1')
 	}
-	const toggleHref = `${pathname}${params.toString() ? `?${params.toString()}` : ''}`;
+	const toggleHref = `${pathname}${params.toString() ? `?${params.toString()}` : ''}`
 
 	const renderShowcaseCard = (showcase: GalleryShowcase, index: number, sizes: string, fillHeight = false) => (
 		<motion.div
@@ -159,7 +159,7 @@ export default function GalleryClient({
 				</div>
 			</Card>
 		</motion.div>
-	);
+	)
 
 	return (
 		<>
@@ -176,11 +176,11 @@ export default function GalleryClient({
 			)}
 			<Stack gap="lg" visibleFrom="lg">
 				{blocks.map((block, blockIndex) => {
-					const [featured, sideTop, sideBottom, ...rowItems] = block;
-					if (!featured) return null;
+					const [featured, sideTop, sideBottom, ...rowItems] = block
+					if (!featured) return null
 
-					const featuredOnRight = blockIndex % 2 === 1;
-					const blockStart = blockIndex * 6 + 1;
+					const featuredOnRight = blockIndex % 2 === 1
+					const blockStart = blockIndex * 6 + 1
 
 					return (
 						<Box key={`gallery-block-${featured.id}`}>
@@ -237,7 +237,7 @@ export default function GalleryClient({
 								</Grid>
 							)}
 						</Box>
-					);
+					)
 				})}
 			</Stack>
 
@@ -255,5 +255,5 @@ export default function GalleryClient({
 				</Group>
 			)}
 		</>
-	);
+	)
 }

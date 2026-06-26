@@ -1,12 +1,12 @@
-'use client';
-import { useRouter } from '@/i18n/navigation';
-import { Pagination as MPagination, PaginationProps } from '@mantine/core';
-import { useTranslations } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+'use client'
+import { useRouter } from '@/i18n/navigation'
+import { Pagination as MPagination, PaginationProps } from '@mantine/core'
+import { useTranslations } from 'next-intl'
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react'
 
 export default function Pagination() {
-	return MPagination;
+	return MPagination
 }
 
 function QueryPaginationInner({
@@ -18,23 +18,23 @@ function QueryPaginationInner({
 	PaginationProps,
 	'total' | 'value' | 'onChange'
 >) {
-	const t = useTranslations('common.pagination');
+	const t = useTranslations('common.pagination')
 
-	const router = useRouter();
-	const searchParams = useSearchParams();
+	const router = useRouter()
+	const searchParams = useSearchParams()
 
-	const totalPages = Math.ceil(itemCount / pageSize);
-	const currentPage = Number(searchParams.get(paramName)) || 1;
+	const totalPages = Math.ceil(itemCount / pageSize)
+	const currentPage = Number(searchParams.get(paramName)) || 1
 
 	const getHref = (page: number) => {
-		const params = new URLSearchParams(searchParams.toString());
+		const params = new URLSearchParams(searchParams.toString())
 		if (page === 1) {
-			params.delete(paramName);
+			params.delete(paramName)
 		} else {
-			params.set(paramName, String(page));
+			params.set(paramName, String(page))
 		}
-		return `?${params.toString()}`;
-	};
+		return `?${params.toString()}`
+	}
 
 	return (
 		<MPagination
@@ -49,11 +49,11 @@ function QueryPaginationInner({
 				'aria-label': t('page', { page }),
 			})}
 			getControlProps={(control) => {
-				let page: number | undefined;
-				if (control === 'first') page = 1;
-				if (control === 'last') page = totalPages;
-				if (control === 'next') page = Math.min(currentPage + 1, totalPages);
-				if (control === 'previous') page = Math.max(currentPage - 1, 1);
+				let page: number | undefined
+				if (control === 'first') page = 1
+				if (control === 'last') page = totalPages
+				if (control === 'next') page = Math.min(currentPage + 1, totalPages)
+				if (control === 'previous') page = Math.max(currentPage - 1, 1)
 				if (page) {
 					return {
 						component: 'a',
@@ -67,13 +67,13 @@ function QueryPaginationInner({
 									: control === 'next'
 										? t('next')
 										: t('previous'),
-					};
+					}
 				}
-				return {};
+				return {}
 			}}
 			{...props}
 		/>
-	);
+	)
 }
 
 export function QueryPagination(
@@ -86,5 +86,5 @@ export function QueryPagination(
 		<Suspense>
 			<QueryPaginationInner {...props} />
 		</Suspense>
-	);
+	)
 }

@@ -1,29 +1,29 @@
-import { Image as MantineImage } from '@mantine/core';
-import NextImage, { type ImageProps as NextImageProps } from 'next/image';
-import type { CSSProperties } from 'react';
+import { Image as MantineImage } from '@mantine/core'
+import NextImage, { type ImageProps as NextImageProps } from 'next/image'
+import type { CSSProperties } from 'react'
 
-const CDN_HOST = 'cdn.buildtheearth.net';
+const CDN_HOST = 'cdn.buildtheearth.net'
 
 function isCdnUrl(src: NextImageProps['src']): src is string {
 	if (typeof src !== 'string') {
-		return false;
+		return false
 	}
 
 	if (!src.startsWith('http://') && !src.startsWith('https://')) {
-		return false;
+		return false
 	}
 
 	try {
-		return new URL(src).hostname === CDN_HOST;
+		return new URL(src).hostname === CDN_HOST
 	} catch {
-		return false;
+		return false
 	}
 }
 
 export default function SmartImage(props: NextImageProps) {
-	const { src, alt, fill, width, height, style, className, loading } = props;
+	const { src, alt, fill, width, height, style, className, loading } = props
 
-	return <NextImage {...props} unoptimized={isCdnUrl(src)} />;
+	return <NextImage {...props} unoptimized={isCdnUrl(src)} />
 
 	// if (!isCdnUrl(src)) {
 	// 	return <NextImage {...props} />;

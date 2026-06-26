@@ -1,96 +1,83 @@
-'use client';
+'use client'
 
-import { getClaimData } from '@/actions/claimActions';
-import { BuildTeamDisplay } from '@/components/data/BuildTeam';
-import { UserDisplay } from '@/components/data/User';
-import { CustomMapControls } from '@/components/map/CustomMapControls';
-import { Carousel, CarouselSlide } from '@mantine/carousel';
-import {
-	Box,
-	Button,
-	Divider,
-	Drawer,
-	Flex,
-	Group,
-	Image,
-	Stack,
-	Text,
-	ThemeIcon,
-	Title,
-	Tooltip,
-} from '@mantine/core';
-import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react';
-import { useFormatter } from 'next-intl';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre';
+import { getClaimData } from '@/actions/claimActions'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { UserDisplay } from '@/components/data/User'
+import { CustomMapControls } from '@/components/map/CustomMapControls'
+import { Carousel, CarouselSlide } from '@mantine/carousel'
+import { Box, Button, Divider, Drawer, Flex, Group, Image, Stack, Text, ThemeIcon, Title, Tooltip } from '@mantine/core'
+import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react'
+import { useFormatter } from 'next-intl'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre'
 
 type ClaimProperties = {
-	id?: string;
-	name?: string;
-	size?: number;
-	finished?: boolean;
-	buildings?: number;
-};
+	id?: string
+	name?: string
+	size?: number
+	finished?: boolean
+	buildings?: number
+}
 
 export const MapClient = () => {
-	const [claimPoints, setClaimPoints] = useState(null);
-	const [claimPolygons, setClaimPolygons] = useState(null);
-	const [selectedClaim, setSelectedClaim] = useState<string | null>(null);
+	const [claimPoints, setClaimPoints] = useState(null)
+	const [claimPolygons, setClaimPolygons] = useState(null)
+	const [selectedClaim, setSelectedClaim] = useState<string | null>(null)
 	const [layerVisibility, setLayerVisibility] = useState<{
-		heatmap: 'full' | 'partial' | 'hidden';
-		claims: 'full' | 'partial' | 'hidden';
+		heatmap: 'full' | 'partial' | 'hidden'
+		claims: 'full' | 'partial' | 'hidden'
 	}>({
 		heatmap: 'full',
 		claims: 'full',
-	});
+	})
 
 	useEffect(() => {
 		fetch('/api/data/map/claim_points.geojson')
 			.then((resp) => resp.json())
 			.then(setClaimPoints)
-			.catch((err) => console.error('Could not load data', err));
-	}, []);
+			.catch((err) => console.error('Could not load data', err))
+	}, [])
 
 	useEffect(() => {
 		fetch('/api/data/map/claim_polygons.geojson')
 			.then((resp) => resp.json())
 			.then(setClaimPolygons)
-			.catch((err) => console.error('Could not load data', err));
-	}, []);
+			.catch((err) => console.error('Could not load data', err))
+	}, [])
 
 	const toggleLayer = useCallback((layerName: string) => {
 		setLayerVisibility((prev) => {
-			const currentState = prev[layerName as keyof typeof prev];
-			const supportsPartial = layerName === 'claims';
+			const currentState = prev[layerName as keyof typeof prev]
+			const supportsPartial = layerName === 'claims'
 
-			let nextState: 'hidden' | 'partial' | 'full';
+			let nextState: 'hidden' | 'partial' | 'full'
 			if (supportsPartial) {
-				nextState = currentState === 'hidden' ? 'partial' : currentState === 'partial' ? 'full' : 'hidden';
+				nextState = currentState === 'hidden' ? 'partial' : currentState === 'partial' ? 'full' : 'hidden'
 			} else {
-				nextState = currentState === 'hidden' ? 'full' : 'hidden';
+				nextState = currentState === 'hidden' ? 'full' : 'hidden'
 			}
 
 			return {
 				...prev,
 				[layerName]: nextState,
-			};
-		});
-	}, []);
+			}
+		})
+	}, [])
 
-	const claimPointsData = useMemo(() => claimPoints, [claimPoints]);
-	const claimPolygonsData = useMemo(() => claimPolygons, [claimPolygons]);
+	const claimPointsData = useMemo(() => claimPoints, [claimPoints])
+	const claimPolygonsData = useMemo(() => claimPolygons, [claimPolygons])
 
 	const handleClaimClick = useCallback((event: any) => {
-		const feature = event.features?.[0];
-		if (!feature?.properties) return;
+		const feature = event.features?.[0]
+		if (!feature?.properties) return
 
-		const properties = feature.properties as ClaimProperties;
-		setSelectedClaim(String(properties.id ?? feature.id ?? ''));
-	}, []);
+		const properties = feature.properties as ClaimProperties
+		setSelectedClaim(String(properties.id ?? feature.id ?? ''))
+	}, [])
 
 	const handleClaimHover = useCallback((event: any) => {
-		event.target.getCanvas().style.cursor = event.features?.length ? 'pointer' : '';
-	}, []);
+		event.target.getCanvas().style.cursor = event.features?.length ? 'pointer' : ''
+	}, [])
 
 	return (
 		<>
@@ -104,7 +91,7 @@ export const MapClient = () => {
 				onClick={handleClaimClick}
 				onMouseMove={handleClaimHover}
 				onMouseLeave={(event) => {
-					event.target.getCanvas().style.cursor = '';
+					event.target.getCanvas().style.cursor = ''
 				}}
 			>
 				<CustomMapControls
@@ -186,37 +173,37 @@ export const MapClient = () => {
 			</MapGL>
 			<MapClaimDrawer claimId={selectedClaim} closeAction={() => setSelectedClaim(null)} />
 		</>
-	);
-};
+	)
+}
 
 export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | null; closeAction: () => void }) => {
 	// const claim = use(getClaimData(claimId!));
-	const formatter = useFormatter();
-	const [claimData, setClaimData] = useState<Awaited<ReturnType<typeof getClaimData>> | null>(null);
+	const formatter = useFormatter()
+	const [claimData, setClaimData] = useState<Awaited<ReturnType<typeof getClaimData>> | null>(null)
 
 	useEffect(() => {
 		if (claimId) {
 			getClaimData(claimId)
 				.then((data) => {
-					setClaimData(data);
+					setClaimData(data)
 				})
 				.catch((err) => {
-					console.error('Error fetching claim data:', err);
-					setClaimData(null);
-				});
+					console.error('Error fetching claim data:', err)
+					setClaimData(null)
+				})
 		}
-	}, [claimId]);
+	}, [claimId])
 
 	if (!claimId || !claimData) {
-		return null;
+		return null
 	}
 
 	return (
 		<Drawer
 			opened={claimId !== null}
 			onClose={() => {
-				setClaimData(null);
-				closeAction();
+				setClaimData(null)
+				closeAction()
 			}}
 			position="left"
 			title=""
@@ -316,5 +303,5 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 				</Box>
 			</Box>
 		</Drawer>
-	);
-};
+	)
+}

@@ -1,7 +1,7 @@
-import { Job } from 'bullmq';
-import { z } from 'zod';
-import { BuildTeamWebhook, WebhookBuildTeam } from '../../lib/buildteamWebhook';
-import { BaseTask } from '../base.task';
+import { Job } from 'bullmq'
+import { z } from 'zod'
+import { BuildTeamWebhook, WebhookBuildTeam } from '../../lib/buildteamWebhook'
+import { BaseTask } from '../base.task'
 
 enum AuditLogBuildTeamType {
 	APPLICATION = 'APPLICATION',
@@ -15,23 +15,23 @@ const webhookBuildTeamSchema = z.union([
 	z.object({ url: z.string().min(1) }),
 	z.object({ id: z.string().min(1) }),
 	z.object({ slug: z.string().min(1) }),
-]);
+])
 
 const auditLogBtPayloadSchema = z.object({
 	type: z.nativeEnum(AuditLogBuildTeamType),
 	data: z.unknown().optional(),
 	destination: z.array(webhookBuildTeamSchema),
-});
+})
 
-type AuditLogBtPayload = z.infer<typeof auditLogBtPayloadSchema>;
+type AuditLogBtPayload = z.infer<typeof auditLogBtPayloadSchema>
 
 class PartialBuildTeamWebhookFailureError extends Error {
-	readonly failed: WebhookBuildTeam[];
+	readonly failed: WebhookBuildTeam[]
 
 	constructor(failed: WebhookBuildTeam[]) {
-		super(`Failed to send BuildTeam Webhook to ${failed.length} BuildTeam(s)`);
-		this.name = 'PartialBuildTeamWebhookFailureError';
-		this.failed = failed;
+		super(`Failed to send BuildTeam Webhook to ${failed.length} BuildTeam(s)`)
+		this.name = 'PartialBuildTeamWebhookFailureError'
+		this.failed = failed
 	}
 }
 
@@ -40,37 +40,37 @@ class PartialBuildTeamWebhookFailureError extends Error {
  * @summary Send BuildTeam Webhook on relevant events
  */
 export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadSchema> {
-	readonly name = 'BUILDTEAM_WEBHOOK';
-	readonly schema = auditLogBtPayloadSchema;
+	readonly name = 'BUILDTEAM_WEBHOOK'
+	readonly schema = auditLogBtPayloadSchema
 
 	async execute(data: AuditLogBtPayload, job: Job) {
-		const { type, data: content, destination } = data;
+		const { type, data: content, destination } = data
 
 		if (!destination || destination.length === 0) {
-			return;
+			return
 		}
 		if (!Object.values(AuditLogBuildTeamType).includes(type)) {
-			this.logger.warn(`Unknown AuditLogBuildTeamType: ${type}`);
-			return;
+			this.logger.warn(`Unknown AuditLogBuildTeamType: ${type}`)
+			return
 		}
 
-		const failed: WebhookBuildTeam[] = [];
+		const failed: WebhookBuildTeam[] = []
 
 		for (const dest of destination) {
 			try {
-				const { ok, status, error } = await new BuildTeamWebhook().send(dest, type, this.transformData(type, content));
+				const { ok, status, error } = await new BuildTeamWebhook().send(dest, type, this.transformData(type, content))
 				if (!ok) {
-					failed.push(dest);
+					failed.push(dest)
 					if (error) {
 						this.logger.warn(`Failed to send BuildTeam Webhook`, {
 							destination: 'url' in dest ? dest.url : 'id' in dest ? dest.id : 'slug' in dest ? dest.slug : 'unknown',
 							error,
 							status,
-						});
+						})
 					}
 				}
 			} catch (err: any) {
-				failed.push(dest);
+				failed.push(dest)
 			}
 		}
 
@@ -79,14 +79,14 @@ export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadS
 				successCount: destination.length - failed.length,
 				failedCount: failed.length,
 				failed: failed.map((d) => ('url' in d ? d.url : 'id' in d ? d.id : 'slug' in d ? d.slug : 'unknown')),
-			});
+			})
 
 			// Let BullMQ retry with the failed IDs
 			await job.updateData({
 				...data,
 				destination: failed,
-			});
-			throw new PartialBuildTeamWebhookFailureError(failed);
+			})
+			throw new PartialBuildTeamWebhookFailureError(failed)
 		}
 	}
 
@@ -127,7 +127,7 @@ export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadS
 							}
 						: undefined,
 					ApplicationAnswer: data.ApplicationAnswer,
-				};
+				}
 			case AuditLogBuildTeamType.CLAIM_CREATE:
 			case AuditLogBuildTeamType.CLAIM_UPDATE:
 			case AuditLogBuildTeamType.CLAIM_DELETE:
@@ -147,10 +147,10 @@ export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadS
 					city: data.city,
 					osmName: data.osmName,
 					createdAt: data.createdAt,
-				};
+				}
 			default:
 				// DOES NOT STRIP ANY TOKEN, WEBHOOK LINK etc.
-				return data;
+				return data
 		}
 	}
 }

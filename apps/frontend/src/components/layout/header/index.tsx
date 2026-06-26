@@ -1,23 +1,23 @@
-'use server';
+'use server'
 
-import { Button, Container, Group, Text } from '@mantine/core';
+import { Button, Container, Group, Text } from '@mantine/core'
 
-import { Link } from '@/i18n/navigation';
-import classes from '@/styles/layout/Header.module.css';
-import SmartImage from '@/components/core/SmartImage';
-import { IconChevronRight } from '@tabler/icons-react';
-import { getTranslations } from 'next-intl/server';
-import HeaderDrawer from './HeaderDrawer';
-import { headerLinks } from './links';
+import { Link } from '@/i18n/navigation'
+import classes from '@/styles/layout/Header.module.css'
+import SmartImage from '@/components/core/SmartImage'
+import { IconChevronRight } from '@tabler/icons-react'
+import { getTranslations } from 'next-intl/server'
+import HeaderDrawer from './HeaderDrawer'
+import { headerLinks } from './links'
 
 export async function Header() {
-	const t = await getTranslations('common.header');
-	const tLinks = await getTranslations('common.links');
+	const t = await getTranslations('common.header')
+	const tLinks = await getTranslations('common.links')
 	const items = headerLinks.map((link) => (
 		<Link key={link.key} href={link.link} className={classes.link}>
 			{tLinks(link.key)}
 		</Link>
-	));
+	))
 
 	return (
 		<header className={classes.header}>
@@ -65,7 +65,7 @@ export async function Header() {
 				</Group>
 			</Container>
 		</header>
-	);
+	)
 }
 
-export default Header;
+export default Header

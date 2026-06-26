@@ -1,5 +1,5 @@
-import { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import SmartImage from './SmartImage';
+import { StaticImport } from 'next/dist/shared/lib/get-img-props'
+import SmartImage from './SmartImage'
 
 export default function BackgroundImage({
 	src,
@@ -10,13 +10,13 @@ export default function BackgroundImage({
 	fetchPriority,
 	...props
 }: {
-	src: string | StaticImport;
-	loading?: 'eager' | 'lazy' | undefined;
-	priority?: boolean;
-	fetchPriority?: 'high' | 'low' | 'auto' | undefined;
-	children?: any;
-	blurDataURL?: any;
-	[k: string]: any;
+	src: string | StaticImport
+	loading?: 'eager' | 'lazy' | undefined
+	priority?: boolean
+	fetchPriority?: 'high' | 'low' | 'auto' | undefined
+	children?: any
+	blurDataURL?: any
+	[k: string]: any
 }) {
 	return (
 		<>
@@ -41,5 +41,5 @@ export default function BackgroundImage({
 				{children}
 			</div>
 		</>
-	);
+	)
 }

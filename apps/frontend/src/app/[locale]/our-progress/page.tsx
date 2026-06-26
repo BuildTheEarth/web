@@ -1,19 +1,19 @@
-import ProgressCard from '@/components/core/card/ProgressCard';
-import StatCard from '@/components/core/card/StatCard';
-import Wrapper from '@/components/layout/Wrapper';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
-import { Box, Container, Grid, GridCol, SimpleGrid, Text, Title } from '@mantine/core';
-import { IconBuildingSkyscraper, IconMap, IconUsersGroup } from '@tabler/icons-react';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import ProgressCard from '@/components/core/card/ProgressCard'
+import StatCard from '@/components/core/card/StatCard'
+import Wrapper from '@/components/layout/Wrapper'
+import prisma from '@/util/db'
+import { getLanguageAlternates } from '@/util/seo'
+import { Box, Container, Grid, GridCol, SimpleGrid, Text, Title } from '@mantine/core'
+import { IconBuildingSkyscraper, IconMap, IconUsersGroup } from '@tabler/icons-react'
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
+	const locale = (await params).locale
 	const t = (await getTranslations({ locale, namespace: 'our-progress.seo' })) as (
 		key: 'title' | 'description',
-	) => string;
+	) => string
 
 	return {
 		title: t('title'),
@@ -21,25 +21,25 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/our-progress'),
 		},
-	};
+	}
 }
 
-export const dynamic = 'force-static';
-export const revalidate = 7200;
+export const dynamic = 'force-static'
+export const revalidate = 7200
 
 function toPercent(value: number, total: number) {
 	if (!total || total <= 0) {
-		return 0;
+		return 0
 	}
 
-	return Math.max(0, Math.min(100, (value / total) * 100));
+	return Math.max(0, Math.min(100, (value / total) * 100))
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('our-progress');
-	const formatter = new Intl.NumberFormat(locale);
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('our-progress')
+	const formatter = new Intl.NumberFormat(locale)
 
 	const [activeClaims, finishedClaims, buildings, areas, finishedAreas, communityMembers] = await prisma.$transaction([
 		prisma.claim.count({ where: { active: true } }),
@@ -57,26 +57,26 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			where: { active: true, finished: true },
 		}),
 		prisma.user.count({ where: { joinedBuildTeams: { some: {} } } }),
-	]);
+	])
 
-	const trackedBuildings = buildings._sum.buildings || 0;
-	const trackedArea = finishedAreas._sum.size || 0;
-	const claimCompletion = toPercent(finishedClaims, activeClaims);
-	const trackedAreaKm2 = trackedArea / 1_000_000;
-	const earthLandAreaKm2 = 148_940_000;
-	const earthTotalAreaKm2 = 510_100_000;
+	const trackedBuildings = buildings._sum.buildings || 0
+	const trackedArea = finishedAreas._sum.size || 0
+	const claimCompletion = toPercent(finishedClaims, activeClaims)
+	const trackedAreaKm2 = trackedArea / 1_000_000
+	const earthLandAreaKm2 = 148_940_000
+	const earthTotalAreaKm2 = 510_100_000
 
 	// Earth-scale percentages based on tracked claim area.
-	const globalCompletionLand = toPercent(trackedAreaKm2, earthLandAreaKm2);
-	const globalCompletionTotal = toPercent(trackedAreaKm2, earthTotalAreaKm2);
+	const globalCompletionLand = toPercent(trackedAreaKm2, earthLandAreaKm2)
+	const globalCompletionTotal = toPercent(trackedAreaKm2, earthTotalAreaKm2)
 
 	const precisePercent = (value: number) => {
 		if (value >= 1) {
-			return formatter.format(Number(value.toFixed(1)));
+			return formatter.format(Number(value.toFixed(1)))
 		}
 		// For very small values, return toFixed string directly to preserve decimals
-		return value.toFixed(4);
-	};
+		return value.toFixed(4)
+	}
 
 	return (
 		<Wrapper offsetHeader={false} padded={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
@@ -179,5 +179,5 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 				</Grid>
 			</Container>
 		</Wrapper>
-	);
+	)
 }

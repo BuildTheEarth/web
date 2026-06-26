@@ -1,30 +1,30 @@
-import { NextFunction, Request, Response } from 'express';
-import Core, { ExtendedPrismaClient } from '../../../Core.js';
+import { NextFunction, Request, Response } from 'express'
+import Core, { ExtendedPrismaClient } from '../../../Core.js'
 
 const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		if (!req.kauth.grant) {
-			next();
-			return;
+			next()
+			return
 		}
 		let user = await prisma.user.findUnique({
 			where: {
 				ssoId: req.kauth.grant.access_token.content.sub,
 			},
-		});
+		})
 
 		// If there is an user present in the DB -> Not first request
 		if (user) {
-			req.user = user;
+			req.user = user
 			const kcUser = await core.getKeycloakAdmin().getKeycloakAdminClient().users.findOne({
 				id: req.kauth.grant.access_token.content.sub,
-			});
+			})
 
-			req.kcUser = kcUser;
+			req.kcUser = kcUser
 
 			// User has KC IdPs linked
 			if (kcUser.federatedIdentities.length > 0) {
-				const discordIdentity = kcUser.federatedIdentities.find((fi) => fi.identityProvider === 'discord');
+				const discordIdentity = kcUser.federatedIdentities.find((fi) => fi.identityProvider === 'discord')
 
 				// User has discord IdP linked
 				if (discordIdentity) {
@@ -37,8 +37,8 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 							data: {
 								discordId: discordIdentity.userId,
 							},
-						});
-						req.user = user;
+						})
+						req.user = user
 					}
 				}
 			} else {
@@ -50,8 +50,8 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 					data: {
 						discordId: '',
 					},
-				});
-				req.user = user;
+				})
+				req.user = user
 			}
 
 			// TEMPORARY: Set kcUser attributes to user`s minecraft
@@ -68,19 +68,19 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 							},
 							username: kcUser.username,
 						},
-					);
+					)
 				req.kcUser = {
 					...kcUser,
 					attributes: {
 						minecraft: [user.minecraft],
 						minecraftVerified: ['false'],
 					},
-				};
+				}
 			}
 
 			// User hast mc linked
 			if (kcUser.attributes?.minecraft) {
-				const minecraft = kcUser.attributes?.minecraft[0];
+				const minecraft = kcUser.attributes?.minecraft[0]
 				if (minecraft != user.minecraft) {
 					const user = await prisma.user.update({
 						where: {
@@ -89,8 +89,8 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 						data: {
 							minecraft: minecraft,
 						},
-					});
-					req.user = user;
+					})
+					req.user = user
 				}
 			}
 
@@ -103,16 +103,16 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 					data: {
 						username: kcUser.username,
 					},
-				});
-				req.user = user;
+				})
+				req.user = user
 			}
 		} else {
 			// Get KC user
 			const kcUser = await core.getKeycloakAdmin().getKeycloakAdminClient().users.findOne({
 				id: req.kauth.grant.access_token.content.sub,
-			});
+			})
 
-			req.kcUser = kcUser;
+			req.kcUser = kcUser
 
 			// Set kcUser attributes to empty values
 			if (!kcUser.attributes?.minecraft) {
@@ -125,20 +125,20 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 							attributes: { minecraft: '', minecraftVerified: false },
 							username: kcUser.username,
 						},
-					);
+					)
 				req.kcUser = {
 					...kcUser,
 					attributes: { minecraft: [''], minecraftVerified: ['false'] },
-				};
+				}
 			}
 
 			// User has discord IdP linked
-			const discordIdentity = kcUser.federatedIdentities.find((fi) => fi.identityProvider === 'discord');
+			const discordIdentity = kcUser.federatedIdentities.find((fi) => fi.identityProvider === 'discord')
 
 			// !! ONLY TO MIGRATE OLD WEBSITE BUILDERS
 			const oldUser = await prisma.user.findFirst({
 				where: { ssoId: 'o_' + discordIdentity?.userId || '' },
-			});
+			})
 			if (oldUser) {
 				// Update migrated user
 				await prisma.user.update({
@@ -148,8 +148,8 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 					data: {
 						ssoId: req.kauth.grant.access_token.content.sub,
 					},
-				});
-				req.user = oldUser;
+				})
+				req.user = oldUser
 			} else {
 				// Create new user
 				const user = await prisma.user.create({
@@ -157,8 +157,8 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 						ssoId: req.kauth.grant.access_token.content.sub,
 						discordId: discordIdentity ? discordIdentity.userId : undefined,
 					},
-				});
-				req.user = user;
+				})
+				req.user = user
 			}
 
 			// Create default Permission
@@ -173,10 +173,10 @@ const checkNewUser = (prisma: ExtendedPrismaClient, core: Core) => {
 						permissionId: 'account.edit',
 					},
 				],
-			});
+			})
 		}
-		next();
-	};
-};
+		next()
+	}
+}
 
-export default checkNewUser;
+export default checkNewUser

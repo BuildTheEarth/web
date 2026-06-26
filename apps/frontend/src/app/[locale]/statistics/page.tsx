@@ -1,22 +1,20 @@
-import Anchor from '@/components/core/Anchor';
-import Wrapper from '@/components/layout/Wrapper';
-import prisma from '@/util/db';
-import { getLanguageAlternates } from '@/util/seo';
-import { BarChart, PieChart } from '@mantine/charts';
-import { Alert, Badge, Box, Code, Container, Grid, GridCol, Text, Title } from '@mantine/core';
+import Anchor from '@/components/core/Anchor'
+import Wrapper from '@/components/layout/Wrapper'
+import prisma from '@/util/db'
+import { getLanguageAlternates } from '@/util/seo'
+import { BarChart, PieChart } from '@mantine/charts'
+import { Alert, Badge, Box, Code, Container, Grid, GridCol, Text, Title } from '@mantine/core'
 // import { PrismaClient } from '@prisma/client';
-import { Metadata } from 'next';
-import { Locale } from 'next-intl';
-import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server';
+import { Metadata } from 'next'
+import { Locale } from 'next-intl'
+import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 
-export const dynamic = 'force-static';
-export const revalidate = 3600; // 60m
+export const dynamic = 'force-static'
+export const revalidate = 3600 // 60m
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const locale = (await params).locale;
-	const t = (await getTranslations({ locale, namespace: 'statistics.seo' })) as (
-		key: 'title' | 'description',
-	) => string;
+	const locale = (await params).locale
+	const t = (await getTranslations({ locale, namespace: 'statistics.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
@@ -24,19 +22,19 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		alternates: {
 			languages: getLanguageAlternates('/statistics'),
 		},
-	};
+	}
 }
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
-	const locale = (await params).locale;
-	setRequestLocale(locale);
-	const t = await getTranslations('statistics');
-	const formatter = await getFormatter();
+	const locale = (await params).locale
+	setRequestLocale(locale)
+	const t = await getTranslations('statistics')
+	const formatter = await getFormatter()
 	const counts = await prisma.$transaction([
 		prisma.user.count({ where: { joinedBuildTeams: { some: {} } } }),
 		prisma.claim.count({ where: { active: true } }),
 		prisma.claim.aggregate({ _sum: { buildings: true }, where: { active: true, finished: true } }),
-	]);
+	])
 	const claims = await prisma.$transaction([
 		prisma.claim.count({ where: { active: true, finished: true } }),
 		prisma.claim.aggregate({ _sum: { buildings: true }, where: { active: true } }),
@@ -45,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 		prisma.claim.count(),
 		prisma.claim.aggregate({ _sum: { buildings: true } }),
 		prisma.claim.aggregate({ _sum: { size: true } }),
-	]);
+	])
 
 	const leaderboard = await prisma.$transaction([
 		prisma.claim.findMany({
@@ -71,14 +69,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			take: 10,
 			select: { name: true, _count: { select: { claims: true } } },
 		}),
-	]);
+	])
 
 	const buildTeams = await prisma.$transaction([
 		prisma.buildTeam.findMany({
 			orderBy: { members: { _count: 'desc' } },
 			select: { name: true, slug: true, color: true, _count: { select: { members: true } } },
 		}),
-	]);
+	])
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }} padded={false}>
@@ -249,9 +247,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 					<GridCol span={10 / 3} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							const finished = claims[0];
-							const unfinished = counts[1] - claims[0];
-							const total = counts[1];
+							const finished = claims[0]
+							const unfinished = counts[1] - claims[0]
+							const total = counts[1]
 							return (
 								<Box
 									style={{
@@ -314,14 +312,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 					<GridCol span={10 / 3} offset={1} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							const total = claims[1]._sum.buildings || 0;
-							const finished = counts[2]._sum.buildings || 0;
-							const unfinished = total - finished;
+							const total = claims[1]._sum.buildings || 0
+							const finished = counts[2]._sum.buildings || 0
+							const unfinished = total - finished
 							return (
 								<Box
 									style={{
@@ -384,14 +382,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 					<GridCol span={10 / 3} offset={1} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							const total = claims[2]._sum.size || 0;
-							const finished = claims[3]._sum.size || 0;
-							const unfinished = total - finished;
+							const total = claims[2]._sum.size || 0
+							const finished = claims[3]._sum.size || 0
+							const unfinished = total - finished
 							return (
 								<Box
 									style={{
@@ -458,7 +456,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 
@@ -598,12 +596,12 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 					<GridCol span={5.5} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							let data: { [key: string]: number | string }[] = [{ name: '' }];
-							const colors = ['pink', 'violet', 'blue', 'teal', 'orange'];
+							let data: { [key: string]: number | string }[] = [{ name: '' }]
+							const colors = ['pink', 'violet', 'blue', 'teal', 'orange']
 
 							leaderboard[0].forEach((claim) => {
-								data[0][claim.name] = claim.buildings;
-							});
+								data[0][claim.name] = claim.buildings
+							})
 
 							return (
 								<Box
@@ -646,17 +644,17 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 					<GridCol span={5.5} offset={1} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							let data: { [key: string]: number | string }[] = [{ name: '' }];
-							const colors = ['pink', 'violet', 'blue', 'teal', 'orange'];
+							let data: { [key: string]: number | string }[] = [{ name: '' }]
+							const colors = ['pink', 'violet', 'blue', 'teal', 'orange']
 
 							leaderboard[1].forEach((claim) => {
-								data[0][claim.name] = claim.size;
-							});
+								data[0][claim.name] = claim.size
+							})
 
 							return (
 								<Box
@@ -704,18 +702,18 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 
 					<GridCol span={12} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							let data: { [key: string]: number | string }[] = [{ name: '' }];
-							const colors = ['pink', 'violet', 'blue', 'teal', 'lime', 'yellow', 'orange'];
+							let data: { [key: string]: number | string }[] = [{ name: '' }]
+							const colors = ['pink', 'violet', 'blue', 'teal', 'lime', 'yellow', 'orange']
 
 							leaderboard[2].forEach((user) => {
-								data[0][user.username || ''] = user._count.claims;
-							});
+								data[0][user.username || ''] = user._count.claims
+							})
 
 							return (
 								<Box
@@ -760,17 +758,17 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 					<GridCol span={12} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							let data: { [key: string]: number | string }[] = [{ name: '' }];
-							const colors = ['pink', 'violet', 'blue', 'teal', 'lime', 'yellow', 'orange'];
+							let data: { [key: string]: number | string }[] = [{ name: '' }]
+							const colors = ['pink', 'violet', 'blue', 'teal', 'lime', 'yellow', 'orange']
 
 							leaderboard[3].forEach((bt) => {
-								data[0][bt.name || ''] = bt._count.claims;
-							});
+								data[0][bt.name || ''] = bt._count.claims
+							})
 
 							return (
 								<Box
@@ -815,7 +813,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 
@@ -828,12 +826,12 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 					<GridCol span={12} mt="calc(var(--mantine-spacing-md) * 2)">
 						{(() => {
-							let data: { [key: string]: number | string }[] = [{ name: '' }];
-							const colors = ['pink', 'violet', 'blue', 'teal', 'lime', 'yellow', 'orange'];
+							let data: { [key: string]: number | string }[] = [{ name: '' }]
+							const colors = ['pink', 'violet', 'blue', 'teal', 'lime', 'yellow', 'orange']
 
 							buildTeams[0].forEach((bt) => {
-								data[0][bt.name || ''] = bt._count.members;
-							});
+								data[0][bt.name || ''] = bt._count.members
+							})
 
 							return (
 								<Box
@@ -878,11 +876,11 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										</tbody>
 									</table>
 								</Box>
-							);
+							)
 						})()}
 					</GridCol>
 				</Grid>
 			</Container>
 		</Wrapper>
-	);
+	)
 }

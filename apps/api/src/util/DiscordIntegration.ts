@@ -1,24 +1,24 @@
-import { Claim } from '@prisma/client';
-import Core from '../Core.js';
+import { Claim } from '@prisma/client'
+import Core from '../Core.js'
 
 class DiscordIntegration {
-	private webhookUrl: string;
-	private botUrl: string;
-	private botSecret: string;
-	private core: Core;
+	private webhookUrl: string
+	private botUrl: string
+	private botSecret: string
+	private core: Core
 
 	constructor(core: Core, webhookUrl: string, botUrl: string, botSecret: string) {
-		this.core = core;
-		this.webhookUrl = webhookUrl;
-		this.botUrl = botUrl;
-		this.botSecret = botSecret;
+		this.core = core
+		this.webhookUrl = webhookUrl
+		this.botUrl = botUrl
+		this.botSecret = botSecret
 	}
 
 	public getWebhookUrl() {
-		return this.webhookUrl;
+		return this.webhookUrl
 	}
 	public getBotUrl() {
-		return this.botUrl;
+		return this.botUrl
 	}
 
 	public async sendWebhook(props: { embeds?: DiscordWebhookEmbed[]; content?: string; type: string }) {
@@ -26,7 +26,7 @@ class DiscordIntegration {
 			embeds: props.embeds,
 			content: props.content,
 			username: discordWebhookType[props.type].username,
-		});
+		})
 	}
 
 	public async sendRawWebhook(content: any) {
@@ -36,7 +36,7 @@ class DiscordIntegration {
 				'Content-type': 'application/json',
 			},
 			body: JSON.stringify(content),
-		});
+		})
 	}
 
 	public async sendBotMessage(content: any, users: string[], errorCallback?: (error: any) => void) {
@@ -48,12 +48,12 @@ class DiscordIntegration {
 					Authorization: `Bearer ${this.botSecret}`,
 				},
 				body: JSON.stringify({ params: { text: content }, ids: users }),
-			});
-			return true;
+			})
+			return true
 		} catch (e) {
-			this.core.getLogger().error(e + ` (sendBotMessage; ${content.slice(0, 10)})`);
-			errorCallback(e);
-			return false;
+			this.core.getLogger().error(e + ` (sendBotMessage; ${content.slice(0, 10)})`)
+			errorCallback(e)
+			return false
 		}
 	}
 
@@ -66,12 +66,12 @@ class DiscordIntegration {
 					Authorization: `Bearer ${this.botSecret}`,
 				},
 				body: JSON.stringify({ add: isBuilder }),
-			});
-			return true;
+			})
+			return true
 		} catch (e) {
-			this.core.getLogger().error(e + ` (updateBuilderRole; ${user}; ${isBuilder})`);
-			errorCallback(e);
-			return false;
+			this.core.getLogger().error(e + ` (updateBuilderRole; ${user}; ${isBuilder})`)
+			errorCallback(e)
+			return false
 		}
 	}
 
@@ -85,17 +85,17 @@ class DiscordIntegration {
 		})
 			.then((res) => res.json())
 			.catch((e) => {
-				this.core.getLogger().error(e + ` (getBuilderRole; ${user})`);
-				return { error: 'NOT_FOUND' };
-			});
+				this.core.getLogger().error(e + ` (getBuilderRole; ${user})`)
+				return { error: 'NOT_FOUND' }
+			})
 	}
 
 	public async isOnServer(user: string) {
-		const res = await this.getBuilderRole(user);
+		const res = await this.getBuilderRole(user)
 		if (res?.error == 'NOT_FOUND') {
-			return false;
+			return false
 		}
-		return true;
+		return true
 	}
 
 	public async sendClaimUpdate(claim: Claim) {
@@ -124,7 +124,7 @@ class DiscordIntegration {
 				},
 			],
 			username: discordWebhookType.claim.username,
-		});
+		})
 	}
 
 	public async getUserPunishments(user: string) {
@@ -134,7 +134,7 @@ class DiscordIntegration {
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${this.botSecret}`,
 			},
-		}).then((res) => res.json());
+		}).then((res) => res.json())
 	}
 
 	public async getUserRoles(user: string) {
@@ -144,7 +144,7 @@ class DiscordIntegration {
 				'Content-type': 'application/json',
 				Authorization: `Bearer ${this.botSecret}`,
 			},
-		}).then((res) => res.json());
+		}).then((res) => res.json())
 	}
 
 	public async sendApplicationUpdate(application: any) {
@@ -178,7 +178,7 @@ class DiscordIntegration {
 				},
 			],
 			username: discordWebhookType.application.username,
-		});
+		})
 	}
 }
 
@@ -211,31 +211,31 @@ export const discordWebhookType = {
 		username: 'Website - Applications',
 		color: 11419337,
 	},
-};
-
-interface DiscordWebhookEmbed {
-	title?: string;
-	description?: string;
-	timestamp?: string;
-	username?: string;
-	url?: string;
-	color?: number;
-	footer?: {
-		text: string;
-		icon_url?: string;
-		proxy_icon_url?: string;
-	};
-	author?: {
-		name: string;
-		url?: string;
-		icon_url?: string;
-		proxy_icon_url?: string;
-	};
-	fields?: {
-		name: string;
-		value: string;
-		inline?: boolean;
-	}[];
 }
 
-export default DiscordIntegration;
+interface DiscordWebhookEmbed {
+	title?: string
+	description?: string
+	timestamp?: string
+	username?: string
+	url?: string
+	color?: number
+	footer?: {
+		text: string
+		icon_url?: string
+		proxy_icon_url?: string
+	}
+	author?: {
+		name: string
+		url?: string
+		icon_url?: string
+		proxy_icon_url?: string
+	}
+	fields?: {
+		name: string
+		value: string
+		inline?: boolean
+	}[]
+}
+
+export default DiscordIntegration

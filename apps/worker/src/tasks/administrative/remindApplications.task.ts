@@ -1,19 +1,19 @@
-import { ApplicationStatus } from '@repo/db';
-import { Job, Queue } from 'bullmq';
-import { z } from 'zod';
-import { DiscordBotEmojis } from '../../lib/discordBot';
-import { BaseTask } from '../base.task';
+import { ApplicationStatus } from '@repo/db'
+import { Job, Queue } from 'bullmq'
+import { z } from 'zod'
+import { DiscordBotEmojis } from '../../lib/discordBot'
+import { BaseTask } from '../base.task'
 
-const remindApplicationsPayloadSchema = z.unknown();
-type remindApplicationsPayloadSchema = z.infer<typeof remindApplicationsPayloadSchema>;
+const remindApplicationsPayloadSchema = z.unknown()
+type remindApplicationsPayloadSchema = z.infer<typeof remindApplicationsPayloadSchema>
 
 /**
  * This tasks finds all applications that are older than two weeks and havent been reviewed yet and sends a reminder to the BuildTeam staff (team.application.notify) to review them.
  * @summary Remind BuildTeams of pending Applications
  */
 export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPayloadSchema> {
-	readonly name = 'REMIND_APPLICATIONS';
-	readonly schema = remindApplicationsPayloadSchema;
+	readonly name = 'REMIND_APPLICATIONS'
+	readonly schema = remindApplicationsPayloadSchema
 
 	async execute(_data: remindApplicationsPayloadSchema, _job: Job, queue: Queue) {
 		const applications = await this.prisma.application.findMany({
@@ -44,17 +44,17 @@ export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPa
 				user: { select: { discordId: true, minecraft: true } },
 				trial: true,
 			},
-		});
-		const groupedApplications: any = {};
+		})
+		const groupedApplications: any = {}
 
 		for (const application of applications) {
-			const bt = application.buildteam.slug;
+			const bt = application.buildteam.slug
 
 			if (!groupedApplications[bt]) {
-				groupedApplications[bt] = [];
+				groupedApplications[bt] = []
 			}
 
-			groupedApplications[bt].push(application);
+			groupedApplications[bt].push(application)
 		}
 
 		await Promise.all(
@@ -67,13 +67,13 @@ export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPa
 								month: 'numeric',
 								day: 'numeric',
 							})}: <@${app.user.discordId}> (${app.user.minecraft})`,
-					);
+					)
 
 					const discordIds = apps[0].buildteam.UserPermission.map((u) => u.user.discordId).filter(
 						(discordId): discordId is string => typeof discordId === 'string' && discordId.trim().length > 0,
-					);
+					)
 					if (discordIds.length === 0) {
-						return null;
+						return null
 					}
 
 					return queue.add('SEND_DISCORD_DM', {
@@ -86,9 +86,9 @@ export class RemindApplicationsTask extends BaseTask<typeof remindApplicationsPa
 							)}`,
 							footer: `Automatically sent on ${new Date().toISOString().split('T')[0]}`,
 						},
-					});
+					})
 				})
 				.filter((job): job is NonNullable<typeof job> => job !== null),
-		);
+		)
 	}
 }

@@ -1,44 +1,44 @@
-import KcAdminClient from '@keycloak/keycloak-admin-client';
-import Core from '../Core.js';
+import KcAdminClient from '@keycloak/keycloak-admin-client'
+import Core from '../Core.js'
 
 class KeycloakAdmin {
-	private kcAdminClient: KcAdminClient;
-	private core: Core;
-	private readonly maxRetries = 3;
-	private readonly baseRetryDelayMs = 250;
-	private tokenExpiry = 0;
-	private authPromise: Promise<void> | null = null;
+	private kcAdminClient: KcAdminClient
+	private core: Core
+	private readonly maxRetries = 3
+	private readonly baseRetryDelayMs = 250
+	private tokenExpiry = 0
+	private authPromise: Promise<void> | null = null
 
 	constructor(core: Core) {
-		this.core = core;
+		this.core = core
 		this.kcAdminClient = new KcAdminClient({
 			baseUrl: process.env.KEYCLOAK_URL,
 			realmName: process.env.KEYCLOAK_REALM,
-		});
+		})
 
-		this.wrapUsersApiWithRetries();
+		this.wrapUsersApiWithRetries()
 	}
 
 	private createAuthenticatedProxy(target: any): any {
 		return new Proxy(target, {
 			get: (obj, prop) => {
-				const val = Reflect.get(obj, prop);
+				const val = Reflect.get(obj, prop)
 				if (typeof val === 'function') {
 					return async (...args: any[]) => {
-						await this.authKcClient();
-						return val.apply(obj, args);
-					};
+						await this.authKcClient()
+						return val.apply(obj, args)
+					}
 				}
 				if (typeof val === 'object' && val !== null) {
-					return this.createAuthenticatedProxy(val);
+					return this.createAuthenticatedProxy(val)
 				}
-				return val;
+				return val
 			},
-		});
+		})
 	}
 
 	public getKeycloakAdminClient() {
-		return this.createAuthenticatedProxy(this.kcAdminClient);
+		return this.createAuthenticatedProxy(this.kcAdminClient)
 	}
 
 	public async authKcClient() {
@@ -49,69 +49,69 @@ class KeycloakAdmin {
 						grantType: 'client_credentials',
 						clientId: process.env.NEXT_PUBLIC_KEYCLOAK_ID,
 						clientSecret: process.env.KEYCLOAK_SECRET,
-					});
-					this.tokenExpiry = Date.now() + 270 * 1000;
-					this.authPromise = null;
+					})
+					this.tokenExpiry = Date.now() + 270 * 1000
+					this.authPromise = null
 				}).catch((err) => {
-					this.authPromise = null;
-					throw err;
-				});
+					this.authPromise = null
+					throw err
+				})
 			}
-			await this.authPromise;
+			await this.authPromise
 		}
 	}
 
 	private wrapUsersApiWithRetries() {
-		const usersApi = this.kcAdminClient.users as any;
+		const usersApi = this.kcAdminClient.users as any
 
-		const originalFindOne = usersApi.findOne?.bind(usersApi);
+		const originalFindOne = usersApi.findOne?.bind(usersApi)
 		if (originalFindOne) {
 			usersApi.findOne = async (params: any) => {
-				return await this.withNetworkRetry('users.findOne', async () => originalFindOne(params));
-			};
+				return await this.withNetworkRetry('users.findOne', async () => originalFindOne(params))
+			}
 		}
 
-		const originalUpdate = usersApi.update?.bind(usersApi);
+		const originalUpdate = usersApi.update?.bind(usersApi)
 		if (originalUpdate) {
 			usersApi.update = async (params: any, payload: any) => {
-				return await this.withNetworkRetry('users.update', async () => originalUpdate(params, payload));
-			};
+				return await this.withNetworkRetry('users.update', async () => originalUpdate(params, payload))
+			}
 		}
 
-		const originalListSessions = usersApi.listSessions?.bind(usersApi);
+		const originalListSessions = usersApi.listSessions?.bind(usersApi)
 		if (originalListSessions) {
 			usersApi.listSessions = async (params: any) => {
-				return await this.withNetworkRetry('users.listSessions', async () => originalListSessions(params));
-			};
+				return await this.withNetworkRetry('users.listSessions', async () => originalListSessions(params))
+			}
 		}
 	}
 
 	private async withNetworkRetry<T>(operation: string, fn: () => Promise<T>): Promise<T> {
-		let attempt = 0;
+		let attempt = 0
 		while (true) {
 			try {
-				return await fn();
+				return await fn()
 			} catch (error) {
-				attempt++;
+				attempt++
 				if (!this.isRetryableNetworkError(error) || attempt >= this.maxRetries) {
-					throw error;
+					throw error
 				}
 
-				const delay = this.baseRetryDelayMs * Math.pow(2, attempt - 1);
+				const delay = this.baseRetryDelayMs * Math.pow(2, attempt - 1)
 				this.core
 					.getLogger()
 					.warn(
 						`Keycloak ${operation} failed (attempt ${attempt}/${this.maxRetries}) due to network issue. Retrying in ${delay}ms.`,
-					);
-				await this.sleep(delay);
+					)
+				await this.sleep(delay)
 			}
 		}
 	}
 
 	private isRetryableNetworkError(error: unknown): boolean {
-		const candidates = this.collectErrorStrings(error);
+		const candidates = this.collectErrorStrings(error)
 		return candidates.some((value) => {
-			const token = value.toUpperCase();
+			const token = value.toUpperCase()
 			return (
 				token.includes('ENOTFOUND') ||
 				token.includes('EAI_AGAIN') ||
@@ -119,34 +119,34 @@ class KeycloakAdmin {
 				token.includes('ECONNRESET') ||
 				token.includes('ECONNREFUSED') ||
 				token.includes('FETCH FAILED')
-			);
-		});
+			)
+		})
 	}
 
 	private collectErrorStrings(error: unknown): string[] {
-		const values: string[] = [];
-		let current: any = error;
-		let guard = 0;
+		const values: string[] = []
+		let current: any = error
+		let guard = 0
 		while (current && guard < 5) {
 			if (typeof current === 'string') {
-				values.push(current);
+				values.push(current)
 			}
 			if (current?.code) {
-				values.push(String(current.code));
+				values.push(String(current.code))
 			}
 			if (current?.message) {
-				values.push(String(current.message));
+				values.push(String(current.message))
 			}
-			current = current?.cause;
-			guard++;
+			current = current?.cause
+			guard++
 		}
 
-		return values;
+		return values
 	}
 
 	private async sleep(ms: number): Promise<void> {
-		await new Promise((resolve) => setTimeout(resolve, ms));
+		await new Promise((resolve) => setTimeout(resolve, ms))
 	}
 }
 
-export default KeycloakAdmin;
+export default KeycloakAdmin

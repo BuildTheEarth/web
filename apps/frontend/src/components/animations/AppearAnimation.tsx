@@ -1,4 +1,4 @@
-import * as motion from 'motion/react-client';
+import * as motion from 'motion/react-client'
 
 export default function AppearAnimation({
 	children,
@@ -6,12 +6,12 @@ export default function AppearAnimation({
 	delay,
 	duration,
 }: {
-	children: any;
-	component?: keyof typeof motion;
-	delay?: number;
-	duration?: number;
+	children: any
+	component?: keyof typeof motion
+	delay?: number
+	duration?: number
 }) {
-	const Component = motion[component || 'span'] as React.ElementType;
+	const Component = motion[component || 'span'] as React.ElementType
 
 	return (
 		<Component
@@ -29,5 +29,5 @@ export default function AppearAnimation({
 		>
 			{children}
 		</Component>
-	);
+	)
 }

@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Box, GridCol, Text, ThemeIcon } from '@mantine/core';
-import { ReactNode } from 'react';
+import { Box, GridCol, Text, ThemeIcon } from '@mantine/core'
+import { ReactNode } from 'react'
 
 interface StatCardProps {
-	icon: ReactNode;
-	color: string;
-	value: string;
-	label: string;
-	description: string;
-	span?: { base?: number; md?: number };
+	icon: ReactNode
+	color: string
+	value: string
+	label: string
+	description: string
+	span?: { base?: number; md?: number }
 }
 
 export default function StatCard({
@@ -44,5 +44,5 @@ export default function StatCard({
 				</Text>
 			</Box>
 		</GridCol>
-	);
+	)
 }

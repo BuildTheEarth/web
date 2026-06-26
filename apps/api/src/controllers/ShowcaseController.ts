@@ -1,23 +1,23 @@
-import { Request, Response } from 'express';
-import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js';
-import { FrontendRoutesGroups, rerenderFrontend } from '../util/Frontend.js';
+import { Request, Response } from 'express'
+import { ERROR_GENERIC, ERROR_VALIDATION } from '../util/Errors.js'
+import { FrontendRoutesGroups, rerenderFrontend } from '../util/Frontend.js'
 
-import { DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { validationResult } from 'express-validator';
-import Core from '../Core.js';
-import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddleware.js';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3'
+import { validationResult } from 'express-validator'
+import Core from '../Core.js'
+import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddleware.js'
 
 class ShowcaseController {
-	private core: Core;
+	private core: Core
 
 	constructor(core: Core) {
-		this.core = core;
+		this.core = core
 	}
 
 	public async getShowcases(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const showcases = await this.core.getPrisma().showcase.findMany({
@@ -27,14 +27,14 @@ class ShowcaseController {
 			include: {
 				image: true,
 			},
-		});
-		res.send(showcases);
+		})
+		res.send(showcases)
 	}
 
 	public async getAllShowcases(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const showcases = await this.core.getPrisma().showcase.findMany({
@@ -50,14 +50,14 @@ class ShowcaseController {
 					},
 				},
 			},
-		});
-		res.send(showcases);
+		})
+		res.send(showcases)
 	}
 
 	public async getRandomShowcases(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const showcases = await this.core.getPrisma().showcase.findMany({
@@ -78,24 +78,24 @@ class ShowcaseController {
 						approved: req.query.approved === 'true',
 					}
 				: {},
-		});
+		})
 
-		const randomIndexes = [];
+		const randomIndexes = []
 
 		while (randomIndexes.length < parseInt(req.query.limit as string)) {
-			const randomIndex = Math.floor(Math.random() * showcases.length);
+			const randomIndex = Math.floor(Math.random() * showcases.length)
 			if (!randomIndexes.includes(randomIndex)) {
-				randomIndexes.push(randomIndex);
+				randomIndexes.push(randomIndex)
 			}
 		}
 
-		res.send(showcases.filter((s, index) => randomIndexes.includes(index)));
+		res.send(showcases.filter((s, index) => randomIndexes.includes(index)))
 	}
 
 	public async deleteShowcase(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const showcase = await this.core.getPrisma().showcase.findFirst({
@@ -103,44 +103,44 @@ class ShowcaseController {
 			include: {
 				image: true,
 			},
-		});
+		})
 
 		if (!showcase) {
-			ERROR_GENERIC(req, res, 404, 'Showcase does not exist.');
+			ERROR_GENERIC(req, res, 404, 'Showcase does not exist.')
 		}
 
-		const fileKey = showcase.image.name;
+		const fileKey = showcase.image.name
 
-		let delUpload;
+		let delUpload
 		const delShowcase = await this.core.getPrisma().showcase.delete({
 			where: { id: showcase.id },
-		});
+		})
 
 		try {
 			delUpload = await this.core.getPrisma().upload.delete({
 				where: { id: showcase.image.id, claimId: null },
-			});
+			})
 		} catch (e) {
 			delUpload = {
 				message: 'Upload not deleted because it is linked to an claim',
-			};
-			return res.send([delUpload, delShowcase]);
+			}
+			return res.send([delUpload, delShowcase])
 		}
 		const command = new DeleteObjectCommand({
 			Bucket: this.core.getAWS().getS3Bucket(),
 			Key: this.core.getAWS().getS3Folder(false, fileKey),
-		});
-		await this.core.getAWS().getS3Client().send(command);
-		res.send([delUpload, delShowcase]);
+		})
+		await this.core.getAWS().getS3Client().send(command)
+		res.send([delUpload, delShowcase])
 	}
 
 	public async createShowcase(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		const upload = await this.core.getAWS().uploadFile(req.file);
+		const upload = await this.core.getAWS().uploadFile(req.file)
 		const showcase = await this.core.getPrisma().showcase.create({
 			data: {
 				title: req.body.title,
@@ -152,23 +152,23 @@ class ShowcaseController {
 				createdAt: req.body.date,
 			},
 			select: { image: true },
-		});
+		})
 
-		rerenderFrontend(FrontendRoutesGroups.TEAM, { team: req.params.id });
+		rerenderFrontend(FrontendRoutesGroups.TEAM, { team: req.params.id })
 
-		res.send(showcase);
+		res.send(showcase)
 	}
 
 	public async linkShowcase(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		const upload = await this.core.getPrisma().upload.findFirst({ where: { id: req.body.image } });
+		const upload = await this.core.getPrisma().upload.findFirst({ where: { id: req.body.image } })
 
 		if (!upload) {
-			ERROR_GENERIC(req, res, 404, 'Image does not exist.');
+			ERROR_GENERIC(req, res, 404, 'Image does not exist.')
 		}
 
 		const showcase = await this.core.getPrisma().showcase.create({
@@ -182,19 +182,19 @@ class ShowcaseController {
 				createdAt: req.body.date,
 			},
 			select: { image: true },
-		});
+		})
 
-		rerenderFrontend(FrontendRoutesGroups.TEAM, { team: req.params.id });
+		rerenderFrontend(FrontendRoutesGroups.TEAM, { team: req.params.id })
 
-		res.send(showcase);
+		res.send(showcase)
 	}
 
 	public async editShowcase(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
-		const isAdmin = await userHasPermissions(this.core.getPrisma(), req.user.ssoId, ['admin.admin']);
+		const isAdmin = await userHasPermissions(this.core.getPrisma(), req.user.ssoId, ['admin.admin'])
 
 		const showcase = await this.core.getPrisma().showcase.update({
 			where: {
@@ -208,12 +208,12 @@ class ShowcaseController {
 				approved: isAdmin ? req.body.approved : undefined,
 			},
 			select: { image: true },
-		});
+		})
 
-		rerenderFrontend(FrontendRoutesGroups.TEAM, { team: req.params.id });
+		rerenderFrontend(FrontendRoutesGroups.TEAM, { team: req.params.id })
 
-		res.send(showcase);
+		res.send(showcase)
 	}
 }
 
-export default ShowcaseController;
+export default ShowcaseController

@@ -1,31 +1,31 @@
-'use client';
+'use client'
 
-import Anchor from '@/components/core/Anchor';
-import { CustomMapControls } from '@/components/map/CustomMapControls';
-import getCountryName from '@/util/countries';
-import { Text, Title } from '@mantine/core';
-import { openModal } from '@mantine/modals';
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
-import { redirect, useRouter } from 'next/navigation';
-import { useCallback, useMemo } from 'react';
-import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre';
+import Anchor from '@/components/core/Anchor'
+import { CustomMapControls } from '@/components/map/CustomMapControls'
+import getCountryName from '@/util/countries'
+import { Text, Title } from '@mantine/core'
+import { openModal } from '@mantine/modals'
+import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { redirect, useRouter } from 'next/navigation'
+import { useCallback, useMemo } from 'react'
+import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre'
 
 type ClaimProperties = {
-	id?: string;
-	name?: string;
-	size?: number;
-	finished?: boolean;
-	buildings?: number;
-};
+	id?: string
+	name?: string
+	size?: number
+	finished?: boolean
+	buildings?: number
+}
 
 export const MapClient = ({
 	data,
 }: {
-	data: { members: number; location: string; name: string; id: string; ip: string; color: string; slug: string }[];
+	data: { members: number; location: string; name: string; id: string; ip: string; color: string; slug: string }[]
 }) => {
-	const router = useRouter();
-	const t = useTranslations('map.teams');
+	const router = useRouter()
+	const t = useTranslations('map.teams')
 
 	const locations: any = useMemo(
 		() => ({
@@ -38,11 +38,11 @@ export const MapClient = ({
 			},
 		}),
 		[],
-	);
+	)
 
 	data
 		.sort((a, b) => {
-			return a.members - b.members;
+			return a.members - b.members
 		})
 		.forEach((element) =>
 			!element.location.includes('glb') && !element.location.includes('us')
@@ -57,37 +57,37 @@ export const MapClient = ({
 							}),
 					)
 				: null,
-		);
+		)
 
-	const fillColor = ['match', ['get', 'id']];
+	const fillColor = ['match', ['get', 'id']]
 
 	data.forEach((d, i: number) => {
-		const color = d.color;
+		const color = d.color
 		d.location.split(', ').forEach((l: string) => {
 			if (l.length >= 2 && l != 'us' && l != 'glb' && !fillColor.some((c) => c == l.toUpperCase())) {
-				fillColor.push(l.toUpperCase(), color.toUpperCase());
+				fillColor.push(l.toUpperCase(), color.toUpperCase())
 				if (l == 'so' || l == 'so-l') {
-					console.log(l.toUpperCase(), color.toUpperCase());
+					console.log(l.toUpperCase(), color.toUpperCase())
 				}
 			}
-		});
-	});
+		})
+	})
 
-	fillColor.push('US', '#9832c7');
+	fillColor.push('US', '#9832c7')
 
-	fillColor.push('#00000000');
+	fillColor.push('#00000000')
 
 	const handlePloygonClick = useCallback(
 		(event: any) => {
-			const feature = event.features?.[0];
-			if (!feature?.properties) return;
+			const feature = event.features?.[0]
+			if (!feature?.properties) return
 
-			const id = feature.properties.id;
+			const id = feature.properties.id
 
-			const team = locations[id];
+			const team = locations[id]
 
 			if (team?.slug || team?.tid) {
-				router.push(`/teams/${team?.slug || team?.tid}`);
+				router.push(`/teams/${team?.slug || team?.tid}`)
 			} else {
 				if (id.toLowerCase() == 'us') {
 					openModal({
@@ -105,7 +105,7 @@ export const MapClient = ({
 								<ul>
 									{data
 										.sort((a, b) => {
-											return a.members - b.members;
+											return a.members - b.members
 										})
 										.filter((team) => team.location.includes('us'))
 										.map((team) => (
@@ -116,7 +116,7 @@ export const MapClient = ({
 								</ul>
 							</>
 						) as any,
-					});
+					})
 				} else {
 					openModal({
 						centered: true,
@@ -132,16 +132,16 @@ export const MapClient = ({
 								<Text>{t('infoNotice.description')}</Text>
 							</>
 						) as any,
-					});
+					})
 				}
 			}
 		},
 		[locations, router, data, t],
-	);
+	)
 
 	const handlePolygonHover = useCallback((event: any) => {
-		event.target.getCanvas().style.cursor = event.features?.length ? 'pointer' : '';
-	}, []);
+		event.target.getCanvas().style.cursor = event.features?.length ? 'pointer' : ''
+	}, [])
 
 	return (
 		<>
@@ -155,7 +155,7 @@ export const MapClient = ({
 				onClick={handlePloygonClick}
 				onMouseMove={handlePolygonHover}
 				onMouseLeave={(event) => {
-					event.target.getCanvas().style.cursor = '';
+					event.target.getCanvas().style.cursor = ''
 				}}
 			>
 				<CustomMapControls position="top-right" />
@@ -178,5 +178,5 @@ export const MapClient = ({
 				</Source>
 			</MapGL>
 		</>
-	);
-};
+	)
+}

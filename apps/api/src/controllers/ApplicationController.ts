@@ -1,41 +1,41 @@
-import { Application, ApplicationQuestionType, ApplicationStatus } from '@prisma/client';
-import { Request, Response } from 'express';
-import { WebhookType, sendBtWebhook } from '../util/BtWebhooks.js';
-import { ERROR_GENERIC, ERROR_NO_PERMISSION, ERROR_VALIDATION } from '../util/Errors.js';
+import { Application, ApplicationQuestionType, ApplicationStatus } from '@prisma/client'
+import { Request, Response } from 'express'
+import { WebhookType, sendBtWebhook } from '../util/BtWebhooks.js'
+import { ERROR_GENERIC, ERROR_NO_PERMISSION, ERROR_VALIDATION } from '../util/Errors.js'
 
-import { validationResult } from 'express-validator';
-import Core from '../Core.js';
-import { parseApplicationStatus } from '../util/Parser.js';
-import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddleware.js';
+import { validationResult } from 'express-validator'
+import Core from '../Core.js'
+import { parseApplicationStatus } from '../util/Parser.js'
+import { userHasPermissions } from '../web/routes/utils/CheckUserPermissionMiddleware.js'
 
 class ApplicationController {
-	private core: Core;
+	private core: Core
 
 	constructor(core: Core) {
-		this.core = core;
+		this.core = core
 	}
 
 	/**
 	 * Get Applications to a buildteam, may filter by review
 	 */
 	public async getApplications(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		if (!req.user) {
-			return ERROR_NO_PERMISSION(req, res);
+			return ERROR_NO_PERMISSION(req, res)
 		}
 
-		const onlyReview = req.query.review;
+		const onlyReview = req.query.review
 
 		if (req.query && req.query.page) {
-			let page = parseInt(req.query.page as string);
-			let take = parseInt((req.query.take || 10) as string);
-			let sort = req.query.sort as string;
+			let page = parseInt(req.query.page as string)
+			let take = parseInt((req.query.take || 10) as string)
+			let sort = req.query.sort as string
 			if (sort != 'asc' && sort != 'desc') {
-				sort = 'asc';
+				sort = 'asc'
 			}
 			let applications = await this.core.getPrisma().application.findMany({
 				skip: page * take,
@@ -50,14 +50,14 @@ class ApplicationController {
 				orderBy: {
 					createdAt: sort as 'asc' | 'desc',
 				},
-			});
+			})
 			let count = await this.core.getPrisma().application.count({
 				where: {
 					buildteam: req.query.slug ? { slug: req.params.id } : { id: req.params.id },
 					status: onlyReview ? { in: [ApplicationStatus.SEND, ApplicationStatus.REVIEWING] } : undefined,
 				},
-			});
-			res.send({ pages: Math.ceil(count / take), data: applications });
+			})
+			res.send({ pages: Math.ceil(count / take), data: applications })
 		} else {
 			let applications = await this.core.getPrisma().application.findMany({
 				where: {
@@ -67,8 +67,8 @@ class ApplicationController {
 				include: {
 					user: { select: { id: true, username: true } },
 				},
-			});
-			res.send(applications);
+			})
+			res.send(applications)
 		}
 	}
 
@@ -76,13 +76,13 @@ class ApplicationController {
 	 * Get Applications from a User to a buildteam, checks if User gets his ownor has permissions and filters by pending
 	 */
 	public async getUserApplications(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		if (!req.user) {
-			return ERROR_NO_PERMISSION(req, res);
+			return ERROR_NO_PERMISSION(req, res)
 		}
 
 		let applications = await this.core.getPrisma().application.findMany({
@@ -90,24 +90,24 @@ class ApplicationController {
 				userId: req.params.user as string,
 				buildteam: req.query.slug ? { slug: req.params.id } : { id: req.params.id },
 			},
-		});
+		})
 
 		const user = await this.core.getPrisma().user.findUnique({
 			where: {
 				id: req.params.user as string,
 			},
-		});
+		})
 
 		// Remove non-pending applications if filter is present
 		if (req.query.pending) {
 			applications = applications.filter(
 				(a) => a.status == ApplicationStatus.REVIEWING || a.status == ApplicationStatus.SEND,
-			);
+			)
 		}
 
 		// Check if User either gets his own, or has permissions on that buildteam
 		if (user.ssoId == req.kauth.grant.access_token.content.sub) {
-			res.send(applications);
+			res.send(applications)
 		} else if (
 			await userHasPermissions(
 				this.core.getPrisma(),
@@ -116,9 +116,9 @@ class ApplicationController {
 				req.query.id as string,
 			)
 		) {
-			res.send(applications);
+			res.send(applications)
 		} else {
-			ERROR_NO_PERMISSION(req, res);
+			ERROR_NO_PERMISSION(req, res)
 		}
 	}
 
@@ -126,9 +126,9 @@ class ApplicationController {
 	 * Get a single Application, allows expansion to include answers and user information
 	 */
 	public async getApplication(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
 		const application = await this.core.getPrisma().application.findFirst({
@@ -154,7 +154,7 @@ class ApplicationController {
 					select: { id: true, discordId: true, ssoId: true, username: true },
 				},
 			},
-		});
+		})
 
 		if (application) {
 			res.send({
@@ -164,24 +164,24 @@ class ApplicationController {
 					discordName: application?.reviewer?.username,
 				},
 				user: { ...application.user, discordName: application.user?.username },
-			});
+			})
 		} else {
-			ERROR_GENERIC(req, res, 404, 'Application does not exist.');
+			ERROR_GENERIC(req, res, 404, 'Application does not exist.')
 		}
-		return;
+		return
 	}
 
 	/**
 	 * Review an Application
 	 */
 	public async review(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 
-		const { status, reason } = req.body;
-		const reviewer = req.user;
+		const { status, reason } = req.body
+		const reviewer = req.user
 
 		// Set reviewer, time and status
 		const application = await this.core.getPrisma().application.update({
@@ -224,7 +224,7 @@ class ApplicationController {
 					},
 				},
 			},
-		});
+		})
 
 		if (parseApplicationStatus(status) == ApplicationStatus.ACCEPTED) {
 			// Join User to Team
@@ -234,7 +234,7 @@ class ApplicationController {
 					joinedBuildTeams: { connect: { id: application.buildteamId } },
 				},
 				select: { discordId: true },
-			});
+			})
 
 			// Send accept message on discord
 			await this.core
@@ -248,15 +248,15 @@ class ApplicationController {
 					),
 					[user.discordId],
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
+				)
 
 			// Update builder role on discord
-			await this.core.getDiscord().updateBuilderRole(user.discordId, true);
+			await this.core.getDiscord().updateBuilderRole(user.discordId, true)
 		} else if (parseApplicationStatus(status) == ApplicationStatus.TRIAL) {
 			const user = await this.core.getPrisma().user.findFirst({
 				where: { id: application.userId },
 				select: { discordId: true },
-			});
+			})
 
 			// Send trial message on discord
 			await this.core
@@ -265,7 +265,7 @@ class ApplicationController {
 					this.mutateApplicationMessage(application.buildteam.trialMessage, application, user, application.buildteam),
 					[user.discordId],
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
+				)
 		} else {
 			// Remove user from team (-> application was reviewed again)
 			const user = await this.core.getPrisma().user.update({
@@ -279,7 +279,7 @@ class ApplicationController {
 						select: { joinedBuildTeams: true },
 					},
 				},
-			});
+			})
 
 			// Send rejection message on discord
 			await this.core
@@ -293,41 +293,41 @@ class ApplicationController {
 					),
 					[user.discordId],
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
+				)
 
 			// Remove builder role if user isnt in any team
 			if (user._count.joinedBuildTeams < 1) {
-				await this.core.getDiscord().updateBuilderRole(user.discordId, false, (e) => ERROR_GENERIC(req, res, 500, e));
+				await this.core.getDiscord().updateBuilderRole(user.discordId, false, (e) => ERROR_GENERIC(req, res, 500, e))
 			}
 		}
 
 		// Send Webhook to BTE Staff server
-		await this.core.getDiscord().sendApplicationUpdate(application);
+		await this.core.getDiscord().sendApplicationUpdate(application)
 
 		// Send Webhook to BuildTeam
 		if (application.buildteam.webhook) {
-			sendBtWebhook(this.core, application.buildteam.webhook, WebhookType.APPLICATION, application);
+			sendBtWebhook(this.core, application.buildteam.webhook, WebhookType.APPLICATION, application)
 		}
 
-		res.send(application);
+		res.send(application)
 	}
 
 	/**
 	 * Create a new Application for a buildteam
 	 */
 	public async apply(req: Request, res: Response) {
-		const errors = validationResult(req);
+		const errors = validationResult(req)
 		if (!errors.isEmpty()) {
-			return ERROR_VALIDATION(req, res, errors.array());
+			return ERROR_VALIDATION(req, res, errors.array())
 		}
 		if (!req.user) {
-			ERROR_NO_PERMISSION(req, res);
+			ERROR_NO_PERMISSION(req, res)
 		}
 
 		// Checks if User is on the BTE.net discord
 		if (!(await this.core.getDiscord().isOnServer(req.user.discordId))) {
-			ERROR_GENERIC(req, res, 428, 'Please join the BuildTheEarth.net Discord Server');
-			return;
+			ERROR_GENERIC(req, res, 428, 'Please join the BuildTheEarth.net Discord Server')
+			return
 		}
 
 		let buildteam = await this.core.getPrisma().buildTeam.findUnique({
@@ -342,30 +342,30 @@ class ApplicationController {
 				token: false,
 				allowApplications: true,
 			},
-		});
+		})
 
 		if (buildteam) {
 			// Get applications the user already submitted to this team
 			const pastApplications = await this.core.getPrisma().application.findMany({
 				where: { userId: req.user.id, buildteamId: buildteam.id },
-			});
-			const answers = req.body;
-			const trial = req.query.trial ? true : false;
-			const validatedAnswers = [];
+			})
+			const answers = req.body
+			const trial = req.query.trial ? true : false
+			const validatedAnswers = []
 
 			// User is already accepted to the buildteam
 			if (pastApplications.some((a) => a.status == ApplicationStatus.ACCEPTED)) {
-				return ERROR_GENERIC(req, res, 409, 'You are already a builder of this BuildTeam.');
+				return ERROR_GENERIC(req, res, 409, 'You are already a builder of this BuildTeam.')
 			} else if (
 				// User already applied, waiting for review
 				pastApplications.some((a) => a.status == ApplicationStatus.REVIEWING || a.status == ApplicationStatus.SEND)
 			) {
-				return ERROR_GENERIC(req, res, 409, 'You already have an pending application for this BuildTeam.');
+				return ERROR_GENERIC(req, res, 409, 'You already have an pending application for this BuildTeam.')
 			}
 
 			// Check if Buildteam has applications disabled
 			if (!buildteam.allowApplications) {
-				return ERROR_GENERIC(req, res, 403, 'BuildTeam has disabled applications.');
+				return ERROR_GENERIC(req, res, 403, 'BuildTeam has disabled applications.')
 			}
 
 			// Perform Accpet flow if needed
@@ -379,7 +379,7 @@ class ApplicationController {
 						reviewedAt: new Date(),
 						trial: false,
 					},
-				});
+				})
 
 				// Send accept message on discord
 				await this.core
@@ -388,26 +388,26 @@ class ApplicationController {
 						this.mutateApplicationMessage(buildteam.acceptionMessage, application, req.user, buildteam),
 						[req.user.discordId],
 						(e) => ERROR_GENERIC(req, res, 500, e),
-					);
+					)
 			}
 
 			for (const question of buildteam.applicationQuestions) {
 				// Filter by correct questions
 				if (question.trial == trial) {
 					if (answers[question.id]) {
-						let answer = answers[question.id];
-						const type = question.type;
+						let answer = answers[question.id]
+						const type = question.type
 
 						if (typeof answer != 'string') {
 							if (typeof answer == 'number') {
-								answer = answer.toString();
+								answer = answer.toString()
 							} else {
 								try {
-									answer = JSON.stringify(answer);
+									answer = JSON.stringify(answer)
 								} catch (e) {}
 							}
 						}
-						validatedAnswers.push({ id: question.id, answer: answer });
+						validatedAnswers.push({ id: question.id, answer: answer })
 
 						// If Type is minecraft, populate the minecraft name of the user
 						// TODO: verify account
@@ -419,7 +419,7 @@ class ApplicationController {
 										res,
 										400,
 										'Minecraft username is not equal to verified username on profile.',
-									);
+									)
 								}
 							} else {
 								await this.core
@@ -434,18 +434,18 @@ class ApplicationController {
 											},
 											username: req.kcUser.username,
 										},
-									);
+									)
 								req.kcUser = {
 									...req.kcUser,
 									attributes: {
 										minecraft: [answer],
 										minecraftVerified: ['false'],
 									},
-								};
+								}
 							}
 						}
 					} else if (question.required && question.sort >= 0) {
-						return ERROR_GENERIC(req, res, 400, 'Required Questions are missing.');
+						return ERROR_GENERIC(req, res, 400, 'Required Questions are missing.')
 					}
 				}
 			}
@@ -474,7 +474,7 @@ class ApplicationController {
 						reviewer: true,
 						user: true,
 					},
-				});
+				})
 
 				const reviewers = await this.core.getPrisma().userPermission.findMany({
 					where: {
@@ -482,26 +482,26 @@ class ApplicationController {
 						buildTeamId: buildteam.id,
 					},
 					select: { user: { select: { id: true, discordId: true } } },
-				});
+				})
 
 				// Send message to all reviewers
 				await this.core.getDiscord().sendBotMessage(
 					`**${buildteam.name}** \\nNew Application from <@${req.user.discordId}> (${req.user.username}). Review it [here](${process.env.FRONTEND_URL}/teams/${buildteam.slug}/manage/review/${application.id})`,
 					reviewers.map((r) => r.user.discordId),
 					(e) => ERROR_GENERIC(req, res, 500, e),
-				);
+				)
 
 				// Send Webhook to BuildTeam
 				if (application.buildteam.webhook) {
-					sendBtWebhook(this.core, application.buildteam.webhook, WebhookType.APPLICATION_SEND, application);
+					sendBtWebhook(this.core, application.buildteam.webhook, WebhookType.APPLICATION_SEND, application)
 				}
 
-				res.send(application);
+				res.send(application)
 			} else {
-				return ERROR_GENERIC(req, res, 400, 'Questions are missing.');
+				return ERROR_GENERIC(req, res, 400, 'Questions are missing.')
 			}
 		} else {
-			ERROR_GENERIC(req, res, 404, 'BuildTeam does not exist.');
+			ERROR_GENERIC(req, res, 404, 'BuildTeam does not exist.')
 		}
 	}
 
@@ -540,8 +540,8 @@ class ApplicationController {
 					day: 'numeric',
 				}),
 			)
-			.replace('{id}', application.id.toString().split('-')[0]);
+			.replace('{id}', application.id.toString().split('-')[0])
 	}
 }
 
-export default ApplicationController;
+export default ApplicationController

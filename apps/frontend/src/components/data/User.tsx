@@ -1,4 +1,4 @@
-import { Avatar, Group, Text } from '@mantine/core';
+import { Avatar, Group, Text } from '@mantine/core'
 
 export function UserDisplay({ user }: { user: { id: string; username?: string | null; ssoId?: string } }) {
 	return (
@@ -10,5 +10,5 @@ export function UserDisplay({ user }: { user: { id: string; username?: string | 
 				{user.username || user.ssoId!.slice(0, 10)}
 			</Text>
 		</Group>
-	);
+	)
 }

@@ -1,40 +1,40 @@
-import * as session from 'express-session';
-import * as winston from 'winston';
+import * as session from 'express-session'
+import * as winston from 'winston'
 
-import { LIB_LICENSE, LIB_VERSION } from './util/package.js';
-import { applicationReminder, purgeClaims, purgeVerifications } from './util/Prisma.js';
+import { LIB_LICENSE, LIB_VERSION } from './util/package.js'
+import { applicationReminder, purgeClaims, purgeVerifications } from './util/Prisma.js'
 
-import { PrismaPg } from '@prisma/adapter-pg';
-import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@prisma/client'
 
-import Keycloak from 'keycloak-connect';
-import AmazonAWS from './util/AmazonAWS.js';
-import CronHandler from './util/CronHandler.js';
-import DiscordIntegration from './util/DiscordIntegration.js';
-import KeycloakAdmin from './util/KeycloakAdmin.js';
-import Web from './web/Web.js';
+import Keycloak from 'keycloak-connect'
+import AmazonAWS from './util/AmazonAWS.js'
+import CronHandler from './util/CronHandler.js'
+import DiscordIntegration from './util/DiscordIntegration.js'
+import KeycloakAdmin from './util/KeycloakAdmin.js'
+import Web from './web/Web.js'
 
 class Core {
-	web: Web;
-	keycloak: Keycloak.Keycloak;
-	memoryStore: session.MemoryStore;
-	prisma: ExtendedPrismaClient;
-	keycloakAdmin: KeycloakAdmin;
-	logger: winston.Logger;
-	aws: AmazonAWS;
-	discord: DiscordIntegration;
-	cron: CronHandler;
+	web: Web
+	keycloak: Keycloak.Keycloak
+	memoryStore: session.MemoryStore
+	prisma: ExtendedPrismaClient
+	keycloakAdmin: KeycloakAdmin
+	logger: winston.Logger
+	aws: AmazonAWS
+	discord: DiscordIntegration
+	cron: CronHandler
 
 	constructor() {
-		this.setUpLogger();
-		this.memoryStore = new session.MemoryStore();
-		this.aws = new AmazonAWS(this);
+		this.setUpLogger()
+		this.memoryStore = new session.MemoryStore()
+		this.aws = new AmazonAWS(this)
 		this.discord = new DiscordIntegration(
 			this,
 			process.env.DISCORD_WEBHOOK_URL,
 			process.env.DISCORD_BOT_URL,
 			process.env.DISCORD_BOT_SECRET,
-		);
+		)
 		this.keycloak = new Keycloak(
 			{
 				store: this.memoryStore,
@@ -47,14 +47,14 @@ class Core {
 				resource: process.env.KEYCLOAK_CLIENTID,
 				'confidential-port': 0,
 			},
-		);
-		this.keycloakAdmin = new KeycloakAdmin(this);
+		)
+		this.keycloakAdmin = new KeycloakAdmin(this)
 		this.keycloakAdmin.authKcClient().then(() => {
-			this.getLogger().debug('Keycloak Admin is initialized.');
-			this.prisma = createPrismaClient();
+			this.getLogger().debug('Keycloak Admin is initialized.')
+			this.prisma = createPrismaClient()
 			// this.prisma.$use(middlewareUploadSrc);
-			this.web = new Web(this);
-			this.web.startWebserver();
+			this.web = new Web(this)
+			this.web.startWebserver()
 			this.cron = new CronHandler(this, [
 				{
 					id: 'purge_claims',
@@ -80,25 +80,25 @@ class Core {
 						onTick: () => purgeVerifications(this),
 					},
 				},
-			]);
-		});
+			])
+		})
 	}
 
-	public getLogger = (): winston.Logger => this.logger;
+	public getLogger = (): winston.Logger => this.logger
 
-	public getKeycloak = (): Keycloak.Keycloak => this.keycloak;
+	public getKeycloak = (): Keycloak.Keycloak => this.keycloak
 
-	public getPrisma = (): ExtendedPrismaClient => this.prisma;
+	public getPrisma = (): ExtendedPrismaClient => this.prisma
 
-	public getKeycloakAdmin = (): KeycloakAdmin => this.keycloakAdmin;
+	public getKeycloakAdmin = (): KeycloakAdmin => this.keycloakAdmin
 
-	public getAWS = (): AmazonAWS => this.aws;
+	public getAWS = (): AmazonAWS => this.aws
 
-	public getDiscord = (): DiscordIntegration => this.discord;
+	public getDiscord = (): DiscordIntegration => this.discord
 
-	public getCron = (): CronHandler => this.cron;
+	public getCron = (): CronHandler => this.cron
 
-	public getWeb = (): Web => this.web;
+	public getWeb = (): Web => this.web
 
 	private setUpLogger(): void {
 		const logger = winston.createLogger({
@@ -111,18 +111,18 @@ class Core {
 				}),
 				new winston.transports.File({ filename: 'logs/combined.log' }),
 			],
-		});
+		})
 
 		if (process.env.NODE_ENV !== 'production') {
 			const consoleFormat = winston.format.printf(({ level, message, timestamp }) => {
-				return `${timestamp} | ${level} » ${message}`;
-			});
+				return `${timestamp} | ${level} » ${message}`
+			})
 
 			logger.add(
 				new winston.transports.Console({
 					format: winston.format.combine(winston.format.colorize(), winston.format.simple(), consoleFormat),
 				}),
-			);
+			)
 		}
 		logger.info(
 			'Initializing BuildTheEarth.net API' +
@@ -143,18 +143,18 @@ class Core {
 				'[38;5;254m@[38;5;254m&[38;5;254m&[38;5;254m&[38;5;017m.[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;004m,[38;5;233m [38;5;023m,[38;5;023m,[38;5;023m,[38;5;023m,[38;5;017m.[38;5;017m.[38;5;017m.[38;5;254m&[38;5;254m&[38;5;254m&\n' +
 				'[38;5;254m@[38;5;254m&[38;5;254m&[38;5;254m&[38;5;254m&[38;5;254m&[38;5;254m&[38;5;017m.[38;5;060m/[38;5;060m/[38;5;060m/[38;5;060m/[38;5;235m.[38;5;235m.[38;5;004m,[38;5;004m,[38;5;017m.[38;5;017m.[38;5;233m [38;5;023m,[38;5;023m,[38;5;023m,[38;5;017m.[38;5;017m.[38;5;254m&[38;5;254m&[38;5;254m&[38;5;254m&[38;5;254m&[38;5;254m&\n' +
 				'[0m',
-		);
+		)
 
-		this.logger = logger;
+		this.logger = logger
 	}
 }
 
-export default Core;
+export default Core
 
 function createPrismaClient() {
-	const connectionString = process.env.DATABASE_URL;
+	const connectionString = process.env.DATABASE_URL
 	if (!connectionString) {
-		throw new Error('DATABASE_URL is not set');
+		throw new Error('DATABASE_URL is not set')
 	}
 
 	return new PrismaClient({
@@ -166,12 +166,12 @@ function createPrismaClient() {
 				src: {
 					needs: { name: true },
 					compute: (upload) => {
-						return `https://cdn.buildtheearth.net/uploads/${upload.name}`;
+						return `https://cdn.buildtheearth.net/uploads/${upload.name}`
 					},
 				},
 			},
 		},
-	});
+	})
 }
 
-export type ExtendedPrismaClient = ReturnType<typeof createPrismaClient>;
+export type ExtendedPrismaClient = ReturnType<typeof createPrismaClient>

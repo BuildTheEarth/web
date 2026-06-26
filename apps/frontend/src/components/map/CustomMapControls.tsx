@@ -1,5 +1,5 @@
-'use client';
-import { ActionIcon, Stack, Tooltip } from '@mantine/core';
+'use client'
+import { ActionIcon, Stack, Tooltip } from '@mantine/core'
 import {
 	IconCurrentLocation,
 	IconEye,
@@ -10,20 +10,20 @@ import {
 	IconPlus,
 	IconPolygon,
 	IconRadar,
-} from '@tabler/icons-react';
-import { useEffect, useState } from 'react';
-import { Marker, useMap } from 'react-map-gl/maplibre';
-import classes from './CustomMapControls.module.css';
+} from '@tabler/icons-react'
+import { useEffect, useState } from 'react'
+import { Marker, useMap } from 'react-map-gl/maplibre'
+import classes from './CustomMapControls.module.css'
 
 interface CustomMapControlsProps {
-	position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
-	showGeolocate?: boolean;
-	showZoom?: boolean;
-	showFullscreen?: boolean;
-	layerVisibility?: { [layerName: string]: 'hidden' | 'partial' | 'full' };
-	layers?: { [layerName: string]: React.ElementType };
-	partialLayers?: string[];
-	onToggleLayer?: (layerName: string) => void;
+	position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+	showGeolocate?: boolean
+	showZoom?: boolean
+	showFullscreen?: boolean
+	layerVisibility?: { [layerName: string]: 'hidden' | 'partial' | 'full' }
+	layers?: { [layerName: string]: React.ElementType }
+	partialLayers?: string[]
+	onToggleLayer?: (layerName: string) => void
 }
 
 export const CustomMapControls = ({
@@ -36,53 +36,53 @@ export const CustomMapControls = ({
 	partialLayers = [],
 	onToggleLayer,
 }: CustomMapControlsProps) => {
-	const { current: map } = useMap();
-	const [isFullscreen, setIsFullscreen] = useState(false);
-	const [userLocation, setUserLocation] = useState<{ longitude: number; latitude: number } | null>(null);
+	const { current: map } = useMap()
+	const [isFullscreen, setIsFullscreen] = useState(false)
+	const [userLocation, setUserLocation] = useState<{ longitude: number; latitude: number } | null>(null)
 
 	useEffect(() => {
 		const handleFullscreenChange = () => {
-			setIsFullscreen(!!document.fullscreenElement);
-		};
+			setIsFullscreen(!!document.fullscreenElement)
+		}
 
-		document.addEventListener('fullscreenchange', handleFullscreenChange);
-		return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-	}, []);
+		document.addEventListener('fullscreenchange', handleFullscreenChange)
+		return () => document.removeEventListener('fullscreenchange', handleFullscreenChange)
+	}, [])
 
 	const handleZoomIn = () => {
-		if (map) map.zoomIn();
-	};
+		if (map) map.zoomIn()
+	}
 
 	const handleZoomOut = () => {
-		if (map) map.zoomOut();
-	};
+		if (map) map.zoomOut()
+	}
 
 	const handleGeolocate = () => {
-		if (!map || !navigator.geolocation) return;
+		if (!map || !navigator.geolocation) return
 
 		navigator.geolocation.getCurrentPosition(
 			(position) => {
-				const coords = { longitude: position.coords.longitude, latitude: position.coords.latitude };
-				map.flyTo({ center: [coords.longitude, coords.latitude], zoom: 14, duration: 2000 });
-				setUserLocation(coords);
+				const coords = { longitude: position.coords.longitude, latitude: position.coords.latitude }
+				map.flyTo({ center: [coords.longitude, coords.latitude], zoom: 14, duration: 2000 })
+				setUserLocation(coords)
 			},
 			(error) => {
-				console.error('Geolocation error:', error);
+				console.error('Geolocation error:', error)
 			},
 			{ enableHighAccuracy: true },
-		);
-	};
+		)
+	}
 
 	const handleFullscreen = () => {
-		const container = map?.getContainer().parentElement;
-		if (!container) return;
+		const container = map?.getContainer().parentElement
+		if (!container) return
 
 		if (!document.fullscreenElement) {
-			container.requestFullscreen();
+			container.requestFullscreen()
 		} else {
-			document.exitFullscreen();
+			document.exitFullscreen()
 		}
-	};
+	}
 
 	return (
 		<>
@@ -96,25 +96,25 @@ export const CustomMapControls = ({
 					{layerVisibility && onToggleLayer && (
 						<div className={classes.controlGroup}>
 							{Object.keys(layerVisibility).map((layerName) => {
-								const Icon = layers[layerName];
-								const visibility = layerVisibility[layerName];
-								const supportsPartial = partialLayers.includes(layerName);
+								const Icon = layers[layerName]
+								const visibility = layerVisibility[layerName]
+								const supportsPartial = partialLayers.includes(layerName)
 
 								const getVariant = () => {
-									if (visibility === 'full') return 'filled';
-									if (visibility === 'partial' && supportsPartial) return 'light';
-									return 'default';
-								};
+									if (visibility === 'full') return 'filled'
+									if (visibility === 'partial' && supportsPartial) return 'light'
+									return 'default'
+								}
 
 								const getTooltipLabel = () => {
 									if (supportsPartial) {
-										if (visibility === 'full') return `Hide ${layerName}`;
-										if (visibility === 'partial') return `Show ${layerName} (full)`;
-										return `Show ${layerName} (partial)`;
+										if (visibility === 'full') return `Hide ${layerName}`
+										if (visibility === 'partial') return `Show ${layerName} (full)`
+										return `Show ${layerName} (partial)`
 									} else {
-										return visibility === 'full' ? `Hide ${layerName}` : `Show ${layerName}`;
+										return visibility === 'full' ? `Hide ${layerName}` : `Show ${layerName}`
 									}
-								};
+								}
 
 								return (
 									<Tooltip label={getTooltipLabel()} position="left" key={'layer-toggle-' + layerName}>
@@ -129,7 +129,7 @@ export const CustomMapControls = ({
 											<Icon size={18} stroke={2} />
 										</ActionIcon>
 									</Tooltip>
-								);
+								)
 							})}
 						</div>
 					)}
@@ -201,5 +201,5 @@ export const CustomMapControls = ({
 				</Stack>
 			</div>
 		</>
-	);
-};
+	)
+}
