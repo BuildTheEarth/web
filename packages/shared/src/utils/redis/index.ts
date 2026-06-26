@@ -1,5 +1,6 @@
 import { RedisEventQueue } from './redisEventQueue'
 export * from './redisEventQueue'
+export * from './redisEvents'
 
 /*
 

@@ -36,8 +36,8 @@ export const defaultRedisConfig = {
  * Do not instantiate this class directly; use the provided singleton instance instead.
  */
 export class RedisEventQueue {
-	private redisClient: IORedis
-	private queue: Queue
+	private redisClient: IORedis | null = null
+	private queue: Queue | null = null
 	private config: typeof defaultRedisConfig
 
 	/**
@@ -46,6 +46,10 @@ export class RedisEventQueue {
 	 */
 	constructor(config?: typeof defaultRedisConfig) {
 		this.config = config || defaultRedisConfig
+	}
+
+	private init() {
+		if (this.queue && this.redisClient) return
 
 		if (!this.config.url || this.config.url.trim() === '') {
 			throw new Error('Redis URL is not defined. Please set the REDIS_URL environment variable.')
@@ -68,7 +72,8 @@ export class RedisEventQueue {
 	 * @returns the BullMQ queue instance
 	 */
 	getQueue() {
-		return this.queue
+		this.init()
+		return this.queue!
 	}
 
 	/**
@@ -76,7 +81,8 @@ export class RedisEventQueue {
 	 * @returns the IORedis client instance for direct Redis operations
 	 */
 	getRedis() {
-		return this.redisClient
+		this.init()
+		return this.redisClient!
 	}
 
 	/**
@@ -87,7 +93,8 @@ export class RedisEventQueue {
 	 * @returns the newly created job
 	 */
 	async addJob(eventName: AnyRedisEvent, data?: any, options?: any) {
-		return await this.queue.add(eventName, data || {}, {
+		this.init()
+		return await this.queue!.add(eventName, data || {}, {
 			...this.config.queueConfig.retryOptions,
 			...this.config.queueConfig.removalOptions,
 			...options,
@@ -95,9 +102,10 @@ export class RedisEventQueue {
 	}
 
 	async getJobs(types?: JobType[], hideRecurring?: boolean): Promise<(Job & { state: JobType })[]> {
+		this.init()
 		const jobs: Record<string, (any & { state: string })[]> = {}
 		for (const type of types || ['waiting', 'active', 'completed', 'failed', 'delayed']) {
-			const jobsOfType = await this.queue.getJobs([type])
+			const jobsOfType = await this.queue!.getJobs([type])
 			jobs[type] = jobsOfType.map((job) => ({ ...job, state: type }))
 
 			if (hideRecurring) {
@@ -108,13 +116,15 @@ export class RedisEventQueue {
 	}
 
 	async getJobSchedulers() {
-		return await this.queue.getJobSchedulers()
+		this.init()
+		return await this.queue!.getJobSchedulers()
 	}
 
 	async clearQueue() {
-		await this.queue.drain()
-		await this.queue.clean(0, 0, 'completed')
-		await this.queue.clean(0, 0, 'failed')
+		this.init()
+		await this.queue!.drain()
+		await this.queue!.clean(0, 0, 'completed')
+		await this.queue!.clean(0, 0, 'failed')
 	}
 
 	/**
@@ -122,7 +132,7 @@ export class RedisEventQueue {
 	 * Call this method when you want to gracefully shut down the Redis connection and queue.
 	 */
 	async close() {
-		await this.queue.close()
-		await this.redisClient.quit()
+		if (this.queue) await this.queue.close()
+		if (this.redisClient) await this.redisClient.quit()
 	}
 }
