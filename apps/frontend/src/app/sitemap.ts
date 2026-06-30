@@ -21,6 +21,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 		'/blog/[slug]',
 		'/our-progress',
 		'/map',
+		'/our-progress',
+		'/contributors',
 	]
 
 	const buildTeams = await prisma.buildTeam.findMany({
