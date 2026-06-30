@@ -18,7 +18,7 @@ import {
 import * as motion from 'motion/react-client'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { setRequestLocale } from 'next-intl/server'
 
 export const dynamic = 'force-static'
 export const revalidate = 7200

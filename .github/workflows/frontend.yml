@@ -7,7 +7,7 @@ permissions:
 on:
   push:
     branches: [main]
-    tags: ['frontend-v*.*.*']
+    tags: ['frontend-v*']
 
 jobs:
   check:
@@ -62,10 +62,16 @@ jobs:
             echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
             echo "major=${MAJOR}" >> "$GITHUB_OUTPUT"
             echo "minor=${MINOR}" >> "$GITHUB_OUTPUT"
+            if [ "${PATCH}" -eq 0 ]; then
+              echo "is_patch=false" >> "$GITHUB_OUTPUT"
+            else
+              echo "is_patch=true" >> "$GITHUB_OUTPUT"
+            fi
             exit 0
           fi
 
           echo "is_release=false" >> "$GITHUB_OUTPUT"
+          echo "is_patch=false" >> "$GITHUB_OUTPUT"
       - name: Build and push Docker image
         env:
           DOCKER_BUILDKIT: 1
@@ -112,7 +118,7 @@ jobs:
             "${TAGS[@]}" \
             --push
       - name: Publish GitHub release
-        if: steps.release_meta.outputs.is_release == 'true'
+        if: steps.release_meta.outputs.is_release == 'true' && steps.release_meta.outputs.is_patch == 'false'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
