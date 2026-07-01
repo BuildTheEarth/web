@@ -409,7 +409,18 @@
 		"seo": {
 			"title": "Mapa do proxecto",
 			"description": "Explora as parcelas activas e finalizadas de BuildTheEarth no mapa interactivo do mundo."
-		}
+		},
+		"teams": {
+            "seo": {
+                "title": "Mapa do equipo",
+                "description": "Explora equipos de BuildTheEarth, atopa a túa rexión, e únete a un servidor de Minecraft para comezar a contribuír."
+            },
+            "infoNotice": {
+                "title": "Nota: {country}",
+                "description": "O país ou rexión que clicaches non está sendo construída por ningún equipo agora mesmo. Estamos tratando de arranxalo, pero mentres tanto, se queres botar unha man, por favor, considera unirte a un equipo diferente!",
+                "descriptionUs": "Os Estados Unidos de America están actualmente sendo construídos por varios equipos. Se queres axudar, por favor considera unirte a un dos seguintes equipos que están a construír nos EEUU:"
+            }
+        }
 	},
 	"attribution": {
 		"translations": {
