@@ -263,6 +263,8 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 												aspectRatio: '16/9',
 											}}
 											src={showcase.image.src}
+											width={1920}
+											height={1080}
 											alt={showcase.image.name || t('showcaseImageAlt')}
 											loading="lazy"
 										/>

@@ -18,6 +18,7 @@ import { Locale, NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Cairo, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
+import Script from 'next/script'
 
 const cairoFont = Cairo({ subsets: ['latin'], variable: '--font-cairo' })
 const catamaranFont = Inter({ subsets: ['latin'], variable: '--font-catamaran' })
@@ -63,6 +64,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
 	const locale = await getLocale()
 
+	const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''
+	const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL || 'https://umami.buildtheearth.net/script.js'
+
 	return (
 		<html
 			lang={locale}
@@ -73,6 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		>
 			<head>
 				<ColorSchemeScript />
+				{umamiUrl && websiteId && <Script src={umamiUrl} data-website-id={websiteId} strategy="afterInteractive" />}
 			</head>
 			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
 				<NextIntlClientProvider>

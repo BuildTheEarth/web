@@ -51,20 +51,21 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 		where: {
 			joinedBuildTeams: { some: { id: { contains: '-' } } },
 		},
-		orderBy: { username: 'asc' },
+		orderBy: { minecraft: 'asc' },
 		select: {
 			username: true,
 			minecraft: true,
 			discordId: true,
 		},
 	})
-	const buildersWithUsernameAlphabetic = builders.filter(
-		(builder) => !!builder.username && /^[a-zA-Z]/.test(builder.username),
+	const buildersWithMinecraftAlphabetic = builders.filter(
+		(builder) => !!builder.minecraft && /^[a-zA-Z]/.test(builder.minecraft),
 	)
-	const buildersWithUsernameNonAlphabetic = builders.filter(
-		(builder) => !!builder.username && !/^[a-zA-Z]/.test(builder.username),
+	const buildersWithMinecraftNonAlphabetic = builders.filter(
+		(builder) => !!builder.minecraft && !/^[a-zA-Z]/.test(builder.minecraft),
 	)
-	const buildersWithoutUsername = builders.filter((builder) => !builder.username)
+	const buildersWithUsernameOnly = builders.filter((builder) => !builder.minecraft && !!builder.username)
+	const buildersWithoutName = builders.filter((builder) => !builder.minecraft && !builder.username)
 	const buildersCount = builders.length
 
 	const showcaseImages = await prisma.showcase.findMany({
@@ -141,9 +142,10 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					size="responsive"
 				>
 					<Text w="100%" style={{ textAlign: 'justify' }} fz="xl">
-						{buildersWithUsernameAlphabetic
-							.concat(buildersWithUsernameNonAlphabetic)
-							.map((builder) => builder.username || builder.minecraft || builder.discordId)
+						{buildersWithMinecraftAlphabetic
+							.concat(buildersWithMinecraftNonAlphabetic)
+							.concat(buildersWithUsernameOnly)
+							.map((builder) => builder.minecraft || builder.username || builder.discordId)
 							.join(', ')}
 					</Text>
 					<Text ta="left" mt="xl">
@@ -152,15 +154,15 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						everyone puts into making the earth in Minecraft a reality!
 					</Text>
 					<Text c="dimmed" w="100%" style={{ textAlign: 'justify' }} pt="sm" fz="sm">
-						*{formatter.format(buildersWithoutUsername.length)} builders are contributing anonymously. View them below.
+						*{formatter.format(buildersWithoutName.length)} builders are contributing anonymously. View them below.
 					</Text>
 					<Accordion mt="xl" variant="filled">
 						<AccordionItem value="anonymous-builders">
 							<AccordionControl>View Anonymous Builders</AccordionControl>
 							<AccordionPanel>
 								<Text w="100%" style={{ textAlign: 'justify' }} fz="xl">
-									{buildersWithoutUsername
-										.map((builder) => builder.username || builder.minecraft || builder.discordId)
+									{buildersWithoutName
+										.map((builder) => builder.minecraft || builder.username || builder.discordId)
 										.join(', ')}
 								</Text>
 							</AccordionPanel>

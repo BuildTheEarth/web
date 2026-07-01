@@ -1,6 +1,6 @@
-import type { NextConfig } from 'next';
-import createNextIntlPlugin from 'next-intl/plugin';
-import path from 'path';
+import type { NextConfig } from 'next'
+import createNextIntlPlugin from 'next-intl/plugin'
+import path from 'path'
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
 	output: 'standalone',
@@ -15,18 +15,20 @@ const nextConfig: NextConfig = {
 		const connectSources = [
 			process.env.NEXT_PUBLIC_FRONTEND_URL,
 			process.env.CMS_URL,
+			process.env.NEXT_PUBLIC_UMAMI_URL?.replace('/script.js', ''),
 			process.env.NEXT_PUBLIC_MAP_STYLE_URL?.split('/styles/')[0],
 			'https://static.cloudflareinsights.com',
 			'https://cloudflareinsights.com',
 			'https://cdn.discordapp.com',
 			'https://orangemug.github.io',
 			'https://cdn.jsdelivr.net',
+			'https://umami.buildtheearth.net',
 		]
 			.filter(Boolean)
-			.join(' ');
+			.join(' ')
 		const scriptSources = ["'self'", "'unsafe-inline'", "'unsafe-eval'", 'https://static.cloudflareinsights.com'].join(
 			' ',
-		);
+		)
 
 		return [
 			{
@@ -49,14 +51,22 @@ const nextConfig: NextConfig = {
 					},
 				],
 			},
-		];
+		]
+	},
+	async rewrites() {
+		return [
+			{
+				source: '/api/uma.js',
+				destination: process.env.NEXT_PUBLIC_UMAMI_URL || 'https://umami.buildtheearth.net/script.js',
+			},
+		]
 	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
 	turbopack: {},
 	allowedDevOrigins: ['192.168.178.22'],
-};
+}
 
-const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: process.env.ANALYZE === 'true' });
+const withBundleAnalyzer = require('@next/bundle-analyzer')({ enabled: process.env.ANALYZE === 'true' })
 
-const withNextIntl = createNextIntlPlugin();
-export default withBundleAnalyzer(withNextIntl(nextConfig));
+const withNextIntl = createNextIntlPlugin()
+export default withBundleAnalyzer(withNextIntl(nextConfig))
