@@ -4,7 +4,7 @@ import { QueryPagination } from '@/components/core/Pagination'
 import SmartImage from '@/components/core/SmartImage'
 import { AspectRatio, Avatar, Badge, Box, Button, Card, Grid, GridCol, Group, Stack, Text } from '@mantine/core'
 import * as motion from 'motion/react-client'
-import Link from 'next/link'
+import Link from '@/components/core/Link'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 export type GalleryShowcase = {

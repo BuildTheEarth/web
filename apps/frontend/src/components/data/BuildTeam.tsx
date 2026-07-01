@@ -3,7 +3,7 @@
 import { Avatar, Group, Text } from '@mantine/core'
 import { IconGlobe } from '@tabler/icons-react'
 
-import Link from 'next/link'
+import Link from '@/components/core/Link'
 
 export function BuildTeamDisplay({
 	team,

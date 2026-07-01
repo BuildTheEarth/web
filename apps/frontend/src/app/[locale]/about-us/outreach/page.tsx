@@ -1,5 +1,6 @@
 import { OutreachArticle, OutreachArticleCard } from '@/components/data/OutreachArticle'
 import Wrapper from '@/components/layout/Wrapper'
+import Anchor from '@/components/core/Anchor'
 import directus from '@/util/directus'
 import { getLanguageAlternates } from '@/util/seo'
 import { readItems } from '@directus/sdk'
@@ -8,7 +9,7 @@ import { IconInfoCircle } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
-import Link from 'next/link'
+import Link from '@/components/core/Link'
 
 export const dynamic = 'force-static'
 export const revalidate = 86400 // 24h
@@ -46,7 +47,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					<AccordionPanel>
 						<Text>
 							{t.rich('contact.description', {
-								mail: (chunks: string) => <a href="mailto:pr@buildtheearth.net">pr@buildtheearth.net</a>,
+								mail: (chunks: string) => <Anchor href="mailto:pr@buildtheearth.net">pr@buildtheearth.net</Anchor>,
 								contact: (chunks: string) => <Link href="/contact">{chunks}</Link>,
 							})}
 						</Text>

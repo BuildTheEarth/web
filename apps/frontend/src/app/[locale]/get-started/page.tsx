@@ -6,7 +6,8 @@ import { QuerySearchInput } from '@/components/core/SearchInput'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import EarthBackground from '@/components/layout/EarthBackground'
 import Wrapper from '@/components/layout/Wrapper'
-import { Link } from '@/i18n/navigation'
+import Link from '@/components/core/Link'
+import Anchor from '@/components/core/Anchor'
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
 import getCountryName from '@/util/countries'
 import prisma from '@/util/db'
@@ -195,6 +196,7 @@ export default async function Page({
 											mt="md"
 											scroll
 											style={{ width: 'fit-content', alignSelf: 'flex-start' }}
+											data-umami-event="get-started-explore-card-click"
 										>
 											{t('explore.cta')}
 										</Button>
@@ -223,6 +225,7 @@ export default async function Page({
 											px={'var(--mantine-spacing-xl)'}
 											mt="md"
 											style={{ width: 'fit-content', alignSelf: 'flex-start' }}
+											data-umami-event="get-started-build-card-click"
 										>
 											{t('build.cta')}
 										</Button>
@@ -266,6 +269,7 @@ export default async function Page({
 								href="/gallery"
 								mt="md"
 								variant="transparent"
+								data-umami-event="get-started-gallery-click"
 							>
 								{t('explore.content.ctaGallery')}
 							</Button>
@@ -275,6 +279,7 @@ export default async function Page({
 								href="/map"
 								mt="md"
 								variant="transparent"
+								data-umami-event="get-started-map-click"
 							>
 								{t('explore.content.ctaMap')}
 							</Button>
@@ -386,12 +391,12 @@ export default async function Page({
 									br: () => <br />,
 									b: (chunks: string) => <b>{chunks}</b>,
 									discord: (chunks: string) => (
-										<Link
+										<Anchor
 											href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
 											target="_blank"
 										>
 											{chunks}
-										</Link>
+										</Anchor>
 									),
 									ip: (chunks: string) => <Code>{chunks}</Code>,
 								})}

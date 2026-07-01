@@ -2,7 +2,7 @@
 
 import { Button, Container, Group, Text } from '@mantine/core'
 
-import { Link } from '@/i18n/navigation'
+import Link from '@/components/core/Link'
 import classes from '@/styles/layout/Header.module.css'
 import SmartImage from '@/components/core/SmartImage'
 import { IconChevronRight } from '@tabler/icons-react'
@@ -58,6 +58,7 @@ export async function Header() {
 						rightSection={<IconChevronRight size={12} />}
 						component={Link}
 						href="/get-started"
+						data-umami-event="header-cta-click"
 					>
 						{t('cta')}
 					</Button>

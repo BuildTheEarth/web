@@ -1,7 +1,7 @@
 import { QueryPagination } from '@/components/core/Pagination'
 import { QuerySearchInput } from '@/components/core/SearchInput'
 import Wrapper from '@/components/layout/Wrapper'
-import { Link } from '@/i18n/navigation'
+import Link from '@/components/core/Link'
 import { getCountryNames } from '@/util/countries'
 import prisma from '@/util/db'
 import { getLanguageAlternates } from '@/util/seo'

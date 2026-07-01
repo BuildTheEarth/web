@@ -65,7 +65,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 	const locale = await getLocale()
 
 	const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''
-	const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL || 'https://umami.buildtheearth.net/script.js'
 
 	return (
 		<html
@@ -77,7 +76,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		>
 			<head>
 				<ColorSchemeScript />
-				{umamiUrl && websiteId && <Script src={umamiUrl} data-website-id={websiteId} strategy="afterInteractive" />}
+				{websiteId && (
+					<Script
+						src={'/api/uma.js'}
+						data-website-id={websiteId}
+						data-tag={process.env.NODE_ENV === 'development' ? 'development' : undefined}
+						data-performance={process.env.NODE_ENV === 'development' ? 'false' : 'true'}
+						strategy="afterInteractive"
+					/>
+				)}
 			</head>
 			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
 				<NextIntlClientProvider>

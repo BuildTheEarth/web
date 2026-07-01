@@ -86,6 +86,8 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								target="_blank"
 								rel="noopener noreferrer"
 								aria-label={`Follow us on ${social.name}`}
+								data-umami-event="link-click"
+								data-umami-event-url={social.link}
 							>
 								<Icon size={26} stroke={2} />
 							</ActionIcon>

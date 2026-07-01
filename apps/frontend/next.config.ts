@@ -59,6 +59,12 @@ const nextConfig: NextConfig = {
 				source: '/api/uma.js',
 				destination: process.env.NEXT_PUBLIC_UMAMI_URL || 'https://umami.buildtheearth.net/script.js',
 			},
+			{
+				source: '/api/api/send',
+				destination: process.env.NEXT_PUBLIC_UMAMI_URL
+					? `${process.env.NEXT_PUBLIC_UMAMI_URL.replace('/script.js', '')}/api/send`
+					: 'https://umami.buildtheearth.net/api/send',
+			},
 		]
 	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },

@@ -9,5 +9,20 @@ export default function Anchor(
 		React.AnchorHTMLAttributes<HTMLAnchorElement> & { children: any; href: string | import('url').UrlObject },
 ) {
 	const { href, ...rest } = props
-	return <MantineAnchor {...rest} href={href} component={Link as any} />
+	const frontendUrl = (process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://buildtheearth.net').replace(/\/$/, '')
+	const outbound =
+		typeof href === 'string' ? !href.startsWith('/') && !href.startsWith('#') && !href.startsWith(frontendUrl) : false
+
+	const umamiEvent = props['data-umami-event'] || (outbound ? 'link-click' : undefined)
+	const umamiUrl = props['data-umami-event-url'] || (outbound ? href : undefined)
+
+	return (
+		<MantineAnchor
+			{...rest}
+			href={href}
+			component={Link as any}
+			data-umami-event={umamiEvent}
+			data-umami-event-url={umamiUrl}
+		/>
+	)
 }

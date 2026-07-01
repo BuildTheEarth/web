@@ -2,7 +2,7 @@
 
 import { Burger, Button, Drawer, Flex, Group, ScrollArea, Stack } from '@mantine/core'
 
-import { Link } from '@/i18n/navigation'
+import Link from '@/components/core/Link'
 import classes from '@/styles/layout/Header.module.css'
 import { useDisclosure } from '@mantine/hooks'
 import { IconChevronRight } from '@tabler/icons-react'
@@ -45,7 +45,15 @@ export function HeaderDrawer() {
 					</ScrollArea>
 
 					<Group mx="xl" mb="md" grow style={{}}>
-						<Button variant="filled" color="indigo" rightSection={<IconChevronRight size={12} />}>
+						<Button
+							variant="filled"
+							color="indigo"
+							rightSection={<IconChevronRight size={12} />}
+							component={Link}
+							href="/get-started"
+							onClick={close}
+							data-umami-event="mobile-header-cta-click"
+						>
 							{t('cta')}
 						</Button>
 					</Group>

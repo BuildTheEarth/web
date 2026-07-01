@@ -1,7 +1,8 @@
 import BackgroundImage from '@/components/core/BackgroundImage'
 import SmartImage from '@/components/core/SmartImage'
 import Wrapper from '@/components/layout/Wrapper'
-import { Link } from '@/i18n/navigation'
+import LinkButton from '@/components/core/LinkButton'
+import Link from '@/components/core/Link'
 import { getCountryNames } from '@/util/countries'
 import prisma from '@/util/db'
 import { getLanguageAlternates } from '@/util/seo'
@@ -140,15 +141,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						></Avatar>
 						<h1>{buildTeam.name}</h1>
 					</Group>
-					<Button
-						component={Link}
+					<LinkButton
 						href="https://my.buildtheearth.net/ineedtochangethisurl"
 						w={{ base: '100%', md: 'auto' }}
 						maw="none"
 						mb={{ base: 'xl', md: 0 }}
 					>
 						{t('apply')}
-					</Button>
+					</LinkButton>
 				</Flex>
 			</Group>
 			<Container

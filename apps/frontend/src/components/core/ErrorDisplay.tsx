@@ -2,6 +2,7 @@ import { Box, Button, Text, Title } from '@mantine/core'
 import AppearAnimation from '../animations/AppearAnimation'
 import SplitTextAnimation from '../animations/SplitText'
 import EarthBackground from '../layout/EarthBackground'
+import LinkButton from './LinkButton'
 
 export default function ErrorDisplay({
 	title = 'Something is not right...',
@@ -36,9 +37,9 @@ export default function ErrorDisplay({
 			</Text>
 			<AppearAnimation delay={0.35} component="div">
 				{backButton && (
-					<Button variant="outline" size="sm" mt="md">
+					<LinkButton variant="outline" size="sm" mt="md" href="/" data-umami-event="error-back-click">
 						{typeof backButton === 'string' ? backButton : 'Go back'}
-					</Button>
+					</LinkButton>
 				)}
 			</AppearAnimation>
 		</Box>

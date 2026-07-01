@@ -1,6 +1,7 @@
-import { ActionIcon, Anchor, Box, Group, Text } from '@mantine/core'
+import { ActionIcon, Box, Group, Text } from '@mantine/core'
+import Anchor from '@/components/core/Anchor'
 
-import { Link } from '@/i18n/navigation'
+import Link from '@/components/core/Link'
 import classes from '@/styles/layout/Footer.module.css'
 import { IconBrandDiscord } from '@tabler/icons-react'
 import { useTranslations } from 'next-intl'
@@ -21,7 +22,7 @@ export default function Footer({ style }: FooterProps) {
 	const tLinks = useTranslations('common.links')
 
 	const items = links.map((link) => (
-		<Anchor component={Link} c="dimmed" key={link.link} href={link.link} size="sm">
+		<Anchor c="dimmed" key={link.link} href={link.link} size="sm">
 			{tLinks(link.key)}
 		</Anchor>
 	))
@@ -42,6 +43,8 @@ export default function Footer({ style }: FooterProps) {
 						target="_blank"
 						c="dimmed"
 						size="sm"
+						data-umami-event="link-click"
+						data-umami-event-url="http://go.buildtheearth.net/dc"
 					>
 						<IconBrandDiscord />
 					</ActionIcon>

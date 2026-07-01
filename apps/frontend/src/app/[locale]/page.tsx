@@ -4,7 +4,7 @@ import SplitTextAnimation from '@/components/animations/SplitText'
 import LinkButton from '@/components/core/LinkButton'
 import { OutreachArticle, OutreachArticleCard } from '@/components/data/OutreachArticle'
 import Wrapper from '@/components/layout/Wrapper'
-import { Link } from '@/i18n/navigation'
+import Link from '@/components/core/Link'
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
 import prisma from '@/util/db'
 import directus from '@/util/directus'
@@ -118,7 +118,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							<SplitTextAnimation>{t('landing.title')}</SplitTextAnimation>
 						</Title>
 						<AppearAnimation component="div" delay={0.3} duration={1}>
-							<LinkButton href="/get-started" size="xl" mt="xl" aria-label={t('landing.cta.alt')}>
+							<LinkButton
+								href="/get-started"
+								size="xl"
+								mt="xl"
+								aria-label={t('landing.cta.alt')}
+								data-umami-event="hero-cta-click"
+							>
 								{t('landing.cta.label')}
 							</LinkButton>
 						</AppearAnimation>
@@ -169,9 +175,16 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<Title order={2}>{t('whoWeAre.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('whoWeAre.description')}</Text>
-								<Button variant="filled" color="indigo" rightSection={<IconChevronRight size={12} />} mt="md">
+								<LinkButton
+									variant="filled"
+									href="/about-us"
+									color="indigo"
+									rightSection={<IconChevronRight size={12} />}
+									mt="md"
+									data-umami-event="whoweare-cta-click"
+								>
 									{t('whoWeAre.cta')}
-								</Button>
+								</LinkButton>
 							</Box>
 						</GridCol>
 						<GridCol
@@ -340,6 +353,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									color="indigo"
 									rightSection={<IconChevronRight size={12} />}
 									mt="md"
+									data-umami-event="community-cta-click"
 								>
 									{t('globalCommunity.cta')}
 								</LinkButton>
@@ -413,6 +427,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									color="indigo"
 									rightSection={<IconChevronRight size={12} />}
 									mt="md"
+									data-umami-event="explore-cta-click"
 								>
 									{t('explore.cta')}
 								</LinkButton>
@@ -471,6 +486,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								color="indigo"
 								rightSection={<IconChevronRight size={12} />}
 								mt="md"
+								data-umami-event="gallery-cta-click"
 							>
 								{t('gallery.cta')}
 							</LinkButton>
@@ -505,6 +521,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									color="indigo"
 									rightSection={<IconChevronRight size={12} />}
 									mt="md"
+									data-umami-event="outreach-cta-click"
 								>
 									{t('mediaList.mainCta')}
 								</LinkButton>
