@@ -6,7 +6,12 @@ import { AnchorProps, Anchor as MantineAnchor } from '@mantine/core'
  */
 export default function Anchor(
 	props: AnchorProps &
-		React.AnchorHTMLAttributes<HTMLAnchorElement> & { children: any; href: string | import('url').UrlObject },
+		React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+			children: any
+			href: string | import('url').UrlObject
+			'data-umami-event'?: string
+			'data-umami-event-url'?: string
+		},
 ) {
 	const { href, ...rest } = props
 	const frontendUrl = (process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://buildtheearth.net').replace(/\/$/, '')
