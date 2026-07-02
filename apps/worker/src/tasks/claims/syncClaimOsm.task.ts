@@ -150,16 +150,17 @@ out count;`
 							resData.display_name?.split(',')?.[0] ||
 							''
 
-				city =
-					resData.address?.city ||
-					resData.address?.town ||
-					resData.address?.hamlet ||
-					resData.address?.township ||
-					resData.address?.village ||
-					resData.address?.suburb ||
-					resData.address?.neighbourhood ||
-					resData.address?.county ||
-					''
+				city = claim.city
+					? claim.city
+					: resData.address?.city ||
+						resData.address?.town ||
+						resData.address?.hamlet ||
+						resData.address?.township ||
+						resData.address?.village ||
+						resData.address?.suburb ||
+						resData.address?.neighbourhood ||
+						resData.address?.county ||
+						''
 			}
 			this.logger.debug(`Fetched geocoding details for claim ${claimId}: name="${name}", city="${city}"`)
 		} catch (error: any) {
