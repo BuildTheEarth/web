@@ -142,7 +142,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						<h1>{buildTeam.name}</h1>
 					</Group>
 					<LinkButton
-						href="https://my.buildtheearth.net/ineedtochangethisurl"
+						href={`https://my.buildtheearth.net/apply/${buildTeam.slug}`}
 						w={{ base: '100%', md: 'auto' }}
 						maw="none"
 						mb={{ base: 'xl', md: 0 }}
