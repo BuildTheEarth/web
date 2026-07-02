@@ -23,6 +23,7 @@ import { modals, openConfirmModal } from '@mantine/modals'
 import type { BuildTeam, Claim } from '@repo/db'
 import { IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { useState } from 'react'
 
@@ -48,6 +49,21 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 					aria-label="Copy ID"
 					onClick={() => clipboard.copy(claim.id)}
+				>
+					Copy ID
+				</MenuItem>
+				<MenuItem
+					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+					aria-label="Copy ID"
+					onClick={() => clipboard.copy(claim.id)}
+					component={Link}
+					disabled={!claim.center}
+					target="_blank"
+					href={
+						claim.center
+							? `https://nominatim.openstreetmap.org/reverse?lat=${claim.center.split(', ')[1]}&lon=${claim.center.split(', ')[0]}&format=json&accept-language=en&zoom=18`
+							: '#'
+					}
 				>
 					Copy ID
 				</MenuItem>
