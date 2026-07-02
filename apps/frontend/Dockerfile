@@ -8,8 +8,8 @@ COPY . .
 RUN yarn dlx turbo@^2 prune frontend --docker
 # ---
 FROM base AS installer
-RUN apk update && apk add --no-cache libc6-compat openssl 
-RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3 
+RUN apk update && apk add --no-cache libc6-compat openssl
+RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 WORKDIR /app
 
 ARG CMS_URL
@@ -17,12 +17,16 @@ ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_FRONTEND_URL
 ARG NEXT_PUBLIC_CDN_URL
 ARG NEXT_PUBLIC_MAP_STYLE_URL
+ARG NEXT_PUBLIC_UMAMI_URL
+ARG NEXT_PUBLIC_UMAMI_WEBSITE_ID
 
 ENV CMS_URL=$CMS_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
 ENV NEXT_PUBLIC_CDN_URL=$NEXT_PUBLIC_CDN_URL
 ENV NEXT_PUBLIC_MAP_STYLE_URL=$NEXT_PUBLIC_MAP_STYLE_URL
+ENV NEXT_PUBLIC_UMAMI_URL=$NEXT_PUBLIC_UMAMI_URL
+ENV NEXT_PUBLIC_UMAMI_WEBSITE_ID=$NEXT_PUBLIC_UMAMI_WEBSITE_ID
 
 COPY --from=builder /app/out/json/ .
 RUN yarn install

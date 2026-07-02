@@ -81,6 +81,8 @@ jobs:
           NEXT_PUBLIC_FRONTEND_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_FRONTEND_URL }}
           NEXT_PUBLIC_CDN_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_CDN_URL }}
           NEXT_PUBLIC_MAP_STYLE_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_MAP_STYLE_URL }}
+          NEXT_PUBLIC_UMAMI_URL: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_UMAMI_URL }}
+          NEXT_PUBLIC_UMAMI_WEBSITE_ID: ${{ secrets.INFISICAL_FRONTEND_NEXT_PUBLIC_UMAMI_WEBSITE_ID }}
           IS_RELEASE: ${{ steps.release_meta.outputs.is_release }}
           RELEASE_VERSION: ${{ steps.release_meta.outputs.version }}
           RELEASE_MAJOR: ${{ steps.release_meta.outputs.major }}
