@@ -36,7 +36,7 @@ const ensureAuthenticated = async () => {
 	}
 }
 
-const createAuthenticatedProxy = (target: any): any => {
+const createAuthenticatedProxy = (target: any): KcAdminClient => {
 	return new Proxy(target, {
 		get(obj, prop) {
 			const val = Reflect.get(obj, prop)

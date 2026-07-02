@@ -1,5 +1,3 @@
-'use server'
-
 import { Alert, Box, CheckIcon, Code, Grid, GridCol, Group, SimpleGrid, ThemeIcon, Title } from '@mantine/core'
 
 import { getUserPermissions } from '@/actions/getUser'

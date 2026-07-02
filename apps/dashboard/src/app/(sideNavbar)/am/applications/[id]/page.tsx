@@ -1,5 +1,3 @@
-'use server'
-
 import { Alert, Box, Grid, GridCol, Group, Title } from '@mantine/core'
 
 import { Protection } from '@/components/Protection'

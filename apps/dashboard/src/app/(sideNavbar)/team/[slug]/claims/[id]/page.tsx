@@ -1,5 +1,3 @@
-'use server'
-
 import {
 	Alert,
 	Box,

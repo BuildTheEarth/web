@@ -1,5 +1,3 @@
-'use server'
-
 import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
 import { Box, Button, Divider, Group, Title } from '@mantine/core'
