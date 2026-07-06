@@ -10,6 +10,7 @@ import {
 	IconPolygon,
 	IconUser,
 	IconUsersGroup,
+	IconDeviceAnalytics,
 } from '@tabler/icons-react'
 import Image from 'next/image'
 import { LinksGroup } from './NavbarLinksGroup'
@@ -39,11 +40,16 @@ export interface NavbarLinkGroup extends NavbarLinkShared {
 
 const mockdata: (NavbarLink | NavbarLinkGroup)[] = [
 	{ label: 'Your Home', icon: IconGauge, link: '/' },
+	{
+		label: 'Statistics',
+		icon: IconDeviceAnalytics,
+		initiallyOpened: true,
+		links: [{ label: 'Interactive Explorer', link: '/stats' }],
+	},
 
 	{
 		label: 'Claims',
 		icon: IconPolygon,
-		initiallyOpened: true,
 		links: [{ label: 'Claim Editor', link: '/editor' }],
 	},
 	{
