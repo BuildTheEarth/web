@@ -38,9 +38,9 @@ export default function SignupPage() {
 					</Anchor>
 				</Text>
 
-				<Paper withBorder shadow="sm" p={22} mt={30} radius="md">
+				<Paper withBorder shadow="sm" p={22} mt={30}>
 					<Text>To get started, please create an account by clicking the button below.</Text>
-					<Button fullWidth mt="xl" radius="md" onClick={handleSignup}>
+					<Button fullWidth mt="xl" onClick={handleSignup}>
 						Create Account
 					</Button>
 				</Paper>

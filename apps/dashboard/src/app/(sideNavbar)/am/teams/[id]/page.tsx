@@ -124,7 +124,13 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 					<Grid>
 						<GridCol span={12}>
 							<TextCard title="Banner" icon={IconPhoto}>
-								<Image src={team.backgroundImage} alt="Banner" style={{ aspectRatio: '16 / 9' }} w="100%" radius="md" />
+								<Image
+									src={team.backgroundImage}
+									alt="Banner"
+									style={{ aspectRatio: '16 / 9' }}
+									w="100%"
+									radius="default"
+								/>
 							</TextCard>
 						</GridCol>
 						<GridCol span={{ base: 12, sm: 6, md: 12, lg: 6 }}>
@@ -212,7 +218,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 						style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-yellow-outline)' }}
 						color="yellow"
 						mb="md"
-						radius="md"
 						title="Disabled Applications"
 						icon={<IconForms />}
 					>
@@ -247,7 +252,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 										variant="light"
 										style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-red-outline)' }}
 										color="red"
-										radius="md"
 										title="Low review activity"
 										icon={<IconClockExclamation />}
 									>
@@ -262,7 +266,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 											border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-orange-outline)',
 										}}
 										color="orange"
-										radius="md"
 										title="Moderate review activity"
 										icon={<IconClock />}
 									>
@@ -276,7 +279,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 										variant="light"
 										style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-green-outline)' }}
 										color="green"
-										radius="md"
 										title={`${reviewActivity.ras > 4.5 ? 'Perfect' : 'Good'} review activity`}
 										icon={<IconClockCheck />}
 									>

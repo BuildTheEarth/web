@@ -83,14 +83,7 @@ export default async function WelcomePage() {
 			</Text>
 
 			{isDiscordLinked ? (
-				<Alert
-					mt="md"
-					variant="light"
-					color="green"
-					radius="md"
-					icon={<IconCheck size={16} />}
-					title="Discord Account Connected"
-				>
+				<Alert mt="md" variant="light" color="green" icon={<IconCheck size={16} />} title="Discord Account Connected">
 					<Stack gap="xs" align="flex-start">
 						<Text size="sm">
 							Your Discord account (<Code>{discordIdentity.userId}</Code>) is connected. You can receive notifications.
@@ -102,7 +95,6 @@ export default async function WelcomePage() {
 					mt="md"
 					variant="light"
 					color="orange"
-					radius="md"
 					title="Discord Connection Required"
 					icon={<IconAlertTriangle size={18} />}
 				>

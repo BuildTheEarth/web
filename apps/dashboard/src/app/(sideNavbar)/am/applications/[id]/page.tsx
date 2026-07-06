@@ -81,7 +81,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 								variant="light"
 								style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-cyan-outline)' }}
 								color="cyan"
-								radius="md"
 								title="Application pending review"
 								icon={<IconClockExclamation />}
 								h="100%"

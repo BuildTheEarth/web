@@ -114,13 +114,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						It looks like you want to apply to {joiningBuildTeam?.name}.
 					</Text>
 					<Box maw={{ base: '100%', sm: '85%', md: '60%', xl: '45%' }} mt="md">
-						<Alert
-							variant="light"
-							color="green"
-							radius="md"
-							title="Application accepted"
-							icon={<IconConfetti size={16} />}
-						>
+						<Alert variant="light" color="green" title="Application accepted" icon={<IconConfetti size={16} />}>
 							Your application to {joiningBuildTeam?.name} was accepted on{' '}
 							{latestApplication.reviewedAt ? toHumanDate(latestApplication.reviewedAt) : 'unknown date'}!
 						</Alert>
@@ -163,7 +157,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					<Alert
 						variant="light"
 						color="orange"
-						radius="md"
 						title="Application rejected"
 						mb="md"
 						icon={<IconArrowForward size={16} />}
@@ -175,14 +168,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					</Alert>
 				)}
 				{user.applications.length > 0 && user.applications[0].status === ApplicationStatus.SEND && (
-					<Alert
-						variant="light"
-						color="yellow"
-						radius="md"
-						title="Application pending"
-						mb="md"
-						icon={<IconClock size={16} />}
-					>
+					<Alert variant="light" color="yellow" title="Application pending" mb="md" icon={<IconClock size={16} />}>
 						Your application to {joiningBuildTeam?.name} is still pending. The Build Team will review it as soon as
 						possible and get back to you. This process can usually take up to 48 hours, but it can sometimes take a bit
 						longer. You will receive a notification on discord once the status changes.
@@ -292,7 +278,6 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					<Alert
 						variant="light"
 						color="yellow"
-						radius="md"
 						title="Applications are currently disabled for this Build Team"
 						icon={<IconClock size={16} />}
 					>

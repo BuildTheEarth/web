@@ -87,7 +87,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 								variant="light"
 								style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-orange-outline)' }}
 								color="orange"
-								radius="md"
 								title="Claim is hidden"
 								icon={<IconClockExclamation />}
 								h="100%"
@@ -100,7 +99,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 								variant="light"
 								style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-green-outline)' }}
 								color="green"
-								radius="md"
 								title="Claim is finished"
 								icon={<IconClockExclamation />}
 								h="100%"
@@ -112,7 +110,6 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 								variant="light"
 								style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-cyan-outline)' }}
 								color="cyan"
-								radius="md"
 								title="Claim is under construction"
 								icon={<IconClockExclamation />}
 								h="100%"

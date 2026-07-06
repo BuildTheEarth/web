@@ -4,6 +4,7 @@ import { createTheme } from '@mantine/core'
  * Main Mantine Theme of the Website
  */
 export const theme = createTheme({
+	defaultRadius: 'sm',
 	fontFamily:
 		'var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
 	breakpoints: {

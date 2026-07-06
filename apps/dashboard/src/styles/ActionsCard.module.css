@@ -15,7 +15,7 @@
 	align-items: center;
 	justify-content: center;
 	text-align: center;
-	border-radius: var(--mantine-radius-md);
+	border-radius: var(--mantine-radius-default);
 	height: 90px;
 	background-color: var(--mantine-color-card-bg-light);
 	transition:

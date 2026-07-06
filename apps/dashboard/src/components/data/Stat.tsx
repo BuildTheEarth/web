@@ -14,7 +14,7 @@ export function Stat(stat: {
 	const DiffIcon = stat.diffIcon || (stat.diff && stat.diff > 0 ? IconArrowUpRight : IconArrowDownRight)
 
 	return (
-		<Paper withBorder p="md" radius="md" key={stat.title}>
+		<Paper withBorder p="md" key={stat.title}>
 			<Group justify="space-between">
 				<Text size="xs" c="dimmed" fw="bold" tt="uppercase">
 					{stat.title}

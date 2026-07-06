@@ -33,7 +33,7 @@ html {
 
 .mapboxgl-popup-content {
 	background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
-	border-radius: var(--mantine-radius-xs);
+	border-radius: var(--mantine-radius-default);
 	box-shadow: var(--mantine-shadow-md);
 	text-align: center;
 	font-size: 14px;
@@ -51,7 +51,7 @@ html {
 }
 
 .mapboxgl-ctrl-group {
-	border-radius: var(--mantine-radius-xs);
+	border-radius: var(--mantine-radius-default);
 	background: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7)) !important;
 }
 
@@ -67,11 +67,11 @@ html {
 	button {
 		color: var(--mantine-text-color) !important;
 	}
-	border-radius: var(--mantine-radius-xs);
+	border-radius: var(--mantine-radius-default);
 }
 
 .mapboxgl-style-switcher {
-	border-radius: var(--mantine-radius-xs) !important;
+	border-radius: var(--mantine-radius-default) !important;
 	background-image: url('/icons/layers-subtract.svg') !important;
 }
 

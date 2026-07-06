@@ -185,7 +185,6 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 							variant="light"
 							style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-red-outline)' }}
 							color="red"
-							radius="md"
 							title="Unregistered User"
 							icon={<IconInfoCircle />}
 						>

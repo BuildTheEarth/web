@@ -322,7 +322,7 @@ export default async function Page() {
 				<GridCol span={{ base: 12, md: 5 }}>
 					<Stack>
 						{showOnboarding && (
-							<Paper withBorder p="md" radius="md">
+							<Paper withBorder p="md">
 								<Text size="xs" c="dimmed" fw={700} tt="uppercase" mb="md">
 									Get Started Checklist
 								</Text>
@@ -390,7 +390,7 @@ export default async function Page() {
 								icon={IconDeviceAnalytics}
 							/>
 						) : (
-							<Paper withBorder p="md" radius="md">
+							<Paper withBorder p="md">
 								<Group justify="space-between">
 									<Text fz="xl" fw={700}>
 										Your Claims

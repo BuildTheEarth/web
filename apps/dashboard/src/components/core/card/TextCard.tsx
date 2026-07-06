@@ -14,7 +14,7 @@ export function TextCard(props: {
 }) {
 	const Icon = props.icon
 	return (
-		<Paper withBorder p="md" radius="md" key={props.title} m={0} style={props.style}>
+		<Paper withBorder p="md" key={props.title} m={0} style={props.style}>
 			<Group justify="space-between">
 				<Text size="xs" c="dimmed" fw={700} tt="uppercase">
 					{props.title}

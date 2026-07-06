@@ -140,7 +140,13 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				<Grid>
 					<GridCol span={12}>
 						<TextCard title="Banner" icon={IconPhoto}>
-							<Image src={team.backgroundImage} alt="Banner" style={{ aspectRatio: '16 / 9' }} w="100%" radius="md" />
+							<Image
+								src={team.backgroundImage}
+								alt="Banner"
+								style={{ aspectRatio: '16 / 9' }}
+								w="100%"
+								radius="default"
+							/>
 						</TextCard>
 					</GridCol>
 					<GridCol span={{ base: 12, sm: 6, md: 12, lg: 6 }}>

@@ -91,7 +91,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 										variant="light"
 										style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-green-outline)' }}
 										color="green"
-										radius="md"
 										title={`Application accepted`}
 										icon={<IconClockCheck />}
 										h="100%"
@@ -103,7 +102,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 										variant="light"
 										style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-teal-outline)' }}
 										color="teal"
-										radius="md"
 										title={`Application accepted`}
 										icon={<IconClockCheck />}
 										h="100%"
@@ -115,7 +113,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 										variant="light"
 										style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-red-outline)' }}
 										color="red"
-										radius="md"
 										title={`Application rejected`}
 										icon={<IconClockCheck />}
 										h="100%"
@@ -131,7 +128,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 								variant="light"
 								style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-cyan-outline)' }}
 								color="cyan"
-								radius="md"
 								title="Application pending review"
 								icon={<IconClockExclamation />}
 								h="100%"
@@ -169,7 +165,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 							variant="light"
 							style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-yellow-outline)' }}
 							color="yellow"
-							radius="md"
 							title="No questions answered"
 							icon={<IconInfoCircle />}
 							h="100%"
@@ -186,7 +181,6 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 							variant="light"
 							style={{ border: 'calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-yellow-outline)' }}
 							color="yellow"
-							radius="md"
 							mb="md"
 							title="Already reviewed"
 							icon={<IconInfoCircle />}

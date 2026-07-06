@@ -134,7 +134,7 @@ export function BatchUploadStepOne() {
 	}
 
 	return (
-		<Paper withBorder p="lg" radius="md">
+		<Paper withBorder p="lg">
 			<Stack gap="md">
 				<Stack gap={4}>
 					<Text fw={600}>Step 1: Upload source data</Text>

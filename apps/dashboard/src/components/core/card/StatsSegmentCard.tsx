@@ -35,7 +35,7 @@ export function StatsSegmentsCard({
 	))
 
 	return (
-		<Paper withBorder p="md" radius="md">
+		<Paper withBorder p="md">
 			<Group justify="space-between">
 				<Text fz="xl" fw={700}>
 					{title}

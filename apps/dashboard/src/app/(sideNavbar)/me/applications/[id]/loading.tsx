@@ -36,7 +36,6 @@ export default async function Page() {
 						border: `calc(0.0625rem* var(--mantine-scale)) solid var(--mantine-color-green-outline)`,
 					}}
 					color={'green'}
-					radius="md"
 					title={'Loading...'}
 					h="100%"
 					my="md"
