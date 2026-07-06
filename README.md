@@ -1,17 +1,19 @@
 <!-- markdownlint-disable -->
 <div align="center">
 
-<img width="128" src="https://github.com/BuildTheEarth/assets/blob/main/logos/logo_archive_2.png?raw=true" />
+<img width="128" src="https://github.com/BuildTheEarth/assets/blob/main/logos/logo_archive_2.png?raw=true" alt="BuildTheEarth Logo" />
 
-# @BuildTheEarth/web
+# BuildTheEarth Web Monorepo
 
-_A Monorepo containing all website-related projects._
+_A unified monorepo housing all website portals, dashboards, API services, queue processors, and database configurations._
 
 ![official](https://go.buildtheearth.net/official-shield)
 [![chat](https://img.shields.io/discord/706317564904472627.svg?color=768AD4&label=discord&logo=https%3A%2F%2Fdiscordapp.com%2Fassets%2F8c9701b98ad4372b58f13fd9f65f966e.svg)](https://discord.gg/buildtheearth)
 
 </div>
 <!-- markdownlint-restore -->
+
+---
 
 ## Apps and Packages
 
@@ -27,94 +29,100 @@ This repository contains the following apps and other shared packages:
 | packages/prettier-config   | Shared Prettier config for all apps   | Prettier, JSON         | -/-                           |
 | packages/db                | Shared Prisma client and schema       | Prisma.js              | -/-                           |
 
-## Table of Contents
+---
 
-- [@BuildTheEarth/web](#buildtheearthweb)
-  - [Apps and Packages](#apps-and-packages)
-  - [Table of Contents](#table-of-contents)
-  - [Getting Started](#getting-started)
-  - [Bugs and Features](#bugs-and-features)
-  - [Building](#building)
-    - [Building all applications](#building-all-applications)
-    - [Building a single application](#building-a-single-application)
-  - [CI/CD](#cicd)
+## Local Development Setup
 
-## Getting Started
+To configure this repository on your local computer, follow the instructions below:
 
-First, clone this repository:
+### 1. Prerequisites
+
+- **Node.js**: Ensure you are running Node.js `20.x` or `22.x` (LTS is recommended).
+- **Yarn Modern**: Modern Yarn (`yarn@4.9.1`) is configured for workspace lock files. Do **not** run standard `npm` or `pnpm` commands as it will alter the workspace configuration.
+- **Infisical CLI** (Recommended): Secrets management tool. If configured, you can log in to inject secrets automatically:
+  ```bash
+  infisical login
+  ```
+
+### 2. Installation
+
+Clone the repository and run yarn to link internal workspaces and download npm dependencies:
 
 ```bash
 git clone https://github.com/BuildTheEarth/web.git
-```
-
-If you want, you can install [Turborepo](https://turbo.build/repo/docs) globally. Note that `yarn@4` does not support global installs anymore.
-
-```bash
-yarn global add turbo@2.1.1
-```
-
-To install all dependencies, run:
-
-```bash
+cd web
 yarn install
-# and optionally
-yarn db:generate
 ```
 
-Now, copy the example `.env` file and change all its options:
+### 3. Environment Setup
+
+If you are not utilizing the Infisical Secrets CLI, copy the mock template environment settings across the applications:
 
 ```bash
 yarn env:copy
 ```
 
-Then you can start the development server with:
+Ensure you inspect the generated `.env` configurations inside:
+
+- `apps/api/.env`
+- `apps/frontend/.env`
+- `packages/db/.env`
+
+### 4. Database Setup
+
+Build the database client locally from the schema:
+
+```bash
+yarn db:generate
+```
+
+You can also spin up the interactive Prisma Database viewer:
+
+```bash
+yarn db:studio
+```
+
+### 5. Running the Apps
+
+Start the development server. Turborepo runs the servers in parallel:
 
 ```bash
 yarn dev
 ```
 
-This will also start the Prisma Studio.
+- **Frontend**: `http://localhost:3000`
+- **Dashboard**: `http://localhost:3001`
+- **API Backend**: `http://localhost:8080`
 
-## Bugs and Features
+---
 
-We use [GitHub Issues](https://github.com/BuildTheEarth/website-frontend/issues) to manage all bugs and features. You can submit a new bug or feature request [here](https://github.com/BuildTheEarth/website-frontend/issues/new). An overview of the state of bugs and features can be found [here](https://github.com/orgs/BuildTheEarth/projects/11).
+## Release Lifecycle & Tagging
 
-## Building
+Each app is versioned independently. We use helper TS scripts to run clean check verification, bump versions in package manifests, create Git tagging, and push changes.
 
-Usually, you will never need to build any app yourself, as it will automatically happen once you push your changes to GitHub. If you ever need to build all applications or only a single one, follow this guide:
-
-(All commands are executed from the root `web/` folder.)
-
-Optionally, start by clearing all existing builds:
+### Get App Information
 
 ```bash
-yarn clean
+# Syntax: yarn app:info <app-name>
+yarn app:info frontend
 ```
 
-### Building all applications
+### Release & Publish Tag
 
 ```bash
-yarn build
+# Syntax: yarn app:release <app-name> <patch|minor|major|x.y.z> [--push]
+yarn app:release dashboard patch --push
 ```
 
-Due to the use of Turborepo, this command will only build applications that have changed since the last build!
+_The `--push` flag will automatically push the commit and tag to the remote origin server._
 
-### Building a single application
-
-You can select only one application to be built:
-
-```bash
-yarn build:api
-# or
-yarn build:frontend
-```
-
-If you need to filter with more information, you can run the root turbo command (see [the docs](https://turbo.build/repo/docs/reference/run#--filter-string)):
-
-```bash
-turbo build --filter=[...]
-```
+---
 
 ## CI/CD
 
-This monorepo uses [GitHub Actions](https://github.com/BuildTheEarth/web/actions) to create deployable Docker images, which are pushed to the [GitHub Container Registry](https://github.com/orgs/BuildTheEarth/packages).
+1. **Selective Builds**: When changes are pushed to `main`, workflows utilize `turbo-ignore` (`npx turbo-ignore <app-name>`) to build only the services that have changed code.
+2. **Container Registry**: Builds are packaged in the context of the monorepo root (enabling local copy tasks of `@repo/db` and configuration workspaces) and pushed to the **GitHub Container Registry (GHCR)**:
+   - **Frontend**: `ghcr.io/buildtheearth/website-frontend:latest`
+   - **API**: `ghcr.io/buildtheearth/website-node-backend:latest`
+   - **Dashboard**: `ghcr.io/buildtheearth/website-dashboard:latest`
+   - **Worker**: `ghcr.io/buildtheearth/website-worker:latest`
