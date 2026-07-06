@@ -3,6 +3,7 @@
 import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
 import { ApplicationStatus } from '@repo/db'
+import getCountryName from '@/util/countries'
 
 export interface StatsFilter {
 	teamId?: string
@@ -270,4 +271,211 @@ export const getBuildTeamsList = async () => {
 			},
 		},
 	})
+}
+
+export const getGeographyStatisticsData = async () => {
+	const session = await getSession()
+	if (!session || !session.user) {
+		throw new Error('Unauthorized')
+	}
+
+	// 1. Fetch active claims with their buildTeam location and osmName
+	const claims = await prisma.claim.findMany({
+		where: { active: true },
+		select: {
+			id: true,
+			size: true,
+			finished: true,
+			buildings: true,
+			city: true,
+			osmName: true,
+			buildTeam: {
+				select: {
+					id: true,
+					name: true,
+					location: true,
+					slug: true,
+					icon: true,
+					color: true,
+				},
+			},
+		},
+	})
+
+	// 2. Fetch all build teams to ensure empty ones are also mapped
+	const teams = await prisma.buildTeam.findMany({
+		select: {
+			id: true,
+			name: true,
+			location: true,
+			slug: true,
+			icon: true,
+			color: true,
+		},
+	})
+
+	const countryMap: {
+		[name: string]: {
+			country: string
+			claims: number
+			finishedClaims: number
+			buildings: number
+			area: number
+			teams: any[]
+		}
+	} = {}
+
+	const getOrCreateCountry = (name: string) => {
+		const normalized = name || 'Unknown'
+		if (!countryMap[normalized]) {
+			countryMap[normalized] = {
+				country: normalized,
+				claims: 0,
+				finishedClaims: 0,
+				buildings: 0,
+				area: 0,
+				teams: [],
+			}
+		}
+		return countryMap[normalized]
+	}
+
+	// Group claims using Hybrid Resolution Strategy
+	claims.forEach((claim) => {
+		const team = claim.buildTeam
+		let countryName = ''
+
+		// 1. Primary: actual geographical location from osmName
+		if (claim.osmName) {
+			const parts = claim.osmName.split(', ')
+			if (parts.length > 0) {
+				countryName = parts[parts.length - 1].trim()
+			}
+		}
+
+		// 2. Fallback: Build Team designated primary country code
+		if (!countryName || countryName === 'Unknown') {
+			const countryCodes = team.location
+				? team.location
+						.split(',')
+						.map((c) => c.trim())
+						.filter(Boolean)
+				: []
+			if (countryCodes.length > 0) {
+				countryName = getCountryName(countryCodes[0])
+			} else {
+				countryName = 'Unknown'
+			}
+		}
+
+		const country = getOrCreateCountry(countryName)
+		country.claims++
+		if (claim.finished) country.finishedClaims++
+		country.buildings += claim.buildings
+		country.area += claim.size
+		if (!country.teams.some((t) => t.id === team.id)) {
+			country.teams.push(team)
+		}
+	})
+
+	// Map any remaining teams with locations that have 0 claims
+	teams.forEach((team) => {
+		if (team.location) {
+			const codes = team.location
+				.split(',')
+				.map((c) => c.trim())
+				.filter(Boolean)
+			codes.forEach((code) => {
+				const countryName = getCountryName(code)
+				const country = getOrCreateCountry(countryName)
+				if (!country.teams.some((t) => t.id === team.id)) {
+					country.teams.push(team)
+				}
+			})
+		}
+	})
+
+	// Collect cities and group them by resolved country
+	const cityMap: {
+		[key: string]: {
+			city: string
+			country: string
+			claims: number
+			buildings: number
+			area: number
+		}
+	} = {}
+
+	claims.forEach((claim) => {
+		if (claim.city) {
+			const cityName = claim.city.trim()
+			if (!cityName) return
+
+			const team = claim.buildTeam
+			let countryName = ''
+
+			if (claim.osmName) {
+				const parts = claim.osmName.split(', ')
+				if (parts.length > 0) {
+					countryName = parts[parts.length - 1].trim()
+				}
+			}
+
+			if (!countryName || countryName === 'Unknown') {
+				const countryCodes = team.location
+					? team.location
+							.split(',')
+							.map((c) => c.trim())
+							.filter(Boolean)
+					: []
+				countryName = countryCodes.length > 0 ? getCountryName(countryCodes[0]) : 'Unknown'
+			}
+
+			const key = `${cityName}-${countryName}`
+			if (!cityMap[key]) {
+				cityMap[key] = {
+					city: cityName,
+					country: countryName,
+					claims: 0,
+					buildings: 0,
+					area: 0,
+				}
+			}
+			cityMap[key].claims++
+			cityMap[key].buildings += claim.buildings
+			cityMap[key].area += claim.size
+		}
+	})
+
+	// Process countries list
+	const countries = Object.values(countryMap)
+		.map((c) => {
+			return {
+				country: c.country,
+				claims: c.claims,
+				finishedClaims: c.finishedClaims,
+				buildings: c.buildings,
+				area: c.area,
+				teams: c.teams,
+			}
+		})
+		.sort((a, b) => b.claims - a.claims)
+
+	const topCities = Object.values(cityMap)
+		.sort((a, b) => b.claims - a.claims)
+		.slice(0, 10)
+
+	const totalCountries = countries.filter((c) => c.country !== 'Unknown').length
+	const totalCities = Object.keys(cityMap).length
+	const totalTeamsMapped = teams.filter((t) => t.location).length
+
+	return {
+		countries,
+		topCities,
+		globalTotals: {
+			totalCountries,
+			totalCities,
+			totalTeamsMapped,
+		},
+	}
 }

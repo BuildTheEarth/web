@@ -44,7 +44,10 @@ const mockdata: (NavbarLink | NavbarLinkGroup)[] = [
 		label: 'Statistics',
 		icon: IconDeviceAnalytics,
 		initiallyOpened: true,
-		links: [{ label: 'Interactive Explorer', link: '/stats' }],
+		links: [
+			{ label: 'Interactive Explorer', link: '/stats' },
+			{ label: 'Geographical Stats', link: '/stats/geography' },
+		],
 	},
 
 	{
