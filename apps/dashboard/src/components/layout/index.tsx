@@ -25,7 +25,7 @@ export default async function AppLayout({ children, hideNavbar, customNavbar, ..
 			p="md"
 			{...props}
 		>
-			{!hideNavbar && <Navbar roles={session?.user?.realm_access.roles || []} />}
+			{!hideNavbar && <Navbar roles={session?.user?.realm_access?.roles || []} />}
 
 			{customNavbar}
 
