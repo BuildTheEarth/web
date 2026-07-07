@@ -35,7 +35,8 @@
 		"dash/auth",
 		"shared",
 		"frontend/about",
-		"frontend/faq"
+		"frontend/faq",
+		"frontend/stats"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
