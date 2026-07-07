@@ -1,3 +1,4 @@
+import Anchor from '@/components/core/Anchor'
 import Wrapper from '@/components/layout/Wrapper'
 import { List, ListItem, Text, Title } from '@mantine/core'
 import { Locale } from 'next-intl'
@@ -14,7 +15,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const keys = Object.keys(tMessages.attribution.translations) as (keyof typeof tMessages.attribution.translations)[]
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: 'Public Attributions', src: '/thumbs/home.webp' }}>
+		<Wrapper offsetHeader={false} head={{ title: 'Public Attribution', src: '/thumbs/1.webp' }}>
+			<Title order={2} mb="md">
+				Builders
+			</Title>
+			<Text mb="sm">
+				We would like to thank all the people who have contributed to the project through building. As this list is very
+				long, it is a seperate page. Please visit it here: <Anchor href="/contributors">Builder Contributions</Anchor>
+			</Text>
 			<Title order={2} mb="md">
 				Datasets and Tools
 			</Title>

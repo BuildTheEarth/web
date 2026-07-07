@@ -51,7 +51,7 @@ export default async function Page({
 	)) as any[]
 
 	return (
-		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
+		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/4.webp' }}>
 			{locale !== 'en' && t.has('differentLanguageAlert') && (
 				<Alert variant="light" color="yellow" title={t('differentLanguageAlert.title')} icon={<IconLanguage />} mb="xl">
 					{t('differentLanguageAlert.description')}

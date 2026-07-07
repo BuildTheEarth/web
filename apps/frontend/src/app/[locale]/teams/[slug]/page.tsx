@@ -102,7 +102,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
-				src={buildTeam.backgroundImage || '/thumbs/home.webp'}
+				src={buildTeam.backgroundImage || '/thumbs/6.webp'}
 				rootStyle={{ minHeight: '45vh', zIndex: 1 }}
 				priority
 				fetchpriority="high"
