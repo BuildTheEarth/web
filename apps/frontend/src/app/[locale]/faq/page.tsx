@@ -1,13 +1,13 @@
 import { QuerySearchInput } from '@/components/core/SearchInput'
 import Wrapper from '@/components/layout/Wrapper'
-import prisma from '@/util/db'
+import directus from '@/util/directus'
 import { getLanguageAlternates } from '@/util/seo'
+import { readItems } from '@directus/sdk'
 import { Accordion, AccordionControl, AccordionItem, AccordionPanel, Alert, Group } from '@mantine/core'
 import { IconLanguage } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import { unstable_cache } from 'next/cache'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale
@@ -34,29 +34,21 @@ export default async function Page({
 	const t = await getTranslations('faq')
 
 	const q = (await searchParams).q || ''
-	const faqs = await prisma.fAQQuestion.findMany({
-		select: {
-			id: true,
-			question: true,
-			answer: true,
-		},
-		where: {
-			OR: [
-				{
-					question: {
-						contains: q,
-						mode: 'insensitive',
-					},
-				},
-				{
-					answer: {
-						contains: q,
-						mode: 'insensitive',
-					},
-				},
-			],
-		},
-	})
+
+	const faqs: { id: string; sort: number; question: string; answer: string }[] = (await directus.request(
+		readItems('FAQ', {
+			limit: 99,
+			sort: 'sort',
+			fields: ['id', 'sort', 'question', 'answer', 'question'],
+			filter: q
+				? {
+						question: {
+							_contains: q,
+						},
+					}
+				: undefined,
+		}),
+	)) as any[]
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: t('title'), src: '/thumbs/home.webp' }}>
