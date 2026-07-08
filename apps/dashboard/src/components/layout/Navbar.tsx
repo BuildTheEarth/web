@@ -38,7 +38,7 @@ export interface NavbarLinkGroup extends NavbarLinkShared {
 	links: Omit<NavbarLink, 'icon'>[]
 }
 
-const mockdata: (NavbarLink | NavbarLinkGroup)[] = [
+const data: (NavbarLink | NavbarLinkGroup)[] = [
 	{ label: 'Your Home', icon: IconGauge, link: '/' },
 	{
 		label: 'Statistics',
@@ -121,7 +121,7 @@ const mockdata: (NavbarLink | NavbarLinkGroup)[] = [
 ]
 
 export default function Navbar(props: Navbar) {
-	const links = mockdata.map((item, i) => <LinksGroup {...item} key={item.label + '-' + i} />)
+	const links = data.map((item, i) => <LinksGroup {...item} key={item.label + '-' + i} />)
 
 	return (
 		<AppShellNavbar p="md" pb={0} style={{ backgroundColor: 'var(--mantine-color-dark-6)' }}>

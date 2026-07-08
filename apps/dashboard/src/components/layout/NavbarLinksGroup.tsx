@@ -39,7 +39,12 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 			return true
 		})
 		.map((link) => (
-			<Text component={Link} className={classes.link} href={link.link} key={link.label}>
+			<Text
+				component={Link}
+				className={classes.link}
+				href={`${isGroup ? props.prefix || '' : ''}${link.link}`.replaceAll('[team_slug]', activeBuildTeam?.slug || '')}
+				key={link.label}
+			>
 				{link.label}
 			</Text>
 		))
