@@ -17,6 +17,7 @@ import {
 	useCombobox,
 } from '@mantine/core'
 import { IconSelector } from '@tabler/icons-react'
+import classes from '@/styles/UserButton.module.css'
 
 const BuildTeamSelector = () => {
 	const [buildteams, activeBuildTeam, selectBuildTeam] = useSelectableBuildTeams()
@@ -46,8 +47,6 @@ const BuildTeamSelector = () => {
 					<InputBase
 						component="button"
 						style={{
-							display: 'block',
-							padding: 'var(--mantine-spacing-md)',
 							borderBottom: ' 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
 						}}
 						type="button"
@@ -57,6 +56,7 @@ const BuildTeamSelector = () => {
 						rightSection={''}
 						multiline
 						variant="unstyled"
+						className={classes.user}
 					>
 						{activeBuildTeam ? (
 							// <Box py="xs">
