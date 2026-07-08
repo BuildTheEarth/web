@@ -1,4 +1,4 @@
-import { Button, Group, Title } from '@mantine/core'
+import { Alert, Button, Group, Title } from '@mantine/core'
 
 import { getUserPermissions } from '@/actions/getUser'
 import ContentWrapper from '@/components/core/ContentWrapper'
@@ -72,6 +72,13 @@ export default async function Page({
 		orderBy: { createdAt: 'desc' },
 	})
 
+	const externallyLinkedClaimCount = await prisma.claim.count({
+		where: {
+			buildTeam: { slug },
+			externalId: { not: null },
+		},
+	})
+
 	return (
 		<Protection requiredRole="get-claims">
 			<ContentWrapper maw="90vw">
@@ -90,6 +97,16 @@ export default async function Page({
 						</Button>
 					</Group>
 				</Group>
+				{!searchQuery && externallyLinkedClaimCount > 0 && claimCount - externallyLinkedClaimCount > 0 ? (
+					<Alert title="Externally Linked Claims" color="yellow" mb="md">
+						There are a mix of externally linked and non-externally linked claims present in this team. You currently
+						have {externallyLinkedClaimCount} externally linked claims and {claimCount - externallyLinkedClaimCount}{' '}
+						non-externally linked claims.
+						<br />
+						It is not recommended to have a mix of externally linked and non-externally linked claims in the same team,
+						as this can lead to confusion and errors. Please consider removing the non-externally linked claims.
+					</Alert>
+				) : undefined}
 				<SearchClaims mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<ClaimsDatatable
 					claims={claims}

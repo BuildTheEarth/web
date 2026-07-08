@@ -1,7 +1,28 @@
 'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core'
-import { IconBlendMode, IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react'
+import {
+	ActionIcon,
+	Code,
+	Group,
+	Menu,
+	MenuDropdown,
+	MenuItem,
+	MenuLabel,
+	MenuTarget,
+	rem,
+	Text,
+	ThemeIcon,
+	Tooltip,
+} from '@mantine/core'
+import {
+	IconBlendMode,
+	IconCirclesRelation,
+	IconDots,
+	IconExternalLink,
+	IconEye,
+	IconId,
+	IconTrash,
+} from '@tabler/icons-react'
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { deleteClaim } from '@/actions/buildTeams'
@@ -40,8 +61,19 @@ export default function ClaimsDatatable({
 				{
 					accessor: 'id',
 					title: '#',
-					render: ({ id }) => <Code>{id.split('-')[0]}</Code>,
-					width: 120,
+					render: ({ id, externalId }) => (
+						<Group gap={4}>
+							<Code>{id.split('-')[0]}</Code>
+							{externalId ? (
+								<Tooltip label="This claim has an external ID">
+									<ThemeIcon color="yellow" size="sm" variant="light">
+										<IconCirclesRelation size={16} />
+									</ThemeIcon>
+								</Tooltip>
+							) : null}
+						</Group>
+					),
+					width: 140,
 				},
 				{
 					accessor: 'name',
@@ -86,20 +118,22 @@ export default function ClaimsDatatable({
 									</ActionIcon>
 								</MenuTarget>
 								<MenuDropdown>
+									{claim.externalId && (
+										<MenuItem
+											leftSection={<IconCirclesRelation style={{ width: rem(14), height: rem(14) }} />}
+											aria-label="Copy External ID"
+											onClick={() => clipboard.copy(claim.externalId)}
+											color="yellow"
+										>
+											Copy External ID
+										</MenuItem>
+									)}
 									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Copy ID"
 										onClick={() => clipboard.copy(claim.id)}
 									>
 										Copy ID
-									</MenuItem>
-									<MenuItem
-										leftSection={<IconBlendMode style={{ width: rem(14), height: rem(14) }} />}
-										aria-label="Copy External ID"
-										disabled={!claim.externalId}
-										onClick={() => clipboard.copy(claim.externalId)}
-									>
-										Copy External ID
 									</MenuItem>
 									<MenuItem
 										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
