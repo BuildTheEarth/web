@@ -1,6 +1,5 @@
 import {
 	Alert,
-	Avatar,
 	Badge,
 	Button,
 	Divider,
@@ -16,35 +15,31 @@ import {
 	Tooltip,
 } from '@mantine/core'
 
+import { getUserBuildTeams } from '@/actions/user'
+import Anchor from '@/components/core/Anchor'
+import { ActionsCard } from '@/components/core/card/ActionsCard'
+import { StatsSegmentsCard } from '@/components/core/card/StatsSegmentCard'
+import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
+import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { Greeting } from '@/components/data/Greeting'
+import { StatsGroup } from '@/components/data/StatsGroup'
 import { getSession } from '@/util/auth'
-import { Metadata } from 'next'
+import { toHumanDateTime } from '@/util/date'
 import prisma from '@/util/db'
 import { ApplicationStatus } from '@repo/db'
-import Anchor from '@/components/core/Anchor'
-import { toHumanDateTime } from '@/util/date'
-import { TextCard } from '@/components/core/card/TextCard'
-import { ActionsCard } from '@/components/core/card/ActionsCard'
-import { StatsGroup } from '@/components/data/StatsGroup'
 import {
+	IconCheck,
+	IconDeviceAnalytics,
+	IconForms,
+	IconManualGearbox,
+	IconMap,
 	IconPolygon,
 	IconUsersGroup,
-	IconForms,
-	IconBrandDiscord,
-	IconShield,
-	IconChevronRight,
-	IconDeviceAnalytics,
-	IconManualGearbox,
-	IconBrandMinecraft,
-	IconMap,
-	IconCheck,
 } from '@tabler/icons-react'
-import Link from 'next/link'
-import { getUserBuildTeams } from '@/actions/user'
-import { StatsSegmentsCard } from '@/components/core/card/StatsSegmentCard'
-import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import moment from 'moment'
+import { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
 	title: 'Your Home',
