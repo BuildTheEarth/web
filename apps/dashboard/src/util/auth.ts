@@ -228,30 +228,30 @@ export function hasBuildTeamPermission(
 	if (!requiredBuildTeam) {
 		return false
 	}
-	const hasPermission = permissions.some((perm) => {
-		// 1. user has global permission (no buildteam referenced)
-		if (requiredBuildTeam?.permission === perm.permission.id && !perm.buildTeam) {
-			return true
-		}
-		// 2. user has permission for buildteam with id
-		if (
-			'id' in requiredBuildTeam &&
-			perm.buildTeam &&
-			requiredBuildTeam.permission === perm.permission.id &&
-			requiredBuildTeam.id === perm.buildTeam.id
-		) {
-			return true
-		}
-		// 3. user has permission for buildteam with slug
-		if (
-			'slug' in requiredBuildTeam &&
-			perm.buildTeam &&
-			requiredBuildTeam.permission === perm.permission.id &&
-			requiredBuildTeam.slug === perm.buildTeam.slug
-		) {
-			return true
-		}
+
+	const requiredPermissionId = requiredBuildTeam.permission
+	const isSlug = 'slug' in requiredBuildTeam
+	const targetVal = isSlug ? requiredBuildTeam.slug : requiredBuildTeam.id
+
+	// 1. Filter permissions matching this specific buildTeam
+	const teamSpecificPermissions = permissions.filter((perm) => {
+		if (!perm.buildTeam) return false
+		const permVal = isSlug ? perm.buildTeam.slug : perm.buildTeam.id
+		return permVal === targetVal
 	})
 
-	return hasPermission
+	// If we are looking for ANY permission for this team
+	if (requiredPermissionId === 'any') {
+		return teamSpecificPermissions.length > 0 || permissions.some((perm) => !perm.buildTeam)
+	}
+
+	// 2. If the user has any permission entries for this specific team,
+	// only check if they have the required permission in those team-specific ones.
+	// Global permissions (where buildTeam is null) do not override team-specific ones if any team-specific permission exists.
+	if (teamSpecificPermissions.length > 0) {
+		return teamSpecificPermissions.some((perm) => perm.permission.id === requiredPermissionId)
+	}
+
+	// 3. If there are no team-specific entries for this team, check global database permissions (buildTeam is null)
+	return permissions.some((perm) => !perm.buildTeam && perm.permission.id === requiredPermissionId)
 }

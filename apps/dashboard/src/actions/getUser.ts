@@ -1,5 +1,5 @@
 'use server'
-import { getSession } from '@/util/auth'
+import { getSession, hasBuildTeamPermission } from '@/util/auth'
 import prisma from '@/util/db'
 import keycloakAdmin from '@/util/keycloak'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
@@ -201,4 +201,13 @@ export const getUserPermissions = async (ssoId?: string) => {
 		},
 	})
 	return permissions
+}
+
+export const checkBuildTeamPermission = async (
+	userId: string,
+	requiredBuildTeam: ({ id: string } | { slug: string }) & { permission: string },
+): Promise<boolean> => {
+	// Check permissions in the database (handles team-specific and global DB permissions)
+	const permissions = await getUserPermissions(userId)
+	return hasBuildTeamPermission(permissions, requiredBuildTeam)
 }

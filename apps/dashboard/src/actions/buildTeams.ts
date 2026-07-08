@@ -1,5 +1,6 @@
 'use server'
 import { getSession, hasRole } from '@/util/auth'
+import { checkBuildTeamPermission } from './getUser'
 import { revalidateWebsitePaths } from '@/util/data'
 import prisma from '@/util/db'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
@@ -237,15 +238,12 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 	const userId = session.user.id
 	const id = formData.get('id') as string
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			user: { ssoId: userId },
-			buildTeamId: id,
-			permissionId: 'team.settings.edit',
-		},
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		id,
+		permission: 'team.settings.edit',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('User does not have permission to edit this information')
 	}
 
@@ -312,17 +310,11 @@ export const userEditTeamSocials = async (
 		return { status: 'error', error: 'Missing team context' }
 	}
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			user: { ssoId: userId },
-			buildTeamId: id,
-			permissionId: {
-				in: ['team.settings.edit', 'team.socials.edit'],
-			},
-		},
-	})
+	const hasPermission =
+		(await checkBuildTeamPermission(userId, { id, permission: 'team.settings.edit' })) ||
+		(await checkBuildTeamPermission(userId, { id, permission: 'team.socials.edit' }))
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		return { status: 'error', error: 'User does not have permission to edit these social links' }
 	}
 
@@ -466,24 +458,16 @@ export const removeMember = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.remove',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.remove',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'permission.remove',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to remove members from this Build Team')
 	}
 
@@ -533,24 +517,16 @@ export const removeMembers = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.remove',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.remove',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'permission.remove',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to remove members from this Build Team')
 	}
 
@@ -600,24 +576,16 @@ export const addMember = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.add',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.add',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'permission.add',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to add members to this Build Team')
 	}
 
@@ -675,24 +643,16 @@ export const addMembers = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.add',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.add',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'permission.add',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to add members to this Build Team')
 	}
 
@@ -762,21 +722,13 @@ export const setMemberPermissions = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.add',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'permission.add',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'permission.add',
 	})
 
 	const buildTeam = await prisma.buildTeam.findFirst({
@@ -784,7 +736,7 @@ export const setMemberPermissions = async ({
 		select: { id: true, name: true, slug: true },
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to change permissions on this Build Team')
 	}
 
@@ -852,24 +804,16 @@ export const addApplicationResponseTemplate = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.application.edit',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.application.edit',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'team.application.edit',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to add a response template to this Build Team')
 	}
 
@@ -900,24 +844,16 @@ export const reviewApplication = async ({
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.application.review',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.application.review',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'team.application.review',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to review an application to this Build Team')
 	}
 
@@ -1204,24 +1140,16 @@ export const saveBuildTeamApplicationQuestions = async ({ buildTeamSlug, questio
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
 
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.application.edit',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.application.edit',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'team.application.edit',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to edit application questions on this Build Team')
 	}
 
@@ -1313,24 +1241,16 @@ export const deleteClaim = async ({ removeId, buildTeamSlug }: { removeId: strin
 	const session = await getSession()
 	if (!session) throw Error('Unauthorized')
 	const userId = session.user.id
-	const userHasPermission = await prisma.userPermission.findFirst({
-		where: {
-			OR: [
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.claim.list',
-					buildTeam: { slug: buildTeamSlug },
-				},
-				{
-					user: { ssoId: userId },
-					permissionId: 'team.claim.list',
-					buildTeamId: null,
-				},
-			],
-		},
+	if (!buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission = await checkBuildTeamPermission(userId, {
+		slug: buildTeamSlug,
+		permission: 'team.claim.list',
 	})
 
-	if (!userHasPermission) {
+	if (!hasPermission) {
 		throw Error('You do not have permission to delete claims from this Build Team')
 	}
 

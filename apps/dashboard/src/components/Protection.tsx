@@ -1,9 +1,9 @@
 'use server'
-import { getSession, hasBuildTeamPermission, hasRole } from '@/util/auth'
+import { getSession, hasRole } from '@/util/auth'
 
 import ErrorDisplay from './core/ErrorDisplay'
 
-import { getUserPermissions } from '@/actions/getUser'
+import { checkBuildTeamPermission } from '@/actions/getUser'
 import { Permisision } from '@repo/db'
 import type { JSX } from 'react'
 
@@ -12,12 +12,16 @@ export async function Protection(
 		| { children: JSX.Element; requiredRole: string }
 		| {
 				children: JSX.Element
-				requiredBuildTeam: ({ id: string } | { slug: string }) & { permission: Permisision['id'] }
+				requiredBuildTeam: ({ id: string } | { slug: string }) & { permission: Permisision['id'] | 'any' }
 		  },
 ) {
-	if ('requiredRole' in props) {
-		const session = await getSession()
+	const session = await getSession()
 
+	if (!session) {
+		return <ErrorDisplay message="You are not logged in. Please log in to access this page." />
+	}
+
+	if ('requiredRole' in props) {
 		if (!hasRole(session, props.requiredRole)) {
 			return (
 				<ErrorDisplay message="The Page you are trying to open requires special permissions. You are not authorized to view it. If you think this is a mistake please contact us." />
@@ -28,9 +32,9 @@ export async function Protection(
 	}
 
 	if ('requiredBuildTeam' in props && props.requiredBuildTeam) {
-		const permissions = await getUserPermissions()
+		const hasPermission = await checkBuildTeamPermission(session.user.id, props.requiredBuildTeam)
 
-		if (!hasBuildTeamPermission(permissions, props.requiredBuildTeam)) {
+		if (!hasPermission) {
 			return (
 				<ErrorDisplay message="The Page you are trying to open requires special permissions. You are not authorized to view it. If you think this is a mistake please contact us." />
 			)
