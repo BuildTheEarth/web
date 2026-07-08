@@ -1,7 +1,7 @@
 'use client'
 
 import classes from '@/styles/NavbarNested.module.css'
-import { AppShellNavbar, Group, ScrollArea, Text } from '@mantine/core'
+import { AppShellNavbar, Box, Group, ScrollArea, Text } from '@mantine/core'
 import {
 	IconForms,
 	IconGauge,
@@ -125,14 +125,14 @@ export default function Navbar(props: Navbar) {
 
 	return (
 		<AppShellNavbar p="md" pb={0} style={{ backgroundColor: 'var(--mantine-color-dark-6)' }}>
-			<div className={classes.header}>
+			<Box visibleFrom="sm" className={classes.header}>
 				<Group>
 					<Image src="/logo.png" alt="Logo" width={32} height={32} style={{ marginRight: '4px' }} />
 					<Text fw="bold" ff="var(--font-minecraft)" fz="20px" m={0}>
 						MyBuildTheEarth
 					</Text>
 				</Group>
-			</div>
+			</Box>
 
 			<ScrollArea className={classes.links}>
 				<div className={classes.linksInner}>{links}</div>
