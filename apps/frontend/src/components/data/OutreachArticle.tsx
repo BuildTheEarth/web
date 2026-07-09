@@ -13,6 +13,7 @@ export interface OutreachArticle {
 	publisher: string
 	link: string
 	date: string
+	tags: string[]
 }
 
 export async function OutreachArticleCard({
@@ -49,7 +50,8 @@ export async function OutreachArticleCard({
 					<IconCalendar size={16} />
 				</Tooltip>
 				<Text size="xs" c="dimmed">
-					{formatter.dateTime(new Date(article.date), { dateStyle: 'medium' })} / {article.publisher}
+					{formatter.dateTime(new Date(article.date), { dateStyle: 'medium' })} / <b>{article.publisher}</b>
+					{!!article.tags ? ' / ' + article.tags.join(', ') : ''}
 				</Text>
 			</Group>
 			<Text
