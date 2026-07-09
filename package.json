@@ -31,7 +31,7 @@
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
 		"husky": "^9.1.7",
-		"lint-staged": "^15.2.10",
+		"prettier": "^3.5.3",
 		"turbo": "^2.5.4"
 	},
 	"workspaces": [

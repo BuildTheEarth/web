@@ -62,8 +62,5 @@
 		"winston": "^3.17.0",
 		"yup": "^1.6.1"
 	},
-	"prettier": "@repo/prettier-config",
-	"lint-staged": {
-		"*": "prettier --write --ignore-unknown"
-	}
+	"prettier": "@repo/prettier-config"
 }

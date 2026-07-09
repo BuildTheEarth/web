@@ -1,3 +1,7 @@
 #!/usr/bin/env sh
 gpg-connect-agent reloadagent /bye
-npx lint-staged
+# Format staged files using Prettier and re-stage them
+if git diff --cached --name-only --diff-filter=ACMR | grep -q .; then
+  git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 yarn exec prettier --write --ignore-unknown
+  git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 git add
+fi
