@@ -415,5 +415,12 @@
 		"translations": {
 			"longhitw": "LonghiTW"
 		}
+	},
+	"about-us": {
+		"seo": {
+			"title": "关于我们",
+			"description": "探索 BuildTheEarth 的历史、我们的关键里程碑以及迄今为止的历程。"
+		},
+		"link": "了解更多"
 	}
 }

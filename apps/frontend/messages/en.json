@@ -100,6 +100,7 @@
 			"step3": "Build your first building"
 		},
 		"gallery": {
+			"subtitle": "Our journey so far",
 			"alt": "Showcase Image Gallery of BuildTheEarth",
 			"cta": "Explore the Gallery"
 		},
@@ -424,5 +425,12 @@
 	},
 	"attribution": {
 		"translations": {}
+	},
+	"about-us": {
+		"seo": {
+			"title": "About Us",
+			"description": "Explore the history of BuildTheEarth, our key milestones, and the journey so far."
+		},
+		"link": "Learn more"
 	}
 }

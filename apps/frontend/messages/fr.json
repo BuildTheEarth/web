@@ -426,5 +426,12 @@
 		"translations": {
 			"maxyolo01": "mAxYoLo01"
 		}
+	},
+	"about-us": {
+		"seo": {
+			"title": "À propos de nous",
+			"description": "Explorez l'histoire de BuildTheEarth, nos étapes clés et le chemin parcouru jusqu'à présent."
+		},
+		"link": "En savoir plus"
 	}
 }

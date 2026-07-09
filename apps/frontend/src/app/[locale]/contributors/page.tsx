@@ -35,7 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 
 	return {
 		title: 'Contributors',
-		description: `BuildTheEarth would not be possible without the support of everyone who has contributed to the project. Meet the ${formatter.format(builders)} people who make BuildTheEarth possible!`,
+		description: `BuildTheEarth would not be possible without the support of everyone who has contributed to the project. Meet the ${formatter.format(
+			builders,
+		)} people who make BuildTheEarth possible!`,
 		alternates: {
 			languages: getLanguageAlternates('/our-progress'),
 		},

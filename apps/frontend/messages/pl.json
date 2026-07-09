@@ -426,5 +426,12 @@
 		"translations": {
 			"brizu": "Brizu"
 		}
+	},
+	"about-us": {
+		"seo": {
+			"title": "O nas",
+			"description": "Poznaj historię BuildTheEarth, nasze kluczowe kamienie milowe i dotychczasową drogę."
+		},
+		"link": "Dowiedz się więcej"
 	}
 }

@@ -1,433 +1,440 @@
 {
-    "seo": {
-        "locale_long": "es_ES",
-        "locale_short": "es",
-        "locale_name": "Español",
-        "site_name": "BuildTheEarth",
-        "descri": "Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
-        "description": "Construyendo la Tierra en Minecraft - Únete al proyecto más grande del mundo dedicado a recrear nuestro planeta en el videojuego Minecraft.",
-        "title": {
-            "template": "%s | BuildTheEarth",
-            "default": "Construyendo la Tierra a escala real en Minecraft | BuildTheEarth"
-        },
-        "keywords": [
-            "BuildTheEarth",
-            "Minecraft",
-            "BTE",
-            "Comunidad",
-            "La Tierra",
-            "Mapa",
-            "Minecraft",
-            "Servidor",
-            "1:1",
-            "Global"
-        ],
-        "og": {
-            "title": "BuildTheEarth",
-            "subtitle": "Construyendo la Tierra en Minecraft"
-        }
-    },
-    "common": {
-        "pagination": {
-            "page": "Página {page}",
-            "first": "Primera página",
-            "last": "Última página",
-            "next": "Siguiente página",
-            "previous": "Página anterior"
-        },
-        "search": {
-            "placeholder": "Buscar..."
-        },
-        "footer": {
-            "copyright": "© {year} BuildTheEarth"
-        },
-        "header": {
-            "cta": "Empezar",
-            "toggleNavigation": "Alternar enlaces de navegación"
-        },
-        "links": {
-            "faq": "FAQ",
-            "teams": "Equipos",
-            "contact": "Contacto",
-            "status": "Estado del servidor",
-            "gallery": "Galería",
-            "map": "Mapa"
-        }
-    },
-    "home": {
-        "seo": {
-            "title": "Construyendo la Tierra en Minecraft",
-            "description": "Únete a BuildTheEarth y ayuda a recrear el planeta en Minecraft a escala 1:1."
-        },
-        "landing": {
-            "image": {
-                "alt": "Rotonda en una ciudad francesa, imagen de fondo"
-            },
-            "title": "Construyendo la Tierra en Minecraft",
-            "cta": {
-                "label": "¡Únete a nosotros!",
-                "alt": "Únete a la comunidad de BuildTheEarth"
-            },
-            "arrowDown": {
-                "alt": "Desliza hacia abajo para aprender más"
-            }
-        },
-        "whoWeAre": {
-            "title": "Quiénes somos",
-            "description": "BuildTheEarth es un proyecto comunitario con la intención de crear una réplica completa a escala 1:1 de todos los edificios de la Tierra en el videojuego Minecraft, una copia virtual de nuestro mundo entero que muestra la diversidad de cultura y espacio vital en nuestro planeta y se erige como un testimonio de lo que podemos lograr cuando trabajamos juntos como humanidad. Juntos conectamos, compartimos y aprendemos de constructores de todo el mundo, y exploramos la Tierra como nunca antes. ¡Únete a nuestra comunidad global y ayuda a dar vida a nuestro mundo!",
-            "cta": "Leer más"
-        },
-        "whatWeHaveDone": {
-            "title": "Qué hemos completado",
-            "buildings": "Edificios",
-            "area": "Área",
-            "users": "Usuarios"
-        },
-        "globalCommunity": {
-            "title": "Nuestra comunidad global",
-            "description": "Cada región o país se construye en un servidor de Minecraft y el progreso es gestionado por los equipos de BuildTheEarth. Para comenzar a construir, busca el equipo de una región y aprende cómo puedes ayudar. Muchas personas empiezan construyendo su propio vecindario o incluso solo su propia casa y luego continúan construyendo más. No tengas miedo de no ser lo suficientemente bueno para construir, todos comenzamos con algo pequeño. Recuerda que estamos aquí para ayudarte a aprender a construir cosas más complicadas.",
-            "cta": "Únete ahora"
-        },
-        "explore": {
-            "title": "Explora la Tierra",
-            "description": "Todo el progreso de BuildTheEarth está disponible para visitar y explorar de forma gratuita. El progreso se guarda en diferentes servidores dependiendo de la región o país del mundo. Basta con encontrar la IP de la región que quieres explorar y conectarte a ella. Muchos servidores se pueden conectar a través de nuestro servidor central que está disponible desde buildtheearth.net en Java edition.",
-            "cta": "Encuentra un servidor"
-        },
-        "howToHelp": {
-            "title": "Como puedes ayudar",
-            "description": "Para empezar a construir, busca el equipo de la región y aprende cómo puedes ayudar. Todos los equipos tienen un \"proceso de aplicación\" lo cual tiene como objetivo enseñarte los conceptos básicos de la construcción en el mundo de BuildTheEarth. Esto generalmente consiste en recrear 1 o 2 edificios pequeños en su servidor. Siempre puedes pedir ayuda y consejos de construcción en nuestro servidor de Discord. Los constructores experimentados estarán más que dispuestos a ayudarte a comenzar.",
-            "step1": "Encuentra tu Equipo",
-            "step2": "Únete al servidor",
-            "step3": "Construye tu primer edificio"
-        },
-        "gallery": {
-            "alt": "Imagen de muestra de la galería de BuildTheEarth",
-            "cta": "Explora la galería"
-        },
-        "mediaList": {
-            "title": "Puedes haber visto...",
-            "cta": "Seguir leyendo",
-            "mainCta": "Ver todo"
-        }
-    },
-    "notfound": {
-        "title": "No se ha encontrado la página...",
-        "description": "La página que estás intentando abrir no existe. Es posible que la dirección sea incorrecta o que la página se haya movido a otro enlace.",
-        "cta": "Volver"
-    },
-    "teams": {
-        "seo": {
-            "title": "Equipos de construcción",
-            "description": "Explora los equipos de BuildTheEarth, encuentra tu región y únete a un servidor de Minecraft para comenzar a participar."
-        },
-        "title": "Equipos de construcción",
-        "viewTeamOnMap": "Explora equipos en el mapa",
-        "description": [
-            "BuildTheEarth se divide en equipos de construcción, que construyen países o áreas específicas del mundo.",
-            "Cada equipo tiene su propio servidor de Minecraft, donde puedes unirte y comenzar a construir."
-        ],
-        "tooltip": {
-            "location": "Una lista de países en los que este equipo construye",
-            "members": "Número de miembros en este equipo"
-        },
-        "memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}",
-        "ownPage": {
-            "seo": {
-                "notFoundTitle": "Equipo de construcción no encontrado",
-                "notFoundDescription": "El equipo de construcción que estás buscando no existe.",
-                "defaultOgImage": "/opengraph-image.png"
-            },
-            "notFoundFallback": "Equipo de construcción no encontrado.",
-            "showcaseImageAlt": "Imagen de muestra",
-            "overview": "Vista general",
-            "details": "Detalles",
-            "ip": "IP de Minecraft",
-            "version": "Versión de Minecraft",
-            "location": "{count, plural, =1 {Location} other {Locations}}",
-            "moreLocations": "{list}, +{count}",
-            "members": "Miembros",
-            "recentImages": "Imágenes Recientes",
-            "noRecentImages": "{team} no ha compartido imágenes aún.",
-            "apply": "Solicitar unirse",
-            "joinServer": {
-                "label": "Únete al servidor",
-                "step1": [
-                    "1. Inicia Minecraft",
-                    "Abre el launcher.",
-                    "Selecciona <i>Minecraft Java Edition</i> en la barra lateral izquierda.",
-                    "Haz clic en el botón verde <launcherButton>PLAY</launcherButton> para iniciar Minecraft.",
-                    "Una vez que Minecraft haya iniciado, haz clic en <button>Multiplayer</button> en el menú principal."
-                ],
-                "tip": "Para la mejor experiencia, es posible que necesites <link>cambiar la versión de tu juego</link> a <code>{version}</code>.",
-                "step2": [
-                    "2. Añade el servidor",
-                    "Haz clic en <button>Add Server</button> en la esquina inferior derecha.",
-                    "Para <b>Nombre del servidor</b>, ingresa una etiqueta para ti (como <i>{name}</i>).",
-                    "Para <b>Dirección del servidor</b>, ingresa <code>{ip}</code> y haz clic en <button>Done</button>.",
-                    "Haz clic en el servidor que acabas de agregar en la lista.",
-                    "Escribe <code>/bt {slug}</code> y presiona <kbd>ENTER</kbd>."
-                ],
-                "done": "<b>¡Listo!</b> Ahora estás en el servidor de Minecraft {name}."
-            },
-            "locationsList": {
-                "label": "Ubicaciones",
-                "description": "{buildTeam} está construyendo en múltiples países. Puedes encontrar la lista completa de países a continuación. Si quieres ver esta lista en un mapa, haz clic en el botón de abajo.",
-                "viewOnMap": "Ver en el Mapa"
-            }
-        }
-    },
-    "faq": {
-        "seo": {
-            "title": "Preguntas frecuentes",
-            "description": "Obtén respuestas a las preguntas más comunes sobre BuildTheEarth, incluyendo unirse a equipos, reglas de construcción y detalles de la comunidad."
-        },
-        "title": "Preguntas frecuentes",
-        "differentLanguageAlert": {
-            "title": "Traducción de Preguntas Frecuentes",
-            "description": "Todas las preguntas enumeradas en esta página están escritas y respondidas en inglés. Si necesitas ayuda para obtener una respuesta, por favor envíanos un mensaje en Discord."
-        }
-    },
-    "contact": {
-        "seo": {
-            "title": "Contacto",
-            "description": "Conecta con BuildTheEarth a través de nuestros canales sociales, contactos del equipo o soporte."
-        },
-        "title": "Contacto",
-        "socialMedia": "Redes sociales",
-        "staffContacts": "Gestión del proytecto",
-        "appeals": {
-            "title": "Apelación de expulsión",
-            "description": "Si quieres apelar tu expulsión de nuestro servidor de Discord, por favor envía un correo electrónico a <mail></mail>. Para enviar una apelación de expulsión, debes incluir tu nombre e ID de Discord, una captura de pantalla de tu mensaje de expulsión y tu razón para apelar. Las apelaciones ilegítimas serán ignoradas."
-        }
-    },
-    "statistics": {
-        "seo": {
-            "title": "Estadísticas del Proyecto",
-            "description": "Explora las estadísticas de BuildTheEarth: constructores, parcelas, edificios y el progreso del proyecto."
-        },
-        "atAGlance": "A simple vista",
-        "users": {
-            "label": "Usuarios",
-            "description": "están ayudando a construir la Tierra en Minecraft."
-        },
-        "buildings": {
-            "label": "Edificios",
-            "description": "ya han sido construidos en todo el planeta.",
-            "total": {
-                "label": "Total de edificios",
-                "description": "han sido creados."
-            },
-            "active": {
-                "label": "Edificios activos",
-                "description": "están actualmente visibles en nuestro mapa."
-            },
-            "finished": {
-                "label": "Edificios terminados",
-                "description": "ya han sido completamente construidos."
-            },
-            "unfinished": {
-                "label": "Edificios incompletos",
-                "description": "aún están en construcción."
-            }
-        },
-        "claims": {
-            "label": "Parcelas",
-            "description": "están siendo construidas o ya están terminadas.",
-            "sectionTitle": "Parcelas",
-            "total": {
-                "label": "Total de Parcelas",
-                "description": "han sido creadas."
-            },
-            "active": {
-                "label": "Parcelas activas",
-                "description": "están actualmente visibles en nuestro mapa."
-            },
-            "finished": {
-                "label": "Parcelas terminadas",
-                "description": "ya han sido completamente construidas."
-            },
-            "unfinished": {
-                "label": "Parcelas incompletas",
-                "description": "aún están en construcción."
-            }
-        },
-        "common": {
-            "finished": "Terminado",
-            "unfinished": "Incompleto"
-        },
-        "charts": {
-            "finishedVsUnfinishedCount": "Finalizados vs. Incompletos (Cantidad)",
-            "finishedVsUnfinishedBuildings": "Finalizados vs. Incompletos (Edificios)",
-            "finishedVsUnfinishedArea": "Finalizados vs. Incompletos (Área)"
-        },
-        "area": {
-            "total": "Superficie Total",
-            "active": "Superficie Activa",
-            "finished": "Superficie Terminada"
-        },
-        "leaderboard": {
-            "title": "Clasificación",
-            "largestFinishedByBuildings": "Parcela terminada más grande (Cantidad de edificios)",
-            "largestFinishedByArea": "Parcela terminada más grande (Superficie)",
-            "mostClaimsByUser": "Más Parcelas (Usuario con más parcelas)",
-            "mostClaimsByBuildTeam": "Más Parcelas (Equipos con más parcelas)"
-        },
-        "buildTeams": {
-            "title": "BuildTeams",
-            "mostBuilders": "Equipo con más constructores"
-        },
-        "title": "Estadísticas del Proyecto"
-    },
-    "get-started": {
-        "seo": {
-            "title": "Empezar en BuildTheEarth",
-            "description": "Aprende cómo explorar servidores, encontrar tu equipo y empezar a construir con BuildTheEarth"
-        },
-        "cards": {
-            "imageAlt": "Tarjeta de tutorial de inicio"
-        },
-        "title": "Empieza a construir",
-        "arrowDown": {
-            "alt": "Desliza hacia abajo para aprender más sobre cómo empezar en el proyecto."
-        },
-        "explore": {
-            "title": "Explorar BuildTheEarth",
-            "description": "Descubra el increíble progreso realizado por nuestra comunidad global mientras recrean el mundo.",
-            "cta": "Encontrar un servidor",
-            "searchCountries": "Buscar países...",
-            "content": {
-                "text": "Dependiendo del país que quieras visitar, hay múltiples servidores disponibles. Puedes buscar un país en el cuadro inferior. <br></br><br></br>De lo contrario, también puedes explorar nuestro progreso revisando la galería o visitando el mapa de progreso.",
-                "ctaGallery": "Ver galería",
-                "ctaMap": "Explorar el mapa"
-            },
-            "joinServer": {
-                "title": "Explorar {country}",
-                "description": "Únete al servidor {{name}} para explorar las increíbles construcciones de esta región.<br></br><br></br>Si necesitas ayuda para navegar por el servidor, no dudes en contactarnos en Discord",
-                "ctaDiscord": "Unirse al servidor de Discord",
-                "moreInformation": "Más información"
-            }
-        },
-        "build": {
-            "title": "Empezar a construir",
-            "description": "Únete y comienza a participar en la creación de una réplica de la Tierra a escala 1:1 en Minecraft.",
-            "cta": "Encuentra tu equipo",
-            "content": {
-                "text": "BuildTheEarth está organizado en múltiples <b>Equipos de Construcción</b>, cada uno responsable de recrear diferentes regiones del mundo. Los Equipos de Construcción a menudo se enfocan en <b>países o regiones específicas</b>, lo que te permite contribuir a áreas que te apasionan.<br></br><br></br>No hay restricciones sobre a cuáles o cuántos Equipos de Construcción puedes unirte, ¡así que siéntete libre de explorar tantos como quieras!<br></br><br></br>Cada Equipo de Construcción tiene su propio servidor donde puedes colaborar con otros constructores, participar en eventos y obtener apoyo. Debido a esto, no hay un \"proceso de aplicación\" único.<br></br>En cambio, simplemente <b>únete al servidor de Discord</b> del Equipo de Construcción que te interese y sigue sus simples instrucciones para comenzar.<br></br><br></br>¡También puedes unirte a nuestro Servidor Central (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) para obtener ayuda y conocer a otros constructores de todo el mundo!"
-            },
-            "joinServer": {
-                "title": "Construir en {country}",
-                "description": "¡Únete al servidor {name} de Minecraft para ayudar a construir en esta región!<br></br><br></br>¡No olvides unirte a los servidores de Discord con los enlaces de abajo!",
-                "ctaDiscord": "Servidor de Discord de {name}",
-                "moreInformation": "Más información"
-            }
-        }
-    },
-    "outreach": {
-        "seo": {
-            "title": "Alcance y medios",
-            "description": "Lea artículos de los medios, reportes de prensa e historias de alcance sobre BuildTheEarth."
-        },
-        "title": "Alcance",
-        "articles": "Artículos y medios",
-        "contact": {
-            "title": "Consultas de medios",
-            "description": "Para consultas de medios, oportunidades de asociación o cualquier otra pregunta relacionada con el alcance, por favor contáctenos a través de <mail></mail>. ¡Esperamos escuchar de usted! También puede encontrarnos en varias <contact>plataformas de redes sociales</contact>."
-        }
-    },
-    "our-progress": {
-        "title": "Nuestro progreso",
-        "seo": {
-            "title": "Nuestro progreso",
-            "description": "Descubre que ha conseguido BuildTheEarth hasta ahora y hacia dónde nos dirigimos."
-        },
-        "meta": {
-            "title": "Nuestro progreso",
-            "description": "Descubre que ha conseguido BuildTheEarth hasta ahora y hacia dónde nos dirigimos."
-        },
-        "sections": {
-            "achievements": {
-                "title": "Qué hemos conseguido hasta ahora",
-                "description": "Nuestras estadísticas de progreso pueden parecer modestas a primera vista, pero este proyecto nunca fue sobre aumentar a toda velocidad un porcentaje. Trata de una colaboración global, preservar identidades locales y crear un registro duradero de nuestro mundo juntos."
-            },
-            "progress": {
-                "title": "Estimaciones de progreso",
-                "description": "Estas estadísticas muestran nuestro progreso como una fracción de la superficie total de la Tierra, un humilde recordatorio de que la misión prioriza la calidad y nuestra comunidad, no la velocidad."
-            }
-        },
-        "stats": {
-            "builders": {
-                "label": "Constructores",
-                "description": "Personas que colaboran activamente en equipos, enseñan a principiantes y comparten técnicas de construcción desde todas partes del mundo."
-            },
-            "buildings": {
-                "label": "Edificios en seguimiento",
-                "description": "Un registro en crecimiento de estructuras del mundo real recreadas con cuidado, investigación y conocimiento local."
-            },
-            "area": {
-                "label": "Superficie cubierta",
-                "description": "Regiones grandes y pequeñas organizadas en parcelas para que los equipos puedan coordinar el trabajo a través de continentes."
-            }
-        },
-        "cards": {
-            "claimCompletion": {
-                "title": "Parcelas completadas",
-                "description": "{finishedClaims} de {activeClaims} parcelas activas están marcadas como completadas."
-            },
-            "landCoverage": {
-                "title": "Cobertura de la masa terrestre de la Tierra",
-                "description": "{trackedAreaKm2} km² de la superficie terrestre de la Tierra."
-            },
-            "totalCoverage": {
-                "title": "Cobertura total del área de la Tierra",
-                "description": "{trackedAreaKm2} km² de la superficie total de la Tierra."
-            }
-        },
-        "impact": {
-            "title": "Pequeños porcentajes, grandes impactos",
-            "description": "BuldTheEarth no es una carrera por el 100%. Estamos construyendo ciudades con contexto histórico, detalles locales y miles de horas de voluntariado. Incluso un solo barrio bien hecho puede educar, inspirar y conectar a personas de diferentes países."
-        }
-    },
-    "gallery": {
-        "seo": {
-            "title": "Galería de Muestra",
-            "description": "Explora la galería de muestra de BuildTheEarth con construcciones de la comunidad de todo el mundo."
-        }
-    },
-    "blog": {
-        "seo": {
-            "title": "Blog",
-            "description": "Lea noticias sobre BuildTheEarth, actualizaciones e historias de la comunidad global.",
-            "defaultOgImage": "/opengraph-image.png"
-        },
-        "intro": "¿Alguna vez te has preguntado cómo construimos nuestros proyectos, qué sucede destrás de escenas o quieres estar al día sobre nuestro proyecto? !Entonces este es el lugar! Sumérgete en un mundo de creatividad, innovación y espíritu comunitario dónde compartimos historias, actualizaciones e ideas de nuestro viaje para recrear la Tierra en Minecraft.",
-        "latestPosts": "Últimas publicaciones",
-        "thumbnailAlt": "Imagen de miniatura",
-        "publishedOn": "Publicado el día {date}",
-        "defaultAuthor": "BuildTheEarth",
-        "readMore": "Leer más"
-    },
-    "map": {
-        "seo": {
-            "title": "Mapa del proyecto",
-            "description": "Explora parcelas activas o completadas de BuildTheEarth en el mapa mundial interactivo."
-        },
-        "teams": {
-            "seo": {
-                "title": "Mapa del equipo",
-                "description": "Explora los equipos de BuilTheEarth, encuentra tu región y únete a un servidor de Minecraft para empezar a contribuir."
-            },
-            "infoNotice": {
-                "title": "Nota: {country}",
-                "description": "El país o región que has seleccionado no está siendo construido actualmente por ningún equipo. Estamos en el proceso de solucionar esto, pero mientras tanto, si quieres ayudar, considera unirte a un equipo diferente.",
-                "descriptionUs": "Los Estados Unidos está siendo construido por varios equipos de construcción. Si quieres ayudar, considera unirte a uno de los siguientes equipos de construcción que están construyendo en los Estados Unidos:",
-                "descUs": "The United States is currently being built by multiple BuildTeams. If you want to help out, please consider joining one of the following BuildTeams that are building in the US:"
-            }
-        }
-    },
-    "attribution": {
-        "translations": {
-            "aki4444": "aki.4444",
-            "thelib03": "thelib03"
-        }
-    }
+	"seo": {
+		"locale_long": "es_ES",
+		"locale_short": "es",
+		"locale_name": "Español",
+		"site_name": "BuildTheEarth",
+		"descri": "Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
+		"description": "Construyendo la Tierra en Minecraft - Únete al proyecto más grande del mundo dedicado a recrear nuestro planeta en el videojuego Minecraft.",
+		"title": {
+			"template": "%s | BuildTheEarth",
+			"default": "Construyendo la Tierra a escala real en Minecraft | BuildTheEarth"
+		},
+		"keywords": [
+			"BuildTheEarth",
+			"Minecraft",
+			"BTE",
+			"Comunidad",
+			"La Tierra",
+			"Mapa",
+			"Minecraft",
+			"Servidor",
+			"1:1",
+			"Global"
+		],
+		"og": {
+			"title": "BuildTheEarth",
+			"subtitle": "Construyendo la Tierra en Minecraft"
+		}
+	},
+	"common": {
+		"pagination": {
+			"page": "Página {page}",
+			"first": "Primera página",
+			"last": "Última página",
+			"next": "Siguiente página",
+			"previous": "Página anterior"
+		},
+		"search": {
+			"placeholder": "Buscar..."
+		},
+		"footer": {
+			"copyright": "© {year} BuildTheEarth"
+		},
+		"header": {
+			"cta": "Empezar",
+			"toggleNavigation": "Alternar enlaces de navegación"
+		},
+		"links": {
+			"faq": "FAQ",
+			"teams": "Equipos",
+			"contact": "Contacto",
+			"status": "Estado del servidor",
+			"gallery": "Galería",
+			"map": "Mapa"
+		}
+	},
+	"home": {
+		"seo": {
+			"title": "Construyendo la Tierra en Minecraft",
+			"description": "Únete a BuildTheEarth y ayuda a recrear el planeta en Minecraft a escala 1:1."
+		},
+		"landing": {
+			"image": {
+				"alt": "Rotonda en una ciudad francesa, imagen de fondo"
+			},
+			"title": "Construyendo la Tierra en Minecraft",
+			"cta": {
+				"label": "¡Únete a nosotros!",
+				"alt": "Únete a la comunidad de BuildTheEarth"
+			},
+			"arrowDown": {
+				"alt": "Desliza hacia abajo para aprender más"
+			}
+		},
+		"whoWeAre": {
+			"title": "Quiénes somos",
+			"description": "BuildTheEarth es un proyecto comunitario con la intención de crear una réplica completa a escala 1:1 de todos los edificios de la Tierra en el videojuego Minecraft, una copia virtual de nuestro mundo entero que muestra la diversidad de cultura y espacio vital en nuestro planeta y se erige como un testimonio de lo que podemos lograr cuando trabajamos juntos como humanidad. Juntos conectamos, compartimos y aprendemos de constructores de todo el mundo, y exploramos la Tierra como nunca antes. ¡Únete a nuestra comunidad global y ayuda a dar vida a nuestro mundo!",
+			"cta": "Leer más"
+		},
+		"whatWeHaveDone": {
+			"title": "Qué hemos completado",
+			"buildings": "Edificios",
+			"area": "Área",
+			"users": "Usuarios"
+		},
+		"globalCommunity": {
+			"title": "Nuestra comunidad global",
+			"description": "Cada región o país se construye en un servidor de Minecraft y el progreso es gestionado por los equipos de BuildTheEarth. Para comenzar a construir, busca el equipo de una región y aprende cómo puedes ayudar. Muchas personas empiezan construyendo su propio vecindario o incluso solo su propia casa y luego continúan construyendo más. No tengas miedo de no ser lo suficientemente bueno para construir, todos comenzamos con algo pequeño. Recuerda que estamos aquí para ayudarte a aprender a construir cosas más complicadas.",
+			"cta": "Únete ahora"
+		},
+		"explore": {
+			"title": "Explora la Tierra",
+			"description": "Todo el progreso de BuildTheEarth está disponible para visitar y explorar de forma gratuita. El progreso se guarda en diferentes servidores dependiendo de la región o país del mundo. Basta con encontrar la IP de la región que quieres explorar y conectarte a ella. Muchos servidores se pueden conectar a través de nuestro servidor central que está disponible desde buildtheearth.net en Java edition.",
+			"cta": "Encuentra un servidor"
+		},
+		"howToHelp": {
+			"title": "Como puedes ayudar",
+			"description": "Para empezar a construir, busca el equipo de la región y aprende cómo puedes ayudar. Todos los equipos tienen un \"proceso de aplicación\" lo cual tiene como objetivo enseñarte los conceptos básicos de la construcción en el mundo de BuildTheEarth. Esto generalmente consiste en recrear 1 o 2 edificios pequeños en su servidor. Siempre puedes pedir ayuda y consejos de construcción en nuestro servidor de Discord. Los constructores experimentados estarán más que dispuestos a ayudarte a comenzar.",
+			"step1": "Encuentra tu Equipo",
+			"step2": "Únete al servidor",
+			"step3": "Construye tu primer edificio"
+		},
+		"gallery": {
+			"alt": "Imagen de muestra de la galería de BuildTheEarth",
+			"cta": "Explora la galería"
+		},
+		"mediaList": {
+			"title": "Puedes haber visto...",
+			"cta": "Seguir leyendo",
+			"mainCta": "Ver todo"
+		}
+	},
+	"notfound": {
+		"title": "No se ha encontrado la página...",
+		"description": "La página que estás intentando abrir no existe. Es posible que la dirección sea incorrecta o que la página se haya movido a otro enlace.",
+		"cta": "Volver"
+	},
+	"teams": {
+		"seo": {
+			"title": "Equipos de construcción",
+			"description": "Explora los equipos de BuildTheEarth, encuentra tu región y únete a un servidor de Minecraft para comenzar a participar."
+		},
+		"title": "Equipos de construcción",
+		"viewTeamOnMap": "Explora equipos en el mapa",
+		"description": [
+			"BuildTheEarth se divide en equipos de construcción, que construyen países o áreas específicas del mundo.",
+			"Cada equipo tiene su propio servidor de Minecraft, donde puedes unirte y comenzar a construir."
+		],
+		"tooltip": {
+			"location": "Una lista de países en los que este equipo construye",
+			"members": "Número de miembros en este equipo"
+		},
+		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}",
+		"ownPage": {
+			"seo": {
+				"notFoundTitle": "Equipo de construcción no encontrado",
+				"notFoundDescription": "El equipo de construcción que estás buscando no existe.",
+				"defaultOgImage": "/opengraph-image.png"
+			},
+			"notFoundFallback": "Equipo de construcción no encontrado.",
+			"showcaseImageAlt": "Imagen de muestra",
+			"overview": "Vista general",
+			"details": "Detalles",
+			"ip": "IP de Minecraft",
+			"version": "Versión de Minecraft",
+			"location": "{count, plural, =1 {Location} other {Locations}}",
+			"moreLocations": "{list}, +{count}",
+			"members": "Miembros",
+			"recentImages": "Imágenes Recientes",
+			"noRecentImages": "{team} no ha compartido imágenes aún.",
+			"apply": "Solicitar unirse",
+			"joinServer": {
+				"label": "Únete al servidor",
+				"step1": [
+					"1. Inicia Minecraft",
+					"Abre el launcher.",
+					"Selecciona <i>Minecraft Java Edition</i> en la barra lateral izquierda.",
+					"Haz clic en el botón verde <launcherButton>PLAY</launcherButton> para iniciar Minecraft.",
+					"Una vez que Minecraft haya iniciado, haz clic en <button>Multiplayer</button> en el menú principal."
+				],
+				"tip": "Para la mejor experiencia, es posible que necesites <link>cambiar la versión de tu juego</link> a <code>{version}</code>.",
+				"step2": [
+					"2. Añade el servidor",
+					"Haz clic en <button>Add Server</button> en la esquina inferior derecha.",
+					"Para <b>Nombre del servidor</b>, ingresa una etiqueta para ti (como <i>{name}</i>).",
+					"Para <b>Dirección del servidor</b>, ingresa <code>{ip}</code> y haz clic en <button>Done</button>.",
+					"Haz clic en el servidor que acabas de agregar en la lista.",
+					"Escribe <code>/bt {slug}</code> y presiona <kbd>ENTER</kbd>."
+				],
+				"done": "<b>¡Listo!</b> Ahora estás en el servidor de Minecraft {name}."
+			},
+			"locationsList": {
+				"label": "Ubicaciones",
+				"description": "{buildTeam} está construyendo en múltiples países. Puedes encontrar la lista completa de países a continuación. Si quieres ver esta lista en un mapa, haz clic en el botón de abajo.",
+				"viewOnMap": "Ver en el Mapa"
+			}
+		}
+	},
+	"faq": {
+		"seo": {
+			"title": "Preguntas frecuentes",
+			"description": "Obtén respuestas a las preguntas más comunes sobre BuildTheEarth, incluyendo unirse a equipos, reglas de construcción y detalles de la comunidad."
+		},
+		"title": "Preguntas frecuentes",
+		"differentLanguageAlert": {
+			"title": "Traducción de Preguntas Frecuentes",
+			"description": "Todas las preguntas enumeradas en esta página están escritas y respondidas en inglés. Si necesitas ayuda para obtener una respuesta, por favor envíanos un mensaje en Discord."
+		}
+	},
+	"contact": {
+		"seo": {
+			"title": "Contacto",
+			"description": "Conecta con BuildTheEarth a través de nuestros canales sociales, contactos del equipo o soporte."
+		},
+		"title": "Contacto",
+		"socialMedia": "Redes sociales",
+		"staffContacts": "Gestión del proytecto",
+		"appeals": {
+			"title": "Apelación de expulsión",
+			"description": "Si quieres apelar tu expulsión de nuestro servidor de Discord, por favor envía un correo electrónico a <mail></mail>. Para enviar una apelación de expulsión, debes incluir tu nombre e ID de Discord, una captura de pantalla de tu mensaje de expulsión y tu razón para apelar. Las apelaciones ilegítimas serán ignoradas."
+		}
+	},
+	"statistics": {
+		"seo": {
+			"title": "Estadísticas del Proyecto",
+			"description": "Explora las estadísticas de BuildTheEarth: constructores, parcelas, edificios y el progreso del proyecto."
+		},
+		"atAGlance": "A simple vista",
+		"users": {
+			"label": "Usuarios",
+			"description": "están ayudando a construir la Tierra en Minecraft."
+		},
+		"buildings": {
+			"label": "Edificios",
+			"description": "ya han sido construidos en todo el planeta.",
+			"total": {
+				"label": "Total de edificios",
+				"description": "han sido creados."
+			},
+			"active": {
+				"label": "Edificios activos",
+				"description": "están actualmente visibles en nuestro mapa."
+			},
+			"finished": {
+				"label": "Edificios terminados",
+				"description": "ya han sido completamente construidos."
+			},
+			"unfinished": {
+				"label": "Edificios incompletos",
+				"description": "aún están en construcción."
+			}
+		},
+		"claims": {
+			"label": "Parcelas",
+			"description": "están siendo construidas o ya están terminadas.",
+			"sectionTitle": "Parcelas",
+			"total": {
+				"label": "Total de Parcelas",
+				"description": "han sido creadas."
+			},
+			"active": {
+				"label": "Parcelas activas",
+				"description": "están actualmente visibles en nuestro mapa."
+			},
+			"finished": {
+				"label": "Parcelas terminadas",
+				"description": "ya han sido completamente construidas."
+			},
+			"unfinished": {
+				"label": "Parcelas incompletas",
+				"description": "aún están en construcción."
+			}
+		},
+		"common": {
+			"finished": "Terminado",
+			"unfinished": "Incompleto"
+		},
+		"charts": {
+			"finishedVsUnfinishedCount": "Finalizados vs. Incompletos (Cantidad)",
+			"finishedVsUnfinishedBuildings": "Finalizados vs. Incompletos (Edificios)",
+			"finishedVsUnfinishedArea": "Finalizados vs. Incompletos (Área)"
+		},
+		"area": {
+			"total": "Superficie Total",
+			"active": "Superficie Activa",
+			"finished": "Superficie Terminada"
+		},
+		"leaderboard": {
+			"title": "Clasificación",
+			"largestFinishedByBuildings": "Parcela terminada más grande (Cantidad de edificios)",
+			"largestFinishedByArea": "Parcela terminada más grande (Superficie)",
+			"mostClaimsByUser": "Más Parcelas (Usuario con más parcelas)",
+			"mostClaimsByBuildTeam": "Más Parcelas (Equipos con más parcelas)"
+		},
+		"buildTeams": {
+			"title": "BuildTeams",
+			"mostBuilders": "Equipo con más constructores"
+		},
+		"title": "Estadísticas del Proyecto"
+	},
+	"get-started": {
+		"seo": {
+			"title": "Empezar en BuildTheEarth",
+			"description": "Aprende cómo explorar servidores, encontrar tu equipo y empezar a construir con BuildTheEarth"
+		},
+		"cards": {
+			"imageAlt": "Tarjeta de tutorial de inicio"
+		},
+		"title": "Empieza a construir",
+		"arrowDown": {
+			"alt": "Desliza hacia abajo para aprender más sobre cómo empezar en el proyecto."
+		},
+		"explore": {
+			"title": "Explorar BuildTheEarth",
+			"description": "Descubra el increíble progreso realizado por nuestra comunidad global mientras recrean el mundo.",
+			"cta": "Encontrar un servidor",
+			"searchCountries": "Buscar países...",
+			"content": {
+				"text": "Dependiendo del país que quieras visitar, hay múltiples servidores disponibles. Puedes buscar un país en el cuadro inferior. <br></br><br></br>De lo contrario, también puedes explorar nuestro progreso revisando la galería o visitando el mapa de progreso.",
+				"ctaGallery": "Ver galería",
+				"ctaMap": "Explorar el mapa"
+			},
+			"joinServer": {
+				"title": "Explorar {country}",
+				"description": "Únete al servidor {{name}} para explorar las increíbles construcciones de esta región.<br></br><br></br>Si necesitas ayuda para navegar por el servidor, no dudes en contactarnos en Discord",
+				"ctaDiscord": "Unirse al servidor de Discord",
+				"moreInformation": "Más información"
+			}
+		},
+		"build": {
+			"title": "Empezar a construir",
+			"description": "Únete y comienza a participar en la creación de una réplica de la Tierra a escala 1:1 en Minecraft.",
+			"cta": "Encuentra tu equipo",
+			"content": {
+				"text": "BuildTheEarth está organizado en múltiples <b>Equipos de Construcción</b>, cada uno responsable de recrear diferentes regiones del mundo. Los Equipos de Construcción a menudo se enfocan en <b>países o regiones específicas</b>, lo que te permite contribuir a áreas que te apasionan.<br></br><br></br>No hay restricciones sobre a cuáles o cuántos Equipos de Construcción puedes unirte, ¡así que siéntete libre de explorar tantos como quieras!<br></br><br></br>Cada Equipo de Construcción tiene su propio servidor donde puedes colaborar con otros constructores, participar en eventos y obtener apoyo. Debido a esto, no hay un \"proceso de aplicación\" único.<br></br>En cambio, simplemente <b>únete al servidor de Discord</b> del Equipo de Construcción que te interese y sigue sus simples instrucciones para comenzar.<br></br><br></br>¡También puedes unirte a nuestro Servidor Central (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) para obtener ayuda y conocer a otros constructores de todo el mundo!"
+			},
+			"joinServer": {
+				"title": "Construir en {country}",
+				"description": "¡Únete al servidor {name} de Minecraft para ayudar a construir en esta región!<br></br><br></br>¡No olvides unirte a los servidores de Discord con los enlaces de abajo!",
+				"ctaDiscord": "Servidor de Discord de {name}",
+				"moreInformation": "Más información"
+			}
+		}
+	},
+	"outreach": {
+		"seo": {
+			"title": "Alcance y medios",
+			"description": "Lea artículos de los medios, reportes de prensa e historias de alcance sobre BuildTheEarth."
+		},
+		"title": "Alcance",
+		"articles": "Artículos y medios",
+		"contact": {
+			"title": "Consultas de medios",
+			"description": "Para consultas de medios, oportunidades de asociación o cualquier otra pregunta relacionada con el alcance, por favor contáctenos a través de <mail></mail>. ¡Esperamos escuchar de usted! También puede encontrarnos en varias <contact>plataformas de redes sociales</contact>."
+		}
+	},
+	"our-progress": {
+		"title": "Nuestro progreso",
+		"seo": {
+			"title": "Nuestro progreso",
+			"description": "Descubre que ha conseguido BuildTheEarth hasta ahora y hacia dónde nos dirigimos."
+		},
+		"meta": {
+			"title": "Nuestro progreso",
+			"description": "Descubre que ha conseguido BuildTheEarth hasta ahora y hacia dónde nos dirigimos."
+		},
+		"sections": {
+			"achievements": {
+				"title": "Qué hemos conseguido hasta ahora",
+				"description": "Nuestras estadísticas de progreso pueden parecer modestas a primera vista, pero este proyecto nunca fue sobre aumentar a toda velocidad un porcentaje. Trata de una colaboración global, preservar identidades locales y crear un registro duradero de nuestro mundo juntos."
+			},
+			"progress": {
+				"title": "Estimaciones de progreso",
+				"description": "Estas estadísticas muestran nuestro progreso como una fracción de la superficie total de la Tierra, un humilde recordatorio de que la misión prioriza la calidad y nuestra comunidad, no la velocidad."
+			}
+		},
+		"stats": {
+			"builders": {
+				"label": "Constructores",
+				"description": "Personas que colaboran activamente en equipos, enseñan a principiantes y comparten técnicas de construcción desde todas partes del mundo."
+			},
+			"buildings": {
+				"label": "Edificios en seguimiento",
+				"description": "Un registro en crecimiento de estructuras del mundo real recreadas con cuidado, investigación y conocimiento local."
+			},
+			"area": {
+				"label": "Superficie cubierta",
+				"description": "Regiones grandes y pequeñas organizadas en parcelas para que los equipos puedan coordinar el trabajo a través de continentes."
+			}
+		},
+		"cards": {
+			"claimCompletion": {
+				"title": "Parcelas completadas",
+				"description": "{finishedClaims} de {activeClaims} parcelas activas están marcadas como completadas."
+			},
+			"landCoverage": {
+				"title": "Cobertura de la masa terrestre de la Tierra",
+				"description": "{trackedAreaKm2} km² de la superficie terrestre de la Tierra."
+			},
+			"totalCoverage": {
+				"title": "Cobertura total del área de la Tierra",
+				"description": "{trackedAreaKm2} km² de la superficie total de la Tierra."
+			}
+		},
+		"impact": {
+			"title": "Pequeños porcentajes, grandes impactos",
+			"description": "BuldTheEarth no es una carrera por el 100%. Estamos construyendo ciudades con contexto histórico, detalles locales y miles de horas de voluntariado. Incluso un solo barrio bien hecho puede educar, inspirar y conectar a personas de diferentes países."
+		}
+	},
+	"gallery": {
+		"seo": {
+			"title": "Galería de Muestra",
+			"description": "Explora la galería de muestra de BuildTheEarth con construcciones de la comunidad de todo el mundo."
+		}
+	},
+	"blog": {
+		"seo": {
+			"title": "Blog",
+			"description": "Lea noticias sobre BuildTheEarth, actualizaciones e historias de la comunidad global.",
+			"defaultOgImage": "/opengraph-image.png"
+		},
+		"intro": "¿Alguna vez te has preguntado cómo construimos nuestros proyectos, qué sucede destrás de escenas o quieres estar al día sobre nuestro proyecto? !Entonces este es el lugar! Sumérgete en un mundo de creatividad, innovación y espíritu comunitario dónde compartimos historias, actualizaciones e ideas de nuestro viaje para recrear la Tierra en Minecraft.",
+		"latestPosts": "Últimas publicaciones",
+		"thumbnailAlt": "Imagen de miniatura",
+		"publishedOn": "Publicado el día {date}",
+		"defaultAuthor": "BuildTheEarth",
+		"readMore": "Leer más"
+	},
+	"map": {
+		"seo": {
+			"title": "Mapa del proyecto",
+			"description": "Explora parcelas activas o completadas de BuildTheEarth en el mapa mundial interactivo."
+		},
+		"teams": {
+			"seo": {
+				"title": "Mapa del equipo",
+				"description": "Explora los equipos de BuilTheEarth, encuentra tu región y únete a un servidor de Minecraft para empezar a contribuir."
+			},
+			"infoNotice": {
+				"title": "Nota: {country}",
+				"description": "El país o región que has seleccionado no está siendo construido actualmente por ningún equipo. Estamos en el proceso de solucionar esto, pero mientras tanto, si quieres ayudar, considera unirte a un equipo diferente.",
+				"descriptionUs": "Los Estados Unidos está siendo construido por varios equipos de construcción. Si quieres ayudar, considera unirte a uno de los siguientes equipos de construcción que están construyendo en los Estados Unidos:",
+				"descUs": "The United States is currently being built by multiple BuildTeams. If you want to help out, please consider joining one of the following BuildTeams that are building in the US:"
+			}
+		}
+	},
+	"attribution": {
+		"translations": {
+			"aki4444": "aki.4444",
+			"thelib03": "thelib03"
+		}
+	},
+	"about-us": {
+		"seo": {
+			"title": "Sobre nosotros",
+			"description": "Explora la historia de BuildTheEarth, nuestros hitos clave y el viaje hasta ahora."
+		},
+		"link": "Más información"
+	}
 }
