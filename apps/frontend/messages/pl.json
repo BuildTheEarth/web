@@ -50,7 +50,10 @@
 			"contact": "Kontakt",
 			"status": "Status",
 			"gallery": "Galeria",
-			"map": "Mapa"
+			"map": "Mapa",
+			"tos": "Warunki korzystania",
+			"privacy": "Polityka prywatności",
+			"impressum": "Nota prawna (Impressum)"
 		}
 	},
 	"home": {
