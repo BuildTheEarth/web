@@ -57,6 +57,9 @@
 			"status": "Status",
 			"gallery": "Gallery",
 			"map": "Map",
+			"tos": "Terms of Service",
+			"privacy": "Privacy Policy",
+			"impressum": "Impressum",
 			"discord": "Discord"
 		},
 		"cookieBanner": {
