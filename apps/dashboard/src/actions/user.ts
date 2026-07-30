@@ -15,6 +15,31 @@ const requireEditUsersPermission = async () => {
 	return null
 }
 
+export const externalSyncUserRoles = async (prevState: any, data: { discordId: string }): Promise<any> => {
+	try {
+		const user = await prisma.user.findFirst({
+			where: { discordId: data.discordId },
+			select: { ssoId: true, discordId: true, joinedBuildTeams: { select: { slug: true } } },
+		})
+
+		if (!user) {
+			throw new Error('User not found')
+		}
+
+		await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
+			discordId: user.discordId,
+			isBuilder: user.joinedBuildTeams.length > 0,
+		})
+
+		return {
+			status: 'success',
+			error: false,
+		}
+	} catch (error) {
+		return { status: 'error', error: true, message: 'Something was not right.' }
+	}
+}
+
 export const getUserBuildTeams = async (ssoId: string) => {
 	const buildteams = await prisma.buildTeam.findMany({
 		where: {
