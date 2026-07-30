@@ -23,7 +23,10 @@ export const externalSyncUserRoles = async (prevState: any, data: { discordId: s
 		})
 
 		if (!user) {
-			throw new Error('User not found')
+			return {
+				status: 'success',
+				error: false,
+			}
 		}
 
 		await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
@@ -34,6 +37,7 @@ export const externalSyncUserRoles = async (prevState: any, data: { discordId: s
 		return {
 			status: 'success',
 			error: false,
+			isBuilder: user.joinedBuildTeams.length > 0,
 		}
 	} catch (error) {
 		return { status: 'error', error: true, message: 'Something was not right.' }

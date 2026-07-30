@@ -29,8 +29,10 @@ export default function MissingRolePage() {
 			if (res.status === 'success') {
 				showNotification({
 					title: 'User roles sync initiated',
-					message: 'Please allow a few minutes for the changes to take effect.',
-					color: 'green',
+					message: res.isBuilder
+						? 'Please allow a few minutes for the changes to take effect.'
+						: 'Please note that you do not currently have the builder role.',
+					color: res.isBuilder ? 'green' : 'yellow',
 				})
 				return
 			}
