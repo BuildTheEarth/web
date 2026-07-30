@@ -36,7 +36,8 @@
 		"shared",
 		"frontend/about",
 		"frontend/faq",
-		"frontend/stats"
+		"frontend/stats",
+		"frontend/legal"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }

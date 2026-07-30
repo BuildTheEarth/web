@@ -55,8 +55,9 @@ export async function sendDiscordDm(
 				emoji: DiscordBotEmojis.INFORMATION,
 			}
 		}
+		// TODO: Release: remove beta info
 		const content = `## ${DiscordBotEmojisRaw[message.emoji]} ${message.title}\n\n${message.body}${
-			message.footer ? `\n\n-# ${message.footer}` : ''
+			message.footer ? `\n\n-# ${message.footer} (ℹ️: This system is currently in beta, expect bugs)` : ''
 		}`
 
 		const res = await fetch(process.env.DISCORD_BOT_API_URL + '/api/v1/website/message/blank', {

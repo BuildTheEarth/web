@@ -55,18 +55,18 @@ export class CronManager {
 				logger.info('Cleared existing repeatable cron jobs')
 			}
 
-			for (const e of this.entries) {
-				try {
-					await this.queue.add(e.name, e.data, {
-						repeat: { cron: e.cron },
-						removeOnComplete: true,
-						...e.opts,
-					} as any)
-					logger.debug('Scheduled cron job', { name: e.name, cron: e.cron })
-				} catch (err: any) {
-					logger.error('Failed to schedule cron job', { name: e.name, error: err?.message })
-				}
-			}
+			// for (const e of this.entries) {
+			// 	try {
+			// 		await this.queue.add(e.name, e.data, {
+			// 			repeat: { cron: e.cron },
+			// 			removeOnComplete: true,
+			// 			...e.opts,
+			// 		} as any)
+			// 		logger.debug('Scheduled cron job', { name: e.name, cron: e.cron })
+			// 	} catch (err: any) {
+			// 		logger.error('Failed to schedule cron job', { name: e.name, error: err?.message })
+			// 	}
+			// }
 			logger.info(`Registered ${this.entries.length} cron job(s) successfully`)
 		} catch (err: any) {
 			logger.error('Failed to start cron manager', { error: err?.message })
