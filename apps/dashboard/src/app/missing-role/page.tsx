@@ -5,7 +5,12 @@ import Anchor from '@/components/core/Anchor'
 import { Box, Button, Center, Container, Group, Paper, Text, TextInput, Title } from '@mantine/core'
 import { showNotification } from '@mantine/notifications'
 import { IconArrowLeft } from '@tabler/icons-react'
+import { Metadata } from 'next'
 import { useState } from 'react'
+
+export const metadata: Metadata = {
+	title: 'Missing Role',
+}
 
 export default function MissingRolePage() {
 	const [discordId, setDiscordId] = useState<string | undefined>()
