@@ -28,10 +28,11 @@ RUN yarn install
 COPY --from=builder /app/out/full/ .
 RUN --mount=type=secret,id=database_url \
   sh -c 'export DATABASE_URL=$(cat /run/secrets/database_url) && yarn turbo run build --filter=worker...'
+RUN rm -rf .turbo apps/*/.turbo packages/*/.turbo
 
 FROM base AS runner
 WORKDIR /app
 
 COPY --from=installer /app .
 
-CMD ["node", "apps/worker/dist/main.js"]
+CMD ["npx", "tsx", "--tsconfig", "apps/worker/tsconfig.runtime.json", "apps/worker/src/main.ts"]
