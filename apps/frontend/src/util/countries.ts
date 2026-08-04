@@ -156,7 +156,6 @@ const isoCountries: { [key: string]: string } = {
 	NR: 'Nauru',
 	NP: 'Nepal',
 	NL: 'Netherlands',
-	AN: 'Netherlands Antilles',
 	NC: 'New Caledonia',
 	NZ: 'New Zealand',
 	NI: 'Nicaragua',
@@ -250,6 +249,9 @@ const isoCountries: { [key: string]: string } = {
 	GLB: 'Globe', // Not a country, but i need this!!!
 	OST: 'Overseas Territories', // !!
 	CDP: 'Crown Dependencies', // !!
+	XK: 'Kosovo',
+	SS: 'South Sudan',
+	KP: 'North Korea',
 }
 
 export default function getCountryName(countryCode: string): string {
