@@ -14,10 +14,19 @@ import {
 	Tooltip,
 	rem,
 } from '@mantine/core'
-import { IconDots, IconExternalLink, IconEye, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react'
+import {
+	IconDots,
+	IconExternalLink,
+	IconEye,
+	IconId,
+	IconTransfer,
+	IconUserCheck,
+	IconUserCog,
+} from '@tabler/icons-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { UserDisplay } from '@/components/data/User'
+import { useImpersonateBuildTeam } from '@/hooks/useBuildTeamData'
 import { useClipboard } from '@mantine/hooks'
 import type { BuildTeam } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
@@ -37,6 +46,7 @@ export default function BuildTeamsDatatable({
 	const pathname = usePathname()
 	const page = Number(params.get('page')) || 1
 	const clipboard = useClipboard({ timeout: 500 })
+	const impersonate = useImpersonateBuildTeam()
 
 	return (
 		<DataTable
@@ -107,6 +117,17 @@ export default function BuildTeamsDatatable({
 					textAlign: 'right',
 					render: (team: BuildTeam) => (
 						<Group gap={4} justify="right" wrap="nowrap">
+							<Tooltip label="Impersonate BuildTeam">
+								<ActionIcon
+									size="sm"
+									variant="subtle"
+									color="green"
+									aria-label="Impersonate BuildTeam"
+									onClick={() => impersonate(team)}
+								>
+									<IconUserCheck size={16} />
+								</ActionIcon>
+							</Tooltip>
 							<ActionIcon
 								size="sm"
 								variant="subtle"
@@ -125,6 +146,14 @@ export default function BuildTeamsDatatable({
 									</ActionIcon>
 								</MenuTarget>
 								<MenuDropdown>
+									<MenuItem
+										leftSection={<IconUserCheck style={{ width: rem(14), height: rem(14) }} />}
+										color="green"
+										aria-label="Impersonate BuildTeam"
+										onClick={() => impersonate(team)}
+									>
+										Impersonate BuildTeam
+									</MenuItem>
 									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Copy ID"

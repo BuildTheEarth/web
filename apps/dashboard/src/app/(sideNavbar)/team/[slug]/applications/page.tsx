@@ -1,7 +1,7 @@
 import { getUserPermissions } from '@/actions/getUser'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { Protection } from '@/components/Protection'
-import { getSession } from '@/util/auth'
+import { getSession, hasRole } from '@/util/auth'
 import prisma from '@/util/db'
 import { Group, Title } from '@mantine/core'
 import { Metadata } from 'next'
@@ -90,6 +90,24 @@ export default async function Page({
 		},
 	})
 
+	const activePermissions = userPermissions
+		.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
+		.map((p) => p.permission.id)
+
+	if (
+		hasRole(session, 'edit-applications') ||
+		hasRole(session, 'get-applications') ||
+		hasRole(session, 'get-team-questions') ||
+		hasRole(session, 'review-team')
+	) {
+		if (!activePermissions.includes('team.application.review')) {
+			activePermissions.push('team.application.review')
+		}
+		if (!activePermissions.includes('team.application.edit')) {
+			activePermissions.push('team.application.edit')
+		}
+	}
+
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
 			<ContentWrapper maw="90vw">
@@ -104,9 +122,7 @@ export default async function Page({
 					count={applicationCount}
 					userId={session?.user.id!}
 					slug={slug}
-					permissions={userPermissions
-						.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
-						.map((p) => p.permission.id)}
+					permissions={activePermissions}
 				/>
 			</ContentWrapper>
 		</Protection>

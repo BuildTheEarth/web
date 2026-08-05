@@ -49,7 +49,7 @@ import {
 } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { EditMenu } from './interactivity'
+import { EditMenu, ImpersonateButton } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Build Team Details',
@@ -96,6 +96,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>{team.name}</Title>
 					<Group gap="xs">
+						<ImpersonateButton team={team} />
 						<Button
 							variant="light"
 							color="cyan"

@@ -1,5 +1,5 @@
 'use server'
-import { getSession, hasBuildTeamPermission } from '@/util/auth'
+import { getSession, hasBuildTeamPermission, hasRole } from '@/util/auth'
 import prisma from '@/util/db'
 import keycloakAdmin from '@/util/keycloak'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
@@ -207,6 +207,47 @@ export const checkBuildTeamPermission = async (
 	userId: string,
 	requiredBuildTeam: ({ id: string } | { slug: string }) & { permission: string },
 ): Promise<boolean> => {
+	const session = await getSession()
+	if (session) {
+		const req = requiredBuildTeam.permission
+		if (
+			req === 'any' &&
+			(hasRole(session, 'get-teams') ||
+				hasRole(session, 'get-team') ||
+				hasRole(session, 'edit-teams') ||
+				hasRole(session, 'edit-claims') ||
+				hasRole(session, 'review-claims') ||
+				hasRole(session, 'review-team') ||
+				hasRole(session, 'get-applications') ||
+				hasRole(session, 'get-claims') ||
+				hasRole(session, 'get-team-members') ||
+				hasRole(session, 'get-team-questions'))
+		) {
+			return true
+		}
+		if (req === 'team.settings.edit' && hasRole(session, 'edit-teams')) {
+			return true
+		}
+		if (
+			(req === 'team.application.edit' || req === 'team.application.review') &&
+			(hasRole(session, 'edit-applications') ||
+				hasRole(session, 'get-applications') ||
+				hasRole(session, 'get-team-questions') ||
+				hasRole(session, 'review-team'))
+		) {
+			return true
+		}
+		if (req === 'team.claims.edit' && (hasRole(session, 'edit-claims') || hasRole(session, 'review-claims'))) {
+			return true
+		}
+		if (
+			(req === 'permission.remove' || req === 'permission.add' || req === 'team.members.remove') &&
+			hasRole(session, 'edit-users')
+		) {
+			return true
+		}
+	}
+
 	// Check permissions in the database (handles team-specific and global DB permissions)
 	const permissions = await getUserPermissions(userId)
 	return hasBuildTeamPermission(permissions, requiredBuildTeam)

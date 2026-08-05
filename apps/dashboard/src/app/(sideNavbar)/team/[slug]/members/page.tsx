@@ -100,6 +100,18 @@ export default async function Page({
 		},
 	})
 
+	const canEditMembers = hasRole(session, 'edit-users')
+
+	const activePermissions = userPermissions
+		.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
+		.map((p) => p.permission.id)
+
+	if (canEditMembers) {
+		if (!activePermissions.includes('permission.remove')) activePermissions.push('permission.remove')
+		if (!activePermissions.includes('permission.add')) activePermissions.push('permission.add')
+		if (!activePermissions.includes('team.members.remove')) activePermissions.push('team.members.remove')
+	}
+
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
 			<ContentWrapper maw="90vw">
@@ -111,6 +123,7 @@ export default async function Page({
 						slug={slug}
 						userId={session?.user.id!}
 						disabled={
+							!canEditMembers &&
 							!userPermissions.some(
 								(p) => (p.buildTeam?.slug == slug || p.buildTeam == null) && p.permissionId == 'permission.remove',
 							)
@@ -125,9 +138,7 @@ export default async function Page({
 					isAdmin={hasRole(session, 'get-users')}
 					userId={session?.user.id!}
 					slug={slug}
-					permissions={userPermissions
-						.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
-						.map((p) => p.permission.id)}
+					permissions={activePermissions}
 				/>
 			</ContentWrapper>
 		</Protection>

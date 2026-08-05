@@ -4,6 +4,7 @@ import { getUserBuildTeams } from '@/actions/user'
 import { useLocalStorage } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 import useSWR from 'swr'
 
@@ -65,4 +66,31 @@ export function useActiveBuildTeam() {
 	})
 
 	return activeBuildTeam
+}
+
+export function useImpersonateBuildTeam() {
+	const [, setActiveBuildTeam] = useLocalStorage<BuildTeam | null>({
+		key: 'bte-active-build-team',
+	})
+	const router = useRouter()
+
+	const impersonate = useCallback(
+		(team: { id: string; slug: string; name: string; icon: string }) => {
+			setActiveBuildTeam({
+				id: team.id,
+				slug: team.slug,
+				name: team.name,
+				icon: team.icon,
+			})
+			showNotification({
+				title: 'Impersonating BuildTeam',
+				message: `Now impersonating ${team.name}`,
+				color: 'green',
+			})
+			router.push(`/team/${team.slug}`)
+		},
+		[setActiveBuildTeam, router],
+	)
+
+	return impersonate
 }

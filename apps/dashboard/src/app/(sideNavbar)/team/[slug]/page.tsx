@@ -3,7 +3,7 @@ import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
-import { getSession } from '@/util/auth'
+import { getSession, hasRole } from '@/util/auth'
 import { Protection } from '@/components/Protection'
 import { getCountryNames } from '@/util/countries'
 import { toHumanDate } from '@/util/date'
@@ -49,6 +49,14 @@ export const metadata: Metadata = {
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
 	const slug = (await params).slug
 	const session = await getSession()
+	const canEditTeam = hasRole(session, 'edit-teams') || hasRole(session, 'get-teams') || hasRole(session, 'get-team')
+
+	const hasStaffRole =
+		canEditTeam ||
+		hasRole(session, 'get-applications') ||
+		hasRole(session, 'edit-applications') ||
+		hasRole(session, 'get-claims') ||
+		hasRole(session, 'get-team-members')
 
 	const team = await prisma.buildTeam.findFirst({
 		where: { slug },
@@ -79,6 +87,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 	})
 	if (!team) throw Error('Could not find Build Team')
 
+	const hasEditPermission =
+		hasRole(session, 'edit-teams') || team.UserPermission.some((p) => p.permission.id === 'team.settings.edit')
+
 	return (
 		<Protection requiredBuildTeam={{ permission: 'any', slug }}>
 			<ContentWrapper maw="90vw">
@@ -91,14 +102,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 							component={Link}
 							href={`/team/${team.slug}/edit`}
 							rightSection={<IconEdit size={14} />}
-							disabled={!team.UserPermission.find((p) => p.permission.id === 'team.settings.edit')}
+							disabled={!hasEditPermission}
 						>
 							Edit Information
 						</Button>
 						<EditMenu team={team} />
 					</Group>
 				</Group>
-				{team.UserPermission.length <= 0 && (
+				{team.UserPermission.length <= 0 && !hasStaffRole && (
 					<Alert
 						variant="light"
 						color="yellow"

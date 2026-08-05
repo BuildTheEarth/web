@@ -3,7 +3,7 @@ import { Alert, Button, Group, Title } from '@mantine/core'
 import { getUserPermissions } from '@/actions/getUser'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { Protection } from '@/components/Protection'
-import { getSession } from '@/util/auth'
+import { getSession, hasRole } from '@/util/auth'
 import prisma from '@/util/db'
 import { IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
@@ -27,6 +27,7 @@ export default async function Page({
 	const slug = (await params).slug
 	const page = (await searchParams).page
 	const searchQuery = (await searchParams).query
+
 	const claimCount = await prisma.claim.count({
 		where: searchQuery
 			? {
@@ -79,6 +80,16 @@ export default async function Page({
 		},
 	})
 
+	const activePermissions = userPermissions
+		.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
+		.map((p) => p.permission.id)
+
+	if (hasRole(session, 'edit-claims') || hasRole(session, 'review-claims') || hasRole(session, 'get-claims')) {
+		if (!activePermissions.includes('team.claims.edit')) {
+			activePermissions.push('team.claims.edit')
+		}
+	}
+
 	return (
 		<Protection requiredRole="get-claims">
 			<ContentWrapper maw="90vw">
@@ -112,9 +123,7 @@ export default async function Page({
 					claims={claims}
 					count={claimCount}
 					buildTeamSlug={slug}
-					permissions={userPermissions
-						.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
-						.map((p) => p.permission.id)}
+					permissions={activePermissions}
 					userId={session?.user.id!}
 				/>
 			</ContentWrapper>

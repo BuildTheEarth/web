@@ -1,15 +1,27 @@
 'use client'
 
+import { useImpersonateBuildTeam } from '@/hooks/useBuildTeamData'
 import { hasRole } from '@/util/auth'
-import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem } from '@mantine/core'
+import { ActionIcon, Button, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem } from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
 import type { BuildTeam } from '@repo/db'
-import { IconDots, IconId, IconTransfer, IconUserCog } from '@tabler/icons-react'
+import { IconDots, IconId, IconTransfer, IconUserCheck, IconUserCog } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+
+export function ImpersonateButton({ team }: { team: BuildTeam }) {
+	const impersonate = useImpersonateBuildTeam()
+	return (
+		<Button variant="light" color="green" leftSection={<IconUserCheck size={14} />} onClick={() => impersonate(team)}>
+			Impersonate
+		</Button>
+	)
+}
+
 export function EditMenu({ team }: { team: BuildTeam }) {
 	const session = useSession()
 	const clipboard = useClipboard({ timeout: 500 })
+	const impersonate = useImpersonateBuildTeam()
 
 	return (
 		<Menu>
@@ -25,6 +37,14 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				</ActionIcon>
 			</MenuTarget>
 			<MenuDropdown>
+				<MenuItem
+					leftSection={<IconUserCheck style={{ width: rem(14), height: rem(14) }} />}
+					color="green"
+					aria-label="Impersonate BuildTeam"
+					onClick={() => impersonate(team)}
+				>
+					Impersonate BuildTeam
+				</MenuItem>
 				<MenuItem
 					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 					aria-label="Copy ID"
