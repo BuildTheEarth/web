@@ -1,5 +1,3 @@
-'use client'
-
 import { externalSyncUserRoles } from '@/actions/user'
 import Anchor from '@/components/core/Anchor'
 import { Box, Button, Center, Container, Group, Paper, Text, TextInput, Title } from '@mantine/core'
