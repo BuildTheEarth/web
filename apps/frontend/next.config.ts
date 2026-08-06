@@ -65,6 +65,38 @@ const nextConfig: NextConfig = {
 					? `${process.env.NEXT_PUBLIC_UMAMI_URL.replace('/script.js', '')}/api/send`
 					: 'https://umami.buildtheearth.net/api/send',
 			},
+			{
+				source: '/privacy',
+				destination: '/legal/privacy',
+			},
+			{
+				source: '/privacy-policy',
+				destination: '/legal/privacy',
+			},
+			{
+				source: '/terms',
+				destination: '/legal/terms-of-service',
+			},
+			{
+				source: '/tos',
+				destination: '/legal/terms-of-service',
+			},
+			{
+				source: '/terms-of-service',
+				destination: '/legal/terms-of-service',
+			},
+			{
+				source: '/impressum',
+				destination: '/legal/impressum',
+			},
+			{
+				source: '/imprint',
+				destination: '/legal/impressum',
+			},
+			{
+				source: '/legal-notice',
+				destination: '/legal/impressum',
+			},
 		]
 	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },

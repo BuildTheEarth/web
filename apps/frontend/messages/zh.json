@@ -39,7 +39,10 @@
 			"contact": "聯繫",
 			"status": "狀態",
 			"gallery": "畫廊",
-			"map": "地圖"
+			"map": "地圖",
+			"tos": "服務條款",
+			"privacy": "隱私政策",
+			"impressum": "法律聲明 (Impressum)"
 		}
 	},
 	"home": {
