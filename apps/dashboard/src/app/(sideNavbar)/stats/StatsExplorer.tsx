@@ -313,25 +313,27 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 												</Table.Tr>
 											</Table.Thead>
 											<Table.Tbody>
-												{data.topBuilders.map((builder: any, i: number) => (
-													<Table.Tr key={builder.username}>
-														<Table.Td>
-															<Group gap="xs">
-																{/* <Text fw={500}>{builder.username}</Text> */}
-																<UserDisplay user={{ username: builder.username, ssoId: '', id: '' }} noAnchor />
-															</Group>
-														</Table.Td>
-														<Table.Td style={{ textAlign: 'right' }}>
-															<Code>{formatNumber(builder.claims)}</Code>
-														</Table.Td>
-														<Table.Td style={{ textAlign: 'right' }}>
-															<Code>{formatNumber(builder.buildings)}</Code>
-														</Table.Td>
-														<Table.Td style={{ textAlign: 'right' }}>
-															<Code>{formatArea(builder.size)}</Code>
-														</Table.Td>
-													</Table.Tr>
-												))}
+												{data.topBuilders
+													.filter((builder: any) => builder.username && builder.username.trim() !== '')
+													.map((builder: any, i: number) => (
+														<Table.Tr key={builder.username}>
+															<Table.Td>
+																<Group gap="xs">
+																	{/* <Text fw={500}>{builder.username}</Text> */}
+																	<UserDisplay user={{ username: builder.username, ssoId: '', id: '' }} noAnchor />
+																</Group>
+															</Table.Td>
+															<Table.Td style={{ textAlign: 'right' }}>
+																<Code>{formatNumber(builder.claims)}</Code>
+															</Table.Td>
+															<Table.Td style={{ textAlign: 'right' }}>
+																<Code>{formatNumber(builder.buildings)}</Code>
+															</Table.Td>
+															<Table.Td style={{ textAlign: 'right' }}>
+																<Code>{formatArea(builder.size)}</Code>
+															</Table.Td>
+														</Table.Tr>
+													))}
 											</Table.Tbody>
 										</Table>
 									) : (
@@ -377,9 +379,7 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 														<Table.Td style={{ textAlign: 'right' }}>
 															<Code>{formatArea(claim.size)}</Code>
 														</Table.Td>
-														<Table.Td>
-															<UserDisplay user={claim.owner} noAnchor />
-														</Table.Td>
+														<Table.Td>{claim.owner ? <UserDisplay user={claim.owner} noAnchor /> : '-/-'}</Table.Td>
 														<Table.Td>
 															<BuildTeamDisplay team={claim.buildTeam} noAnchor />
 														</Table.Td>

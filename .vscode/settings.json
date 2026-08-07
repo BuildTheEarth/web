@@ -37,7 +37,8 @@
 		"frontend/about",
 		"frontend/faq",
 		"frontend/stats",
-		"frontend/legal"
+		"frontend/legal",
+		"dash/stats"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }
