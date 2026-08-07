@@ -130,7 +130,11 @@ class TokenRouteContoller {
 			externalId: externalId,
 			active: active,
 			description: description,
-			buildings: buildings || (await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })),
+			buildings:
+				buildings ||
+				(req.query.skipOSM == 'true'
+					? -1
+					: await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })),
 			city: osmDetails.city,
 			area: area,
 			osmName: osmDetails.osmName,
