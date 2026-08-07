@@ -113,7 +113,10 @@ class TokenRouteContoller {
 
 		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
 
-		const osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center })
+		let osmDetails = { osmName: name, city: city }
+		if (!name || req.query.skipOSM == 'true') {
+			osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center })
+		}
 
 		const data = {
 			owner: owner ? { connect: { id: owner.id } } : undefined,
@@ -125,7 +128,7 @@ class TokenRouteContoller {
 			active: active,
 			description: description,
 			buildings: buildings || (await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })),
-			city: city || osmDetails.city,
+			city: osmDetails.city,
 			area: area,
 			osmName: osmDetails.osmName,
 			size: area && turf.area(toPolygon(area)),
