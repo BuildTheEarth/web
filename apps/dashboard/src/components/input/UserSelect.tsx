@@ -90,16 +90,33 @@ export function UserSelect(
 	}
 
 	useEffect(() => {
-		if (!debounced) {
-			setData(null)
-			return
-		}
-		if (debounced.length < 3) {
-			setData(null)
-			return
+		if (!debounced || debounced.length < 3) {
+			const timer = setTimeout(() => {
+				setData(null)
+			}, 0)
+			return () => clearTimeout(timer)
 		}
 
-		fetchOptions(debounced)
+		abortController.current?.abort()
+		const controller = new AbortController()
+		abortController.current = controller
+		const timer = setTimeout(() => {
+			setLoading(true)
+		}, 0)
+
+		getData(debounced, controller.signal)
+			.then((result) => {
+				setData(result as any[])
+				setLoading(false)
+				setEmpty(result.length === 0)
+				abortController.current = undefined
+			})
+			.catch(() => {})
+
+		return () => {
+			clearTimeout(timer)
+			controller.abort()
+		}
 	}, [debounced])
 
 	const options = (data || []).map((item) => (

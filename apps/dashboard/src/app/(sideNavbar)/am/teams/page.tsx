@@ -1,11 +1,11 @@
-import { Button, Group, Title } from '@mantine/core'
+import { Group, Title } from '@mantine/core'
 
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { Protection } from '@/components/Protection'
 import prisma from '@/util/db'
 import { IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 import BuildTeamsDatatable from './datatable'
 import { SearchBuildTeams } from './interactivity'
 
@@ -55,16 +55,15 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Build Teams</Title>
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/teams`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open Page
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 				<SearchBuildTeams mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />

@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import React, { useEffect } from 'react'
 import Navbar from './Navbar'
+import logo from '../../../public/logo.png'
 
 export interface LayoutProps {
 	children: React.ReactNode
@@ -58,7 +59,7 @@ export default function AppLayout({
 				<Group gap="md" style={{ width: '100%' }}>
 					<Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 					<Group gap="xs">
-						<Image src="/logo.png" alt="Logo" width={32} height={32} />
+						<Image src={logo} alt="Logo" width={32} height={32} />
 						<Text fw="bold" ff="var(--font-minecraft)" fz="20px" m={0}>
 							MyBuildTheEarth
 						</Text>

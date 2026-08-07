@@ -114,7 +114,7 @@ export default function GeographyStats({ initialData }: GeographyStatsProps) {
 
 				<Alert variant="light" color="blue" title="Calculation Note" icon={<IconInfoCircle size={16} />}>
 					The country of a claim is primarily determined by its actual geographical location. For claims where geocoding
-					data is temporarily unavailable, the system falls back to the BuildTeam's primary country.
+					data is temporarily unavailable, the system falls back to the BuildTeam&apos;s primary country.
 				</Alert>
 
 				<Grid gutter="lg">

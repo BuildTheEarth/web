@@ -1,6 +1,6 @@
-import { Button, Group, MantineStyleProp, Paper, Text } from '@mantine/core'
+import { Group, MantineStyleProp, Paper, Text } from '@mantine/core'
 import { IconExternalLink } from '@tabler/icons-react'
-import Link from 'next/link'
+import LinkButton from '../LinkButton'
 
 export function TextCard(props: {
 	title: string
@@ -21,17 +21,16 @@ export function TextCard(props: {
 				</Text>
 				<Group>
 					{props.href && (
-						<Button
+						<LinkButton
 							variant="subtle"
 							color="cyan"
-							component={Link}
 							href={props.href}
 							target="_blank"
 							size="xs"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							{props.hrefText || 'View all'}
-						</Button>
+						</LinkButton>
 					)}
 					{props.icon && (
 						<Icon

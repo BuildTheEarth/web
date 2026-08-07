@@ -16,6 +16,7 @@ import Image from 'next/image'
 import { LinksGroup } from './NavbarLinksGroup'
 import { UserButton } from './UserButton'
 import BuildTeamSelector from './BuildTeamSelector'
+import logo from '../../../public/logo.png'
 
 export interface Navbar {
 	roles: string[]
@@ -127,7 +128,7 @@ export default function Navbar(props: Navbar) {
 		<AppShellNavbar p="md" pb={0} style={{ backgroundColor: 'var(--mantine-color-dark-6)' }}>
 			<Box visibleFrom="sm" className={classes.header}>
 				<Group>
-					<Image src="/logo.png" alt="Logo" width={32} height={32} style={{ marginRight: '4px' }} />
+					<Image src={logo} alt="Logo" width={32} height={32} style={{ marginRight: '4px' }} />
 					<Text fw="bold" ff="var(--font-minecraft)" fz="20px" m={0}>
 						MyBuildTheEarth
 					</Text>

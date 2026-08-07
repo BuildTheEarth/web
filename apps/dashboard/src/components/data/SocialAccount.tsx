@@ -18,32 +18,39 @@ export default function SocialAccount({
 	identity: WebsiteKeycloakUser['federatedIdentities'][0]
 	isLinked?: boolean
 }) {
-	const Icon = getIcon(identity?.identityProvider || '')
 	const session = useSession()
 	const router = useRouter()
 	const [linkUrl, setLinkUrl] = useState<string | null>(null)
 
-	const generateLinkUrl = async () => {
-		if (!session?.data?.user) return
-		if (linkUrl != null) return
-		const nonce = crypto.randomUUID()
-		const hashRaw = nonce + session.data.user.session_state + session.data.user.azp + identity.identityProvider
-
-		setLinkUrl(
-			`${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/broker/${identity.identityProvider}/link?client_id=${
-				process.env.NEXT_PUBLIC_KEYCLOAK_ID
-			}&redirect_uri=${encodeURIComponent(window.location.href)}&nonce=${nonce}&hash=${await hash(hashRaw)}`,
-		)
-	}
-
 	useEffect(() => {
-		generateLinkUrl()
-	})
+		let isMounted = true
+		if (!session?.data?.user) return
+		const provider = identity?.identityProvider
+		if (!provider) return
+
+		const generate = async () => {
+			const nonce = crypto.randomUUID()
+			const hashRaw = nonce + session.data.user.session_state + session.data.user.azp + provider
+			const calculatedHash = await hash(hashRaw)
+			if (isMounted) {
+				setLinkUrl(
+					`${process.env.NEXT_PUBLIC_KEYCLOAK_URL}/broker/${provider}/link?client_id=${
+						process.env.NEXT_PUBLIC_KEYCLOAK_ID
+					}&redirect_uri=${encodeURIComponent(window.location.href)}&nonce=${nonce}&hash=${calculatedHash}`,
+				)
+			}
+		}
+
+		generate()
+		return () => {
+			isMounted = false
+		}
+	}, [session?.data?.user, identity?.identityProvider])
 
 	return (
 		<Card withBorder>
 			<Flex align={'center'} gap={'md'}>
-				<Icon size={'3rem'} />
+				<SocialIcon name={identity?.identityProvider || ''} size={'3rem'} />
 				<Flex gap={5} direction={'column'} style={{ flex: 1 }}>
 					<Flex align={'center'} gap={'xs'}>
 						<Text fw={'bold'}>{capitalize(identity?.identityProvider || '')}</Text>
@@ -105,14 +112,14 @@ function capitalize(s: string) {
 	return s.charAt(0).toUpperCase() + s.slice(1)
 }
 
-function getIcon(name: Provider) {
+function SocialIcon({ name, size }: { name: string; size: string }) {
 	switch (name) {
 		case 'discord':
-			return IconBrandDiscord
+			return <IconBrandDiscord size={size} />
 		case 'github':
-			return IconBrandGithub
+			return <IconBrandGithub size={size} />
 		default:
-			return IconWorld
+			return <IconWorld size={size} />
 	}
 }
 

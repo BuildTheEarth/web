@@ -1,3 +1,5 @@
+'use client'
+
 import { Menu, MenuDropdown, MenuItem, MenuTarget } from '@mantine/core'
 import { IconLogout, IconMap, IconSettings, IconWorld } from '@tabler/icons-react'
 

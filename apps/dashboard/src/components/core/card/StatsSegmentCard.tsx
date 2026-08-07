@@ -40,7 +40,7 @@ export function StatsSegmentsCard({
 				<Text fz="xl" fw={700}>
 					{title}
 				</Text>
-				{
+				{Icon && (
 					<Icon
 						size={22}
 						style={{
@@ -48,7 +48,7 @@ export function StatsSegmentsCard({
 						}}
 						stroke={1.5}
 					/>
-				}
+				)}
 			</Group>
 
 			<Text c="dimmed" fz="sm">

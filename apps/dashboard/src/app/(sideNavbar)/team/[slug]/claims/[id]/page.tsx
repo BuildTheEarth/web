@@ -15,6 +15,7 @@ import {
 
 import { Protection } from '@/components/Protection'
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
 import { TextCard } from '@/components/core/card/TextCard'
 import { UserDisplay } from '@/components/data/User'
 import { getSession } from '@/util/auth'
@@ -65,16 +66,15 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 					<Title order={1}>{claim.name || `Claim ${id.split('-')[0]}`}</Title>
 
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/map?claim=${id}`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open on Map
-						</Button>
+						</LinkButton>
 						<EditMenu claim={claim as any} buildTeamSlug={slug} userId={session?.user.id!} />
 					</Group>
 				</Group>

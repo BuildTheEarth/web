@@ -1,3 +1,4 @@
+'use client'
 import { AnchorProps, Anchor as MantineAnchor } from '@mantine/core'
 import Link, { LinkProps } from 'next/link'
 

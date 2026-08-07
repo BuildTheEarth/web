@@ -46,14 +46,10 @@ export function ContextMenu({ contextMenuInfo, setContextMenuInfo, children, ...
 		[contextMenuInfo, setContextMenuInfo],
 	)
 
-	const [opened, setOpened] = useState<boolean>(false)
-
-	useEffect(() => setOpened(contextMenuInfo.opened), [contextMenuInfo.opened])
-
 	return (
 		<Menu
 			{...other}
-			opened={opened}
+			opened={contextMenuInfo.opened}
 			onClose={onClose}
 			offset={0}
 			middlewares={{ shift: true, flip: false }}

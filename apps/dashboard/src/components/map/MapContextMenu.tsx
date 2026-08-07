@@ -1,3 +1,4 @@
+'use client'
 /* eslint-disable react-hooks/exhaustive-deps */
 
 import { MenuDivider, MenuItem, MenuLabel, rem } from '@mantine/core'

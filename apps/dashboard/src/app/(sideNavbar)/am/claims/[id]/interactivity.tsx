@@ -61,7 +61,9 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 					target="_blank"
 					href={
 						claim.center
-							? `https://nominatim.openstreetmap.org/reverse?lat=${claim.center.split(', ')[1]}&lon=${claim.center.split(', ')[0]}&format=json&accept-language=en&zoom=18`
+							? `https://nominatim.openstreetmap.org/reverse?lat=${claim.center.split(', ')[1]}&lon=${
+									claim.center.split(', ')[0]
+								}&format=json&accept-language=en&zoom=18`
 							: '#'
 					}
 				>

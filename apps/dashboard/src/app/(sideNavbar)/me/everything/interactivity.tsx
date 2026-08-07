@@ -5,20 +5,24 @@ import { Box, Divider, SimpleGrid } from '@mantine/core'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 
+const LS_VALID_PATHS = ['bte-active-build-team', 'nextauth.message', 'mantine-color-scheme-value']
+
 export function LocalData() {
 	const [localData, setLocalData] = useState<Record<string, string>>({})
-	const lsValidPaths = ['bte-active-build-team', 'nextauth.message', 'mantine-color-scheme-value']
 	const session = useSession()
 
 	useEffect(() => {
 		const data: Record<string, string> = {}
-		for (const path of lsValidPaths) {
+		for (const path of LS_VALID_PATHS) {
 			const value = localStorage.getItem(path)
 			if (value) {
 				data[path] = value
 			}
 		}
-		setLocalData(data)
+		const timer = setTimeout(() => {
+			setLocalData(data)
+		}, 0)
+		return () => clearTimeout(timer)
 	}, [])
 
 	if (Object.keys(localData).length === 0) {

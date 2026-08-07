@@ -2,20 +2,7 @@ import { ensureUserCreated, getUserFederatedIdentities } from '@/actions/getUser
 import { getSession } from '@/util/auth'
 import { createHash, randomUUID } from 'crypto'
 import { redirect } from 'next/navigation'
-import {
-	Alert,
-	Anchor,
-	Button,
-	Card,
-	Divider,
-	Group,
-	SimpleGrid,
-	Stack,
-	Text,
-	Title,
-	ThemeIcon,
-	Code,
-} from '@mantine/core'
+import { Alert, Button, Card, Divider, Group, SimpleGrid, Stack, Text, Title, ThemeIcon, Code } from '@mantine/core'
 import {
 	IconBrandDiscord,
 	IconCheck,
@@ -28,6 +15,8 @@ import {
 	IconMap,
 } from '@tabler/icons-react'
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
+import Anchor from '@/components/core/Anchor'
 import Link from 'next/link'
 import { Metadata } from 'next'
 
@@ -102,31 +91,25 @@ export default async function WelcomePage() {
 						<Text size="sm">
 							You have not linked your Discord account yet. Please do so by clicking the button below.
 						</Text>
-						<Button
-							component={Link}
-							href={generateDiscordLinkUrl()}
-							size="xs"
-							rightSection={<IconChevronRight size={16} />}
-						>
+						<LinkButton href={generateDiscordLinkUrl()} size="xs" rightSection={<IconChevronRight size={16} />}>
 							Connect Discord Account
-						</Button>
+						</LinkButton>
 					</Stack>
 				</Alert>
 			)}
 			<Text mt="md">
-				If you haven't already, you should also join our global Discord server to stay updated and engage with the
+				If you haven&apos;t already, you should also join our global Discord server to stay updated and engage with the
 				community.
 			</Text>
-			<Button
+			<LinkButton
 				rightSection={<IconBrandDiscord size={16} />}
-				component={Link}
 				href="https://go.buildtheearth.net/dc"
 				target="_blank"
 				fullWidth
 				mt="md"
 			>
 				Join Discord Server
-			</Button>
+			</LinkButton>
 
 			<Title order={2} mt="xl" mb="md">
 				Finding a Build Team
@@ -137,23 +120,17 @@ export default async function WelcomePage() {
 				will see a link to apply to that BuildTeam.
 			</Text>
 			<Stack mt="md" gap="sm">
-				<Button
-					rightSection={<IconBook size={16} />}
-					component={Link}
-					href="https://buildtheearth.net/teams"
-					target="_blank"
-				>
+				<LinkButton rightSection={<IconBook size={16} />} href="https://buildtheearth.net/teams" target="_blank">
 					BuildTeam List
-				</Button>
-				<Button
+				</LinkButton>
+				<LinkButton
 					rightSection={<IconMap size={16} />}
-					component={Link}
 					href="https://buildtheearth.net/map/teams"
 					target="_blank"
 					variant="outline"
 				>
 					BuildTeam Map
-				</Button>
+				</LinkButton>
 			</Stack>
 
 			<Title order={2} mt="xl" mb="md">
@@ -164,24 +141,22 @@ export default async function WelcomePage() {
 				free to reach out to us on our Discord server
 			</Text>
 			<Stack mt="md" gap="sm">
-				<Button
+				<LinkButton
 					rightSection={<IconBook size={16} />}
-					component={Link}
 					href="https://docs.buildtheearth.net"
 					target="_blank"
 					variant="outline"
 				>
 					Visit Documentation
-				</Button>
-				<Button
+				</LinkButton>
+				<LinkButton
 					rightSection={<IconMessage size={16} />}
-					component={Link}
 					href="https://discord.com/channels/690908396404080650/1340721571228024892/"
 					target="_blank"
 					variant="outline"
 				>
 					Open Support Channel
-				</Button>
+				</LinkButton>
 				<Text c="dimmed" fz="sm" ta="center">
 					or send an{' '}
 					<Anchor href="mailto:support@buildtheearth.net" fz="sm">

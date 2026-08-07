@@ -9,15 +9,8 @@ export function UserDisplay({
 	user: { id: string; username?: string; ssoId: string }
 	noAnchor?: boolean
 }) {
-	const groupProps = noAnchor
-		? {}
-		: {
-				component: Link,
-				href: '/am/users/' + user.ssoId,
-			}
-
-	return (
-		<Group gap="sm" key={user.id || user.ssoId} {...groupProps} c="gray" td="none">
+	const content = (
+		<Group gap="sm" key={user.id || user.ssoId} c="gray" td="none">
 			<Avatar color="initials" name={user.username} size={30}>
 				{(user.username || user.ssoId)[0].toUpperCase()}
 			</Avatar>
@@ -25,5 +18,15 @@ export function UserDisplay({
 				{user.username || user.ssoId.slice(0, 10)}
 			</Text>
 		</Group>
+	)
+
+	if (noAnchor) {
+		return content
+	}
+
+	return (
+		<Link href={'/am/users/' + user.ssoId} style={{ textDecoration: 'none', color: 'inherit' }}>
+			{content}
+		</Link>
 	)
 }

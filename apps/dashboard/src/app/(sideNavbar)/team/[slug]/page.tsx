@@ -1,4 +1,5 @@
 import Anchor from '@/components/core/Anchor'
+import LinkButton from '@/components/core/LinkButton'
 import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
@@ -96,16 +97,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>{team.name}</Title>
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`/team/${team.slug}/edit`}
 							rightSection={<IconEdit size={14} />}
 							disabled={!hasEditPermission}
 						>
 							Edit Information
-						</Button>
+						</LinkButton>
 						<EditMenu team={team} />
 					</Group>
 				</Group>

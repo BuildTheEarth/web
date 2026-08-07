@@ -6,7 +6,7 @@ import { Protection } from '@/components/Protection'
 import prisma from '@/util/db'
 import { IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 import ContactsDatatable from './datatable'
 import { AddContactButton } from './interactivity'
 
@@ -25,16 +25,15 @@ export default async function Page() {
 					<Title order={1}>Contacts</Title>
 					<Group gap="xs">
 						<AddContactButton disabled={!hasRole(session, 'edit-contacts')} />
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/contact`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open Page
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 				<ContactsDatatable contacts={contacts} canEdit={hasRole(session, 'edit-contacts')} />

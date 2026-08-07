@@ -1,9 +1,9 @@
-import { Button, Group, Title } from '@mantine/core'
+import { Group, Title } from '@mantine/core'
 
 import { Protection } from '@/components/Protection'
 import prisma from '@/util/db'
 import { IconChevronRight } from '@tabler/icons-react'
-import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 import UploadsDatatable from './datatable'
 
 import ContentWrapper from '@/components/core/ContentWrapper'
@@ -38,23 +38,17 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Image Uploads</Title>
 					<Group gap="xs">
-						<Button
-							color="cyan"
-							component={Link}
-							href="/am/uploads/check"
-							rightSection={<IconChevronRight size={14} />}
-						>
+						<LinkButton color="cyan" href="/am/uploads/check" rightSection={<IconChevronRight size={14} />}>
 							Check Uploads
-						</Button>
-						<Button
+						</LinkButton>
+						<LinkButton
 							color="cyan"
 							variant="outline"
-							component={Link}
 							href="/am/uploads/approve"
 							rightSection={<IconChevronRight size={14} />}
 						>
 							Approve Showcases
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 				<UploadsDatatable

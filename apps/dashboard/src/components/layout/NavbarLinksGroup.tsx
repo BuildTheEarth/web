@@ -49,51 +49,42 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 			</Text>
 		))
 
-	const Wrapper = ({ children }: { children: React.ReactNode }) => {
-		if (isGroup) {
-			return (
-				<UnstyledButton className={classes.control} onClick={() => setOpened((o) => !o)}>
-					{children}
-				</UnstyledButton>
-			)
-		}
-		return (
-			<UnstyledButton className={classes.control} component={Link} href={'link' in props ? props.link : '#'}>
-				{children}
-			</UnstyledButton>
-		)
-	}
+	const content = (
+		<Group justify="space-between" gap={0}>
+			<Box style={{ display: 'flex', alignItems: 'center' }}>
+				<ThemeIcon
+					variant="light"
+					size={30}
+					color={
+						permissionType === 'permission' ? 'gray' : permissionType === 'teamPermission' ? 'green' : 'buildtheearth'
+					}
+				>
+					<Icon size={18} />
+				</ThemeIcon>
+				<Box ml="md">{label}</Box>
+			</Box>
+			{isGroup && (
+				<IconChevronRight
+					className={classes.chevron}
+					stroke={1.5}
+					size={16}
+					style={{ transform: isOpened ? 'rotate(-90deg)' : 'none' }}
+				/>
+			)}
+		</Group>
+	)
 
 	return (
 		<>
-			<Wrapper>
-				<Group justify="space-between" gap={0}>
-					<Box style={{ display: 'flex', alignItems: 'center' }}>
-						<ThemeIcon
-							variant="light"
-							size={30}
-							color={
-								permissionType === 'permission'
-									? 'gray'
-									: permissionType === 'teamPermission'
-										? 'green'
-										: 'buildtheearth'
-							}
-						>
-							<Icon size={18} />
-						</ThemeIcon>
-						<Box ml="md">{label}</Box>
-					</Box>
-					{isGroup && (
-						<IconChevronRight
-							className={classes.chevron}
-							stroke={1.5}
-							size={16}
-							style={{ transform: isOpened ? 'rotate(-90deg)' : 'none' }}
-						/>
-					)}
-				</Group>
-			</Wrapper>
+			{isGroup ? (
+				<UnstyledButton className={classes.control} onClick={() => setOpened((o) => !o)}>
+					{content}
+				</UnstyledButton>
+			) : (
+				<UnstyledButton className={classes.control} component={Link} href={'link' in props ? props.link : '#'}>
+					{content}
+				</UnstyledButton>
+			)}
 			{isGroup ? <Collapse in={isOpened}>{items}</Collapse> : null}
 		</>
 	)

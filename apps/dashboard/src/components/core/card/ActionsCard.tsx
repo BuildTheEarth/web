@@ -1,4 +1,4 @@
-import { Box, DefaultMantineColor, SimpleGrid, Text, UnstyledButton } from '@mantine/core'
+import { Box, DefaultMantineColor, SimpleGrid, Text } from '@mantine/core'
 
 import classes from '@/styles/ActionsCard.module.css'
 import Link from 'next/link'
@@ -19,12 +19,17 @@ export function ActionsCard({
 	}[]
 }) {
 	const items = links.map((item) => (
-		<UnstyledButton key={item.title} className={classes.item} component={Link} href={item.url}>
-			<item.icon color={`var(--mantine-color-${item.color}-6`} size={32} />
+		<Link
+			key={item.title}
+			className={classes.item}
+			href={item.url}
+			style={{ textDecoration: 'none', color: 'inherit' }}
+		>
+			<item.icon color={`var(--mantine-color-${item.color}-6)`} size={32} />
 			<Text size="xs" mt={7}>
 				{item.title}
 			</Text>
-		</UnstyledButton>
+		</Link>
 	))
 	const Wrapper = withCard ? BlankCard : Box
 

@@ -6,7 +6,7 @@ import { Protection } from '@/components/Protection'
 import prisma from '@/util/db'
 import { IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 import FAQDatatabe from './datatable'
 import { AddFaqQuestionButton } from './interactivity'
 
@@ -25,16 +25,15 @@ export default async function Page() {
 					<Title order={1}>FAQ Questions</Title>
 					<Group gap="xs">
 						<AddFaqQuestionButton disabled={!hasRole(session, 'edit-faq')} />
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/faq`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open Page
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 				<FAQDatatabe faq={faq} canEdit={hasRole(session, 'edit-faq')} />

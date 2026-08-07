@@ -53,178 +53,180 @@ export default async function Page() {
 				{teams.map((team) => {
 					return (
 						<Fragment key={team.id}>
-							<Card
+							<Link
 								key={team.id + '-desktop'}
-								className="animate-scale"
-								component={Link}
 								href={`https://buildtheearth.net/teams/${team.slug}`}
 								target="_blank"
-								visibleFrom="md"
+								style={{ textDecoration: 'none', color: 'inherit' }}
 							>
-								<Grid>
-									<GridCol span={5}>
-										<BuildTeamDisplay team={team} noAnchor />
-									</GridCol>
-									<GridCol span={4}>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconMapPin
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Tooltip label={getCountryNames(team.location.split(', ')).join(', ')}>
+								<Card className="animate-scale" visibleFrom="md">
+									<Grid>
+										<GridCol span={5}>
+											<BuildTeamDisplay team={team} noAnchor />
+										</GridCol>
+										<GridCol span={4}>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconMapPin
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
+												<Tooltip label={getCountryNames(team.location.split(', ')).join(', ')}>
+													<Text fz="xs" c="dimmed">
+														{getCountryNames(team.location.split(', ').slice(0, 2)).join(', ')}{' '}
+														{team.location.split(', ').length > 2 ? '...' : ''}
+													</Text>
+												</Tooltip>
+											</Group>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconCalendar
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
 												<Text fz="xs" c="dimmed">
-													{getCountryNames(team.location.split(', ').slice(0, 2)).join(', ')}{' '}
-													{team.location.split(', ').length > 2 ? '...' : ''}
+													Member since{' '}
+													{team.Application.length > 0 ? toHumanDate(team.Application[0]?.createdAt) : 'N/A'}
 												</Text>
-											</Tooltip>
-										</Group>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconCalendar
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Text fz="xs" c="dimmed">
-												Member since {team.Application.length > 0 ? toHumanDate(team.Application[0]?.createdAt) : 'N/A'}
-											</Text>
-										</Group>
-									</GridCol>
-									<GridCol span={3}>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconPolygon
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Text fz="xs" c="dimmed">
-												{team._count.claims} claims
-											</Text>
-										</Group>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											{team.creator.ssoId === session?.user.id ? (
-												<>
-													<IconStar
-														stroke={1.5}
-														size={16}
-														color="light-dark(var(--mantine-color-orange-5), var(--mantine-color-orange-4))"
-													/>
-													<Text fz="xs" c="orange">
-														Owner
-													</Text>
-												</>
-											) : team._count.UserPermission > 0 ? (
-												<>
-													<IconPencil
-														stroke={1.5}
-														size={16}
-														color="light-dark(var(--mantine-color-grape-5), var(--mantine-color-grape-4))"
-													/>
-													<Text fz="xs" c="grape">
-														Manager
-													</Text>
-												</>
-											) : (
-												<>
-													<IconTools
-														stroke={1.5}
-														size={16}
-														color="light-dark(var(--mantine-color-cyan-5), var(--mantine-color-cyan-4))"
-													/>
-													<Text fz="xs" c="cyan">
-														Builder
-													</Text>
-												</>
-											)}
-										</Group>
-									</GridCol>
-								</Grid>
-							</Card>
-							<Card
+											</Group>
+										</GridCol>
+										<GridCol span={3}>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconPolygon
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
+												<Text fz="xs" c="dimmed">
+													{team._count.claims} claims
+												</Text>
+											</Group>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												{team.creator.ssoId === session?.user.id ? (
+													<>
+														<IconStar
+															stroke={1.5}
+															size={16}
+															color="light-dark(var(--mantine-color-orange-5), var(--mantine-color-orange-4))"
+														/>
+														<Text fz="xs" c="orange">
+															Owner
+														</Text>
+													</>
+												) : team._count.UserPermission > 0 ? (
+													<>
+														<IconPencil
+															stroke={1.5}
+															size={16}
+															color="light-dark(var(--mantine-color-grape-5), var(--mantine-color-grape-4))"
+														/>
+														<Text fz="xs" c="grape">
+															Manager
+														</Text>
+													</>
+												) : (
+													<>
+														<IconTools
+															stroke={1.5}
+															size={16}
+															color="light-dark(var(--mantine-color-cyan-5), var(--mantine-color-cyan-4))"
+														/>
+														<Text fz="xs" c="cyan">
+															Builder
+														</Text>
+													</>
+												)}
+											</Group>
+										</GridCol>
+									</Grid>
+								</Card>
+							</Link>
+							<Link
 								key={team.id + '-mobile'}
-								className="animate-scale"
-								component={Link}
 								href={`https://buildtheearth.net/teams/${team.slug}`}
 								target="_blank"
-								hiddenFrom="md"
+								style={{ textDecoration: 'none', color: 'inherit' }}
 							>
-								<BuildTeamDisplay team={team} noAnchor />
-								<Grid mt="sm">
-									<GridCol span={7}>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconMapPin
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Tooltip label={getCountryNames(team.location.split(', ')).join(', ')}>
+								<Card className="animate-scale" hiddenFrom="md">
+									<BuildTeamDisplay team={team} noAnchor />
+									<Grid mt="sm">
+										<GridCol span={7}>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconMapPin
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
+												<Tooltip label={getCountryNames(team.location.split(', ')).join(', ')}>
+													<Text fz="xs" c="dimmed">
+														{getCountryNames(team.location.split(', ').slice(0, 2)).join(', ')}{' '}
+														{team.location.split(', ').length > 2 ? '...' : ''}
+													</Text>
+												</Tooltip>
+											</Group>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconCalendar
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
 												<Text fz="xs" c="dimmed">
-													{getCountryNames(team.location.split(', ').slice(0, 2)).join(', ')}{' '}
-													{team.location.split(', ').length > 2 ? '...' : ''}
+													Member since{' '}
+													{team.Application.length > 0 ? toHumanDate(team.Application[0]?.createdAt) : 'N/A'}
 												</Text>
-											</Tooltip>
-										</Group>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconCalendar
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Text fz="xs" c="dimmed">
-												Member since {team.Application.length > 0 ? toHumanDate(team.Application[0]?.createdAt) : 'N/A'}
-											</Text>
-										</Group>
-									</GridCol>
-									<GridCol span={5}>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconPolygon
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Text fz="xs" c="dimmed">
-												{team._count.claims} claims
-											</Text>
-										</Group>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											{team.creator.ssoId === session?.user.id ? (
-												<>
-													<IconStar
-														stroke={1.5}
-														size={16}
-														color="light-dark(var(--mantine-color-orange-5), var(--mantine-color-orange-4))"
-													/>
-													<Text fz="xs" c="orange">
-														Owner
-													</Text>
-												</>
-											) : team._count.UserPermission > 0 ? (
-												<>
-													<IconPencil
-														stroke={1.5}
-														size={16}
-														color="light-dark(var(--mantine-color-grape-5), var(--mantine-color-grape-4))"
-													/>
-													<Text fz="xs" c="grape">
-														Manager
-													</Text>
-												</>
-											) : (
-												<>
-													<IconTools
-														stroke={1.5}
-														size={16}
-														color="light-dark(var(--mantine-color-cyan-5), var(--mantine-color-cyan-4))"
-													/>
-													<Text fz="xs" c="cyan">
-														Builder
-													</Text>
-												</>
-											)}
-										</Group>
-									</GridCol>
-								</Grid>
-							</Card>
+											</Group>
+										</GridCol>
+										<GridCol span={5}>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconPolygon
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
+												<Text fz="xs" c="dimmed">
+													{team._count.claims} claims
+												</Text>
+											</Group>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												{team.creator.ssoId === session?.user.id ? (
+													<>
+														<IconStar
+															stroke={1.5}
+															size={16}
+															color="light-dark(var(--mantine-color-orange-5), var(--mantine-color-orange-4))"
+														/>
+														<Text fz="xs" c="orange">
+															Owner
+														</Text>
+													</>
+												) : team._count.UserPermission > 0 ? (
+													<>
+														<IconPencil
+															stroke={1.5}
+															size={16}
+															color="light-dark(var(--mantine-color-grape-5), var(--mantine-color-grape-4))"
+														/>
+														<Text fz="xs" c="grape">
+															Manager
+														</Text>
+													</>
+												) : (
+													<>
+														<IconTools
+															stroke={1.5}
+															size={16}
+															color="light-dark(var(--mantine-color-cyan-5), var(--mantine-color-cyan-4))"
+														/>
+														<Text fz="xs" c="cyan">
+															Builder
+														</Text>
+													</>
+												)}
+											</Group>
+										</GridCol>
+									</Grid>
+								</Card>
+							</Link>
 						</Fragment>
 					)
 				})}

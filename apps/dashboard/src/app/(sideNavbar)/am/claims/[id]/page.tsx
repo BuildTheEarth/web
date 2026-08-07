@@ -23,7 +23,7 @@ import { toHumanDateTime } from '@/util/date'
 import prisma from '@/util/db'
 import { IconAlertCircle, IconCheck, IconClockExclamation, IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 import { EditMenu } from './interactivity'
 import { Map } from './map'
 
@@ -52,16 +52,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 					<Title order={1}>{claim.name || `Claim ${id.split('-')[0]}`}</Title>
 
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/map?claim=${id}`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open on Map
-						</Button>
+						</LinkButton>
 						<EditMenu claim={claim as any} />
 					</Group>
 				</Group>

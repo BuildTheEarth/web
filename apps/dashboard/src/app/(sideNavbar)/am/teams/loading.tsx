@@ -1,9 +1,9 @@
-import { Button, Group, Title } from '@mantine/core'
+import { Group, Title } from '@mantine/core'
 
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
 import { Protection } from '@/components/Protection'
 import { IconExternalLink } from '@tabler/icons-react'
-import Link from 'next/link'
 
 export default function Page() {
 	return (
@@ -12,16 +12,15 @@ export default function Page() {
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Build Teams</Title>
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/teams`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open Page
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 			</ContentWrapper>

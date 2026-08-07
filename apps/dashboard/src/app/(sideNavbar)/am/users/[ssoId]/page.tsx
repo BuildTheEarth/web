@@ -43,6 +43,7 @@ import {
 } from '@tabler/icons-react'
 
 import Anchor from '@/components/core/Anchor'
+import LinkButton from '@/components/core/LinkButton'
 import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import ErrorDisplay from '@/components/core/ErrorDisplay'
@@ -161,16 +162,15 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 					</Text>
 				</Flex>
 				<Group gap="xs">
-					<Button
+					<LinkButton
 						variant="light"
 						color="cyan"
-						component={Link}
 						href={`https://auth.buildtheearth.net/admin/master/console/#/website/users/${ssoId}/settings`}
 						target="_blank"
 						rightSection={<IconExternalLink size={14} />}
 					>
 						Edit in Keycloak
-					</Button>
+					</LinkButton>
 					<UserMenu
 						user={websiteData}
 						availablePermissions={availablePermissions}

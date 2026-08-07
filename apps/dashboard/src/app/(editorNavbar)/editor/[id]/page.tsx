@@ -1,9 +1,9 @@
 import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
-import { Box, Button, Divider, Group, Title } from '@mantine/core'
+import { Box, Divider, Group, Title } from '@mantine/core'
 import { IconMap } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 import { AdvancedEditor } from './interactivity'
 
 export const metadata: Metadata = {
@@ -30,16 +30,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 					Editing: {claim?.name || id.split('-')[0]}
 				</Title>
 				<Group>
-					<Button
+					<LinkButton
 						variant="outline"
 						color="orange"
 						disabled={!id}
-						component={Link}
 						href={`/editor?id=${id}`}
 						rightSection={<IconMap size={16} />}
 					>
 						Open in Map-Editor
-					</Button>
+					</LinkButton>
 				</Group>
 			</Group>
 			<Divider />

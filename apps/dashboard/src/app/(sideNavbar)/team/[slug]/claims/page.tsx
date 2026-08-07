@@ -1,13 +1,13 @@
-import { Alert, Button, Group, Title } from '@mantine/core'
+import { Alert, Group, Title } from '@mantine/core'
 
 import { getUserPermissions } from '@/actions/getUser'
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
 import { Protection } from '@/components/Protection'
 import { getSession, hasRole } from '@/util/auth'
 import prisma from '@/util/db'
 import { IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
 import ClaimsDatatable from './datatable'
 import { SearchClaims } from './interactivity'
 
@@ -27,58 +27,12 @@ export default async function Page({
 	const slug = (await params).slug
 	const page = (await searchParams).page
 	const searchQuery = (await searchParams).query
-
-	const claimCount = await prisma.claim.count({
-		where: searchQuery
-			? {
-					OR: [
-						{ city: { contains: searchQuery || undefined } },
-						{ id: { contains: searchQuery || undefined } },
-						{ externalId: { contains: searchQuery || undefined } },
-						{ name: { contains: searchQuery || undefined } },
-						{ osmName: { contains: searchQuery || undefined } },
-						{ owner: { username: { contains: searchQuery || undefined } } },
-						{ owner: { minecraft: { contains: searchQuery || undefined } } },
-						{ owner: { discordId: { contains: searchQuery || undefined } } },
-						{ owner: { ssoId: { contains: searchQuery || undefined } } },
-					],
-					buildTeam: { slug },
-				}
-			: {
-					buildTeam: { slug },
-				},
-	})
-	const claims = await prisma.claim.findMany({
-		take: 20,
-		skip: (Number(page || '1') - 1) * 20,
-		where: searchQuery
-			? {
-					OR: [
-						{ city: { contains: searchQuery || undefined } },
-						{ id: { contains: searchQuery || undefined } },
-						{ externalId: { contains: searchQuery || undefined } },
-						{ name: { contains: searchQuery || undefined } },
-						{ osmName: { contains: searchQuery || undefined } },
-						{ owner: { username: { contains: searchQuery || undefined } } },
-						{ owner: { minecraft: { contains: searchQuery || undefined } } },
-						{ owner: { discordId: { contains: searchQuery || undefined } } },
-						{ owner: { ssoId: { contains: searchQuery || undefined } } },
-					],
-					buildTeam: { slug },
-				}
-			: {
-					buildTeam: { slug },
-				},
-		include: { owner: true },
-		orderBy: { createdAt: 'desc' },
+	const team = await prisma.buildTeam.findUnique({
+		where: { slug },
+		select: { id: true, allowBuilderClaim: true },
 	})
 
-	const externallyLinkedClaimCount = await prisma.claim.count({
-		where: {
-			buildTeam: { slug },
-			externalId: { not: null },
-		},
-	})
+	if (!team) throw Error('Could not find BuildTeam')
 
 	const activePermissions = userPermissions
 		.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
@@ -90,22 +44,73 @@ export default async function Page({
 		}
 	}
 
+	const claimCount = await prisma.claim.count({
+		where: searchQuery
+			? {
+					buildTeam: { slug },
+					OR: [
+						{ name: { contains: searchQuery || undefined } },
+						{ city: { contains: searchQuery || undefined } },
+						{ id: { contains: searchQuery || undefined } },
+						{ owner: { username: { contains: searchQuery || undefined } } },
+					],
+				}
+			: {
+					buildTeam: { slug },
+				},
+	})
+	const claims = await prisma.claim.findMany({
+		skip: page ? (parseInt(page) - 1) * 10 : 0,
+		take: 10,
+		where: searchQuery
+			? {
+					buildTeam: { slug },
+					OR: [
+						{ name: { contains: searchQuery || undefined } },
+						{ city: { contains: searchQuery || undefined } },
+						{ id: { contains: searchQuery || undefined } },
+						{ owner: { username: { contains: searchQuery || undefined } } },
+					],
+				}
+			: {
+					buildTeam: { slug },
+				},
+		include: { owner: true, buildTeam: { select: { id: true, slug: true, icon: true, name: true } } },
+		orderBy: { createdAt: 'desc' },
+	})
+
+	let externallyLinkedClaimCount = 0
+
+	if (!searchQuery) {
+		const claimsAggregate = await prisma.claim.aggregate({
+			where: {
+				buildTeam: { slug },
+				externalId: { not: null },
+			},
+			_count: {
+				_all: true,
+			},
+		})
+		if (claimsAggregate._count._all) {
+			externallyLinkedClaimCount = claimsAggregate._count._all
+		}
+	}
+
 	return (
 		<Protection requiredRole="get-claims">
 			<ContentWrapper maw="90vw">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Claims</Title>
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/map`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open Map
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 				{!searchQuery && externallyLinkedClaimCount > 0 && claimCount - externallyLinkedClaimCount > 0 ? (

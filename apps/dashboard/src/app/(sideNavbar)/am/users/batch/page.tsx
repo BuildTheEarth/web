@@ -24,8 +24,8 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ s
 				{step == null && (
 					<>
 						<p>
-							Be careful of what you are doing here. You can cause a lot of damage if you don't know exactly what you
-							are doing. Click button below to start or jump back to a already started batch operation.
+							Be careful of what you are doing here. You can cause a lot of damage if you don&apos;t know exactly what
+							you are doing. Click button below to start or jump back to a already started batch operation.
 							<br />
 							<b>For now you can only add users to a BuildTeam</b>
 						</p>

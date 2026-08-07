@@ -1,4 +1,5 @@
 import Anchor from '@/components/core/Anchor'
+import LinkButton from '@/components/core/LinkButton'
 import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
@@ -97,16 +98,15 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 					<Title order={1}>{team.name}</Title>
 					<Group gap="xs">
 						<ImpersonateButton team={team} />
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/teams/${team.slug}`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open on Website
-						</Button>
+						</LinkButton>
 						<EditMenu team={team} />
 					</Group>
 				</Group>

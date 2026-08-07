@@ -1,5 +1,5 @@
-import type { NextConfig } from 'next';
-import path from 'path';
+import type { NextConfig } from 'next'
+import path from 'path'
 
 const nextConfig: NextConfig = {
 	env: {
@@ -19,6 +19,11 @@ const nextConfig: NextConfig = {
 	poweredByHeader: false,
 	outputFileTracingRoot: path.join(__dirname, '../../'),
 	images: {
+		localPatterns: [
+			{
+				pathname: '/**',
+			},
+		],
 		remotePatterns: [
 			{
 				protocol: 'https',
@@ -34,6 +39,6 @@ const nextConfig: NextConfig = {
 			},
 		],
 	},
-};
+}
 
-export default nextConfig;
+export default nextConfig

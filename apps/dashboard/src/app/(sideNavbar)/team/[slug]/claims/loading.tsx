@@ -1,10 +1,10 @@
-import { Button, Group, Title } from '@mantine/core'
+import { Group, Title } from '@mantine/core'
 
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
 import { Protection } from '@/components/Protection'
 import { IconExternalLink } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable'
-import Link from 'next/link'
 import { SearchClaims } from './interactivity'
 
 export default function Page() {
@@ -14,16 +14,15 @@ export default function Page() {
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Claims</Title>
 					<Group gap="xs">
-						<Button
+						<LinkButton
 							variant="light"
 							color="cyan"
-							component={Link}
 							href={`https://buildtheearth.net/map`}
 							target="_blank"
 							rightSection={<IconExternalLink size={14} />}
 						>
 							Open Map
-						</Button>
+						</LinkButton>
 					</Group>
 				</Group>
 				<SearchClaims mb="md" maw="30%" disabled />

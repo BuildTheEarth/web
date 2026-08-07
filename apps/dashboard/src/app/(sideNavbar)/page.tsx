@@ -17,6 +17,7 @@ import {
 
 import { getUserBuildTeams } from '@/actions/user'
 import Anchor from '@/components/core/Anchor'
+import LinkButton from '@/components/core/LinkButton'
 import { ActionsCard } from '@/components/core/card/ActionsCard'
 import { StatsSegmentsCard } from '@/components/core/card/StatsSegmentCard'
 import { TextCard } from '@/components/core/card/TextCard'
@@ -349,9 +350,9 @@ export default async function Page() {
 												</Text>
 											</Group>
 											{!step.completed && step.link && (
-												<Button component={Link} href={step.link} size="xs" variant="light" color="blue">
+												<LinkButton href={step.link} size="xs" variant="light" color="blue">
 													Go
-												</Button>
+												</LinkButton>
 											)}
 										</Group>
 									))}
@@ -386,18 +387,6 @@ export default async function Page() {
 							/>
 						) : (
 							<Paper withBorder p="md">
-								<Group justify="space-between">
-									<Text fz="xl" fw={700}>
-										Your Claims
-									</Text>
-									<IconDeviceAnalytics
-										size={22}
-										style={{
-											color: 'light-dark(var(--mantine-color-gray-4), var(--mantine-color-dark-3))',
-										}}
-										stroke={1.5}
-									/>
-								</Group>
 								<Text c="dimmed" fz="sm" mb="sm">
 									Overview of your claims
 								</Text>
@@ -407,8 +396,7 @@ export default async function Page() {
 								<Text size="xs" c="dimmed" mb="md">
 									Start building the Earth by selecting an area in the claim editor and submitting your request.
 								</Text>
-								<Button
-									component={Link}
+								<LinkButton
 									href="/editor"
 									variant="light"
 									color="teal"
@@ -416,7 +404,7 @@ export default async function Page() {
 									fullWidth
 								>
 									Claim an Area
-								</Button>
+								</LinkButton>
 							</Paper>
 						)}
 

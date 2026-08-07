@@ -31,7 +31,7 @@ import {
 	Title,
 } from '@mantine/core'
 import { IconCheck, IconPolygon, IconRefresh, IconScale, IconUser } from '@tabler/icons-react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export default function StatsExplorer({ teams }: { teams: { id: string; name: string; slug: string }[] }) {
 	const [teamId, setTeamId] = useState<string | null>('')
@@ -40,7 +40,7 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 	const [loading, setLoading] = useState(true)
 	const [error, setError] = useState<string | null>(null)
 
-	const fetchData = async () => {
+	const fetchData = useCallback(async () => {
 		setLoading(true)
 		setError(null)
 		try {
@@ -54,11 +54,11 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 		} finally {
 			setLoading(false)
 		}
-	}
+	}, [teamId, timeRange])
 
 	useEffect(() => {
 		fetchData()
-	}, [teamId, timeRange])
+	}, [fetchData])
 
 	const formatNumber = (num: number) => {
 		return new Intl.NumberFormat().format(num)
@@ -158,7 +158,9 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 								}
 								diffSuffix="% Finished"
 								diffIcon={false}
-								subtitle={`${formatNumber(data.kpis.finishedClaims)} finished, ${formatNumber(data.kpis.unfinishedClaims)} in progress`}
+								subtitle={`${formatNumber(data.kpis.finishedClaims)} finished, ${formatNumber(
+									data.kpis.unfinishedClaims,
+								)} in progress`}
 							/>
 							<Stat
 								title="Total Buildings"
@@ -171,7 +173,9 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 								}
 								diffSuffix="% Finished"
 								diffIcon={false}
-								subtitle={`${formatNumber(data.kpis.finishedBuildings)} finished, ${formatNumber(data.kpis.unfinishedBuildings)} in progress`}
+								subtitle={`${formatNumber(data.kpis.finishedBuildings)} finished, ${formatNumber(
+									data.kpis.unfinishedBuildings,
+								)} in progress`}
 							/>
 
 							<Stat
@@ -185,7 +189,9 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 								}
 								diffSuffix="% Finished"
 								diffIcon={false}
-								subtitle={`${formatArea(data.kpis.finishedArea)} finished, ${formatArea(data.kpis.unfinishedArea)} in progress`}
+								subtitle={`${formatArea(data.kpis.finishedArea)} finished, ${formatArea(
+									data.kpis.unfinishedArea,
+								)} in progress`}
 							/>
 
 							<Stat

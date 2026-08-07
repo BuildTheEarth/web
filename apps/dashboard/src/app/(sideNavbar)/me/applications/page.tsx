@@ -99,63 +99,64 @@ export default async function Page({
 					.map((application) => {
 						const Icon = applicationStatusToIcon(application.status)
 						return (
-							<Card
+							<Link
 								key={application.id}
-								component={Link}
 								href={`/me/applications/${application.id}`}
-								className="animate-scale"
+								style={{ textDecoration: 'none', color: 'inherit' }}
 							>
-								<Grid>
-									<GridCol span={{ base: 1.75, lg: 0.75 }}>
-										<Tooltip label={applicationStatusToTooltip(application.status)}>
-											<ThemeIcon
-												variant="light"
-												radius="xl"
-												size="lg"
-												color={applicationStatusToColor(application.status)}
-											>
-												<Icon style={{ width: '70%', height: '70%' }} />
-											</ThemeIcon>
-										</Tooltip>
-									</GridCol>
-									<GridCol span={{ base: 10.25, lg: 7.25 }}>
-										<Stack>
-											<Title order={4}>
-												{application.trial ? 'Trial' : 'Builder'} Application {application.id.split('-')[0]}
-											</Title>
-											<BuildTeamDisplay team={application.buildteam} noAnchor />
-										</Stack>
-									</GridCol>
-									<GridCol span={{ base: 11.25, lg: 4 }} offset={{ base: 1.75, lg: 0 }}>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconCalendar
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Text fz="xs" c="dimmed">
-												{toHumanDateTime(application.createdAt)}
-											</Text>
-										</Group>
-										<Group wrap="nowrap" gap={5} mt={5}>
-											<IconCalendarCheck
-												stroke={1.5}
-												size={16}
-												color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
-											/>
-											<Text fz="xs" c="dimmed">
-												{application.reviewedAt
-													? `${toHumanDateTime(application.reviewedAt)} (${moment
-															.duration(moment(application.createdAt).diff(application.reviewedAt))
-															.humanize()})`
-													: `Pending review... (${moment
-															.duration(moment(application.createdAt).diff(moment.now()))
-															.humanize()})`}
-											</Text>
-										</Group>
-									</GridCol>
-								</Grid>
-							</Card>
+								<Card className="animate-scale">
+									<Grid>
+										<GridCol span={{ base: 1.75, lg: 0.75 }}>
+											<Tooltip label={applicationStatusToTooltip(application.status)}>
+												<ThemeIcon
+													variant="light"
+													radius="xl"
+													size="lg"
+													color={applicationStatusToColor(application.status)}
+												>
+													<Icon style={{ width: '70%', height: '70%' }} />
+												</ThemeIcon>
+											</Tooltip>
+										</GridCol>
+										<GridCol span={{ base: 10.25, lg: 7.25 }}>
+											<Stack>
+												<Title order={4}>
+													{application.trial ? 'Trial' : 'Builder'} Application {application.id.split('-')[0]}
+												</Title>
+												<BuildTeamDisplay team={application.buildteam} noAnchor />
+											</Stack>
+										</GridCol>
+										<GridCol span={{ base: 11.25, lg: 4 }} offset={{ base: 1.75, lg: 0 }}>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconCalendar
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
+												<Text fz="xs" c="dimmed">
+													{toHumanDateTime(application.createdAt)}
+												</Text>
+											</Group>
+											<Group wrap="nowrap" gap={5} mt={5}>
+												<IconCalendarCheck
+													stroke={1.5}
+													size={16}
+													color="light-dark(var(--mantine-color-gray-5), var(--mantine-color-dark-3))"
+												/>
+												<Text fz="xs" c="dimmed">
+													{application.reviewedAt
+														? `${toHumanDateTime(application.reviewedAt)} (${moment
+																.duration(moment(application.createdAt).diff(application.reviewedAt))
+																.humanize()})`
+														: `Pending review... (${moment
+																.duration(moment(application.createdAt).diff(moment.now()))
+																.humanize()})`}
+												</Text>
+											</Group>
+										</GridCol>
+									</Grid>
+								</Card>
+							</Link>
 						)
 					})}
 			</Stack>
