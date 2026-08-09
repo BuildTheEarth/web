@@ -13,6 +13,12 @@ const links = [
 	{ link: 'https://status.buildtheearth.net', key: 'status' },
 ]
 
+const legalLinks = [
+	{ link: '/legal/impressum', key: 'impressum' },
+	{ link: '/legal/privacy', key: 'privacy' },
+	{ link: '/legal/terms-of-service', key: 'tos' },
+]
+
 interface FooterProps {
 	style?: React.CSSProperties
 }
@@ -27,13 +33,19 @@ export default function Footer({ style }: FooterProps) {
 		</Anchor>
 	))
 
+	const legalItems = legalLinks.map((link) => (
+		<Anchor c="dimmed" key={link.link} href={link.link} size="xs">
+			{tLinks(link.key)}
+		</Anchor>
+	))
+
 	return (
 		<Box className={classes.root} style={style}>
 			<Box className={classes.container}>
 				<Text style={{ fontSize: '14px' }} c="dimmed" variant="text" className={classes.copyright}>
 					{t('copyright', { year: new Date().getFullYear() })}
 				</Text>
-				<Group className={classes.links}>
+				<Group gap="md" className={classes.links}>
 					{items}
 					<ActionIcon
 						component={Link}
@@ -48,6 +60,9 @@ export default function Footer({ style }: FooterProps) {
 					>
 						<IconBrandDiscord />
 					</ActionIcon>
+				</Group>
+				<Group gap="xs" wrap="wrap">
+					{legalItems}
 				</Group>
 			</Box>
 		</Box>

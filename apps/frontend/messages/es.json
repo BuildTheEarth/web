@@ -51,7 +51,10 @@
 			"contact": "Contacto",
 			"status": "Estado del servidor",
 			"gallery": "Galería",
-			"map": "Mapa"
+			"map": "Mapa",
+			"tos": "Términos de servicio",
+			"privacy": "Política de privacidad",
+			"impressum": "Aviso legal (Impressum)"
 		}
 	},
 	"home": {
