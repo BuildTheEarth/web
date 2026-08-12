@@ -226,18 +226,27 @@ class TokenRouteContoller {
 
 		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
 
-		const osmDetails = area && (await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center }))
+		let osmDetails = area && (await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center }))
+		if (req.query.skipOSM == 'true') {
+			this.core.getLogger().info('Skipping OSM details update for claim update.')
+			osmDetails = { osmName: name || center || 'Unnamed Claim', city: city, name: name || center || 'Unnamed Claim' }
+		} else {
+			osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center })
+		}
 
 		const data = {
 			owner: owner && { connect: { id: owner.id } },
 			builders: builders ? { set: builders } : undefined,
-			name: name,
+			name: name || center || 'Unnamed Claim',
 			finished: finished,
 			externalId: externalId,
 			active: active,
 			description: description,
 			buildings:
-				buildings || (area && (await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area }))),
+				buildings ||
+				(req.query.skipOSM == 'true'
+					? -1
+					: await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })),
 			city: city || osmDetails.city,
 			area: area,
 			osmName: osmDetails.osmName,
