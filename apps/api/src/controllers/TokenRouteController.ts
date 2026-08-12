@@ -226,7 +226,7 @@ class TokenRouteContoller {
 
 		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
 
-		let osmDetails = area && (await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center }))
+		let osmDetails = { osmName: name || center || 'Unnamed Claim', city: city, name: name || center || 'Unnamed Claim' }
 		if (req.query.skipOSM == 'true') {
 			this.core.getLogger().info('Skipping OSM details update for claim update.')
 			osmDetails = { osmName: name || center || 'Unnamed Claim', city: city, name: name || center || 'Unnamed Claim' }
