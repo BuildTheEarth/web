@@ -96,7 +96,7 @@ class TokenRouteContoller {
 
 		let { owner: _owner, area, active, finished, name, externalId, description, buildings, city, builders } = req.body
 
-		if (area[0] != area[area.length - 1]) {
+		if (area && area.length > 0 && area[0] != area[area.length - 1]) {
 			area.push(area[0])
 		}
 
@@ -111,34 +111,63 @@ class TokenRouteContoller {
 			)
 		}
 
-		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
+		const center = area && area.length > 0 ? turf.center(toPolygon(area)).geometry.coordinates.join(', ') : undefined
 
-		let osmDetails = { osmName: name || center || 'Unnamed Claim', city: city }
-		if (req.query.skipOSM == 'true') {
+		const skipOSM =
+			req.query.skipOSM === 'true' ||
+			(req.query.skipOSM as unknown) === true ||
+			req.body?.skipOSM === true ||
+			req.body?.skipOSM === 'true'
+
+		const claimName = name && name.trim() !== '' ? name : undefined
+
+		let osmDetails: { osmName?: string; city?: string; name?: string } | undefined = {
+			osmName: claimName || center || 'Unnamed Claim',
+			city: city,
+			name: claimName || center || 'Unnamed Claim',
+		}
+		if (skipOSM) {
 			this.core.getLogger().info('Skipping OSM details update for claim creation.')
-			osmDetails = { osmName: name || center || 'Unnamed Claim', city: city }
+		} else if (center) {
+			const fetchedOsm = await this.core
+				.getWeb()
+				.getControllers()
+				.claim.updateClaimOSMDetails({ name: claimName, center })
+			if (fetchedOsm) {
+				osmDetails = {
+					osmName: fetchedOsm.osmName || claimName || center || 'Unnamed Claim',
+					city: city || fetchedOsm.city,
+					name: claimName || fetchedOsm.name || center || 'Unnamed Claim',
+				}
+			}
+		}
+
+		let buildingCount: number
+		if (buildings !== undefined && buildings !== null && !isNaN(Number(buildings))) {
+			buildingCount = typeof buildings === 'number' ? buildings : parseInt(buildings, 10)
+		} else if (skipOSM) {
+			buildingCount = -1
+		} else if (area && area.length > 0) {
+			const countResult = await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })
+			buildingCount = typeof countResult === 'number' ? countResult : -1
 		} else {
-			osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center })
+			buildingCount = -1
 		}
 
 		const data = {
 			owner: owner ? { connect: { id: owner.id } } : undefined,
 			buildTeam: { connect: { id: req.team.id } },
 			builders: builders ? { connect: builders } : undefined,
-			name: name || center || 'Unnamed Claim',
+			name: claimName || osmDetails?.name || center || 'Unnamed Claim',
 			finished: finished,
 			externalId: externalId,
 			active: active,
 			description: description,
-			buildings:
-				buildings ||
-				(req.query.skipOSM == 'true'
-					? -1
-					: await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })),
-			city: osmDetails.city,
+			buildings: buildingCount,
+			city: city || osmDetails?.city,
 			area: area,
-			osmName: osmDetails.osmName,
-			size: area && turf.area(toPolygon(area)),
+			osmName: osmDetails?.osmName || claimName || center || 'Unnamed Claim',
+			size: area && area.length > 0 ? turf.area(toPolygon(area)) : undefined,
 			center: center,
 		}
 
@@ -209,7 +238,7 @@ class TokenRouteContoller {
 
 		let { owner: _owner, area, active, finished, name, externalId, description, buildings, city, builders } = req.body
 
-		if (area[0] != area[area.length - 1]) {
+		if (area && area.length > 0 && area[0] != area[area.length - 1]) {
 			area.push(area[0])
 		}
 
@@ -224,33 +253,46 @@ class TokenRouteContoller {
 			)
 		}
 
-		const center = area && turf.center(toPolygon(area)).geometry.coordinates.join(', ')
+		const center = area && area.length > 0 ? turf.center(toPolygon(area)).geometry.coordinates.join(', ') : undefined
 
-		let osmDetails = { osmName: name || center || 'Unnamed Claim', city: city, name: name || center || 'Unnamed Claim' }
-		if (req.query.skipOSM == 'true') {
+		const skipOSM =
+			req.query.skipOSM === 'true' ||
+			(req.query.skipOSM as unknown) === true ||
+			req.body?.skipOSM === true ||
+			req.body?.skipOSM === 'true'
+
+		const claimName = name !== undefined ? (name && name.trim() !== '' ? name : center || 'Unnamed Claim') : undefined
+
+		let osmDetails: { osmName?: string; city?: string; name?: string } | undefined = undefined
+		if (skipOSM) {
 			this.core.getLogger().info('Skipping OSM details update for claim update.')
-			osmDetails = { osmName: name || center || 'Unnamed Claim', city: city, name: name || center || 'Unnamed Claim' }
-		} else {
-			osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name, center })
+		} else if (center || claimName) {
+			osmDetails = await this.core.getWeb().getControllers().claim.updateClaimOSMDetails({ name: claimName, center })
+		}
+
+		let buildingCount: number | undefined = undefined
+		if (buildings !== undefined && buildings !== null && !isNaN(Number(buildings))) {
+			buildingCount = typeof buildings === 'number' ? buildings : parseInt(buildings, 10)
+		} else if (skipOSM) {
+			buildingCount = undefined
+		} else if (area && area.length > 0) {
+			const countResult = await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })
+			buildingCount = typeof countResult === 'number' ? countResult : -1
 		}
 
 		const data = {
 			owner: owner && { connect: { id: owner.id } },
 			builders: builders ? { set: builders } : undefined,
-			name: name || center || 'Unnamed Claim',
+			name: claimName !== undefined ? claimName : osmDetails?.name,
 			finished: finished,
 			externalId: externalId,
 			active: active,
 			description: description,
-			buildings:
-				buildings ||
-				(req.query.skipOSM == 'true'
-					? -1
-					: await this.core.getWeb().getControllers().claim.updateClaimBuildingCount({ area })),
-			city: city || osmDetails.city,
+			buildings: buildingCount,
+			city: city !== undefined ? city : osmDetails?.city,
 			area: area,
-			osmName: osmDetails.osmName,
-			size: area && turf.area(toPolygon(area)),
+			osmName: osmDetails?.osmName,
+			size: area && area.length > 0 ? turf.area(toPolygon(area)) : undefined,
 			center: center,
 		}
 

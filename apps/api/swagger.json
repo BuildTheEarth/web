@@ -1041,6 +1041,15 @@
 						"schema": {
 							"type": "boolean"
 						}
+					},
+					{
+						"description": "Skip OSM and Overpass external API calls",
+						"in": "query",
+						"name": "skipOSM",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				],
 				"requestBody": {
@@ -1049,6 +1058,10 @@
 							"schema": {
 								"type": "object",
 								"properties": {
+									"skipOSM": {
+										"type": "boolean",
+										"description": "Skip OSM and Overpass external API calls"
+									},
 									"owner": {
 										"type": "object",
 										"properties": {}
@@ -1108,7 +1121,7 @@
 										}
 									}
 								},
-								"required": ["area", "active", "finished", "name"]
+								"required": ["area", "active", "finished"]
 							}
 						}
 					}
@@ -1232,6 +1245,15 @@
 						"schema": {
 							"type": "boolean"
 						}
+					},
+					{
+						"description": "Skip OSM and Overpass external API calls",
+						"in": "query",
+						"name": "skipOSM",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
 					}
 				],
 				"requestBody": {
@@ -1240,6 +1262,10 @@
 							"schema": {
 								"type": "object",
 								"properties": {
+									"skipOSM": {
+										"type": "boolean",
+										"description": "Skip OSM and Overpass external API calls"
+									},
 									"owner": {
 										"type": "object",
 										"properties": {}

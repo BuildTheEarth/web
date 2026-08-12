@@ -842,11 +842,13 @@ class Routes {
 				await controllers.tokenRoute.createClaim(request, response)
 			},
 			param('team'),
+			query('skipOSM').isBoolean().optional(),
+			body('skipOSM').isBoolean().optional(),
 			body('owner').isObject().optional(),
 			body('area'),
 			body('active').isBoolean(),
 			body('finished').isBoolean(),
-			body('name').isString(),
+			body('name').isString().optional(),
 			body('externalId').isString().optional(),
 			body('description').isString().optional(),
 			body('buildings').isNumeric().optional(),
@@ -863,6 +865,8 @@ class Routes {
 				await controllers.tokenRoute.updateClaim(request, response)
 			},
 			param('team'),
+			query('skipOSM').isBoolean().optional(),
+			body('skipOSM').isBoolean().optional(),
 			body('owner').isObject().optional(),
 			body('area').optional(),
 			body('active').isBoolean().optional(),

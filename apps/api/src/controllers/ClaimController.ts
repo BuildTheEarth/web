@@ -489,7 +489,7 @@ class ClaimController {
 				center,
 				owner: { connect: { id: req.user.id } },
 				builders: req.body.builders ? { connect: req.body.builders.map((b: any) => ({ id: b.id })) } : undefined,
-				name: req.body.name,
+				name: req.body.name || center || 'Unnamed Claim',
 				description: req.body.description,
 				finished: req.body.finished,
 				active: req.body.active,
