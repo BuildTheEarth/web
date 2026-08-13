@@ -306,7 +306,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								}}
 								visibleFrom="sm"
 								component={Link}
-								href="/statistics"
+								href="/our-progress"
 							>
 								{[
 									{
