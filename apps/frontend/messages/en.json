@@ -46,6 +46,7 @@
 		},
 		"links": {
 			"faq": "FAQ",
+			"donate": "Donate",
 			"teams": "Teams",
 			"contact": "Contact",
 			"status": "Status",
@@ -307,6 +308,38 @@
 		"impact": {
 			"title": "Low Percentages. Massive Impact.",
 			"description": "BTE is not a race to 100%. We are building cities with historical context, local detail, and thousands of volunteer hours. Even a single district done right can educate, inspire, and connect people across countries."
+		}
+	},
+	"support-us": {
+		"title": "Support Us",
+		"seo": {
+			"title": "Support Us",
+			"description": "Support BuildTheEarth and help us maintain servers, fund development projects, and keep the community going!"
+		},
+		"patreon": {
+			"title": "The BuildTheEarth Patreon",
+			"description": "Support our project and gain access to special content. Your support helps us maintain servers, fund development projects, and keep the community thriving. A full list of perks is available on our Patreon page. If you would like, you can also support us thru Discord Server Subscriptions with the same benefits. Thank you for helping us keep the project going!",
+			"cta": "Become a Patron",
+			"ctaDiscord": "Join via Discord",
+			"perks": {
+				"downloads": {
+					"title": "World Downloads",
+					"description": "Get access to new schematic and world downloads from a featured BuildTeam each month."
+				},
+				"discord": {
+					"title": "Discord Access",
+					"description": "Get access to exclusive Discord channels where you can interact with other donators."
+				}
+			}
+		},
+		"teams": {
+			"title": "Support a BuildTeam",
+			"description": "Many BuildTeams have their own Patreon pages where you can support them directly. This helps them maintain their servers, fund their events and much more! As the donation options depend on the BuildTeam, please check their Patreon or other donation page for more information. Thank you for your support!",
+			"cta": "Check BuildTeams"
+		},
+		"build": {
+			"title": "Support by Building",
+			"description": "Supporting BuildTheEarth doesn't always have to be monetary. You can also support us by building! Join a BuildTeam and help them build their region. You can also help out by joining different staff teams, check our Discord server for more information."
 		}
 	},
 	"gallery": {

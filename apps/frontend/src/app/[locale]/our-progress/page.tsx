@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 }
 
 export const dynamic = 'force-static'
-export const revalidate = 7200
+export const revalidate = 7200 // 2 hours
 
 function toPercent(value: number, total: number) {
 	if (!total || total <= 0) {
@@ -66,7 +66,6 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const earthLandAreaKm2 = 148_940_000
 	const earthTotalAreaKm2 = 510_100_000
 
-	// Earth-scale percentages based on tracked claim area.
 	const globalCompletionLand = toPercent(trackedAreaKm2, earthLandAreaKm2)
 	const globalCompletionTotal = toPercent(trackedAreaKm2, earthTotalAreaKm2)
 

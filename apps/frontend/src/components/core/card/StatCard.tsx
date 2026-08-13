@@ -1,15 +1,16 @@
 'use client'
 
 import { Box, GridCol, Text, ThemeIcon } from '@mantine/core'
-import { ReactNode } from 'react'
+import { Fragment, ReactNode } from 'react'
 
 interface StatCardProps {
 	icon: ReactNode
 	color: string
 	value: string
-	label: string
+	label?: string
 	description: string
-	span?: { base?: number; md?: number }
+	gridCol?: boolean
+	span?: { base: number; md: number }
 }
 
 export default function StatCard({
@@ -19,9 +20,11 @@ export default function StatCard({
 	label,
 	description,
 	span = { base: 12, md: 4 },
+	gridCol = true,
 }: StatCardProps) {
+	const Wrapper = gridCol ? GridCol : Fragment
 	return (
-		<GridCol span={span}>
+		<Wrapper {...(gridCol ? { span } : {})}>
 			<Box
 				style={{
 					backgroundColor: 'var(--mantine-color-dark-6)',
@@ -36,13 +39,15 @@ export default function StatCard({
 				<Text fw={700} fz={36} lh={1.1}>
 					{value}
 				</Text>
-				<Text tt="uppercase" fw={700} mt="sm">
-					{label}
-				</Text>
+				{label && (
+					<Text tt="uppercase" fw={700} mt="sm">
+						{label}
+					</Text>
+				)}
 				<Text c="dimmed" fz="sm" mt="xs">
 					{description}
 				</Text>
 			</Box>
-		</GridCol>
+		</Wrapper>
 	)
 }

@@ -8,7 +8,6 @@ import { useTranslations } from 'next-intl'
 import React from 'react'
 
 const links = [
-	{ link: '/faq', key: 'faq' },
 	{ link: '/contact', key: 'contact' },
 	{ link: 'https://status.buildtheearth.net', key: 'status' },
 ]
@@ -22,7 +21,14 @@ export default function Footer({ style }: FooterProps) {
 	const tLinks = useTranslations('common.links')
 
 	const items = links.map((link) => (
-		<Anchor c="dimmed" key={link.link} href={link.link} size="sm">
+		<Anchor
+			c="dimmed"
+			key={link.link}
+			href={link.link}
+			size="sm"
+			data-umami-event={`footer-link-click`}
+			data-umami-event-url={link.link}
+		>
 			{tLinks(link.key)}
 		</Anchor>
 	))
@@ -43,7 +49,7 @@ export default function Footer({ style }: FooterProps) {
 						target="_blank"
 						c="dimmed"
 						size="sm"
-						data-umami-event="link-click"
+						data-umami-event="footer-discord-click"
 						data-umami-event-url="http://go.buildtheearth.net/dc"
 					>
 						<IconBrandDiscord />

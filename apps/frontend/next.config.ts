@@ -67,6 +67,20 @@ const nextConfig: NextConfig = {
 			},
 		]
 	},
+	async redirects() {
+		return [
+			{
+				source: '/donate',
+				destination: '/support-us',
+				permanent: true,
+			},
+			{
+				source: '/download',
+				destination: '/support-us',
+				permanent: false,
+			},
+		]
+	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
 	turbopack: {},
 	allowedDevOrigins: ['192.168.178.22'],

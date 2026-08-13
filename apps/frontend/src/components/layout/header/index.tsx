@@ -14,7 +14,13 @@ export async function Header() {
 	const t = await getTranslations('common.header')
 	const tLinks = await getTranslations('common.links')
 	const items = headerLinks.map((link) => (
-		<Link key={link.key} href={link.link} className={classes.link}>
+		<Link
+			key={link.key}
+			href={link.link}
+			className={classes.link}
+			data-umami-event={`header-link-click`}
+			data-umami-event-url={link.link}
+		>
 			{tLinks(link.key)}
 		</Link>
 	))
