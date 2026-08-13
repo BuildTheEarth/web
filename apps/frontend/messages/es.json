@@ -4,7 +4,6 @@
 		"locale_short": "es",
 		"locale_name": "Español",
 		"site_name": "BuildTheEarth",
-		"descri": "Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
 		"description": "Construyendo la Tierra en Minecraft - Únete al proyecto más grande del mundo dedicado a recrear nuestro planeta en el videojuego Minecraft.",
 		"title": {
 			"template": "%s | BuildTheEarth",
@@ -47,11 +46,18 @@
 		},
 		"links": {
 			"faq": "FAQ",
+			"donate": "Donar",
 			"teams": "Equipos",
 			"contact": "Contacto",
 			"status": "Estado del servidor",
 			"gallery": "Galería",
 			"map": "Mapa"
+		},
+		"cookieBanner": {
+			"title": "Configuración de cookies",
+			"description": "Usamos Umami para recopilar datos de uso anónimos para mejorar nuestro sitio web. Puedes elegir aceptar o rechazar el uso de cookies.",
+			"accept": "Aceptar",
+			"decline": "Rechazar"
 		}
 	},
 	"home": {
@@ -101,6 +107,7 @@
 			"step3": "Construye tu primer edificio"
 		},
 		"gallery": {
+			"subtitle": "Nuestro viaje hasta ahora",
 			"alt": "Imagen de muestra de la galería de BuildTheEarth",
 			"cta": "Explora la galería"
 		},
@@ -143,7 +150,7 @@
 			"details": "Detalles",
 			"ip": "IP de Minecraft",
 			"version": "Versión de Minecraft",
-			"location": "{count, plural, =1 {Location} other {Locations}}",
+			"location": "{count, plural, =1 {Ubicación} other {Ubicaciones}}",
 			"moreLocations": "{list}, +{count}",
 			"members": "Miembros",
 			"recentImages": "Imágenes Recientes",
@@ -224,7 +231,7 @@
 			},
 			"joinServer": {
 				"title": "Explorar {country}",
-				"description": "Únete al servidor {{name}} para explorar las increíbles construcciones de esta región.<br></br><br></br>Si necesitas ayuda para navegar por el servidor, no dudes en contactarnos en Discord",
+				"description": "Únete al servidor {name} para explorar las increíbles construcciones de esta región.<br></br><br></br>Si necesitas ayuda para navegar por el servidor, no dudes en contactarnos en Discord",
 				"ctaDiscord": "Unirse al servidor de Discord",
 				"moreInformation": "Más información"
 			}
@@ -309,6 +316,38 @@
 			"description": "BuldTheEarth no es una carrera por el 100%. Estamos construyendo ciudades con contexto histórico, detalles locales y miles de horas de voluntariado. Incluso un solo barrio bien hecho puede educar, inspirar y conectar a personas de diferentes países."
 		}
 	},
+	"support-us": {
+		"title": "Apóyanos",
+		"seo": {
+			"title": "Apóyanos",
+			"description": "¡Apoya a BuildTheEarth y ayúdanos a mantener servidores, financiar proyectos de desarrollo y mantener viva la comunidad!"
+		},
+		"patreon": {
+			"title": "El Patreon de BuildTheEarth",
+			"description": "Apoya nuestro proyecto y obtén acceso a contenido especial. Tu apoyo nos ayuda a mantener servidores, financiar proyectos de desarrollo y mantener la comunidad en crecimiento. Una lista completa de beneficios está disponible en nuestra página de Patreon. Si lo deseas, también puedes apoyarnos a través de suscripciones de servidor de Discord con los mismos beneficios. ¡Gracias por ayudarnos a mantener el proyecto en marcha!",
+			"cta": "Conviértete en un mecenas",
+			"ctaDiscord": "Únete vía Discord",
+			"perks": {
+				"downloads": {
+					"title": "Descargas de mundos",
+					"description": "Obtén acceso a nuevos esquemas y descargas de mundos de un equipo de construcción destacado cada mes."
+				},
+				"discord": {
+					"title": "Acceso a Discord",
+					"description": "Obtén acceso a canales exclusivos de Discord donde puedes interactuar con otros donantes."
+				}
+			}
+		},
+		"teams": {
+			"title": "Apoya a un equipo de construcción",
+			"description": "Muchos equipos de construcción tienen sus propias páginas de Patreon donde puedes apoyarlos directamente. ¡Esto les ayuda a mantener sus servidores, financiar sus eventos y mucho más! Dado que las opciones de donación dependen de cada equipo, consulta su página de Patreon u otra plataforma de donaciones para más información. ¡Gracias por tu apoyo!",
+			"cta": "Ver equipos de construcción"
+		},
+		"build": {
+			"title": "Apoya construyendo",
+			"description": "Apoyar a BuildTheEarth no siempre tiene que ser económico. ¡También puedes apoyarnos construyendo! Únete a un equipo de construcción y ayúdalos a construir su región. También puedes ayudar uniéndote a diferentes equipos del personal; consulta nuestro servidor de Discord para más información."
+		}
+	},
 	"gallery": {
 		"seo": {
 			"title": "Galería de Muestra",
@@ -341,8 +380,7 @@
 			"infoNotice": {
 				"title": "Nota: {country}",
 				"description": "El país o región que has seleccionado no está siendo construido actualmente por ningún equipo. Estamos en el proceso de solucionar esto, pero mientras tanto, si quieres ayudar, considera unirte a un equipo diferente.",
-				"descriptionUs": "Los Estados Unidos está siendo construido por varios equipos de construcción. Si quieres ayudar, considera unirte a uno de los siguientes equipos de construcción que están construyendo en los Estados Unidos:",
-				"descUs": "The United States is currently being built by multiple BuildTeams. If you want to help out, please consider joining one of the following BuildTeams that are building in the US:"
+				"descriptionUs": "Los Estados Unidos está siendo construido por varios equipos de construcción. Si quieres ayudar, considera unirte a uno de los siguientes equipos de construcción que están construyendo en los Estados Unidos:"
 			}
 		}
 	},

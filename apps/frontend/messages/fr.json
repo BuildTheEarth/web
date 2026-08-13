@@ -46,11 +46,18 @@
 		},
 		"links": {
 			"faq": "FAQ",
+			"donate": "Faire un don",
 			"teams": "Equipes",
 			"contact": "Contact",
 			"status": "Statut",
 			"gallery": "Galerie",
 			"map": "Carte"
+		},
+		"cookieBanner": {
+			"title": "Paramètres des cookies",
+			"description": "Nous utilisons Umami pour collecter des données d'utilisation anonymes afin d'améliorer notre site web. Vous pouvez choisir d'accepter ou de refuser l'utilisation de cookies.",
+			"accept": "Accepter",
+			"decline": "Refuser"
 		}
 	},
 	"home": {
@@ -100,6 +107,7 @@
 			"step3": "Construis ton premier bâtiment"
 		},
 		"gallery": {
+			"subtitle": "Notre parcours jusqu'à présent",
 			"alt": "Galerie d'images de BuildTheEarth",
 			"cta": "Découvre la galerie"
 		},
@@ -306,6 +314,38 @@
 		"impact": {
 			"title": "Faibles pourcentages. Un impact considérable.",
 			"description": "Le projet BTE n'est pas une course vers le 100 %. Nous construisons des villes en tenant compte du contexte historique, des particularités locales et grâce à des milliers d'heures de bénévolat. Même un seul quartier bien conçu peut éduquer, inspirer et créer des liens entre les gens d'un pays à l'autre."
+		}
+	},
+	"support-us": {
+		"title": "Nous soutenir",
+		"seo": {
+			"title": "Nous soutenir",
+			"description": "Soutiens BuildTheEarth et aide-nous à maintenir les serveurs, financer des projets de développement et faire vivre la communauté !"
+		},
+		"patreon": {
+			"title": "Le Patreon de BuildTheEarth",
+			"description": "Soutiens notre projet et accède à du contenu exclusif. Ton soutien nous aide à maintenir les serveurs, financer les projets de développement et assurer la pérennité de la communauté. La liste complète des avantages est disponible sur notre page Patreon. Si tu le souhaites, tu peux également nous soutenir via les abonnements de serveur Discord avec les mêmes avantages. Merci de nous aider à faire vivre ce projet !",
+			"cta": "Devenir un donateur",
+			"ctaDiscord": "Rejoindre via Discord",
+			"perks": {
+				"downloads": {
+					"title": "Téléchargements de mondes",
+					"description": "Accède chaque mois à de nouveaux schémas et téléchargements de mondes créés par une BuildTeam mise à l'honneur."
+				},
+				"discord": {
+					"title": "Accès Discord",
+					"description": "Accède à des salons Discord exclusifs où tu peux échanger avec d'autres donateurs."
+				}
+			}
+		},
+		"teams": {
+			"title": "Soutenir une BuildTeam",
+			"description": "De nombreuses BuildTeams disposent de leur propre page Patreon sur laquelle tu peux les soutenir directement. Cela les aide à entretenir leurs serveurs, financer leurs événements et bien plus encore ! Les options de don variant selon l'équipe, n'hésite pas à consulter leur page Patreon ou leur plateforme de don dédiée pour plus d'informations. Merci pour ton soutien !",
+			"cta": "Découvrir les BuildTeams"
+		},
+		"build": {
+			"title": "Soutenir en construisant",
+			"description": "Soutenir BuildTheEarth ne passe pas nécessairement par un don financier. Tu peux aussi nous aider en construisant ! Rejoins une BuildTeam et participe à la construction de sa région. Tu peux également prêter main-forte en rejoignant les différentes équipes de modération et de gestion ; consulte notre serveur Discord pour en savoir plus."
 		}
 	},
 	"gallery": {

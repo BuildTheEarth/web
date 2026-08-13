@@ -52,6 +52,12 @@
 			"status": "Status",
 			"gallery": "Gallery",
 			"map": "Map"
+		},
+		"cookieBanner": {
+			"title": "Cookie Settings",
+			"description": "We use Umami to collect anonymous usage data to improve our website. You can choose to accept or decline the use of cookies.",
+			"accept": "Accept",
+			"decline": "Decline"
 		}
 	},
 	"home": {

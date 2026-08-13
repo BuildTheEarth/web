@@ -35,11 +35,18 @@
 		},
 		"links": {
 			"faq": "問答",
+			"donate": "贊助",
 			"teams": "團隊",
 			"contact": "聯繫",
 			"status": "狀態",
 			"gallery": "畫廊",
 			"map": "地圖"
+		},
+		"cookieBanner": {
+			"title": "Cookie 設定",
+			"description": "我們使用 Umami 收集匿名使用數據以改善我們的網站。您可以選擇接受或拒絕使用 Cookie。",
+			"accept": "接受",
+			"decline": "拒絕"
 		}
 	},
 	"home": {
@@ -89,6 +96,7 @@
 			"step3": "建造您的第一棟建築"
 		},
 		"gallery": {
+			"subtitle": "我們迄今為止的旅程",
 			"alt": "BuildTheEarth 的作品展示畫廊",
 			"cta": "探索畫廊"
 		},
@@ -295,6 +303,38 @@
 		"impact": {
 			"title": "低百分比，大影響力。",
 			"description": "BTE 不是一場衝向 100% 的競速。我們透過歷史背景、在地細節和數千小時的志工時數來建設城市。被細緻完成的即使只有一個街區，也足以教育、啟發和連結跨越國界的人們。"
+		}
+	},
+	"support-us": {
+		"title": "支持我們",
+		"seo": {
+			"title": "支持我們",
+			"description": "支持 BuildTheEarth，協助我們維持伺服器運作、資助開發專案並維持社群蓬勃發展！"
+		},
+		"patreon": {
+			"title": "BuildTheEarth Patreon",
+			"description": "支持我們的專案並獲得專屬內容。您的支持有助於我們維持伺服器運作、資助開發專案並保持社群的活躍。完整的福利清單請見我們的 Patreon 頁面。如果您願意，也可以透過 Discord 伺服器訂閱來支持我們，享受相同的福利。感謝您協助我們推動這個專案！",
+			"cta": "成為贊助者",
+			"ctaDiscord": "透過 Discord 加入",
+			"perks": {
+				"downloads": {
+					"title": "世界地圖下載",
+					"description": "每月可獲取精選建築團隊的新投影（schematic）與世界存檔下載權限。"
+				},
+				"discord": {
+					"title": "Discord 專屬權限",
+					"description": "獲得專屬 Discord 頻道的進入權限，與其他贊助者互動交流。"
+				}
+			}
+		},
+		"teams": {
+			"title": "支持建築團隊",
+			"description": "許多建築團隊都有自己的 Patreon 頁面，您可以直接支持他們。這能協助他們維護伺服器、舉辦活動等！由於各團隊的贊助選項不同，請前往他們的 Patreon 或其他贊助頁面了解更多資訊。感謝您的支持！",
+			"cta": "查看建築團隊"
+		},
+		"build": {
+			"title": "以建築支持",
+			"description": "支持 BuildTheEarth 不一定需要資金。您也可以透過親自建築來支持我們！加入建築團隊並協助他們建造當地的區域。您也可以加入不同的管理團隊來提供協助，詳情請查看我們的 Discord 伺服器。"
 		}
 	},
 	"gallery": {

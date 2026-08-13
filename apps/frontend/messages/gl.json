@@ -46,11 +46,18 @@
 		},
 		"links": {
 			"faq": "Preguntas usuais",
+			"donate": "Doar",
 			"teams": "Equipos",
 			"contact": "Contacto",
 			"status": "Estado",
 			"gallery": "Galería",
 			"map": "Mapa"
+		},
+		"cookieBanner": {
+			"title": "Axustes de cookies",
+			"description": "Usamos Umami para recoller datos de uso anónimos para mellorar o noso sitio web. Podes optar por aceptar ou rexeitar o uso de cookies.",
+			"accept": "Aceptar",
+			"decline": "Rexeitar"
 		}
 	},
 	"home": {
@@ -100,6 +107,7 @@
 			"step3": "Fai a túa primeira construción"
 		},
 		"gallery": {
+			"subtitle": "O noso camiño ata o de agora",
 			"alt": "Galería de imaxes de BuildTheEarth",
 			"cta": "Botarlle unha ollada á galería"
 		},
@@ -142,7 +150,7 @@
 			"details": "Detalles",
 			"ip": "IP de Minecraft",
 			"version": "Versión de Minecraft",
-			"location": "{count, plural, =1 {Location} outra {Locations}}",
+			"location": "{count, plural, =1 {Localización} other {Localizacións}}",
 			"moreLocations": "{list}, +{count}",
 			"members": "Membros",
 			"recentImages": "Imaxes recentes",
@@ -306,6 +314,38 @@
 		"impact": {
 			"title": "Porcentaxes baixas. Impacto masivo.",
 			"description": "BTE non é unha carreira para chegar ao 100 %. Estamos a construír cidades con contexto histórico, detalles locais e miles de horas de voluntariado. Mesmo unha soa parroquia ben feita pode educar, inspirar e conectar persoas de todos os países."
+		}
+	},
+	"support-us": {
+		"title": "Apóianos",
+		"seo": {
+			"title": "Apóianos",
+			"description": "Apoia a BuildTheEarth e axúdanos a manter servidores, financiar proxectos de desenvolvemento e manter viva a comunidade!"
+		},
+		"patreon": {
+			"title": "O Patreon de BuildTheEarth",
+			"description": "Apoia o noso proxecto e obtén acceso a contido especial. O teu apoio axúdanos a manter servidores, financiar proxectos de desenvolvemento e facer prosperar a comunidade. Tes dispoñible unha lista completa de vantaxes na nosa páxina de Patreon. Se o desexas, tamén podes apoiarnos mediante subscricións de servidor de Discord cos mesmos beneficios. Grazas por axudarnos a manter o proxecto en marcha!",
+			"cta": "Facerse mecenas",
+			"ctaDiscord": "Únete mediante Discord",
+			"perks": {
+				"downloads": {
+					"title": "Descargas de mundos",
+					"description": "Obtén acceso a novos esquemas e descargas de mundos dun equipo de construción destacado cada mes."
+				},
+				"discord": {
+					"title": "Acceso a Discord",
+					"description": "Obtén acceso a canles exclusivas de Discord onde podes interactuar con outros doantes."
+				}
+			}
+		},
+		"teams": {
+			"title": "Apoia un equipo de construción",
+			"description": "Moitos equipos de construción teñen as súas propias páxinas de Patreon onde podes apoialos directamente. Isto axúdalles a manter os seus servidores, financiar os seus eventos e moito máis! Dado que as opcións de doazón dependen de cada equipo, consulta a súa páxina de Patreon ou outra páxina de doazóns para obter máis información. Grazas polo teu apoio!",
+			"cta": "Comprobar equipos de construción"
+		},
+		"build": {
+			"title": "Apoia construíndo",
+			"description": "Apoiar a BuildTheEarth non sempre ten que ser con cartos. Tamén podes apoiarnos construíndo! Únete a un equipo de construción e axúdao a construír a súa rexión. Tamén podes axudar uníndote a diferentes equipos do persoal; consulta o noso servidor de Discord para obter máis información."
 		}
 	},
 	"gallery": {

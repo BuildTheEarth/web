@@ -18,7 +18,7 @@ import { Locale, NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
 import { Cairo, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
-import Script from 'next/script'
+import CookieConsent from '@/components/CookieConsent'
 
 const cairoFont = Cairo({ subsets: ['latin'], variable: '--font-cairo' })
 const catamaranFont = Inter({ subsets: ['latin'], variable: '--font-catamaran' })
@@ -76,15 +76,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		>
 			<head>
 				<ColorSchemeScript />
-				{websiteId && (
-					<Script
-						src={'/api/uma.js'}
-						data-website-id={websiteId}
-						data-tag={process.env.NODE_ENV === 'development' ? 'development' : undefined}
-						data-performance={process.env.NODE_ENV === 'development' ? 'false' : 'true'}
-						strategy="afterInteractive"
-					/>
-				)}
 			</head>
 			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
 				<NextIntlClientProvider>
@@ -96,6 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 								process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />
 							}
 							<AppLayout>{children}</AppLayout>
+							<CookieConsent websiteId={websiteId} />
 						</ModalsProvider>
 					</MantineProvider>
 				</NextIntlClientProvider>
