@@ -9,18 +9,20 @@ RUN yarn dlx turbo@^2 prune dashboard --docker
 
 # Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
-RUN apk update && apk add --no-cache libc6-compat openssl 
-RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3 
+RUN apk update && apk add --no-cache libc6-compat openssl
+RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 WORKDIR /app
 
 ARG NEXT_PUBLIC_FRONTEND_URL
 ARG NEXT_PUBLIC_KEYCLOAK_URL
 ARG NEXT_PUBLIC_KEYCLOAK_ID
+ARG NEXT_PUBLIC_MAPBOX_TOKEN
 ARG NEXTAUTH_URL
 
 ENV NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
 ENV NEXT_PUBLIC_KEYCLOAK_URL=$NEXT_PUBLIC_KEYCLOAK_URL
 ENV NEXT_PUBLIC_KEYCLOAK_ID=$NEXT_PUBLIC_KEYCLOAK_ID
+ENV NEXT_PUBLIC_MAPBOX_TOKEN=$NEXT_PUBLIC_MAPBOX_TOKEN
 ENV NEXTAUTH_URL=$NEXTAUTH_URL
 
 COPY --from=builder /app/out/json/ .

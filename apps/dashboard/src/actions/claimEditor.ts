@@ -15,6 +15,7 @@ export const getPersonalClaims = async () => {
 	const claims = await prisma.claim.findMany(constructClaimGeoJSONQuery({ user: userId, extended: true }))
 	return claims
 }
+
 export const getAllowedBuildTeams = async () => {
 	const session = await getSession()
 	if (!session) throw new Error('Unauthorized')
