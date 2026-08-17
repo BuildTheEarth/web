@@ -79,33 +79,32 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				<Text mb="md">
 					Approval ration should be ~1/10. All approved image will get placed on the BuildTheEarth website front page!
 				</Text>
-				{showcaseCount < 10 ? (
-					<Alert title="Nothing to do" color="green" icon={<IconInfoCircle />} maw="50%">
+				{showcaseCount < 10 && (
+					<Alert title="Be careful" color="green" icon={<IconInfoCircle />} maw="50%">
 						There are currently less than 10 images with a valid status to approve. Please wait until more images have
 						been checked before approving showcases. This is to ensure a healthy approval ratio and that only good
 						images get approved.
 					</Alert>
-				) : (
-					<UploadsDatatable
-						showcases={showcases.map((u) => ({
-							...u,
-							createdAt: u.createdAt.toISOString(),
-							imageSrc: u.image.src,
-							imageId: u.image.id,
-							imageHeight: u.image.height,
-							imageWidth: u.image.width,
-							imageHash: u.image.hash,
-							buildTeamName: u.buildTeam.name,
-							buildTeamSlug: u.buildTeam.slug,
-							buildTeamId: u.buildTeam.id,
-							buildTeamIcon: u.buildTeam.icon,
-							image: undefined,
-							buildTeam: undefined,
-						}))}
-						count={showcaseCount}
-						onApproveAction={adminApproveShowcase}
-					/>
 				)}
+				<UploadsDatatable
+					showcases={showcases.map((u) => ({
+						...u,
+						createdAt: u.createdAt.toISOString(),
+						imageSrc: u.image.src,
+						imageId: u.image.id,
+						imageHeight: u.image.height,
+						imageWidth: u.image.width,
+						imageHash: u.image.hash,
+						buildTeamName: u.buildTeam.name,
+						buildTeamSlug: u.buildTeam.slug,
+						buildTeamId: u.buildTeam.id,
+						buildTeamIcon: u.buildTeam.icon,
+						image: undefined,
+						buildTeam: undefined,
+					}))}
+					count={showcaseCount}
+					onApproveAction={adminApproveShowcase}
+				/>
 			</ContentWrapper>
 		</Protection>
 	)
