@@ -16,6 +16,9 @@ describe('ApplicationQuestionsService', () => {
 			findUnique: jest.Mock;
 			deleteMany: jest.Mock;
 		};
+		buildTeam: {
+			findUnique: jest.Mock;
+		};
 	};
 
 	const question = {
@@ -37,6 +40,9 @@ describe('ApplicationQuestionsService', () => {
 				updateMany: jest.fn(),
 				findUnique: jest.fn(),
 				deleteMany: jest.fn(),
+			},
+			buildTeam: {
+				findUnique: jest.fn(),
 			},
 		};
 
@@ -66,6 +72,56 @@ describe('ApplicationQuestionsService', () => {
 				data: [{ id: 'question-1' }],
 				meta: { page: 2, perPage: 2, totalItems: 4, totalPages: 2 },
 			});
+		});
+	});
+
+	describe('findAllForTeam', () => {
+		it('should resolve the team by id and return its questions', async () => {
+			prismaService.buildTeam.findUnique.mockResolvedValue({ id: 'team-123' });
+			prismaService.applicationQuestion.findMany.mockResolvedValue([{ id: 'question-1' }]);
+			prismaService.applicationQuestion.count.mockResolvedValue(1);
+
+			const result = await applicationQuestionsService.findAllForTeam(
+				'team-123',
+				false,
+				{ page: 1, limit: 20 },
+				'sort',
+				'asc',
+			);
+
+			expect(prismaService.buildTeam.findUnique).toHaveBeenCalledWith({
+				where: { id: 'team-123' },
+				select: { id: true },
+			});
+			expect(prismaService.applicationQuestion.findMany).toHaveBeenCalledWith({
+				where: { buildTeamId: 'team-123' },
+				orderBy: { sort: 'asc' },
+				skip: 0,
+				take: 20,
+			});
+			expect(result.data).toEqual([{ id: 'question-1' }]);
+		});
+
+		it('should resolve the team by slug when requested', async () => {
+			prismaService.buildTeam.findUnique.mockResolvedValue({ id: 'team-123' });
+			prismaService.applicationQuestion.findMany.mockResolvedValue([]);
+			prismaService.applicationQuestion.count.mockResolvedValue(0);
+
+			await applicationQuestionsService.findAllForTeam('my-team', true, { page: 1, limit: 20 });
+
+			expect(prismaService.buildTeam.findUnique).toHaveBeenCalledWith({
+				where: { slug: 'my-team' },
+				select: { id: true },
+			});
+		});
+
+		it('should throw when the team does not exist', async () => {
+			prismaService.buildTeam.findUnique.mockResolvedValue(null);
+
+			await expect(
+				applicationQuestionsService.findAllForTeam('missing', false, { page: 1, limit: 20 }),
+			).rejects.toThrow(NotFoundException);
+			expect(prismaService.applicationQuestion.findMany).not.toHaveBeenCalled();
 		});
 	});
 

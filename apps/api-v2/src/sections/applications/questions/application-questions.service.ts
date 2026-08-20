@@ -51,6 +51,36 @@ export class ApplicationQuestionsService {
 	}
 
 	/**
+	 * Finds all questions of the team with the given ID or slug. Used for the public
+	 * application form, which is rendered before a user belongs to the team.
+	 * @param teamId ID of the team, or its slug when useSlug is set.
+	 * @param useSlug Whether teamId should be treated as a slug instead of an ID.
+	 * @param pagination Pagination parameters.
+	 * @param sortBy Field to sort by.
+	 * @param order Order of sorting (asc/desc).
+	 * @returns A paginated response containing the questions and metadata.
+	 * @throws NotFoundException if no team with the given ID or slug exists.
+	 */
+	async findAllForTeam(
+		teamId: string,
+		useSlug: boolean,
+		pagination: PaginationParams,
+		sortBy?: SortingParams['sortBy'],
+		order?: SortingParams['order'],
+	) {
+		const buildTeam = await this.prisma.buildTeam.findUnique({
+			where: useSlug ? { slug: teamId } : { id: teamId },
+			select: { id: true },
+		});
+
+		if (!buildTeam) {
+			throw new NotFoundException('BuildTeam not found');
+		}
+
+		return await this.findAll(pagination, sortBy, order, {}, buildTeam.id);
+	}
+
+	/**
 	 * Creates a new question for the given team.
 	 * @param question The question to create.
 	 * @param buildTeamId ID of the team the question belongs to.
