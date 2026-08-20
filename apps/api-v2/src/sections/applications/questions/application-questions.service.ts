@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { FilterParams } from 'src/common/decorators/filter.decorator';
 import { PaginationParams } from 'src/common/decorators/pagination.decorator';
@@ -6,6 +6,12 @@ import { SortingParams } from 'src/common/decorators/sorting.decorator';
 import { CreateApplicationQuestionDto } from './dto/create.application-question.dto';
 import { UpdateApplicationQuestionDto } from './dto/update.application-question.dto';
 import { UpsertApplicationQuestionDto } from './dto/upsert.application-question.dto';
+
+/**
+ * Upper bound for a single bulk upsert. Every entry runs inside one transaction,
+ * so an unbounded payload would hold row locks for as long as it takes to apply.
+ */
+export const MAX_BULK_QUESTIONS = 100;
 
 @Injectable()
 export class ApplicationQuestionsService {
@@ -120,9 +126,14 @@ export class ApplicationQuestionsService {
 	 * @param questions The questions to create or update.
 	 * @param buildTeamId ID of the team the questions belong to.
 	 * @returns All created and updated questions.
-	 * @throws ForbiddenException if one of the given IDs belongs to another team.
+	 * @throws BadRequestException if more than MAX_BULK_QUESTIONS questions are sent at once.
+	 * @throws NotFoundException if one of the given IDs belongs to another team.
 	 */
 	async upsertMany(questions: UpsertApplicationQuestionDto[], buildTeamId: string) {
+		if (questions.length > MAX_BULK_QUESTIONS) {
+			throw new BadRequestException(`Cannot upsert more than ${MAX_BULK_QUESTIONS} questions at once`);
+		}
+
 		const requestedIds = questions.map((question) => question.id).filter((id): id is string => Boolean(id));
 
 		const existing = requestedIds.length
@@ -132,8 +143,10 @@ export class ApplicationQuestionsService {
 				})
 			: [];
 
+		// A 404 rather than a 403: saying "that one is someone else's" would confirm
+		// the ID exists, which is what every other route here avoids doing.
 		if (existing.some((question) => question.buildTeamId !== buildTeamId)) {
-			throw new ForbiddenException('Cannot update questions of another build team');
+			throw new NotFoundException('Question not found');
 		}
 
 		const existingIds = new Set(existing.map((question) => question.id));

@@ -1,7 +1,10 @@
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { ApplicationQuestionType } from '@repo/db';
 import { PrismaService } from 'src/common/db/prisma.service';
-import { ApplicationQuestionsService } from 'src/sections/applications/questions/application-questions.service';
+import {
+	ApplicationQuestionsService,
+	MAX_BULK_QUESTIONS,
+} from 'src/sections/applications/questions/application-questions.service';
 
 describe('ApplicationQuestionsService', () => {
 	let applicationQuestionsService: ApplicationQuestionsService;
@@ -214,12 +217,19 @@ describe('ApplicationQuestionsService', () => {
 			expect(prismaService.applicationQuestion.findMany).not.toHaveBeenCalled();
 		});
 
-		it('should refuse to touch questions of another team', async () => {
+		it('should refuse to touch questions of another team without confirming the id exists', async () => {
 			prismaService.applicationQuestion.findMany.mockResolvedValue([{ id: 'question-1', buildTeamId: 'other-team' }]);
 
 			await expect(
 				applicationQuestionsService.upsertMany([{ ...question, id: 'question-1' }], 'team-123'),
-			).rejects.toThrow(ForbiddenException);
+			).rejects.toThrow(NotFoundException);
+			expect(prismaService.$transaction).not.toHaveBeenCalled();
+		});
+
+		it('should reject a payload above the bulk limit before opening a transaction', async () => {
+			const tooMany = Array.from({ length: MAX_BULK_QUESTIONS + 1 }, () => ({ ...question }));
+
+			await expect(applicationQuestionsService.upsertMany(tooMany, 'team-123')).rejects.toThrow(BadRequestException);
 			expect(prismaService.$transaction).not.toHaveBeenCalled();
 		});
 	});

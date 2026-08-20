@@ -14,7 +14,7 @@ import { Pagination, PaginationParams } from 'src/common/decorators/pagination.d
 import { Sortable } from 'src/common/decorators/sortable.decorator';
 import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator';
 import { ControllerResponse, PaginatedControllerResponse } from 'src/typings';
-import { ApplicationQuestionsService } from './application-questions.service';
+import { ApplicationQuestionsService, MAX_BULK_QUESTIONS } from './application-questions.service';
 import { ApplicationQuestionDto } from './dto/application-question.dto';
 import { CreateApplicationQuestionDto } from './dto/create.application-question.dto';
 import { UpdateApplicationQuestionDto } from './dto/update.application-question.dto';
@@ -98,14 +98,13 @@ export class ApplicationQuestionsController {
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Upsert Application Questions',
-		description:
-			'Creates and updates multiple application questions of the currently authenticated team in one request. Entries with an ID replace the matching question, entries without one are created. Questions that are not part of the payload are left untouched.',
+		description: `Creates and updates multiple application questions of the currently authenticated team in one request. Entries with an ID replace the matching question, entries without one are created. Questions that are not part of the payload are left untouched. At most ${MAX_BULK_QUESTIONS} questions can be sent at once.`,
 	})
 	@ApiBody({ type: [UpsertApplicationQuestionDto] })
 	@ApiDefaultResponse(ApplicationQuestionDto, { isArray: true, description: 'Success' })
 	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
-	@ApiErrorResponse({ status: 403, description: 'Question belongs to another build team' })
+	@ApiErrorResponse({ status: 404, description: 'Question not found' })
 	async upsertApplicationQuestions(
 		@Body(
 			new ParseArrayPipe({
