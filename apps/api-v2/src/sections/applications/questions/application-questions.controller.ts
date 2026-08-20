@@ -73,7 +73,7 @@ export class ApplicationQuestionsController {
 		summary: 'Delete Application Question',
 		description: 'Deletes the question with the given ID if it belongs to the currently authenticated team.',
 	})
-	@ApiResponse({ status: 204, description: 'No Content' })
+	@ApiResponse({ status: 200, description: 'Question deleted successfully.' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	@ApiErrorResponse({ status: 404, description: 'Question not found' })
 	async deleteApplicationQuestion(@Param('id') id: string, @Req() req: Request): ControllerResponse {

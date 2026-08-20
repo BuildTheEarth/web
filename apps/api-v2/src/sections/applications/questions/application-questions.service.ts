@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
 import { FilterParams } from 'src/common/decorators/filter.decorator';
 import { PaginationParams } from 'src/common/decorators/pagination.decorator';
@@ -47,12 +47,22 @@ export class ApplicationQuestionsService {
 		};
 	}
 
+	/**
+	 * Deletes a question if it belongs to the given team.
+	 * @param id ID of the question to delete.
+	 * @param buildTeamId ID of the team the question has to belong to.
+	 * @throws NotFoundException if the question does not exist or belongs to another team.
+	 */
 	async delete(id: string, buildTeamId: string) {
-		return await this.prisma.applicationQuestion.deleteMany({
+		const { count } = await this.prisma.applicationQuestion.deleteMany({
 			where: {
 				id,
 				buildTeamId,
 			},
 		});
+
+		if (count === 0) {
+			throw new NotFoundException('Question not found');
+		}
 	}
 }

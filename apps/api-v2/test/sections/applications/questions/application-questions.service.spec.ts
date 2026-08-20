@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { ApplicationQuestionsService } from 'src/sections/applications/questions/application-questions.service';
 import { PrismaService } from 'src/common/db/prisma.service';
 
@@ -23,7 +24,7 @@ describe('ApplicationQuestionsService', () => {
 		it('should delete the question for the given question and team ids', async () => {
 			prismaService.applicationQuestion.deleteMany.mockResolvedValue({ count: 1 });
 
-			const result = await applicationQuestionsService.delete('question-1', 'team-123');
+			await expect(applicationQuestionsService.delete('question-1', 'team-123')).resolves.toBeUndefined();
 
 			expect(prismaService.applicationQuestion.deleteMany).toHaveBeenCalledWith({
 				where: {
@@ -31,7 +32,12 @@ describe('ApplicationQuestionsService', () => {
 					buildTeamId: 'team-123',
 				},
 			});
-			expect(result).toEqual({ count: 1 });
+		});
+
+		it('should throw when the question does not belong to the team', async () => {
+			prismaService.applicationQuestion.deleteMany.mockResolvedValue({ count: 0 });
+
+			await expect(applicationQuestionsService.delete('question-1', 'team-123')).rejects.toThrow(NotFoundException);
 		});
 	});
 });
