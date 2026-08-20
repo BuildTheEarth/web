@@ -1,75 +1,54 @@
-import { HttpService } from "@nestjs/axios";
-import { Injectable, Logger } from "@nestjs/common";
-import { ConfigService } from "@nestjs/config";
-import { firstValueFrom } from "rxjs";
+import { HttpService } from '@nestjs/axios';
+import { Injectable, Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { firstValueFrom } from 'rxjs';
 
 /**
  *
  */
 @Injectable()
 export class CachetAPIService {
-  private readonly logger = new Logger(CachetAPIService.name);
-  private baseURL: string | undefined;
-  private apiToken: string | undefined;
+	private readonly logger = new Logger(CachetAPIService.name);
+	private baseURL: string | undefined;
+	private apiToken: string | undefined;
 
-  constructor(
-    private readonly http: HttpService,
-    private configService: ConfigService,
-  ) {
-    if (
-      !this.configService.get<string>("CACHET_URL") ||
-      !this.configService.get<string>("CACHET_TOKEN")
-    ) {
-      this.logger.warn(
-        "Cachet configuration is missing. CachetAPIService will not function properly.",
-      );
-    } else {
-      this.baseURL = this.configService.get<string>("CACHET_URL") as string;
-      this.apiToken = this.configService.get<string>("CACHET_TOKEN") as string;
+	constructor(
+		private readonly http: HttpService,
+		private configService: ConfigService,
+	) {
+		if (!this.configService.get<string>('CACHET_URL') || !this.configService.get<string>('CACHET_TOKEN')) {
+			this.logger.warn('Cachet configuration is missing. CachetAPIService will not function properly.');
+		} else {
+			this.baseURL = this.configService.get<string>('CACHET_URL') as string;
+			this.apiToken = this.configService.get<string>('CACHET_TOKEN') as string;
 
-      this.testConnection().then(() => {
-        this.logger.log("Cachet API is reachable");
-      });
-    }
-  }
+			this.testConnection().then(() => {
+				this.logger.log('Cachet API is reachable');
+			});
+		}
+	}
 
-  async testConnection(): Promise<string> {
-    return (await firstValueFrom(this.http.get(`${this.baseURL}/api/ping`)))
-      .data.data;
-  }
+	async testConnection(): Promise<string> {
+		return (await firstValueFrom(this.http.get(`${this.baseURL}/api/ping`))).data.data;
+	}
 
-  async getGlobalStatus(): Promise<{ status: string; message: string }> {
-    return (await firstValueFrom(this.http.get(`${this.baseURL}/api/status`)))
-      .data.data;
-  }
+	async getGlobalStatus(): Promise<{ status: string; message: string }> {
+		return (await firstValueFrom(this.http.get(`${this.baseURL}/api/status`))).data.data;
+	}
 
-  async getComponents({
-    status,
-  }: {
-    status?: 1 | 2 | 3 | 4 | 5 | 6;
-  }): Promise<any[]> {
-    return (
-      await firstValueFrom(
-        this.http.get(
-          `${this.baseURL}/api/components?per_page=30${status ? `&filter%5Bstatus%5D=${status}` : ""}`,
-        ),
-      )
-    ).data.data;
-  }
+	async getComponents({ status }: { status?: 1 | 2 | 3 | 4 | 5 | 6 }): Promise<any[]> {
+		return (
+			await firstValueFrom(
+				this.http.get(`${this.baseURL}/api/components?per_page=30${status ? `&filter%5Bstatus%5D=${status}` : ''}`),
+			)
+		).data.data;
+	}
 
-  async getComponentGroups(): Promise<any[]> {
-    return (
-      await firstValueFrom(
-        this.http.get(`${this.baseURL}/api/component-groups`),
-      )
-    ).data.data;
-  }
+	async getComponentGroups(): Promise<any[]> {
+		return (await firstValueFrom(this.http.get(`${this.baseURL}/api/component-groups`))).data.data;
+	}
 
-  async getIncidents(): Promise<any[]> {
-    return (
-      await firstValueFrom(
-        this.http.get(`${this.baseURL}/api/incidents?per_page=30`),
-      )
-    ).data.data;
-  }
+	async getIncidents(): Promise<any[]> {
+		return (await firstValueFrom(this.http.get(`${this.baseURL}/api/incidents?per_page=30`))).data.data;
+	}
 }

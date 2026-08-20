@@ -1,0 +1,121 @@
+import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Request } from 'express';
+import {
+	ApiDefaultResponse,
+	ApiErrorResponse,
+	ApiPaginatedResponseDto,
+} from 'src/common/decorators/api-response.decorator';
+import { Filter, FilterParams } from 'src/common/decorators/filter.decorator';
+import { Filtered } from 'src/common/decorators/filtered.decorator';
+import { Paginated } from 'src/common/decorators/paginated.decorator';
+import { Pagination, PaginationParams } from 'src/common/decorators/pagination.decorator';
+import { Sortable } from 'src/common/decorators/sortable.decorator';
+import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator';
+import { ControllerResponse, PaginatedControllerResponse } from 'src/typings';
+import { ApplicationTemplatesService } from './application-templates.service';
+import { ApplicationTemplateDto } from './dto/application-template.dto';
+import { CreateApplicationTemplateDto } from './dto/create.application-template.dto';
+import { UpdateApplicationTemplateDto } from './dto/update.application-template.dto';
+
+@Controller('applications/templates')
+export class ApplicationTemplatesController {
+	constructor(private readonly applicationTemplatesService: ApplicationTemplatesService) {}
+
+	/**
+	 * Returns all response templates of the currently authenticated team.
+	 */
+	@Get('/')
+	@ApiBearerAuth()
+	@Sortable({
+		defaultSortBy: 'name',
+		allowedFields: ['id', 'name', 'content'],
+		defaultOrder: 'asc',
+	})
+	@Paginated()
+	@ApiOperation({
+		summary: 'Get All Response Templates',
+		description: 'Returns all response templates of the currently authenticated team.',
+	})
+	@Filtered({
+		fields: [
+			{ name: 'name', required: false, type: String },
+			{ name: 'content', required: false, type: String },
+		],
+	})
+	@ApiPaginatedResponseDto(ApplicationTemplateDto, { description: 'Success' })
+	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
+	async getApplicationTemplates(
+		@Pagination() pagination: PaginationParams,
+		@Sorting() sorting: SortingParams,
+		@Filter() filter: FilterParams,
+		@Req() req: Request,
+	): PaginatedControllerResponse {
+		return await this.applicationTemplatesService.findAll(
+			pagination,
+			sorting.sortBy,
+			sorting.order,
+			filter.filter,
+			req.token.id,
+		);
+	}
+
+	/**
+	 * Creates a new response template for the currently authenticated team.
+	 */
+	@Post('/')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Create Response Template',
+		description: 'Creates a new response template for the currently authenticated team.',
+	})
+	@ApiDefaultResponse(ApplicationTemplateDto, {
+		status: 201,
+		description: 'Template created successfully.',
+	})
+	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
+	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
+	async createApplicationTemplate(
+		@Body() createApplicationTemplateDto: CreateApplicationTemplateDto,
+		@Req() req: Request,
+	): ControllerResponse {
+		return await this.applicationTemplatesService.create(createApplicationTemplateDto, req.token.id);
+	}
+
+	/**
+	 * Updates the response template with the given ID if it belongs to the currently authenticated team.
+	 */
+	@Put(':id')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Update Response Template',
+		description: 'Updates the response template with the given ID if it belongs to the currently authenticated team.',
+	})
+	@ApiDefaultResponse(ApplicationTemplateDto, { description: 'Success' })
+	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
+	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
+	@ApiErrorResponse({ status: 404, description: 'Template not found' })
+	async updateApplicationTemplate(
+		@Param('id') id: string,
+		@Body() updateApplicationTemplateDto: UpdateApplicationTemplateDto,
+		@Req() req: Request,
+	): ControllerResponse {
+		return await this.applicationTemplatesService.update(id, updateApplicationTemplateDto, req.token.id);
+	}
+
+	/**
+	 * Deletes the response template with the given ID if it belongs to the currently authenticated team.
+	 */
+	@Delete(':id')
+	@ApiBearerAuth()
+	@ApiOperation({
+		summary: 'Delete Response Template',
+		description: 'Deletes the response template with the given ID if it belongs to the currently authenticated team.',
+	})
+	@ApiResponse({ status: 200, description: 'Template deleted successfully.' })
+	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
+	@ApiErrorResponse({ status: 404, description: 'Template not found' })
+	async deleteApplicationTemplate(@Param('id') id: string, @Req() req: Request): ControllerResponse {
+		return await this.applicationTemplatesService.delete(id, req.token.id);
+	}
+}
