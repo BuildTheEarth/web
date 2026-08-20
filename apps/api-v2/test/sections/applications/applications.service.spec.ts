@@ -85,6 +85,20 @@ describe('ApplicationsService', () => {
 			expect(result).toEqual({ id: 'application-1' });
 		});
 
+		it('should honour a createdAt supplied by the caller', async () => {
+			prismaService.user.findUnique.mockResolvedValue({ id: 'user-1' });
+			prismaService.application.create.mockResolvedValue({ id: 'application-1' });
+
+			await applicationsService.create(
+				{ userId: 'user-1', createdAt: '2020-05-04T00:00:00.000Z' } as any,
+				'team-123',
+			);
+
+			expect(prismaService.application.create).toHaveBeenCalledWith({
+				data: expect.objectContaining({ createdAt: '2020-05-04T00:00:00.000Z' }),
+			});
+		});
+
 		it('should reject missing users', async () => {
 			prismaService.user.findUnique.mockResolvedValue(null);
 

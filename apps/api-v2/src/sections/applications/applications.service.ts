@@ -83,7 +83,7 @@ export class ApplicationsService {
 			userId: createApplicationDto.userId,
 			reviewerId: createApplicationDto.reviewerId ?? null,
 			status: createApplicationDto.status ?? ApplicationStatus.SEND,
-			createdAt: new Date().toISOString(),
+			createdAt: createApplicationDto.createdAt ?? new Date().toISOString(),
 			reviewedAt: createApplicationDto.reviewedAt ?? null,
 			reason: createApplicationDto.reason ?? null,
 			claimId: createApplicationDto.claimId ?? null,
