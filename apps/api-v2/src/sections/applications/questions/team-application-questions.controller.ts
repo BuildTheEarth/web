@@ -30,7 +30,9 @@ export class TeamApplicationQuestionsController {
 		allowedFields: ['title', 'id', 'subtitle', 'placeholder', 'required', 'sort', 'type', 'icon', 'trial'],
 		defaultOrder: 'asc',
 	})
-	@Paginated()
+	// This renders the public application form, so the default page has to be able
+	// to hold a whole form rather than truncating it at the usual 20.
+	@Paginated({ defaultLimit: 100, maxLimit: 200 })
 	@ApiOperation({
 		summary: 'Get All Application Questions Of A Team',
 		description: 'Returns all application questions of the team with the given ID.',
