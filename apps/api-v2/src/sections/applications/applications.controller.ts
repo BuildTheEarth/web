@@ -95,20 +95,21 @@ export class ApplicationsController {
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Get Application by ID',
-		description: 'Returns the application with the specified ID.',
+		description: 'Returns the application with the specified ID, if it belongs to the currently authenticated team.',
 	})
 	@ApiDefaultResponse(ApplicationDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	@ApiErrorResponse({ status: 404, description: 'Application not found' })
-	async getApplicationById(@Param('id') id: string): ControllerResponse {
-		return await this.applicationsService.findById(id);
+	async getApplicationById(@Param('id') id: string, @Req() req: Request): ControllerResponse {
+		return await this.applicationsService.findById(id, req.token.id);
 	}
 
 	@Put('/:id')
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Review Application',
-		description: 'Review and update an application (set status, reason, claim, etc).',
+		description:
+			'Review and update an application (set status, reason, claim, etc) of the currently authenticated team.',
 	})
 	@ApiDefaultResponse(ApplicationDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
@@ -117,7 +118,8 @@ export class ApplicationsController {
 	async reviewApplication(
 		@Param('id') id: string,
 		@Body() reviewApplicationDto: ReviewApplicationDto,
+		@Req() req: Request,
 	): ControllerResponse {
-		return await this.applicationsService.review(id, reviewApplicationDto);
+		return await this.applicationsService.review(id, reviewApplicationDto, req.token.id);
 	}
 }

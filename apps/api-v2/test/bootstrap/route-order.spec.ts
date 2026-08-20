@@ -18,7 +18,7 @@ describe('application route registration', () => {
 	let token: string;
 	let prismaService: {
 		$connect: jest.Mock;
-		application: { findUnique: jest.Mock };
+		application: { findFirst: jest.Mock };
 		applicationQuestion: { findMany: jest.Mock; count: jest.Mock };
 		applicationResponseTemplate: { findMany: jest.Mock; count: jest.Mock };
 		buildTeam: { findUnique: jest.Mock };
@@ -29,7 +29,7 @@ describe('application route registration', () => {
 
 		prismaService = {
 			$connect: jest.fn(),
-			application: { findUnique: jest.fn() },
+			application: { findFirst: jest.fn() },
 			applicationQuestion: { findMany: jest.fn(), count: jest.fn() },
 			applicationResponseTemplate: { findMany: jest.fn(), count: jest.fn() },
 			buildTeam: { findUnique: jest.fn() },
@@ -69,7 +69,7 @@ describe('application route registration', () => {
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
-		expect(prismaService.application.findUnique).not.toHaveBeenCalled();
+		expect(prismaService.application.findFirst).not.toHaveBeenCalled();
 		expect(prismaService.applicationQuestion.findMany).toHaveBeenCalled();
 		expect(response.body).toEqual({
 			status: 200,
@@ -85,21 +85,21 @@ describe('application route registration', () => {
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
-		expect(prismaService.application.findUnique).not.toHaveBeenCalled();
+		expect(prismaService.application.findFirst).not.toHaveBeenCalled();
 		expect(prismaService.applicationResponseTemplate.findMany).toHaveBeenCalled();
 		expect(response.body.data).toEqual([{ id: 'template-1' }]);
 	});
 
 	it('still routes /applications/:id to the applications controller', async () => {
-		prismaService.application.findUnique.mockResolvedValue({ id: 'application-1' });
+		prismaService.application.findFirst.mockResolvedValue({ id: 'application-1' });
 
 		await request(app.getHttpServer())
 			.get('/v2/applications/application-1')
 			.set('Authorization', `Bearer ${token}`)
 			.expect(200);
 
-		expect(prismaService.application.findUnique).toHaveBeenCalledWith({
-			where: { id: 'application-1' },
+		expect(prismaService.application.findFirst).toHaveBeenCalledWith({
+			where: { id: 'application-1', buildteamId: 'team-123' },
 		});
 	});
 

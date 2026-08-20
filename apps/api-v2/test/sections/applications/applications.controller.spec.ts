@@ -84,9 +84,11 @@ describe('ApplicationsController', () => {
 		it('should fetch the application by id', async () => {
 			applicationsService.findById.mockResolvedValue({ id: 'application-1' });
 
-			const result = await applicationsController.getApplicationById('application-1');
+			const req = { token: { id: 'team-123' } } as Request;
 
-			expect(applicationsService.findById).toHaveBeenCalledWith('application-1');
+			const result = await applicationsController.getApplicationById('application-1', req);
+
+			expect(applicationsService.findById).toHaveBeenCalledWith('application-1', 'team-123');
 			expect(result).toEqual({ id: 'application-1' });
 		});
 	});
@@ -97,9 +99,11 @@ describe('ApplicationsController', () => {
 
 			const dto = { status: 'REVIEWING', reason: 'needs changes' };
 
-			const result = await applicationsController.reviewApplication('application-1', dto as never);
+			const req = { token: { id: 'team-123' } } as Request;
 
-			expect(applicationsService.review).toHaveBeenCalledWith('application-1', dto);
+			const result = await applicationsController.reviewApplication('application-1', dto as never, req);
+
+			expect(applicationsService.review).toHaveBeenCalledWith('application-1', dto, 'team-123');
 			expect(result).toEqual({ id: 'application-1', status: 'REVIEWING' });
 		});
 	});

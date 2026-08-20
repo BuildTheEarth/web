@@ -10,8 +10,9 @@ describe('ApplicationsService', () => {
 			findMany: jest.Mock;
 			count: jest.Mock;
 			create: jest.Mock;
+			findFirst: jest.Mock;
 			findUnique: jest.Mock;
-			update: jest.Mock;
+			updateMany: jest.Mock;
 		};
 		user: {
 			findUnique: jest.Mock;
@@ -24,8 +25,9 @@ describe('ApplicationsService', () => {
 				findMany: jest.fn(),
 				count: jest.fn(),
 				create: jest.fn(),
+				findFirst: jest.fn(),
 				findUnique: jest.fn(),
-				update: jest.fn(),
+				updateMany: jest.fn(),
 			},
 			user: {
 				findUnique: jest.fn(),
@@ -94,33 +96,50 @@ describe('ApplicationsService', () => {
 
 	describe('findById', () => {
 		it('should return the found application', async () => {
-			prismaService.application.findUnique.mockResolvedValue({ id: 'application-1' });
+			prismaService.application.findFirst.mockResolvedValue({ id: 'application-1' });
 
-			await expect(applicationsService.findById('application-1')).resolves.toEqual({ id: 'application-1' });
+			await expect(applicationsService.findById('application-1', 'team-123')).resolves.toEqual({
+				id: 'application-1',
+			});
 		});
 
-		it('should throw when the application is missing', async () => {
-			prismaService.application.findUnique.mockResolvedValue(null);
+		it('should scope the lookup to the given team', async () => {
+			prismaService.application.findFirst.mockResolvedValue({ id: 'application-1' });
 
-			await expect(applicationsService.findById('application-1')).rejects.toThrow(NotFoundException);
+			await applicationsService.findById('application-1', 'team-123');
+
+			expect(prismaService.application.findFirst).toHaveBeenCalledWith({
+				where: { id: 'application-1', buildteamId: 'team-123' },
+			});
+		});
+
+		it('should throw when the application is missing or belongs to another team', async () => {
+			prismaService.application.findFirst.mockResolvedValue(null);
+
+			await expect(applicationsService.findById('application-1', 'team-123')).rejects.toThrow(NotFoundException);
 		});
 	});
 
 	describe('review', () => {
 		it('should update the application with a terminal status and reviewedAt timestamp', async () => {
-			prismaService.application.update.mockResolvedValue({ id: 'application-1' });
+			prismaService.application.updateMany.mockResolvedValue({ count: 1 });
+			prismaService.application.findUnique.mockResolvedValue({ id: 'application-1' });
 
-			await applicationsService.review('application-1', {
-				status: ApplicationStatus.ACCEPTED,
-				reviewerId: 'reviewer-1',
-				reviewedAt: '2026-01-01T00:00:00.000Z',
-				reason: 'ok',
-				claimId: 'claim-1',
-				trial: true,
-			} as any);
+			const result = await applicationsService.review(
+				'application-1',
+				{
+					status: ApplicationStatus.ACCEPTED,
+					reviewerId: 'reviewer-1',
+					reviewedAt: '2026-01-01T00:00:00.000Z',
+					reason: 'ok',
+					claimId: 'claim-1',
+					trial: true,
+				} as any,
+				'team-123',
+			);
 
-			expect(prismaService.application.update).toHaveBeenCalledWith({
-				where: { id: 'application-1' },
+			expect(prismaService.application.updateMany).toHaveBeenCalledWith({
+				where: { id: 'application-1', buildteamId: 'team-123' },
 				data: {
 					reviewerId: 'reviewer-1',
 					status: ApplicationStatus.ACCEPTED,
@@ -130,21 +149,32 @@ describe('ApplicationsService', () => {
 					trial: true,
 				},
 			});
+			expect(result).toEqual({ id: 'application-1' });
 		});
 
 		it('should clear reviewedAt while the application is still reviewing', async () => {
-			prismaService.application.update.mockResolvedValue({ id: 'application-1' });
+			prismaService.application.updateMany.mockResolvedValue({ count: 1 });
+			prismaService.application.findUnique.mockResolvedValue({ id: 'application-1' });
 
-			await applicationsService.review('application-1', {} as any);
+			await applicationsService.review('application-1', {} as any, 'team-123');
 
-			expect(prismaService.application.update).toHaveBeenCalledWith({
-				where: { id: 'application-1' },
+			expect(prismaService.application.updateMany).toHaveBeenCalledWith({
+				where: { id: 'application-1', buildteamId: 'team-123' },
 				data: expect.objectContaining({
 					status: ApplicationStatus.REVIEWING,
 					reviewedAt: null,
 					trial: false,
 				}),
 			});
+		});
+
+		it('should throw 404 instead of a prisma error when the application belongs to another team', async () => {
+			prismaService.application.updateMany.mockResolvedValue({ count: 0 });
+
+			await expect(applicationsService.review('application-1', {} as any, 'team-123')).rejects.toThrow(
+				NotFoundException,
+			);
+			expect(prismaService.application.findUnique).not.toHaveBeenCalled();
 		});
 	});
 });

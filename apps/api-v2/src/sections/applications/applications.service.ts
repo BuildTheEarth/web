@@ -96,13 +96,15 @@ export class ApplicationsService {
 	}
 
 	/**
-	 * Finds an application by its ID.
+	 * Finds an application by its ID, as long as it belongs to the given team.
 	 * @param id - The ID of the application to find.
-	 * @returns The application with the specified ID, or null if not found.
+	 * @param buildteamId - ID of the team the application has to belong to.
+	 * @returns The application with the specified ID.
+	 * @throws NotFoundException if the application does not exist or belongs to another team.
 	 */
-	async findById(id: string) {
-		const application = await this.prisma.application.findUnique({
-			where: { id },
+	async findById(id: string, buildteamId: string) {
+		const application = await this.prisma.application.findFirst({
+			where: { id, buildteamId },
 		});
 
 		if (!application) {
@@ -116,9 +118,11 @@ export class ApplicationsService {
 	 * Reviews an application by updating its status, reviewer, and other relevant fields.
 	 * @param id The ID of the application to review.
 	 * @param reviewApplicationDto The data transfer object containing the review details (status, reviewerId, reason, etc.).
+	 * @param buildteamId ID of the team the application has to belong to.
 	 * @returns The updated application.
+	 * @throws NotFoundException if the application does not exist or belongs to another team.
 	 */
-	async review(id: string, reviewApplicationDto: ReviewApplicationDto) {
+	async review(id: string, reviewApplicationDto: ReviewApplicationDto, buildteamId: string) {
 		// TODO inject the userService to check if the reviewer exists (if reviewerId is provided)
 		const reviewerId = reviewApplicationDto.reviewerId ?? null;
 
@@ -136,9 +140,15 @@ export class ApplicationsService {
 			trial: reviewApplicationDto.trial ?? false,
 		};
 
-		return await this.prisma.application.update({
-			where: { id },
+		const { count } = await this.prisma.application.updateMany({
+			where: { id, buildteamId },
 			data,
 		});
+
+		if (count === 0) {
+			throw new NotFoundException('Application not found');
+		}
+
+		return await this.prisma.application.findUnique({ where: { id } });
 	}
 }
