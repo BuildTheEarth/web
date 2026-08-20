@@ -1,4 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ApplicationQuestionType } from '@repo/db';
 import { Request } from 'express';
 import { ApplicationQuestionsController } from 'src/sections/applications/questions/application-questions.controller';
 import { ApplicationQuestionsService } from 'src/sections/applications/questions/application-questions.service';
@@ -7,12 +8,26 @@ describe('ApplicationQuestionsController', () => {
 	let applicationQuestionsController: ApplicationQuestionsController;
 	let applicationQuestionsService: {
 		findAll: jest.Mock;
+		create: jest.Mock;
+		update: jest.Mock;
+		upsertMany: jest.Mock;
 		delete: jest.Mock;
+	};
+
+	const question = {
+		title: 'What is your experience?',
+		subtitle: 'Tell us about your past projects and roles.',
+		type: ApplicationQuestionType.TEXT,
+		icon: 'briefcase',
+		sort: 1,
 	};
 
 	beforeEach(async () => {
 		applicationQuestionsService = {
 			findAll: jest.fn(),
+			create: jest.fn(),
+			update: jest.fn(),
+			upsertMany: jest.fn(),
 			delete: jest.fn(),
 		};
 
@@ -59,6 +74,50 @@ describe('ApplicationQuestionsController', () => {
 				data: [{ id: 'question-1' }],
 				meta: { page: 1, perPage: 20, totalItems: 1, totalPages: 1 },
 			});
+		});
+	});
+
+	describe('createApplicationQuestion', () => {
+		it('should create the question for the authenticated team', async () => {
+			applicationQuestionsService.create.mockResolvedValue({ id: 'question-1' });
+
+			const req = { token: { id: 'team-123' } } as Request;
+
+			const result = await applicationQuestionsController.createApplicationQuestion(question, req);
+
+			expect(applicationQuestionsService.create).toHaveBeenCalledWith(question, 'team-123');
+			expect(result).toEqual({ id: 'question-1' });
+		});
+	});
+
+	describe('upsertApplicationQuestions', () => {
+		it('should upsert the questions for the authenticated team', async () => {
+			applicationQuestionsService.upsertMany.mockResolvedValue([{ id: 'question-1' }]);
+
+			const questions = [{ ...question, id: 'question-1' }];
+			const req = { token: { id: 'team-123' } } as Request;
+
+			const result = await applicationQuestionsController.upsertApplicationQuestions(questions, req);
+
+			expect(applicationQuestionsService.upsertMany).toHaveBeenCalledWith(questions, 'team-123');
+			expect(result).toEqual([{ id: 'question-1' }]);
+		});
+	});
+
+	describe('updateApplicationQuestion', () => {
+		it('should update the question for the authenticated team', async () => {
+			applicationQuestionsService.update.mockResolvedValue({ id: 'question-1', title: 'Updated' });
+
+			const req = { token: { id: 'team-123' } } as Request;
+
+			const result = await applicationQuestionsController.updateApplicationQuestion(
+				'question-1',
+				{ title: 'Updated' },
+				req,
+			);
+
+			expect(applicationQuestionsService.update).toHaveBeenCalledWith('question-1', { title: 'Updated' }, 'team-123');
+			expect(result).toEqual({ id: 'question-1', title: 'Updated' });
 		});
 	});
 

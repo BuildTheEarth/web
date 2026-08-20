@@ -1,23 +1,171 @@
-import { NotFoundException } from '@nestjs/common';
-import { ApplicationQuestionsService } from 'src/sections/applications/questions/application-questions.service';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { ApplicationQuestionType } from '@repo/db';
 import { PrismaService } from 'src/common/db/prisma.service';
+import { ApplicationQuestionsService } from 'src/sections/applications/questions/application-questions.service';
 
 describe('ApplicationQuestionsService', () => {
 	let applicationQuestionsService: ApplicationQuestionsService;
 	let prismaService: {
+		$transaction: jest.Mock;
 		applicationQuestion: {
+			findMany: jest.Mock;
+			count: jest.Mock;
+			create: jest.Mock;
+			update: jest.Mock;
+			updateMany: jest.Mock;
+			findUnique: jest.Mock;
 			deleteMany: jest.Mock;
 		};
 	};
 
+	const question = {
+		title: 'What is your experience?',
+		subtitle: 'Tell us about your past projects and roles.',
+		type: ApplicationQuestionType.TEXT,
+		icon: 'briefcase',
+		sort: 1,
+	};
+
 	beforeEach(() => {
 		prismaService = {
+			$transaction: jest.fn(),
 			applicationQuestion: {
+				findMany: jest.fn(),
+				count: jest.fn(),
+				create: jest.fn(),
+				update: jest.fn(),
+				updateMany: jest.fn(),
+				findUnique: jest.fn(),
 				deleteMany: jest.fn(),
 			},
 		};
 
 		applicationQuestionsService = new ApplicationQuestionsService(prismaService as unknown as PrismaService);
+	});
+
+	describe('findAll', () => {
+		it('should apply pagination, sorting, filter, and build team constraints', async () => {
+			prismaService.applicationQuestion.findMany.mockResolvedValue([{ id: 'question-1' }]);
+			prismaService.applicationQuestion.count.mockResolvedValue(4);
+
+			const result = await applicationQuestionsService.findAll(
+				{ page: 2, limit: 2 },
+				'sort',
+				'desc',
+				{ required: true },
+				'team-123',
+			);
+
+			expect(prismaService.applicationQuestion.findMany).toHaveBeenCalledWith({
+				where: { required: true, buildTeamId: 'team-123' },
+				orderBy: { sort: 'desc' },
+				skip: 2,
+				take: 2,
+			});
+			expect(result).toEqual({
+				data: [{ id: 'question-1' }],
+				meta: { page: 2, perPage: 2, totalItems: 4, totalPages: 2 },
+			});
+		});
+	});
+
+	describe('create', () => {
+		it('should create the question for the given team', async () => {
+			prismaService.applicationQuestion.create.mockResolvedValue({ id: 'question-1' });
+
+			const result = await applicationQuestionsService.create(question, 'team-123');
+
+			expect(prismaService.applicationQuestion.create).toHaveBeenCalledWith({
+				data: { ...question, buildTeamId: 'team-123' },
+			});
+			expect(result).toEqual({ id: 'question-1' });
+		});
+	});
+
+	describe('update', () => {
+		it('should only update questions of the given team', async () => {
+			prismaService.applicationQuestion.updateMany.mockResolvedValue({ count: 1 });
+			prismaService.applicationQuestion.findUnique.mockResolvedValue({ id: 'question-1', title: 'Updated' });
+
+			const result = await applicationQuestionsService.update('question-1', { title: 'Updated' }, 'team-123');
+
+			expect(prismaService.applicationQuestion.updateMany).toHaveBeenCalledWith({
+				where: { id: 'question-1', buildTeamId: 'team-123' },
+				data: { title: 'Updated' },
+			});
+			expect(result).toEqual({ id: 'question-1', title: 'Updated' });
+		});
+
+		it('should throw when the question does not belong to the team', async () => {
+			prismaService.applicationQuestion.updateMany.mockResolvedValue({ count: 0 });
+
+			await expect(applicationQuestionsService.update('question-1', { title: 'Updated' }, 'team-123')).rejects.toThrow(
+				NotFoundException,
+			);
+			expect(prismaService.applicationQuestion.findUnique).not.toHaveBeenCalled();
+		});
+	});
+
+	describe('upsertMany', () => {
+		beforeEach(() => {
+			prismaService.$transaction.mockImplementation(async (operations: unknown[]) => await Promise.all(operations));
+		});
+
+		it('should update existing questions and create new ones', async () => {
+			prismaService.applicationQuestion.findMany.mockResolvedValue([{ id: 'question-1', buildTeamId: 'team-123' }]);
+			prismaService.applicationQuestion.update.mockResolvedValue({ id: 'question-1' });
+			prismaService.applicationQuestion.create.mockResolvedValue({ id: 'question-2' });
+
+			const result = await applicationQuestionsService.upsertMany(
+				[
+					{ ...question, id: 'question-1' },
+					{ ...question, sort: 2 },
+				],
+				'team-123',
+			);
+
+			expect(prismaService.applicationQuestion.findMany).toHaveBeenCalledWith({
+				where: { id: { in: ['question-1'] } },
+				select: { id: true, buildTeamId: true },
+			});
+			expect(prismaService.applicationQuestion.update).toHaveBeenCalledWith({
+				where: { id: 'question-1' },
+				data: question,
+			});
+			expect(prismaService.applicationQuestion.create).toHaveBeenCalledWith({
+				data: { ...question, sort: 2, buildTeamId: 'team-123' },
+			});
+			expect(result).toEqual([{ id: 'question-1' }, { id: 'question-2' }]);
+		});
+
+		it('should create a question with the given id when it does not exist yet', async () => {
+			prismaService.applicationQuestion.findMany.mockResolvedValue([]);
+			prismaService.applicationQuestion.create.mockResolvedValue({ id: 'question-9' });
+
+			await applicationQuestionsService.upsertMany([{ ...question, id: 'question-9' }], 'team-123');
+
+			expect(prismaService.applicationQuestion.update).not.toHaveBeenCalled();
+			expect(prismaService.applicationQuestion.create).toHaveBeenCalledWith({
+				data: { ...question, id: 'question-9', buildTeamId: 'team-123' },
+			});
+		});
+
+		it('should not look up ids when every question is new', async () => {
+			prismaService.applicationQuestion.create.mockResolvedValue({ id: 'question-1' });
+
+			await applicationQuestionsService.upsertMany([question], 'team-123');
+
+			expect(prismaService.applicationQuestion.findMany).not.toHaveBeenCalled();
+		});
+
+		it('should refuse to touch questions of another team', async () => {
+			prismaService.applicationQuestion.findMany.mockResolvedValue([{ id: 'question-1', buildTeamId: 'other-team' }]);
+
+			await expect(
+				applicationQuestionsService.upsertMany([{ ...question, id: 'question-1' }], 'team-123'),
+			).rejects.toThrow(ForbiddenException);
+			expect(prismaService.$transaction).not.toHaveBeenCalled();
+		});
 	});
 
 	describe('delete', () => {
