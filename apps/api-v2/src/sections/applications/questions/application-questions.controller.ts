@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseArrayPipe, Post, Put, Req } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApplicationQuestionType } from '@repo/db';
 import { Request } from 'express';
 import {
 	ApiDefaultResponse,
@@ -45,7 +46,7 @@ export class ApplicationQuestionsController {
 			{ name: 'placeholder', required: false, type: String },
 			{ name: 'required', required: false, type: Boolean },
 			{ name: 'sort', required: false, type: Number },
-			{ name: 'type', required: false, type: String },
+			{ name: 'type', required: false, type: String, enum: ApplicationQuestionType },
 			{ name: 'icon', required: false, type: String },
 			{ name: 'trial', required: false, type: Boolean },
 		],
