@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Request } from 'express';
 import { ApplicationTemplatesController } from 'src/sections/applications/templates/application-templates.controller';
 import { ApplicationTemplatesService } from 'src/sections/applications/templates/application-templates.service';
 
@@ -43,13 +42,11 @@ describe('ApplicationTemplatesController', () => {
 			const pagination = { page: 1, limit: 20 };
 			const sorting = { sortBy: 'name', order: 'asc' };
 			const filter = { filter: { name: 'Rejection' } };
-			const req = { token: { id: 'team-123' } } as Request;
-
 			const result = await applicationTemplatesController.getApplicationTemplates(
 				pagination as never,
 				sorting as never,
 				filter as never,
-				req,
+				'team-123',
 			);
 
 			expect(applicationTemplatesService.findAll).toHaveBeenCalledWith(
@@ -70,11 +67,9 @@ describe('ApplicationTemplatesController', () => {
 		it('should create the template for the authenticated team', async () => {
 			applicationTemplatesService.create.mockResolvedValue({ id: 'template-1' });
 
-			const req = { token: { id: 'team-123' } } as Request;
-
 			const result = await applicationTemplatesController.createApplicationTemplate(
 				{ content: 'Thanks for applying!' },
-				req,
+				'team-123',
 			);
 
 			expect(applicationTemplatesService.create).toHaveBeenCalledWith({ content: 'Thanks for applying!' }, 'team-123');
@@ -86,12 +81,10 @@ describe('ApplicationTemplatesController', () => {
 		it('should update the template for the authenticated team', async () => {
 			applicationTemplatesService.update.mockResolvedValue({ id: 'template-1', name: 'Updated' });
 
-			const req = { token: { id: 'team-123' } } as Request;
-
 			const result = await applicationTemplatesController.updateApplicationTemplate(
 				'template-1',
 				{ name: 'Updated' },
-				req,
+				'team-123',
 			);
 
 			expect(applicationTemplatesService.update).toHaveBeenCalledWith('template-1', { name: 'Updated' }, 'team-123');
@@ -103,9 +96,7 @@ describe('ApplicationTemplatesController', () => {
 		it('should delete the template for the authenticated team', async () => {
 			applicationTemplatesService.delete.mockResolvedValue(undefined);
 
-			const req = { token: { id: 'team-123' } } as Request;
-
-			const result = await applicationTemplatesController.deleteApplicationTemplate('template-1', req);
+			const result = await applicationTemplatesController.deleteApplicationTemplate('template-1', 'team-123');
 
 			expect(applicationTemplatesService.delete).toHaveBeenCalledWith('template-1', 'team-123');
 			expect(result).toBeUndefined();

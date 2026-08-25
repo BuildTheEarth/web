@@ -64,6 +64,7 @@ export class ApplicationQuestionsService {
 	 * @param pagination Pagination parameters.
 	 * @param sortBy Field to sort by.
 	 * @param order Order of sorting (asc/desc).
+	 * @param filter Filter parameters.
 	 * @returns A paginated response containing the questions and metadata.
 	 * @throws NotFoundException if no team with the given ID or slug exists.
 	 */
@@ -73,6 +74,7 @@ export class ApplicationQuestionsService {
 		pagination: PaginationParams,
 		sortBy?: SortingParams['sortBy'],
 		order?: SortingParams['order'],
+		filter?: FilterParams['filter'],
 	) {
 		const buildTeam = await this.prisma.buildTeam.findUnique({
 			where: useSlug ? { slug: teamId } : { id: teamId },
@@ -83,7 +85,7 @@ export class ApplicationQuestionsService {
 			throw new NotFoundException('BuildTeam not found');
 		}
 
-		return await this.findAll(pagination, sortBy, order, {}, buildTeam.id);
+		return await this.findAll(pagination, sortBy, order, filter ?? {}, buildTeam.id);
 	}
 
 	/**

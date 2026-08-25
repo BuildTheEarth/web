@@ -1,3 +1,4 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ApplicationQuestionType } from '@repo/db';
 import { Request } from 'express';
@@ -8,6 +9,7 @@ describe('ApplicationQuestionsController', () => {
 	let applicationQuestionsController: ApplicationQuestionsController;
 	let applicationQuestionsService: {
 		findAll: jest.Mock;
+		findAllForTeam: jest.Mock;
 		create: jest.Mock;
 		update: jest.Mock;
 		upsertMany: jest.Mock;
@@ -22,9 +24,14 @@ describe('ApplicationQuestionsController', () => {
 		sort: 1,
 	};
 
+	const pagination = { page: 1, limit: 100 };
+	const sorting = { sortBy: 'sort', order: 'asc' };
+	const authed = { token: { id: 'team-123' } } as Request;
+
 	beforeEach(async () => {
 		applicationQuestionsService = {
 			findAll: jest.fn(),
+			findAllForTeam: jest.fn(),
 			create: jest.fn(),
 			update: jest.fn(),
 			upsertMany: jest.fn(),
@@ -45,35 +52,90 @@ describe('ApplicationQuestionsController', () => {
 	});
 
 	describe('getApplicationQuestions', () => {
-		it('should request application questions for the authenticated team', async () => {
+		it('should use the authenticated team when no team is in the path', async () => {
 			applicationQuestionsService.findAll.mockResolvedValue({
 				data: [{ id: 'question-1' }],
-				meta: { page: 1, perPage: 20, totalItems: 1, totalPages: 1 },
+				meta: { page: 1, perPage: 100, totalItems: 1, totalPages: 1 },
 			});
 
-			const pagination = { page: 1, limit: 20 };
-			const sorting = { sortBy: 'title', order: 'asc' };
-			const filter = { filter: { required: true } };
-			const req = { token: { id: 'team-123' } } as Request;
-
 			const result = await applicationQuestionsController.getApplicationQuestions(
+				undefined,
 				pagination as never,
 				sorting as never,
-				filter as never,
-				req,
+				{ filter: { required: true } } as never,
+				authed,
 			);
 
 			expect(applicationQuestionsService.findAll).toHaveBeenCalledWith(
 				pagination,
-				'title',
+				'sort',
 				'asc',
 				{ required: true },
 				'team-123',
 			);
+			expect(applicationQuestionsService.findAllForTeam).not.toHaveBeenCalled();
 			expect(result).toEqual({
 				data: [{ id: 'question-1' }],
-				meta: { page: 1, perPage: 20, totalItems: 1, totalPages: 1 },
+				meta: { page: 1, perPage: 100, totalItems: 1, totalPages: 1 },
 			});
+		});
+
+		it('should use the team in the path without requiring a token', async () => {
+			applicationQuestionsService.findAllForTeam.mockResolvedValue({ data: [], meta: {} });
+
+			await applicationQuestionsController.getApplicationQuestions(
+				'team-999',
+				pagination as never,
+				sorting as never,
+				{ filter: { required: true } } as never,
+				{} as Request,
+			);
+
+			expect(applicationQuestionsService.findAllForTeam).toHaveBeenCalledWith(
+				'team-999',
+				false,
+				pagination,
+				'sort',
+				'asc',
+				{
+					required: true,
+				},
+			);
+			expect(applicationQuestionsService.findAll).not.toHaveBeenCalled();
+		});
+
+		it('should forward the slug flag without passing it on as a filter', async () => {
+			applicationQuestionsService.findAllForTeam.mockResolvedValue({ data: [], meta: {} });
+
+			await applicationQuestionsController.getApplicationQuestions(
+				'my-team',
+				pagination as never,
+				sorting as never,
+				{ filter: { slug: true } } as never,
+				{} as Request,
+			);
+
+			expect(applicationQuestionsService.findAllForTeam).toHaveBeenCalledWith(
+				'my-team',
+				true,
+				pagination,
+				'sort',
+				'asc',
+				{},
+			);
+		});
+
+		it('should reject the unprefixed route without a token', async () => {
+			await expect(
+				applicationQuestionsController.getApplicationQuestions(
+					undefined,
+					pagination as never,
+					sorting as never,
+					{ filter: {} } as never,
+					{} as Request,
+				),
+			).rejects.toThrow(UnauthorizedException);
+			expect(applicationQuestionsService.findAll).not.toHaveBeenCalled();
 		});
 	});
 
@@ -81,9 +143,7 @@ describe('ApplicationQuestionsController', () => {
 		it('should create the question for the authenticated team', async () => {
 			applicationQuestionsService.create.mockResolvedValue({ id: 'question-1' });
 
-			const req = { token: { id: 'team-123' } } as Request;
-
-			const result = await applicationQuestionsController.createApplicationQuestion(question, req);
+			const result = await applicationQuestionsController.createApplicationQuestion(question, 'team-123');
 
 			expect(applicationQuestionsService.create).toHaveBeenCalledWith(question, 'team-123');
 			expect(result).toEqual({ id: 'question-1' });
@@ -95,9 +155,7 @@ describe('ApplicationQuestionsController', () => {
 			applicationQuestionsService.upsertMany.mockResolvedValue([{ id: 'question-1' }]);
 
 			const questions = [{ ...question, id: 'question-1' }];
-			const req = { token: { id: 'team-123' } } as Request;
-
-			const result = await applicationQuestionsController.upsertApplicationQuestions(questions, req);
+			const result = await applicationQuestionsController.upsertApplicationQuestions(questions, 'team-123');
 
 			expect(applicationQuestionsService.upsertMany).toHaveBeenCalledWith(questions, 'team-123');
 			expect(result).toEqual([{ id: 'question-1' }]);
@@ -108,12 +166,10 @@ describe('ApplicationQuestionsController', () => {
 		it('should update the question for the authenticated team', async () => {
 			applicationQuestionsService.update.mockResolvedValue({ id: 'question-1', title: 'Updated' });
 
-			const req = { token: { id: 'team-123' } } as Request;
-
 			const result = await applicationQuestionsController.updateApplicationQuestion(
 				'question-1',
 				{ title: 'Updated' },
-				req,
+				'team-123',
 			);
 
 			expect(applicationQuestionsService.update).toHaveBeenCalledWith('question-1', { title: 'Updated' }, 'team-123');
@@ -125,9 +181,7 @@ describe('ApplicationQuestionsController', () => {
 		it('should delete the question for the authenticated team', async () => {
 			applicationQuestionsService.delete.mockResolvedValue(undefined);
 
-			const req = { token: { id: 'team-123' } } as unknown as Request;
-
-			const result = await applicationQuestionsController.deleteApplicationQuestion('question-1', req);
+			const result = await applicationQuestionsController.deleteApplicationQuestion('question-1', 'team-123');
 
 			expect(applicationQuestionsService.delete).toHaveBeenCalledWith('question-1', 'team-123');
 			expect(result).toBeUndefined();

@@ -1,6 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Req } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { Request } from 'express';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import {
 	ApiDefaultResponse,
 	ApiErrorResponse,
@@ -12,20 +11,27 @@ import { Paginated } from 'src/common/decorators/paginated.decorator';
 import { Pagination, PaginationParams } from 'src/common/decorators/pagination.decorator';
 import { Sortable } from 'src/common/decorators/sortable.decorator';
 import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator';
+import { TeamScope } from 'src/common/decorators/team-scope.decorator';
 import { ControllerResponse, PaginatedControllerResponse } from 'src/typings';
 import { ApplicationTemplatesService } from './application-templates.service';
 import { ApplicationTemplateDto } from './dto/application-template.dto';
 import { CreateApplicationTemplateDto } from './dto/create.application-template.dto';
 import { UpdateApplicationTemplateDto } from './dto/update.application-template.dto';
 
-@Controller('applications/templates')
+/** Both URL shapes, as on the other application routes. See TeamScope. */
+const COLLECTION = ['applications/templates', ':teamId/applications/templates'];
+const ITEM = ['applications/templates/:id', ':teamId/applications/templates/:id'];
+
+const TEAM_PARAM = { name: 'teamId', required: false, description: 'Must be the authenticated team when given.' };
+
+@Controller()
 export class ApplicationTemplatesController {
 	constructor(private readonly applicationTemplatesService: ApplicationTemplatesService) {}
 
 	/**
 	 * Returns all response templates of the currently authenticated team.
 	 */
-	@Get('/')
+	@Get(COLLECTION)
 	@ApiBearerAuth()
 	@Sortable({
 		defaultSortBy: 'name',
@@ -37,6 +43,7 @@ export class ApplicationTemplatesController {
 		summary: 'Get All Response Templates',
 		description: 'Returns all response templates of the currently authenticated team.',
 	})
+	@ApiParam(TEAM_PARAM)
 	@Filtered({
 		fields: [
 			{ name: 'name', required: false, type: String },
@@ -49,26 +56,27 @@ export class ApplicationTemplatesController {
 		@Pagination() pagination: PaginationParams,
 		@Sorting() sorting: SortingParams,
 		@Filter() filter: FilterParams,
-		@Req() req: Request,
+		@TeamScope() buildteamId: string,
 	): PaginatedControllerResponse {
 		return await this.applicationTemplatesService.findAll(
 			pagination,
 			sorting.sortBy,
 			sorting.order,
 			filter.filter,
-			req.token.id,
+			buildteamId,
 		);
 	}
 
 	/**
 	 * Creates a new response template for the currently authenticated team.
 	 */
-	@Post('/')
+	@Post(COLLECTION)
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Create Response Template',
 		description: 'Creates a new response template for the currently authenticated team.',
 	})
+	@ApiParam(TEAM_PARAM)
 	@ApiDefaultResponse(ApplicationTemplateDto, {
 		status: 201,
 		description: 'Template created successfully.',
@@ -77,20 +85,21 @@ export class ApplicationTemplatesController {
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	async createApplicationTemplate(
 		@Body() createApplicationTemplateDto: CreateApplicationTemplateDto,
-		@Req() req: Request,
+		@TeamScope() buildteamId: string,
 	): ControllerResponse {
-		return await this.applicationTemplatesService.create(createApplicationTemplateDto, req.token.id);
+		return await this.applicationTemplatesService.create(createApplicationTemplateDto, buildteamId);
 	}
 
 	/**
 	 * Updates the response template with the given ID if it belongs to the currently authenticated team.
 	 */
-	@Put(':id')
+	@Put(ITEM)
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Update Response Template',
 		description: 'Updates the response template with the given ID if it belongs to the currently authenticated team.',
 	})
+	@ApiParam(TEAM_PARAM)
 	@ApiDefaultResponse(ApplicationTemplateDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
@@ -98,24 +107,25 @@ export class ApplicationTemplatesController {
 	async updateApplicationTemplate(
 		@Param('id') id: string,
 		@Body() updateApplicationTemplateDto: UpdateApplicationTemplateDto,
-		@Req() req: Request,
+		@TeamScope() buildteamId: string,
 	): ControllerResponse {
-		return await this.applicationTemplatesService.update(id, updateApplicationTemplateDto, req.token.id);
+		return await this.applicationTemplatesService.update(id, updateApplicationTemplateDto, buildteamId);
 	}
 
 	/**
 	 * Deletes the response template with the given ID if it belongs to the currently authenticated team.
 	 */
-	@Delete(':id')
+	@Delete(ITEM)
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Delete Response Template',
 		description: 'Deletes the response template with the given ID if it belongs to the currently authenticated team.',
 	})
+	@ApiParam(TEAM_PARAM)
 	@ApiResponse({ status: 200, description: 'Template deleted successfully.' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	@ApiErrorResponse({ status: 404, description: 'Template not found' })
-	async deleteApplicationTemplate(@Param('id') id: string, @Req() req: Request): ControllerResponse {
-		return await this.applicationTemplatesService.delete(id, req.token.id);
+	async deleteApplicationTemplate(@Param('id') id: string, @TeamScope() buildteamId: string): ControllerResponse {
+		return await this.applicationTemplatesService.delete(id, buildteamId);
 	}
 }

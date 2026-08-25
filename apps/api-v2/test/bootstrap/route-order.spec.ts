@@ -75,7 +75,7 @@ describe('application route registration', () => {
 			status: 200,
 			message: 'Success',
 			data: [{ id: 'question-1' }],
-			meta: { page: 1, perPage: 20, totalItems: 1, totalPages: 1 },
+			meta: { page: 1, perPage: 100, totalItems: 1, totalPages: 1 },
 		});
 	});
 
@@ -115,5 +115,49 @@ describe('application route registration', () => {
 
 	it('rejects the authenticated questions route without a token', async () => {
 		await request(app.getHttpServer()).get('/v2/applications/questions').expect(401);
+	});
+
+	// The same ordering hazard exists once more behind the :teamId prefix, where
+	// /:teamId/applications/:id could swallow /:teamId/applications/questions.
+	it('routes the prefixed questions path to the questions controller', async () => {
+		await request(app.getHttpServer())
+			.get('/v2/team-123/applications/questions')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(200);
+
+		expect(prismaService.application.findFirst).not.toHaveBeenCalled();
+		expect(prismaService.applicationQuestion.findMany).toHaveBeenCalled();
+	});
+
+	it('routes the prefixed templates path to the templates controller', async () => {
+		await request(app.getHttpServer())
+			.get('/v2/team-123/applications/templates')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(200);
+
+		expect(prismaService.application.findFirst).not.toHaveBeenCalled();
+		expect(prismaService.applicationResponseTemplate.findMany).toHaveBeenCalled();
+	});
+
+	it('still routes the prefixed application id to the applications controller', async () => {
+		prismaService.application.findFirst.mockResolvedValue({ id: 'application-1' });
+
+		await request(app.getHttpServer())
+			.get('/v2/team-123/applications/application-1')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(200);
+
+		expect(prismaService.application.findFirst).toHaveBeenCalledWith({
+			where: { id: 'application-1', buildteamId: 'team-123' },
+		});
+	});
+
+	it('refuses a prefix naming a team the token does not belong to', async () => {
+		await request(app.getHttpServer())
+			.get('/v2/someone-else/applications/templates')
+			.set('Authorization', `Bearer ${token}`)
+			.expect(404);
+
+		expect(prismaService.applicationResponseTemplate.findMany).not.toHaveBeenCalled();
 	});
 });

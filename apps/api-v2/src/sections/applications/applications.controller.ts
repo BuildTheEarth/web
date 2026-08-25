@@ -1,7 +1,6 @@
-import { Body, Controller, Get, Post, Req, Param, Put } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiParam } from '@nestjs/swagger';
 import { ApplicationStatus } from '@repo/db';
-import { Request } from 'express';
 import {
 	ApiDefaultResponse,
 	ApiErrorResponse,
@@ -13,21 +12,29 @@ import { Paginated } from 'src/common/decorators/paginated.decorator';
 import { Pagination, PaginationParams } from 'src/common/decorators/pagination.decorator';
 import { Sortable } from 'src/common/decorators/sortable.decorator';
 import { Sorting, SortingParams } from 'src/common/decorators/sorting.decorator';
+import { TeamScope } from 'src/common/decorators/team-scope.decorator';
 import { ControllerResponse, PaginatedControllerResponse } from 'src/typings';
 import { ApplicationsService } from './applications.service';
 import { ApplicationDto } from './dto/application.dto';
 import { CreateApplicationDto } from './dto/create.application.dto';
 import { ReviewApplicationDto } from './dto/review.application.dto';
 
-@Controller('applications')
+/** Both URL shapes, as on the other application routes. See TeamScope. */
+const COLLECTION = ['applications', ':teamId/applications'];
+const ITEM = ['applications/:id', ':teamId/applications/:id'];
+
+const TEAM_PARAM = { name: 'teamId', required: false, description: 'Must be the authenticated team when given.' };
+
+@Controller()
 export class ApplicationsController {
 	constructor(private readonly applicationsService: ApplicationsService) {}
 
 	/**
 	 * Returns all applications of the currently authenticated team.
 	 */
-	@Get('/')
+	@Get(COLLECTION)
 	@ApiBearerAuth()
+	@ApiParam(TEAM_PARAM)
 	@Sortable({
 		defaultSortBy: 'createdAt',
 		allowedFields: ['userId', 'reviewerId', 'status', 'createdAt', 'reviewedAt', 'reason', 'claimId', 'trial'],
@@ -61,22 +68,23 @@ export class ApplicationsController {
 		@Pagination() pagination: PaginationParams,
 		@Sorting() sorting: SortingParams,
 		@Filter() filter: FilterParams,
-		@Req() req: Request,
+		@TeamScope() buildteamId: string,
 	): PaginatedControllerResponse {
 		return await this.applicationsService.findAll(
 			pagination,
 			sorting.sortBy,
 			sorting.order,
 			filter.filter,
-			req.token.id,
+			buildteamId,
 		);
 	}
 
 	/**
 	 * Creates a new application for the currently authenticated team.
 	 */
-	@Post('/')
+	@Post(COLLECTION)
 	@ApiBearerAuth()
+	@ApiParam(TEAM_PARAM)
 	@ApiOperation({
 		summary: 'Create Application',
 		description: 'Creates a new application for the currently authenticated team.',
@@ -87,12 +95,16 @@ export class ApplicationsController {
 	})
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
-	async createApplication(@Body() createApplicationDto: CreateApplicationDto, @Req() req: Request): ControllerResponse {
-		return await this.applicationsService.create(createApplicationDto, req.token.id);
+	async createApplication(
+		@Body() createApplicationDto: CreateApplicationDto,
+		@TeamScope() buildteamId: string,
+	): ControllerResponse {
+		return await this.applicationsService.create(createApplicationDto, buildteamId);
 	}
 
-	@Get('/:id')
+	@Get(ITEM)
 	@ApiBearerAuth()
+	@ApiParam(TEAM_PARAM)
 	@ApiOperation({
 		summary: 'Get Application by ID',
 		description: 'Returns the application with the specified ID, if it belongs to the currently authenticated team.',
@@ -100,12 +112,13 @@ export class ApplicationsController {
 	@ApiDefaultResponse(ApplicationDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	@ApiErrorResponse({ status: 404, description: 'Application not found' })
-	async getApplicationById(@Param('id') id: string, @Req() req: Request): ControllerResponse {
-		return await this.applicationsService.findById(id, req.token.id);
+	async getApplicationById(@Param('id') id: string, @TeamScope() buildteamId: string): ControllerResponse {
+		return await this.applicationsService.findById(id, buildteamId);
 	}
 
-	@Put('/:id')
+	@Put(ITEM)
 	@ApiBearerAuth()
+	@ApiParam(TEAM_PARAM)
 	@ApiOperation({
 		summary: 'Review Application',
 		description:
@@ -118,8 +131,8 @@ export class ApplicationsController {
 	async reviewApplication(
 		@Param('id') id: string,
 		@Body() reviewApplicationDto: ReviewApplicationDto,
-		@Req() req: Request,
+		@TeamScope() buildteamId: string,
 	): ControllerResponse {
-		return await this.applicationsService.review(id, reviewApplicationDto, req.token.id);
+		return await this.applicationsService.review(id, reviewApplicationDto, buildteamId);
 	}
 }

@@ -1,5 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { Request } from 'express';
 import { ApplicationsController } from 'src/sections/applications/applications.controller';
 import { ApplicationsService } from 'src/sections/applications/applications.service';
 
@@ -43,13 +42,11 @@ describe('ApplicationsController', () => {
 			const pagination = { page: 1, limit: 20 };
 			const sorting = { sortBy: 'createdAt', order: 'desc' };
 			const filter = { filter: { status: 'SEND' } };
-			const req = { token: { id: 'team-123' } } as Request;
-
 			const result = await applicationsController.getApplications(
 				pagination as never,
 				sorting as never,
 				filter as never,
-				req,
+				'team-123',
 			);
 
 			expect(applicationsService.findAll).toHaveBeenCalledWith(
@@ -70,10 +67,9 @@ describe('ApplicationsController', () => {
 		it('should create an application for the authenticated team', async () => {
 			applicationsService.create.mockResolvedValue({ id: 'application-1' });
 
-			const req = { token: { id: 'team-123' } } as Request;
 			const dto = { userId: 'user-1' };
 
-			const result = await applicationsController.createApplication(dto as never, req);
+			const result = await applicationsController.createApplication(dto as never, 'team-123');
 
 			expect(applicationsService.create).toHaveBeenCalledWith(dto, 'team-123');
 			expect(result).toEqual({ id: 'application-1' });
@@ -84,9 +80,7 @@ describe('ApplicationsController', () => {
 		it('should fetch the application by id', async () => {
 			applicationsService.findById.mockResolvedValue({ id: 'application-1' });
 
-			const req = { token: { id: 'team-123' } } as Request;
-
-			const result = await applicationsController.getApplicationById('application-1', req);
+			const result = await applicationsController.getApplicationById('application-1', 'team-123');
 
 			expect(applicationsService.findById).toHaveBeenCalledWith('application-1', 'team-123');
 			expect(result).toEqual({ id: 'application-1' });
@@ -99,9 +93,7 @@ describe('ApplicationsController', () => {
 
 			const dto = { status: 'REVIEWING', reason: 'needs changes' };
 
-			const req = { token: { id: 'team-123' } } as Request;
-
-			const result = await applicationsController.reviewApplication('application-1', dto as never, req);
+			const result = await applicationsController.reviewApplication('application-1', dto as never, 'team-123');
 
 			expect(applicationsService.review).toHaveBeenCalledWith('application-1', dto, 'team-123');
 			expect(result).toEqual({ id: 'application-1', status: 'REVIEWING' });
