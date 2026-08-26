@@ -18,12 +18,12 @@ import { ApplicationTemplateDto } from './dto/application-template.dto';
 import { CreateApplicationTemplateDto } from './dto/create.application-template.dto';
 import { UpdateApplicationTemplateDto } from './dto/update.application-template.dto';
 
-/** Both URL shapes, as on the other application routes. See TeamScope. */
-const COLLECTION = ['applications/templates', ':teamId/applications/templates'];
-const ITEM = ['applications/templates/:id', ':teamId/applications/templates/:id'];
-
-const TEAM_PARAM = { name: 'teamId', required: false, description: 'Must be the authenticated team when given.' };
-
+/**
+ * Every route is registered twice: once bare, and once behind a `:teamId`
+ * prefix. The controller therefore has no prefix of its own, since a Nest
+ * controller prefix cannot be made optional. See TeamScope for how the team is
+ * resolved.
+ */
 @Controller()
 export class ApplicationTemplatesController {
 	constructor(private readonly applicationTemplatesService: ApplicationTemplatesService) {}
@@ -31,7 +31,7 @@ export class ApplicationTemplatesController {
 	/**
 	 * Returns all response templates of the currently authenticated team.
 	 */
-	@Get(COLLECTION)
+	@Get(['applications/templates', ':teamId/applications/templates'])
 	@ApiBearerAuth()
 	@Sortable({
 		defaultSortBy: 'name',
@@ -43,7 +43,7 @@ export class ApplicationTemplatesController {
 		summary: 'Get All Response Templates',
 		description: 'Returns all response templates of the currently authenticated team.',
 	})
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@Filtered({
 		fields: [
 			{ name: 'name', required: false, type: String },
@@ -70,13 +70,13 @@ export class ApplicationTemplatesController {
 	/**
 	 * Creates a new response template for the currently authenticated team.
 	 */
-	@Post(COLLECTION)
+	@Post(['applications/templates', ':teamId/applications/templates'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Create Response Template',
 		description: 'Creates a new response template for the currently authenticated team.',
 	})
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@ApiDefaultResponse(ApplicationTemplateDto, {
 		status: 201,
 		description: 'Template created successfully.',
@@ -93,13 +93,13 @@ export class ApplicationTemplatesController {
 	/**
 	 * Updates the response template with the given ID if it belongs to the currently authenticated team.
 	 */
-	@Put(ITEM)
+	@Put(['applications/templates/:id', ':teamId/applications/templates/:id'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Update Response Template',
 		description: 'Updates the response template with the given ID if it belongs to the currently authenticated team.',
 	})
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@ApiDefaultResponse(ApplicationTemplateDto, { description: 'Success' })
 	@ApiErrorResponse({ status: 400, description: 'Bad Request' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
@@ -115,13 +115,13 @@ export class ApplicationTemplatesController {
 	/**
 	 * Deletes the response template with the given ID if it belongs to the currently authenticated team.
 	 */
-	@Delete(ITEM)
+	@Delete(['applications/templates/:id', ':teamId/applications/templates/:id'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Delete Response Template',
 		description: 'Deletes the response template with the given ID if it belongs to the currently authenticated team.',
 	})
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@ApiResponse({ status: 200, description: 'Template deleted successfully.' })
 	@ApiErrorResponse({ status: 401, description: 'Unauthorized' })
 	@ApiErrorResponse({ status: 404, description: 'Template not found' })

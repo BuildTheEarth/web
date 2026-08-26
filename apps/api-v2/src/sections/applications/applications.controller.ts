@@ -19,12 +19,12 @@ import { ApplicationDto } from './dto/application.dto';
 import { CreateApplicationDto } from './dto/create.application.dto';
 import { ReviewApplicationDto } from './dto/review.application.dto';
 
-/** Both URL shapes, as on the other application routes. See TeamScope. */
-const COLLECTION = ['applications', ':teamId/applications'];
-const ITEM = ['applications/:id', ':teamId/applications/:id'];
-
-const TEAM_PARAM = { name: 'teamId', required: false, description: 'Must be the authenticated team when given.' };
-
+/**
+ * Every route is registered twice: once bare, and once behind a `:teamId`
+ * prefix. The controller therefore has no prefix of its own, since a Nest
+ * controller prefix cannot be made optional. See TeamScope for how the team is
+ * resolved.
+ */
 @Controller()
 export class ApplicationsController {
 	constructor(private readonly applicationsService: ApplicationsService) {}
@@ -32,9 +32,9 @@ export class ApplicationsController {
 	/**
 	 * Returns all applications of the currently authenticated team.
 	 */
-	@Get(COLLECTION)
+	@Get(['applications', ':teamId/applications'])
 	@ApiBearerAuth()
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@Sortable({
 		defaultSortBy: 'createdAt',
 		allowedFields: ['userId', 'reviewerId', 'status', 'createdAt', 'reviewedAt', 'reason', 'claimId', 'trial'],
@@ -82,9 +82,9 @@ export class ApplicationsController {
 	/**
 	 * Creates a new application for the currently authenticated team.
 	 */
-	@Post(COLLECTION)
+	@Post(['applications', ':teamId/applications'])
 	@ApiBearerAuth()
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@ApiOperation({
 		summary: 'Create Application',
 		description: 'Creates a new application for the currently authenticated team.',
@@ -102,9 +102,9 @@ export class ApplicationsController {
 		return await this.applicationsService.create(createApplicationDto, buildteamId);
 	}
 
-	@Get(ITEM)
+	@Get(['applications/:id', ':teamId/applications/:id'])
 	@ApiBearerAuth()
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@ApiOperation({
 		summary: 'Get Application by ID',
 		description: 'Returns the application with the specified ID, if it belongs to the currently authenticated team.',
@@ -116,9 +116,9 @@ export class ApplicationsController {
 		return await this.applicationsService.findById(id, buildteamId);
 	}
 
-	@Put(ITEM)
+	@Put(['applications/:id', ':teamId/applications/:id'])
 	@ApiBearerAuth()
-	@ApiParam(TEAM_PARAM)
+	@ApiParam({ name: 'teamId', required: false, description: 'Must be the authenticated team when given.' })
 	@ApiOperation({
 		summary: 'Review Application',
 		description:

@@ -39,11 +39,6 @@ import { UpsertApplicationQuestionDto } from './dto/upsert.application-question.
  * there. The controller therefore has no prefix of its own, since a Nest
  * controller prefix cannot be made optional.
  */
-const COLLECTION = ['applications/questions', ':teamId/applications/questions'];
-const ITEM = ['applications/questions/:id', ':teamId/applications/questions/:id'];
-
-const SORTABLE_FIELDS = ['title', 'id', 'subtitle', 'placeholder', 'required', 'sort', 'type', 'icon', 'trial'];
-
 @Controller()
 export class ApplicationQuestionsController {
 	constructor(private readonly applicationQuestionsService: ApplicationQuestionsService) {}
@@ -55,12 +50,12 @@ export class ApplicationQuestionsController {
 	 * The prefixed form is public: it is what renders a team's application form,
 	 * which has to be readable before an applicant belongs to the team.
 	 */
-	@Get(COLLECTION)
+	@Get(['applications/questions', ':teamId/applications/questions'])
 	@OptionalAuth()
 	@ApiBearerAuth()
 	@Sortable({
 		defaultSortBy: 'sort',
-		allowedFields: SORTABLE_FIELDS,
+		allowedFields: ['title', 'id', 'subtitle', 'placeholder', 'required', 'sort', 'type', 'icon', 'trial'],
 		defaultOrder: 'asc',
 	})
 	// Large enough that a whole application form fits on the first page.
@@ -127,7 +122,7 @@ export class ApplicationQuestionsController {
 	/**
 	 * Creates a new application question for the currently authenticated team.
 	 */
-	@Post(COLLECTION)
+	@Post(['applications/questions', ':teamId/applications/questions'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Create Application Question',
@@ -151,7 +146,7 @@ export class ApplicationQuestionsController {
 	 * Creates and updates multiple application questions of the currently authenticated
 	 * team in one request. Questions that are not part of the payload are left untouched.
 	 */
-	@Put(COLLECTION)
+	@Put(['applications/questions', ':teamId/applications/questions'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Upsert Application Questions',
@@ -180,7 +175,7 @@ export class ApplicationQuestionsController {
 	/**
 	 * Updates the question with the given ID if it belongs to the currently authenticated team.
 	 */
-	@Put(ITEM)
+	@Put(['applications/questions/:id', ':teamId/applications/questions/:id'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Update Application Question',
@@ -202,7 +197,7 @@ export class ApplicationQuestionsController {
 	/**
 	 * Deletes the question with the given ID if it belongs to the currently authenticated team.
 	 */
-	@Delete(ITEM)
+	@Delete(['applications/questions/:id', ':teamId/applications/questions/:id'])
 	@ApiBearerAuth()
 	@ApiOperation({
 		summary: 'Delete Application Question',
