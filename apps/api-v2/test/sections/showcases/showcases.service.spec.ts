@@ -65,7 +65,9 @@ describe('ShowcasesService', () => {
 				skip: 2,
 				take: 2,
 				include: {
-					image: true,
+					image: {
+						select: { id: true, name: true, hash: true, width: true, height: true, checked: true, createdAt: true },
+					},
 					buildTeam: { select: { id: true, name: true, location: true, slug: true, icon: true } },
 				},
 			});
@@ -142,7 +144,11 @@ describe('ShowcasesService', () => {
 					buildTeamId: 'team-123',
 					uploadId: 'upload-1',
 				},
-				include: { image: true },
+				include: {
+					image: {
+						select: { id: true, name: true, hash: true, width: true, height: true, checked: true, createdAt: true },
+					},
+				},
 			});
 			expect(result).toEqual({ id: 'showcase-1' });
 		});
@@ -218,7 +224,11 @@ describe('ShowcasesService', () => {
 					createdAt: undefined,
 					uploadId: undefined,
 				},
-				include: { image: true },
+				include: {
+					image: {
+						select: { id: true, name: true, hash: true, width: true, height: true, checked: true, createdAt: true },
+					},
+				},
 			});
 			expect(uploadsService.deleteIfUnreferenced).not.toHaveBeenCalled();
 			expect(result).toEqual({ id: 'showcase-1' });

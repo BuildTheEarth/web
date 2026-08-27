@@ -24,6 +24,18 @@ export class ShowcaseImageDto {
 
 	@ApiProperty({ example: 1080, description: 'The height of the image in pixels.' })
 	height: number;
+
+	@ApiProperty({
+		example: false,
+		description: 'Whether the image has been reviewed by a moderator.',
+	})
+	checked: boolean;
+
+	@ApiProperty({
+		example: '2025-04-19T16:45:18.767Z',
+		description: 'The timestamp when the image was uploaded.',
+	})
+	createdAt: string;
 }
 
 export class ShowcaseBuildTeamDto {

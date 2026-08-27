@@ -8,6 +8,21 @@ import { CreateShowcaseDto } from './dto/create.showcase.dto';
 import { UpdateShowcaseDto } from './dto/update.showcase.dto';
 
 /**
+ * The image columns a showcase carries. Selected explicitly so the response
+ * matches ShowcaseImageDto exactly, rather than whatever the Upload table
+ * happens to hold.
+ */
+const IMAGE_SELECT = {
+	id: true,
+	name: true,
+	hash: true,
+	width: true,
+	height: true,
+	checked: true,
+	createdAt: true,
+} as const;
+
+/**
  * The subset of the build team that is embedded in an unscoped showcase listing,
  * so the website can label a showcase without a second request.
  */
@@ -60,7 +75,7 @@ export class ShowcasesService {
 				skip,
 				take,
 				include: {
-					image: true,
+					image: { select: IMAGE_SELECT },
 					buildTeam: { select: BUILD_TEAM_SELECT },
 				},
 			}),
@@ -140,7 +155,7 @@ export class ShowcasesService {
 				buildTeamId,
 				uploadId,
 			},
-			include: { image: true },
+			include: { image: { select: IMAGE_SELECT } },
 		});
 	}
 
@@ -180,7 +195,7 @@ export class ShowcasesService {
 				createdAt: updateShowcaseDto.createdAt,
 				uploadId: updateShowcaseDto.uploadId,
 			},
-			include: { image: true },
+			include: { image: { select: IMAGE_SELECT } },
 		});
 
 		if (replacesImage) {
@@ -201,7 +216,7 @@ export class ShowcasesService {
 	async delete(id: string, buildTeamId: string) {
 		const showcase = await this.prisma.showcase.findFirst({
 			where: { id, buildTeamId },
-			include: { image: true },
+			include: { image: { select: IMAGE_SELECT } },
 		});
 
 		if (!showcase) {

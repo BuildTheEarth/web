@@ -176,7 +176,11 @@ describe('showcase routes', () => {
 
 		expect(prismaService.showcase.findFirst).toHaveBeenCalledWith({
 			where: { id: 'showcase-1', buildTeamId: 'team-123' },
-			include: { image: true },
+			include: {
+				image: {
+					select: { id: true, name: true, hash: true, width: true, height: true, checked: true, createdAt: true },
+				},
+			},
 		});
 		expect(prismaService.showcase.delete).toHaveBeenCalledWith({ where: { id: 'showcase-1' } });
 	});
