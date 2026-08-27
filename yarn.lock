@@ -9845,6 +9845,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "api-v2@workspace:apps/api-v2"
   dependencies:
+    "@aws-sdk/client-s3": "npm:^3.787.0"
     "@eslint/eslintrc": "npm:^3.2.0"
     "@eslint/js": "npm:^9.18.0"
     "@nestjs/axios": "npm:^4.0.1"
@@ -9864,6 +9865,7 @@ __metadata:
     "@swc/core": "npm:^1.10.7"
     "@types/express": "npm:^5.0.0"
     "@types/jest": "npm:^29.5.14"
+    "@types/multer": "npm:^1.4.12"
     "@types/node": "npm:^22.10.7"
     "@types/supertest": "npm:^6.0.2"
     axios: "npm:^1.13.2"
@@ -9875,6 +9877,7 @@ __metadata:
     jest: "npm:^29.7.0"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.1"
+    sharp: "npm:^0.34.1"
     source-map-support: "npm:^0.5.21"
     supertest: "npm:^7.0.0"
     ts-jest: "npm:^29.2.5"
