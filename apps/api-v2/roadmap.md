@@ -156,11 +156,11 @@ del /claims/[claimId]/images/[imgId] \
 
 ## Showcases
 
-get /showcases \
-get /[teamId]/showcases \
-post /showcases \
-put /showcases/[showId] \
-del /showcases/[showId]
+✅ get /showcases \
+✅ get /[teamId]/showcases \
+✅ post /showcases \
+✅ put /showcases/[showId] \
+✅ del /showcases/[showId]
 
 ## Members
 

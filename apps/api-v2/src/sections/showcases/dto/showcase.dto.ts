@@ -1,73 +1,103 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+
+export class ShowcaseImageDto {
+	@ApiProperty({
+		example: '00000000-0000-0000-0000-000000000000',
+		description: 'The unique ID of the upload.',
+	})
+	id: string;
+
+	@ApiProperty({
+		example: 'd1f4c0b8f9a24d4f',
+		description: 'The key the image is stored under in the CDN bucket.',
+	})
+	name: string;
+
+	@ApiProperty({
+		example: 'data:image/png;base64,iVBORw0KGgo=',
+		description: 'A blurred placeholder rendered while the full image loads.',
+	})
+	hash: string;
+
+	@ApiProperty({ example: 1920, description: 'The width of the image in pixels.' })
+	width: number;
+
+	@ApiProperty({ example: 1080, description: 'The height of the image in pixels.' })
+	height: number;
+}
+
+export class ShowcaseBuildTeamDto {
+	@ApiProperty({
+		example: '00000000-0000-0000-0000-000000000000',
+		description: 'The unique ID of the build team.',
+	})
+	id: string;
+
+	@ApiProperty({ example: 'Build Team Name', description: 'The name of the build team.' })
+	name: string;
+
+	@ApiProperty({ example: 'Country', description: 'The location of the build team.' })
+	location: string;
+
+	@ApiProperty({ example: 'build-team-slug', description: 'The slug of the build team.' })
+	slug: string;
+
+	@ApiProperty({ example: 'https://example.com/icon.png', description: 'The icon of the build team.' })
+	icon: string;
+}
 
 export class ShowcaseDto {
-  @ApiProperty({
-    example: "00000000-0000-0000-0000-000000000000",
-    description: "The unique ID of the showcase.",
-  })
-  id: string;
+	@ApiProperty({
+		example: '00000000-0000-0000-0000-000000000000',
+		description: 'The unique ID of the showcase.',
+	})
+	id: string;
 
-  @ApiProperty({
-    example: "Showcase Title",
-    description: "The title of the showcase.",
-  })
-  title: string;
+	@ApiProperty({
+		example: 'Showcase Title',
+		description: 'The title of the showcase.',
+	})
+	title: string;
 
-  @ApiProperty({
-    example: "New York",
-    description: "The city for the showcase.",
-  })
-  city: string;
+	@ApiProperty({
+		example: 'New York',
+		description: 'The city the showcase was built in.',
+	})
+	city: string;
 
-  @ApiProperty({
-    example: "2025-04-19T16:45:18.767Z",
-    description: "The timestamp when the showcase was created.",
-  })
-  createdAt: string;
+	@ApiProperty({
+		example: false,
+		description: 'Whether the showcase has been approved to appear on the website.',
+	})
+	approved: boolean;
 
-  @ApiProperty({
-    example: "00000000-0000-0000-0000-000000000000",
-    description: "The ID of the build team this showcase belongs to.",
-  })
-  buildTeamId: string;
+	@ApiProperty({
+		example: '2025-04-19T16:45:18.767Z',
+		description: 'The timestamp when the showcase was created.',
+	})
+	createdAt: string;
 
-  @ApiProperty({
-    example: "00000000-0000-0000-0000-000000000000",
-    description: "The ID of the image associated with this showcase.",
-  })
-  imageId: string;
+	@ApiProperty({
+		example: '00000000-0000-0000-0000-000000000000',
+		description: 'The ID of the build team this showcase belongs to.',
+	})
+	buildTeamId: string;
 
-  @ApiProperty({
-    example: {
-      name: "Build Team Name",
-      location: "Country",
-      slug: "build-team-slug",
-      icon: "https://example.com/icon.png",
-      id: "00000000-0000-0000-0000-000000000000",
-    },
-    description: "The build team object for this showcase.",
-    required: false,
-  })
-  buildTeam?: {
-    name: string;
-    location: string;
-    slug: string;
-    icon: string;
-    id: string;
-  };
+	@ApiProperty({
+		example: '00000000-0000-0000-0000-000000000000',
+		description: 'The ID of the upload holding the image of this showcase.',
+	})
+	uploadId: string;
 
-  @ApiProperty({
-    example: {
-      id: "00000000-0000-0000-0000-000000000000",
-      name: "image.png",
-      url: "https://example.com/image.png",
-    },
-    description: "The image object for this showcase.",
-    required: false,
-  })
-  image?: {
-    id: string;
-    name: string;
-    url: string;
-  };
+	@ApiPropertyOptional({
+		type: ShowcaseImageDto,
+		description: 'The image of this showcase.',
+	})
+	image?: ShowcaseImageDto;
+
+	@ApiPropertyOptional({
+		type: ShowcaseBuildTeamDto,
+		description: 'The build team this showcase belongs to. Only included by the unscoped listing.',
+	})
+	buildTeam?: ShowcaseBuildTeamDto;
 }
