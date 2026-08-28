@@ -8,6 +8,7 @@ import { ApplicationsModule } from './sections/applications/applications.module'
 import { ApplicationTemplatesModule } from './sections/applications/templates/application-templates.module';
 import { AuthModule } from './sections/auth/auth.module';
 import { ClaimsModule } from './sections/claims/claims.module';
+import { SocialsModule } from './sections/socials/socials.module';
 import { StatusModule } from './sections/status/status.module';
 import { UtilityModule } from './sections/utility/utility.module';
 
@@ -22,6 +23,7 @@ import { UtilityModule } from './sections/utility/utility.module';
 		AuthModule,
 		ClaimsModule,
 		ConfigModule.forRoot({ isGlobal: true, cache: true }),
+		SocialsModule,
 		StatusModule,
 		UtilityModule,
 	],

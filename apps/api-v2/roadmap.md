@@ -130,12 +130,12 @@ del /applications/templates/[tempId]
 
 ## Socials
 
-get /socials \
-get /[teamId]/socials \
-post /socials \
-put /socials -> also needs to support adding new ones (upsert) \
-put /socials/[soId] \
-del /socials/[soId] \
+✅ get /socials \
+✅ get /[teamId]/socials \
+✅ post /socials \
+✅ put /socials -> also needs to support adding new ones (upsert) \
+✅ put /socials/[soId] \
+✅ del /socials/[soId] \
 
 ## Claims
 
