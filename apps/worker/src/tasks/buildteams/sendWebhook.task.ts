@@ -9,6 +9,8 @@ enum AuditLogBuildTeamType {
 	CLAIM_CREATE = 'CLAIM_CREATE',
 	CLAIM_UPDATE = 'CLAIM_UPDATE',
 	CLAIM_DELETE = 'CLAIM_DELETE',
+	MEMBER_ADD = 'MEMBER_ADD',
+	MEMBER_REMOVE = 'MEMBER_REMOVE',
 }
 
 const webhookBuildTeamSchema = z.union([
@@ -147,6 +149,19 @@ export class SendBuildTeamWebhookTask extends BaseTask<typeof auditLogBtPayloadS
 					city: data.city,
 					osmName: data.osmName,
 					createdAt: data.createdAt,
+				}
+			case AuditLogBuildTeamType.MEMBER_ADD:
+			case AuditLogBuildTeamType.MEMBER_REMOVE:
+				// Projected rather than passed through: a user row carries an ssoId,
+				// which is the Keycloak account behind the person and is not a
+				// BuildTeam's business.
+				return {
+					id: data.id,
+					username: data.username,
+					discordId: data.discordId,
+					minecraft: data.minecraft,
+					avatar: data.avatar,
+					buildTeamId: data.buildTeamId,
 				}
 			default:
 				// DOES NOT STRIP ANY TOKEN, WEBHOOK LINK etc.
