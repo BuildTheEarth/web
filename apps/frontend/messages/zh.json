@@ -366,6 +366,11 @@
 				"title": "建築團隊地圖",
 				"description": "探索 BuildTheEarth 團隊，尋找您要的地區，並加入 Minecraft 伺服器開始貢獻。"
 			},
+			"tooltip": {
+				"clickToView": "點擊查看團隊",
+				"clickToViewMultiple": "點擊查看團隊列表",
+				"clickForInfo": "點擊查看詳情"
+			},
 			"infoNotice": {
 				"title": "注: {country}",
 				"description": "您點擊的國家或地區目前沒有任何建築團隊進駐。我們正在解決這個問題，在此期間，如果您想幫忙，請考慮加入其他的建築團隊！",

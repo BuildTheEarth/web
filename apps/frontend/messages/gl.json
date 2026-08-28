@@ -377,6 +377,11 @@
 				"title": "Mapa do equipo",
 				"description": "Explora equipos de BuildTheEarth, atopa a túa rexión, e únete a un servidor de Minecraft para comezar a contribuír."
 			},
+			"tooltip": {
+				"clickToView": "Fai clic para ver o equipo",
+				"clickToViewMultiple": "Fai clic para ver os equipos",
+				"clickForInfo": "Fai clic para máis información"
+			},
 			"infoNotice": {
 				"title": "Nota: {country}",
 				"description": "O país ou rexión que clicaches non está sendo construída por ningún equipo agora mesmo. Estamos tratando de arranxalo, pero mentres tanto, se queres botar unha man, por favor, considera unirte a un equipo diferente!",

@@ -377,6 +377,11 @@
 				"title": "Mapa del equipo",
 				"description": "Explora los equipos de BuilTheEarth, encuentra tu región y únete a un servidor de Minecraft para empezar a contribuir."
 			},
+			"tooltip": {
+				"clickToView": "Haz clic para ver el equipo",
+				"clickToViewMultiple": "Haz clic para ver los equipos",
+				"clickForInfo": "Haz clic para más información"
+			},
 			"infoNotice": {
 				"title": "Nota: {country}",
 				"description": "El país o región que has seleccionado no está siendo construido actualmente por ningún equipo. Estamos en el proceso de solucionar esto, pero mientras tanto, si quieres ayudar, considera unirte a un equipo diferente.",

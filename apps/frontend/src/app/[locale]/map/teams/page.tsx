@@ -2,7 +2,6 @@ import Wrapper from '@/components/layout/Wrapper'
 import prisma from '@/util/db'
 import { getLanguageAlternates } from '@/util/seo'
 import 'maplibre-gl/dist/maplibre-gl.css'
-import { select } from 'motion/dist/react-client'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -35,6 +34,7 @@ export default async function MapPage({ params }: { params: Promise<{ locale: Lo
 			name: true,
 			color: true,
 			location: true,
+			icon: true,
 			_count: { select: { members: true } },
 		},
 	})

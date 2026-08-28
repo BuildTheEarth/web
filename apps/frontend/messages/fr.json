@@ -377,6 +377,11 @@
 				"title": "Carte des équipes",
 				"description": "Explore les équipes de BuildTheEarth, trouve ta région, et rejoins un serveur Minecraft pour commencer à contribuer au projet."
 			},
+			"tooltip": {
+				"clickToView": "Cliquer pour voir l'équipe",
+				"clickToViewMultiple": "Cliquer pour voir les équipes",
+				"clickForInfo": "Cliquer pour plus d'informations"
+			},
 			"infoNotice": {
 				"title": "Note: {country}",
 				"description": "Le pays ou la région sur lequel tu as cliqué n'est actuellement pris en charge par aucune équipe de construction. Nous sommes en train de régler ce problème, mais en attendant, si tu souhaites nous aider, pense à rejoindre une autre équipe de construction !",

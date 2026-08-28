@@ -377,6 +377,11 @@
 				"title": "Mapa zespołów",
 				"description": "Poznaj zespoły BuildTheEarth, znajdź swój region i dołącz do serwera Minecraft, aby zacząć współtworzyć projekt."
 			},
+			"tooltip": {
+				"clickToView": "Kliknij, aby zobaczyć zespół",
+				"clickToViewMultiple": "Kliknij, aby zobaczyć zespoły",
+				"clickForInfo": "Kliknij, aby uzyskać więcej informacji"
+			},
 			"infoNotice": {
 				"title": "Uwaga: {country}",
 				"description": "Kraj lub region, który kliknąłeś, nie jest obecnie budowany przez żaden zespół. Pracujemy nad rozwiązaniem tego, ale w międzyczasie, jeśli chcesz pomóc, rozważ dołączenie do innego zespołu!",
