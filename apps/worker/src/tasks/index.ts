@@ -8,6 +8,7 @@ import { SyncClaimOsmTask } from './claims/syncClaimOsm.task'
 import { SendDiscordDmTask } from './discord/sendDm.task'
 import { SendDiscordLogTask } from './discord/sendLog.task'
 import { SyncDiscordRolesTask } from './discord/syncDiscordRoles.task'
+import { RevalidateWebsitePageTask } from './website/revalidatePage.task'
 
 export const taskRegistry: Record<string, BaseTask> = {}
 
@@ -24,3 +25,4 @@ register(new PurgeVerificationsTask())
 register(new RemindApplicationsTask())
 register(new SyncClaimOsmTask())
 register(new SyncDiscordRolesTask())
+register(new RevalidateWebsitePageTask())

@@ -2,8 +2,6 @@
  * Static constant configuration values
  */
 
-import { remove } from 'winston'
-
 export const config = {
 	// The number of worker threads to spawn for processing background jobs
 	workerThreadCount: 5,
