@@ -18,6 +18,8 @@ export enum WorkerJob {
 	SendDiscordLog = 'SEND_DISCORD_LOG',
 	/** Sends a Discord DM to one or more users. */
 	SendDiscordDm = 'SEND_DISCORD_DM',
+	/** Adds or removes the Discord builder role for a user. */
+	SyncDiscordRoles = 'SYNC_DISCORD_ROLES',
 	/** Asks the frontend to revalidate cached pages. */
 	RevalidateWebsite = 'REVALIDATE_WEBSITE',
 }
@@ -54,5 +56,6 @@ export interface WorkerJobPayloads {
 		discordIds?: string[];
 		content: unknown;
 	};
+	[WorkerJob.SyncDiscordRoles]: { discordId: string; isBuilder: boolean };
 	[WorkerJob.RevalidateWebsite]: { paths?: string[]; tags?: string[] };
 }

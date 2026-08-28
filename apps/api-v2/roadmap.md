@@ -164,15 +164,15 @@ del /showcases/[showId]
 
 ## Members
 
-get /members \
-post /members \
-get /members/[userId] \
-del /members/[userId] \
-put /members/[userId] \
+✅ get /members \
+✅ post /members \
+✅ get /members/[userId] \
+✅ del /members/[userId] \
+✅ put /members/[userId] \
 
-get /members/[userId]/permissions \
-put /members/[userId]/permissions -> also needs to support adding new ones (upsert) \
-del /members/[userId]/permissions/[permId]
+✅ get /members/[userId]/permissions \
+✅ put /members/[userId]/permissions -> also needs to support adding new ones (upsert) \
+✅ del /members/[userId]/permissions/[permId]
 
 # Network API routes
 
