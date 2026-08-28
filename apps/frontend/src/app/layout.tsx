@@ -71,13 +71,23 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 			lang={locale}
 			className={`${catamaranFont.variable} ${cairoFont.variable} ${minecraftFont.variable}`}
 			suppressHydrationWarning
-			style={{ overflowX: 'hidden', width: '100vw' }}
+			data-mantine-color-scheme="dark"
+			style={{ overflowX: 'hidden', width: '100vw', colorScheme: 'dark' }}
 			data-scroll-behavior="smooth"
 		>
 			<head>
-				<ColorSchemeScript />
+				<ColorSchemeScript forceColorScheme="dark" />
 			</head>
-			<body style={{ overflowX: 'hidden', width: '100vw', margin: 0, padding: 0 }}>
+			<body
+				style={{
+					overflowX: 'hidden',
+					width: '100vw',
+					margin: 0,
+					padding: 0,
+					backgroundColor: '#121315',
+					color: '#c1c2c5',
+				}}
+			>
 				<NextIntlClientProvider>
 					<MantineProvider theme={theme} forceColorScheme="dark">
 						<ModalsProvider>

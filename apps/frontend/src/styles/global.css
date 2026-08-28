@@ -1,4 +1,5 @@
 :root {
+	color-scheme: dark;
 	--mantine-navbar-width: 300;
 	--root-footer-height: 43px;
 	--root-header-height: 56px;
@@ -16,6 +17,12 @@
 		--mantine-color-card-bg-light: var(--mantine-color-gray-0);
 	}
 	scroll-behavior: smooth;
+}
+
+html,
+body {
+	background-color: var(--mantine-color-dark-7, #121315);
+	color: var(--mantine-color-text, #c1c2c5);
 }
 
 .xl2 {
