@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/common/db/prisma.service';
-import { WorkerJob } from 'src/common/queue/jobs';
+import { BuildTeamWebhookEvent, WorkerJob } from 'src/common/queue/jobs';
 import { QueueService } from 'src/common/queue/queue.service';
 import { MAX_BULK_PERMISSIONS, MembersService } from 'src/sections/members/members.service';
 
@@ -143,6 +143,26 @@ describe('MembersService', () => {
 			});
 		});
 
+		it('should deliver a MEMBER_ADD event to the team webhook', async () => {
+			await membersService.add('user-1', 'team-123');
+
+			expect(queueService.dispatch).toHaveBeenCalledWith(WorkerJob.BuildTeamWebhook, {
+				type: BuildTeamWebhookEvent.MemberAdd,
+				data: expect.objectContaining({ id: 'user-1', minecraft: 'Notch', buildTeamId: 'team-123' }),
+				destination: [{ id: 'team-123' }],
+			});
+		});
+
+		it('should not put the member’s Keycloak account in the webhook payload', async () => {
+			await membersService.add('user-1', 'team-123');
+
+			const [, payload] = queueService.dispatch.mock.calls.find(([job]) => job === WorkerJob.BuildTeamWebhook) as [
+				string,
+				{ data: Record<string, unknown> },
+			];
+			expect(payload.data).not.toHaveProperty('ssoId');
+		});
+
 		it('should skip the Discord sync for a member with no linked account', async () => {
 			prismaService.user.update.mockResolvedValue({ ...member, discordId: null });
 
@@ -202,6 +222,17 @@ describe('MembersService', () => {
 				expect.objectContaining({ data: { joinedBuildTeams: { disconnect: { id: 'team-123' } } } }),
 			);
 			expect(prismaService.$transaction).toHaveBeenCalled();
+		});
+
+		it('should deliver a MEMBER_REMOVE event to the team webhook', async () => {
+			prismaService.buildTeam.count.mockResolvedValue(0);
+
+			await membersService.delete('user-1', 'team-123');
+
+			expect(queueService.dispatch).toHaveBeenCalledWith(
+				WorkerJob.BuildTeamWebhook,
+				expect.objectContaining({ type: BuildTeamWebhookEvent.MemberRemove }),
+			);
 		});
 
 		it('should take the Discord builder role away when that was their last team', async () => {

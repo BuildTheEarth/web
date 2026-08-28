@@ -4,7 +4,7 @@ import { PrismaService } from 'src/common/db/prisma.service';
 import { FilterParams } from 'src/common/decorators/filter.decorator';
 import { PaginationParams } from 'src/common/decorators/pagination.decorator';
 import { SortingParams } from 'src/common/decorators/sorting.decorator';
-import { WorkerJob } from 'src/common/queue/jobs';
+import { BuildTeamWebhookEvent, WorkerJob } from 'src/common/queue/jobs';
 import { QueueService } from 'src/common/queue/queue.service';
 import { MemberRefDto } from './dto/member-ref.dto';
 import { UpsertMemberPermissionDto } from './dto/upsert.member-permission.dto';
@@ -148,7 +148,7 @@ export class MembersService {
 
 		// Being in any build team is what makes someone a builder on Discord, and
 		// they are certainly in one now.
-		await this.announce(member.discordId, true, buildTeamId);
+		await this.announce(BuildTeamWebhookEvent.MemberAdd, member, true, buildTeamId);
 
 		return member;
 	}
@@ -176,7 +176,7 @@ export class MembersService {
 		// were in; leaving one team does not stop them building in another.
 		const remaining = await this.prisma.buildTeam.count({ where: { members: { some: { id: member.id } } } });
 
-		await this.announce(member.discordId, remaining > 0, buildTeamId);
+		await this.announce(BuildTeamWebhookEvent.MemberRemove, member, remaining > 0, buildTeamId);
 
 		return member;
 	}
@@ -294,20 +294,49 @@ export class MembersService {
 
 	/**
 	 * Tells the outside world that a team's roster changed, without making the
-	 * request wait for any of it: the builder role on Discord, and the team pages
-	 * that list members.
-	 * @param discordId The member's Discord account, when they have one linked.
+	 * request wait for any of it: the team's own webhook, the builder role on
+	 * Discord, and the team pages that list members.
+	 * @param event Which side of the change this is.
+	 * @param member The member it happened to.
 	 * @param isBuilder Whether they are still in at least one build team.
-	 * @param buildTeamId ID of the team whose pages went stale.
+	 * @param buildTeamId ID of the team whose roster and pages changed.
 	 */
-	private async announce(discordId: string | null, isBuilder: boolean, buildTeamId: string) {
+	private async announce(
+		event: BuildTeamWebhookEvent,
+		member: {
+			id: string;
+			username: string | null;
+			discordId: string | null;
+			minecraft: string | null;
+			avatar: string | null;
+		},
+		isBuilder: boolean,
+		buildTeamId: string,
+	) {
 		const team = await this.prisma.buildTeam.findUnique({
 			where: { id: buildTeamId },
 			select: { slug: true },
 		});
 
 		await Promise.all([
-			...(discordId ? [this.queue.dispatch(WorkerJob.SyncDiscordRoles, { discordId, isBuilder })] : []),
+			this.queue.dispatch(WorkerJob.BuildTeamWebhook, {
+				type: event,
+				// Listed field by field rather than spread: the member was selected with
+				// ssoId on it, which is the Keycloak account behind the person and has
+				// no business leaving this service.
+				data: {
+					id: member.id,
+					username: member.username,
+					discordId: member.discordId,
+					minecraft: member.minecraft,
+					avatar: member.avatar,
+					buildTeamId,
+				},
+				destination: [{ id: buildTeamId }],
+			}),
+			...(member.discordId
+				? [this.queue.dispatch(WorkerJob.SyncDiscordRoles, { discordId: member.discordId, isBuilder })]
+				: []),
 			...(team?.slug
 				? [
 						this.queue.dispatch(WorkerJob.RevalidateWebsite, {

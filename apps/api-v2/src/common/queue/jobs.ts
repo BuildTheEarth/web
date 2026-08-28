@@ -33,6 +33,8 @@ export enum BuildTeamWebhookEvent {
 	ClaimCreate = 'CLAIM_CREATE',
 	ClaimUpdate = 'CLAIM_UPDATE',
 	ClaimDelete = 'CLAIM_DELETE',
+	MemberAdd = 'MEMBER_ADD',
+	MemberRemove = 'MEMBER_REMOVE',
 }
 
 /**
