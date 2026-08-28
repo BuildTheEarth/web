@@ -9,7 +9,6 @@ import { ApplicationTemplatesModule } from './sections/applications/templates/ap
 import { AuthModule } from './sections/auth/auth.module';
 import { ClaimsModule } from './sections/claims/claims.module';
 import { SocialsModule } from './sections/socials/socials.module';
-import { StatusModule } from './sections/status/status.module';
 import { UtilityModule } from './sections/utility/utility.module';
 
 @Module({
@@ -24,7 +23,6 @@ import { UtilityModule } from './sections/utility/utility.module';
 		ClaimsModule,
 		ConfigModule.forRoot({ isGlobal: true, cache: true }),
 		SocialsModule,
-		StatusModule,
 		UtilityModule,
 	],
 	providers: [PrismaService, { provide: APP_GUARD, useClass: AuthGuard }],
