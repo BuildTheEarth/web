@@ -51,6 +51,13 @@ function toOverpassPolygon(coords: string[]): string {
 		.join(' ')
 }
 
+const OVERPASS_ENDPOINTS = [
+	process.env.OVERPASS_URL,
+	'https://overpass-api.de/api/interpreter',
+	'https://overpass.kumi.systems/api/interpreter',
+	'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+].filter((url): url is string => Boolean(url && url.trim().length > 0))
+
 /**
  * Worker task to update a claim's building count and geocoding details in the background.
  * @summary Synchronize Claim OSM & Building Details
@@ -82,11 +89,13 @@ export class SyncClaimOsmTask extends BaseTask<typeof syncClaimOsmPayloadSchema>
 		const center = calculateCenter(claim.area)
 		this.logger.debug(`Calculated center for claim ${claimId}: ${center}`)
 
-		// 2. Fetch building count from Overpass API
-		let buildings = 0
-		try {
-			const polygon = toOverpassPolygon(claim.area)
-			const overpassQuery = `[out:json][timeout:25];
+		// 2. Fetch building count from Overpass API (with endpoint fallbacks)
+		let buildings = claim.buildings ?? 0
+		let overpassSuccess = false
+		let lastOverpassError: Error | null = null
+
+		const polygon = toOverpassPolygon(claim.area)
+		const overpassQuery = `[out:json][timeout:25];
 (
   node["building"]["building"!~"grandstand"]["building"!~"roof"]["building"!~"garage"]["building"!~"hut"]["building"!~"shed"](poly: "${polygon}");
   way["building"]["building"!~"grandstand"]["building"!~"roof"]["building"!~"garage"]["building"!~"hut"]["building"!~"shed"](poly: "${polygon}");
@@ -94,28 +103,40 @@ export class SyncClaimOsmTask extends BaseTask<typeof syncClaimOsmPayloadSchema>
 );
 out count;`
 
-			const overpassUrl = 'https://overpass.private.coffee/api/interpreter?'
-			const res = await fetch(overpassUrl, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-				body: `data=${encodeURIComponent(overpassQuery.replace(/\n/g, ''))}`,
-			})
+		for (const overpassUrl of OVERPASS_ENDPOINTS) {
+			try {
+				this.logger.debug(`Attempting Overpass query via ${overpassUrl}`)
+				const res = await fetch(overpassUrl, {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'User-Agent': 'BuildTheEarth/1.0 (contact: development@buildtheearth.net)',
+					},
+					body: `data=${encodeURIComponent(overpassQuery.replace(/\n/g, ''))}`,
+					signal: AbortSignal.timeout(30000),
+				})
 
-			if (!res.ok) {
-				throw new Error(`Overpass API responded with status ${res.status}`)
-			}
+				if (!res.ok) {
+					throw new Error(`Endpoint ${overpassUrl} returned status ${res.status}`)
+				}
 
-			const resData = (await res.json()) as any
-			if (resData?.elements && resData.elements.length > 0) {
-				buildings = parseInt(resData.elements[0]?.tags?.total) || 0
+				const resData = (await res.json()) as any
+				if (resData?.elements && resData.elements.length > 0) {
+					buildings = parseInt(resData.elements[0]?.tags?.total) || 0
+				}
+				this.logger.debug(`Fetched building count for claim ${claimId}: ${buildings} (via ${overpassUrl})`)
+				overpassSuccess = true
+				break
+			} catch (error: any) {
+				lastOverpassError = error
+				this.logger.warn(`Overpass request to ${overpassUrl} failed: ${error.message}`)
 			}
-			this.logger.debug(`Fetched building count for claim ${claimId}: ${buildings}`)
-		} catch (error: any) {
-			this.logger.error(`Failed to fetch building count for claim ${claimId}: ${error.message}`)
+		}
+
+		if (!overpassSuccess && lastOverpassError) {
+			this.logger.error(`All Overpass API endpoints failed for claim ${claimId}: ${lastOverpassError.message}`)
 			// Rethrow so that the job gets retried by BullMQ
-			throw error
+			throw lastOverpassError
 		}
 
 		// 3. Fetch geocoded location details from Nominatim
@@ -129,8 +150,9 @@ out count;`
 
 			const res = await fetch(nominatimUrl, {
 				headers: {
-					'User-Agent': 'BTE-Worker/1.0',
+					'User-Agent': 'BuildTheEarth/1.0 (contact: development@buildtheearth.net)',
 				},
+				signal: AbortSignal.timeout(15000),
 			})
 
 			if (!res.ok) {
