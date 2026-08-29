@@ -66,6 +66,18 @@ export class SyncClaimOsmTask extends BaseTask<typeof syncClaimOsmPayloadSchema>
 	readonly name = 'SYNC_CLAIM_OSM'
 	readonly schema = syncClaimOsmPayloadSchema
 
+	private static readonly MIN_INTERVAL_MS = 1500 // 1.5s spacing between external OSM calls
+	private static nextRequestAt = 0
+
+	private static async pace(): Promise<void> {
+		const now = Date.now()
+		const waitMs = Math.max(0, SyncClaimOsmTask.nextRequestAt - now)
+		SyncClaimOsmTask.nextRequestAt = Math.max(now, SyncClaimOsmTask.nextRequestAt) + SyncClaimOsmTask.MIN_INTERVAL_MS
+		if (waitMs > 0) {
+			await new Promise((resolve) => setTimeout(resolve, waitMs))
+		}
+	}
+
 	async execute(data: SyncClaimOsmPayload, job: Job) {
 		const { claimId } = data
 
@@ -105,6 +117,7 @@ out count;`
 
 		for (const overpassUrl of OVERPASS_ENDPOINTS) {
 			try {
+				await SyncClaimOsmTask.pace()
 				this.logger.debug(`Attempting Overpass query via ${overpassUrl}`)
 				const res = await fetch(overpassUrl, {
 					method: 'POST',
@@ -145,6 +158,7 @@ out count;`
 		let name = claim.name || ''
 
 		try {
+			await SyncClaimOsmTask.pace()
 			const [lng, lat] = center.split(', ').map(parseFloat)
 			const nominatimUrl = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&accept-language=en&zoom=18`
 
