@@ -47,7 +47,7 @@
 		},
 		"links": {
 			"faq": "Preguntas usuais",
-			"donate": "Doar",
+			"download": "Descargas",
 			"teams": "Equipos",
 			"contact": "Contacto",
 			"status": "Estado",
@@ -330,36 +330,36 @@
 			"description": "BTE non é unha carreira para chegar ao 100 %. Estamos a construír cidades con contexto histórico, detalles locais e miles de horas de voluntariado. Mesmo unha soa parroquia ben feita pode educar, inspirar e conectar persoas de todos os países."
 		}
 	},
-	"support-us": {
-		"title": "Apóianos",
+	"download": {
+		"title": "Descargas de Mundos",
 		"seo": {
-			"title": "Apóianos",
-			"description": "Apoia a BuildTheEarth e axúdanos a manter servidores, financiar proxectos de desenvolvemento e manter viva a comunidade!"
+			"title": "Descargas de Mundos",
+			"description": "Descarga mapas do mundo a escala 1:1, esquemáticos e construcións de BuildTheEarth en Minecraft."
 		},
 		"patreon": {
-			"title": "O Patreon de BuildTheEarth",
-			"description": "Apoia o noso proxecto e obtén acceso a contido especial. O teu apoio axúdanos a manter servidores, financiar proxectos de desenvolvemento e facer prosperar a comunidade. Tes dispoñible unha lista completa de vantaxes na nosa páxina de Patreon. Se o desexas, tamén podes apoiarnos mediante subscricións de servidor de Discord cos mesmos beneficios. Grazas por axudarnos a manter o proxecto en marcha!",
-			"cta": "Facerse mecenas",
-			"ctaDiscord": "Únete mediante Discord",
+			"title": "Descargas de BuildTheEarth en Patreon",
+			"description": "Queres explorar as nosas construcións sen conexión en modo individual? Ofrecemos descargas mensuais exclusivas de mundos e esquemáticos a través de Patreon. Ao apoiar o proxecto en Patreon ou Discord, terás acceso inmediato ao noso arquivo descargable mentres nos axudas a manter os servidores.",
+			"cta": "Obter descargas en Patreon",
+			"ctaDiscord": "Únete por Discord",
 			"perks": {
 				"downloads": {
 					"title": "Descargas de mundos",
-					"description": "Obtén acceso a novos esquemas e descargas de mundos dun equipo de construción destacado cada mes."
+					"description": "Obtén acceso a novos esquemáticos e descargas de mundos dun equipo destacado cada mes."
 				},
 				"discord": {
-					"title": "Acceso a Discord",
-					"description": "Obtén acceso a canles exclusivas de Discord onde podes interactuar con outros doantes."
+					"title": "Acceso ao Discord de doadores",
+					"description": "Acceso a canles exclusivas de Discord para interactuar con outros doadores e construtores."
 				}
 			}
 		},
 		"teams": {
-			"title": "Apoia un equipo de construción",
-			"description": "Moitos equipos de construción teñen as súas propias páxinas de Patreon onde podes apoialos directamente. Isto axúdalles a manter os seus servidores, financiar os seus eventos e moito máis! Dado que as opcións de doazón dependen de cada equipo, consulta a súa páxina de Patreon ou outra páxina de doazóns para obter máis información. Grazas polo teu apoio!",
-			"cta": "Comprobar equipos de construción"
+			"title": "Descargas de equipos",
+			"description": "Moitos equipos teñen as súas propias descargas rexionais, esquemáticos e páxinas de Patreon. Comproba a páxina de cada equipo para máis información.",
+			"cta": "Ver equipos"
 		},
 		"build": {
-			"title": "Apoia construíndo",
-			"description": "Apoiar a BuildTheEarth non sempre ten que ser con cartos. Tamén podes apoiarnos construíndo! Únete a un equipo de construción e axúdao a construír a súa rexión. Tamén podes axudar uníndote a diferentes equipos do persoal; consulta o noso servidor de Discord para obter máis información."
+			"title": "Prefires construír?",
+			"description": "En vez de só descargar construcións rematadas, podes unirte a un equipo e axudar a recrear o mundo en Minecraft! Únete a un equipo e comeza a construír."
 		}
 	},
 	"gallery": {

@@ -47,7 +47,7 @@
 		},
 		"links": {
 			"faq": "FAQ",
-			"donate": "Donar",
+			"download": "Descargas",
 			"teams": "Equipos",
 			"contact": "Contacto",
 			"status": "Estado del servidor",
@@ -330,36 +330,36 @@
 			"description": "BuldTheEarth no es una carrera por el 100%. Estamos construyendo ciudades con contexto histórico, detalles locales y miles de horas de voluntariado. Incluso un solo barrio bien hecho puede educar, inspirar y conectar a personas de diferentes países."
 		}
 	},
-	"support-us": {
-		"title": "Apóyanos",
+	"download": {
+		"title": "Descargas del Mundo",
 		"seo": {
-			"title": "Apóyanos",
-			"description": "¡Apoya a BuildTheEarth y ayúdanos a mantener servidores, financiar proyectos de desarrollo y mantener viva la comunidad!"
+			"title": "Descargas del Mundo",
+			"description": "Descarga mapas de mundos a escala 1:1, esquemáticas y construcciones destacadas de BuildTheEarth en Minecraft."
 		},
 		"patreon": {
-			"title": "El Patreon de BuildTheEarth",
-			"description": "Apoya nuestro proyecto y obtén acceso a contenido especial. Tu apoyo nos ayuda a mantener servidores, financiar proyectos de desarrollo y mantener la comunidad en crecimiento. Una lista completa de beneficios está disponible en nuestra página de Patreon. Si lo deseas, también puedes apoyarnos a través de suscripciones de servidor de Discord con los mismos beneficios. ¡Gracias por ayudarnos a mantener el proyecto en marcha!",
-			"cta": "Conviértete en un mecenas",
-			"ctaDiscord": "Únete vía Discord",
+			"title": "Descargas de BuildTheEarth en Patreon",
+			"description": "¿Quieres explorar nuestras construcciones sin conexión en un jugador? Ofrecemos descargas mensuales exclusivas de mundos y esquemáticas de Equipos de Construcción destacados a través de nuestro Patreon. Al apoyar el proyecto en Patreon o Discord, obtendrás acceso instantáneo a nuestro archivo de ciudades, monumentos y regiones descargables mientras nos ayudas a financiar los servidores.",
+			"cta": "Obtener descargas en Patreon",
+			"ctaDiscord": "Unirse vía Discord",
 			"perks": {
 				"downloads": {
-					"title": "Descargas de mundos",
-					"description": "Obtén acceso a nuevos esquemas y descargas de mundos de un equipo de construcción destacado cada mes."
+					"title": "Descargas de Mundos",
+					"description": "Obtén acceso a nuevas esquemáticas y descargas de mundos de un Equipo de Construcción destacado cada mes."
 				},
 				"discord": {
-					"title": "Acceso a Discord",
-					"description": "Obtén acceso a canales exclusivos de Discord donde puedes interactuar con otros donantes."
+					"title": "Acceso a Discord de Donadores",
+					"description": "Obtén acceso a canales exclusivos de Discord donde puedes interactuar con otros donadores y constructores."
 				}
 			}
 		},
 		"teams": {
-			"title": "Apoya a un equipo de construcción",
-			"description": "Muchos equipos de construcción tienen sus propias páginas de Patreon donde puedes apoyarlos directamente. ¡Esto les ayuda a mantener sus servidores, financiar sus eventos y mucho más! Dado que las opciones de donación dependen de cada equipo, consulta su página de Patreon u otra plataforma de donaciones para más información. ¡Gracias por tu apoyo!",
-			"cta": "Ver equipos de construcción"
+			"title": "Descargas de Equipos de Construcción",
+			"description": "Muchos Equipos de Construcción tienen sus propias descargas regionales, esquemáticas y páginas de Patreon. Como las opciones de descarga dependen del Equipo, consulta la página de cada equipo para obtener más información.",
+			"cta": "Ver Equipos de Construcción"
 		},
 		"build": {
-			"title": "Apoya construyendo",
-			"description": "Apoyar a BuildTheEarth no siempre tiene que ser económico. ¡También puedes apoyarnos construyendo! Únete a un equipo de construcción y ayúdalos a construir su región. También puedes ayudar uniéndote a diferentes equipos del personal; consulta nuestro servidor de Discord para más información."
+			"title": "¿Prefieres construir?",
+			"description": "En lugar de solo descargar construcciones terminadas, ¡puedes unirte a un equipo y ayudar a recrear el mundo en Minecraft! Únete a un Equipo de Construcción y comienza a construir tu región favorita."
 		}
 	},
 	"gallery": {

@@ -71,13 +71,13 @@ const nextConfig: NextConfig = {
 		return [
 			{
 				source: '/donate',
-				destination: '/support-us',
+				destination: '/download',
 				permanent: true,
 			},
 			{
-				source: '/download',
-				destination: '/support-us',
-				permanent: false,
+				source: '/support-us',
+				destination: '/download',
+				permanent: true,
 			},
 		]
 	},

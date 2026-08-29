@@ -47,7 +47,7 @@
 		},
 		"links": {
 			"faq": "FAQ",
-			"donate": "Wesprzyj",
+			"download": "Pobierz",
 			"teams": "Zespoły",
 			"contact": "Kontakt",
 			"status": "Status",
@@ -330,36 +330,36 @@
 			"description": "BTE to nie wyścig do 100%. Budujemy miasta z kontekstem historycznym, lokalnymi detalami i tysiącami godzin pracy wolontariuszy. Nawet jedna dobrze wykonana dzielnica może uczyć, inspirować i łączyć ludzi z różnych krajów."
 		}
 	},
-	"support-us": {
-		"title": "Wesprzyj nas",
+	"download": {
+		"title": "Pobieranie światów",
 		"seo": {
-			"title": "Wesprzyj nas",
-			"description": "Wesprzyj BuildTheEarth i pomóż nam utrzymać serwery, finansować projekty deweloperskie i rozwijać społeczność!"
+			"title": "Pobieranie światów",
+			"description": "Pobieraj mapy światów w skali 1:1, schematy i wyróżnione budowle z projektu BuildTheEarth w Minecrafcie."
 		},
 		"patreon": {
-			"title": "Patreon BuildTheEarth",
-			"description": "Wesprzyj nasz projekt i uzyskaj dostęp do specjalnych treści. Twoje wsparcie pomaga nam utrzymać serwery, finansować projekty deweloperskie i rozwijać społeczność. Pełna lista korzyści jest dostępna na naszej stronie Patreon. Jeśli chcesz, możesz nas również wesprzeć poprzez subskrypcje na serwerze Discord z tymi samymi korzyściami. Dziękujemy za pomoc w utrzymaniu projektu!",
-			"cta": "Zostań Patronem",
+			"title": "Pobieranie światów BuildTheEarth",
+			"description": "Chcesz zwiedzać nasze budowle offline w trybie jednoosobowym? Oferujemy ekskluzywne comiesięczne pobieranie światów i schematów od wyróżnionych zespołów za pośrednictwem Patreona. Wspierając projekt na Patreonie lub Discordzie, zyskujesz natychmiastowy dostęp do naszego archiwum miast i zabytków, jednocześnie pomagając nam w utrzymaniu serwerów.",
+			"cta": "Pobierz na Patreonie",
 			"ctaDiscord": "Dołącz przez Discord",
 			"perks": {
 				"downloads": {
 					"title": "Pobieranie światów",
-					"description": "Uzyskaj comiesięczny dostęp do nowych schematów i światów do pobrania od wyróżnionego zespołu budowlanego."
+					"description": "Uzyskaj dostęp do nowych schematów i światów od wyróżnionego zespołu budowlanego w każdym miesiącu."
 				},
 				"discord": {
-					"title": "Dostęp do Discorda",
-					"description": "Uzyskaj dostęp do ekskluzywnych kanałów Discord, gdzie możesz wchodzić w interakcję z innymi wspierającymi."
+					"title": "Dostęp do Discorda wspierających",
+					"description": "Uzyskaj dostęp do ekskluzywnych kanałów Discord, gdzie możesz rozmawiać z innymi wspierającymi i budowniczymi."
 				}
 			}
 		},
 		"teams": {
-			"title": "Wesprzyj zespół budowlany",
-			"description": "Wiele zespołów budowlanych ma własne strony na Patronite lub Patreon, gdzie możesz wesprzeć je bezpośrednio. Pomaga im to utrzymać serwery, finansować wydarzenia i wiele więcej! Ponieważ opcje wsparcia zależą od danego zespołu, sprawdź ich stronę Patreon lub inną platformę wpłat, aby uzyskać więcej informacji. Dziękujemy za Twoje wsparcie!",
-			"cta": "Zobacz zespoły budowlane"
+			"title": "Materiały zespołów budowlanych",
+			"description": "Wiele zespołów ma własne pobieralnie, schematy oraz strony na Patreonie. Ponieważ opcje zależą od danego zespołu, sprawdź stronę zespołu, aby dowiedzieć się więcej.",
+			"cta": "Sprawdź zespoły"
 		},
 		"build": {
-			"title": "Wesprzyj poprzez budowanie",
-			"description": "Wspieranie BuildTheEarth nie zawsze musi wiązać się z pieniędzmi. Możesz nas również wesprzeć budując! Dołącz do zespołu budowlanego i pomóż w budowie ich regionu. Możesz także pomóc, dołączając do różnych zespołów administracyjnych – sprawdź nasz serwer Discord, aby dowiedzieć się więcej."
+			"title": "Wolisz budować?",
+			"description": "Zamiast tylko pobierać gotowe budowle, możesz dołączyć do zespołu i pomóc w tworzeniu repliki Ziemi w Minecrafcie! Dołącz do zespołu i zacznij budować swój ulubiony region."
 		}
 	},
 	"gallery": {

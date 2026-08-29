@@ -1,33 +1,22 @@
-import ProgressCard from '@/components/core/card/ProgressCard'
 import StatCard from '@/components/core/card/StatCard'
 import LinkButton from '@/components/core/LinkButton'
 import Wrapper from '@/components/layout/Wrapper'
-import prisma from '@/util/db'
 import { getLanguageAlternates } from '@/util/seo'
-import { Box, Container, Grid, GridCol, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core'
-import {
-	IconBrandDiscord,
-	IconBuildingSkyscraper,
-	IconChevronRight,
-	IconDownload,
-	IconFileDownload,
-	IconMap,
-	IconUsersGroup,
-	IconWorldDownload,
-} from '@tabler/icons-react'
+import { Box, Container, Grid, GridCol, Group, SimpleGrid, Text, Title } from '@mantine/core'
+import { IconBrandDiscord, IconChevronRight, IconFileDownload } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale
-	const t = (await getTranslations({ locale, namespace: 'support-us.seo' })) as (key: 'title' | 'description') => string
+	const t = (await getTranslations({ locale, namespace: 'download.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
 		description: t('description'),
 		alternates: {
-			languages: getLanguageAlternates('/support-us'),
+			languages: getLanguageAlternates('/download'),
 		},
 	}
 }
@@ -38,7 +27,7 @@ export const revalidate = 86400 // 24 hours
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale
 	setRequestLocale(locale)
-	const t = await getTranslations('support-us')
+	const t = await getTranslations('download')
 
 	return (
 		<Wrapper offsetHeader={false} padded={false} head={{ title: t('title'), src: '/thumbs/6.webp' }}>
@@ -60,17 +49,17 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								color="indigo"
 								rightSection={<IconChevronRight size={12} />}
 								mt="md"
-								data-umami-event="patreon-cta-click"
+								data-umami-event="patreon-download-cta-click"
 							>
 								{t('patreon.cta')}
 							</LinkButton>
 							<LinkButton
-								variant="subtle"
+								variant="light"
 								href="https://go.buildtheearth.net/dc"
 								color="indigo"
 								rightSection={<IconChevronRight size={12} />}
 								mt="md"
-								data-umami-event="discord-subscription-cta-click"
+								data-umami-event="discord-download-cta-click"
 							>
 								{t('patreon.ctaDiscord')}
 							</LinkButton>
@@ -104,7 +93,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							color="indigo"
 							rightSection={<IconChevronRight size={12} />}
 							mt="md"
-							data-umami-event="teams-donate-cta-click"
+							data-umami-event="teams-download-cta-click"
 						>
 							{t('teams.cta')}
 						</LinkButton>
@@ -124,6 +113,16 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							<Text c="white" maw={960}>
 								{t('build.description')}
 							</Text>
+							<LinkButton
+								variant="white"
+								color="indigo"
+								href="/get-started"
+								rightSection={<IconChevronRight size={12} />}
+								mt="md"
+								data-umami-event="download-to-build-cta-click"
+							>
+								{t('build.title')}
+							</LinkButton>
 						</Box>
 					</GridCol>
 				</Grid>

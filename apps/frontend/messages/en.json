@@ -47,7 +47,7 @@
 		},
 		"links": {
 			"faq": "FAQ",
-			"donate": "Donate",
+			"download": "Download",
 			"teams": "Teams",
 			"contact": "Contact",
 			"status": "Status",
@@ -330,36 +330,36 @@
 			"description": "BTE is not a race to 100%. We are building cities with historical context, local detail, and thousands of volunteer hours. Even a single district done right can educate, inspire, and connect people across countries."
 		}
 	},
-	"support-us": {
-		"title": "Support Us",
+	"download": {
+		"title": "World Downloads",
 		"seo": {
-			"title": "Support Us",
-			"description": "Support BuildTheEarth and help us maintain servers, fund development projects, and keep the community going!"
+			"title": "World Downloads",
+			"description": "Download 1:1 scale Minecraft world maps, schematics, and featured builds from BuildTheEarth."
 		},
 		"patreon": {
-			"title": "The BuildTheEarth Patreon",
-			"description": "Support our project and gain access to special content. Your support helps us maintain servers, fund development projects, and keep the community thriving. A full list of perks is available on our Patreon page. If you would like, you can also support us thru Discord Server Subscriptions with the same benefits. Thank you for helping us keep the project going!",
-			"cta": "Become a Patron",
+			"title": "BuildTheEarth World Downloads",
+			"description": "Want to explore our builds offline in singleplayer? We offer exclusive monthly world downloads and schematics from featured Build Teams through our Patreon. By supporting the project on Patreon or Discord, you gain instant access to our archive of downloadable cities, landmarks, and regions while helping us fund servers and project infrastructure.",
+			"cta": "Get Downloads on Patreon",
 			"ctaDiscord": "Join via Discord",
 			"perks": {
 				"downloads": {
 					"title": "World Downloads",
-					"description": "Get access to new schematic and world downloads from a featured BuildTeam each month."
+					"description": "Get access to new schematic and full world save downloads from a featured Build Team each month."
 				},
 				"discord": {
-					"title": "Discord Access",
-					"description": "Get access to exclusive Discord channels where you can interact with other donators."
+					"title": "Supporter Discord Access",
+					"description": "Get access to exclusive Discord channels where you can interact with other supporters and builders."
 				}
 			}
 		},
 		"teams": {
-			"title": "Support a BuildTeam",
-			"description": "Many BuildTeams have their own Patreon pages where you can support them directly. This helps them maintain their servers, fund their events and much more! As the donation options depend on the BuildTeam, please check their Patreon or other donation page for more information. Thank you for your support!",
-			"cta": "Check BuildTeams"
+			"title": "Build Team Downloads",
+			"description": "Many Build Teams have their own regional downloads, schematics, and Patreon pages. As download options and perks depend on the Build Team, check their team page for more information. Thank you for your support!",
+			"cta": "Explore Build Teams"
 		},
 		"build": {
-			"title": "Support by Building",
-			"description": "Supporting BuildTheEarth doesn't always have to be monetary. You can also support us by building! Join a BuildTeam and help them build their region. You can also help out by joining different staff teams, check our Discord server for more information."
+			"title": "Want to Build Instead?",
+			"description": "Rather than just downloading finished builds, you can join a team and help recreate the world in Minecraft! Join a Build Team and start building in your favorite region."
 		}
 	},
 	"gallery": {

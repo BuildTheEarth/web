@@ -36,7 +36,7 @@
 		},
 		"links": {
 			"faq": "問答",
-			"donate": "贊助",
+			"download": "下載",
 			"teams": "團隊",
 			"contact": "聯繫",
 			"status": "狀態",
@@ -319,36 +319,36 @@
 			"description": "BTE 不是一場衝向 100% 的競速。我們透過歷史背景、在地細節和數千小時的志工時數來建設城市。被細緻完成的即使只有一個街區，也足以教育、啟發和連結跨越國界的人們。"
 		}
 	},
-	"support-us": {
-		"title": "支持我們",
+	"download": {
+		"title": "世界地圖下載",
 		"seo": {
-			"title": "支持我們",
-			"description": "支持 BuildTheEarth，協助我們維持伺服器運作、資助開發專案並維持社群蓬勃發展！"
+			"title": "世界地圖下載",
+			"description": "下載 BuildTheEarth 的 1:1 比例 Minecraft 世界地圖、結構圖與精選建築成果。"
 		},
 		"patreon": {
-			"title": "BuildTheEarth Patreon",
-			"description": "支持我們的專案並獲得專屬內容。您的支持有助於我們維持伺服器運作、資助開發專案並保持社群的活躍。完整的福利清單請見我們的 Patreon 頁面。如果您願意，也可以透過 Discord 伺服器訂閱來支持我們，享受相同的福利。感謝您協助我們推動這個專案！",
-			"cta": "成為贊助者",
+			"title": "BuildTheEarth 世界地圖下載",
+			"description": "想要在單人模式下離線探索我們的建築？我們透過 Patreon 每月提供精選建築團隊的獨家世界存檔與結構圖下載。透過在 Patreon 或 Discord 上贊助專案，您可以立即造訪我們包含城市、地標與地區的可下載檔案庫，同時協助我們維護伺服器與專案營運。",
+			"cta": "在 Patreon 取得下載",
 			"ctaDiscord": "透過 Discord 加入",
 			"perks": {
 				"downloads": {
 					"title": "世界地圖下載",
-					"description": "每月可獲取精選建築團隊的新投影（schematic）與世界存檔下載權限。"
+					"description": "每月取得精選建築團隊的新結構圖與完整世界存檔下載。"
 				},
 				"discord": {
-					"title": "Discord 專屬權限",
-					"description": "獲得專屬 Discord 頻道的進入權限，與其他贊助者互動交流。"
+					"title": "贊助者專屬 Discord",
+					"description": "進入專屬 Discord 頻道，與其他贊助者和建築師交流。"
 				}
 			}
 		},
 		"teams": {
-			"title": "支持建築團隊",
-			"description": "許多建築團隊都有自己的 Patreon 頁面，您可以直接支持他們。這能協助他們維護伺服器、舉辦活動等！由於各團隊的贊助選項不同，請前往他們的 Patreon 或其他贊助頁面了解更多資訊。感謝您的支持！",
+			"title": "建築團隊下載與支援",
+			"description": "許多建築團隊擁有各自的地區下載、結構圖與 Patreon 頁面。由於下載與回饋項目因團隊而異，請造訪團隊頁面了解更多資訊。",
 			"cta": "查看建築團隊"
 		},
 		"build": {
-			"title": "以建築支持",
-			"description": "支持 BuildTheEarth 不一定需要資金。您也可以透過親自建築來支持我們！加入建築團隊並協助他們建造當地的區域。您也可以加入不同的管理團隊來提供協助，詳情請查看我們的 Discord 伺服器。"
+			"title": "想要親自參與建設？",
+			"description": "除了下載現成建築之外，您也可以加入團隊，親手在 Minecraft 中重現世界！加入建築團隊，立即開始建設您喜愛的地區。"
 		}
 	},
 	"gallery": {
