@@ -127,6 +127,35 @@ export class RedisEventQueue {
 		await this.queue!.clean(0, 0, 'failed')
 	}
 
+	async retryFailedJobs() {
+		this.init()
+		const failed = await this.queue!.getJobs(['failed'])
+		for (const job of failed) {
+			await job.retry('failed')
+		}
+		return failed.length
+	}
+
+	async retryJob(jobId: string) {
+		this.init()
+		const job = await this.queue!.getJob(jobId)
+		if (job) {
+			await job.retry('failed')
+			return true
+		}
+		return false
+	}
+
+	async removeJob(jobId: string) {
+		this.init()
+		const job = await this.queue!.getJob(jobId)
+		if (job) {
+			await job.remove()
+			return true
+		}
+		return false
+	}
+
 	/**
 	 * Close current Redis connection and the BullMQ queue instance.
 	 * Call this method when you want to gracefully shut down the Redis connection and queue.
