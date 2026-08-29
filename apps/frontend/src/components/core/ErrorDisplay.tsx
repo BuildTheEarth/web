@@ -8,10 +8,12 @@ export default function ErrorDisplay({
 	title = 'Something is not right...',
 	message = 'The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. ',
 	backButton = true,
+	backHref = '/',
 }: {
 	title?: string
 	message?: string
 	backButton?: boolean | string
+	backHref?: string
 }) {
 	return (
 		<Box
@@ -37,7 +39,7 @@ export default function ErrorDisplay({
 			</Text>
 			<AppearAnimation delay={0.35} component="div">
 				{backButton && (
-					<LinkButton variant="outline" size="sm" mt="md" href="/" data-umami-event="error-back-click">
+					<LinkButton variant="outline" size="sm" mt="md" href={backHref} data-umami-event="error-back-click">
 						{typeof backButton === 'string' ? backButton : 'Go back'}
 					</LinkButton>
 				)}

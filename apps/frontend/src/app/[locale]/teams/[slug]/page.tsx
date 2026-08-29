@@ -47,18 +47,14 @@ export async function generateMetadata({
 		return {
 			title: t('notFoundTitle'),
 			description: t('notFoundDescription'),
-			alternates: {
-				languages: getLanguageAlternates(`/teams/${slug}`),
-			},
+			alternates: { languages: getLanguageAlternates(`/teams/${slug}`) },
 		}
 	}
 
 	return {
 		title: buildTeam.name,
 		description: buildTeam.about,
-		alternates: {
-			languages: getLanguageAlternates(`/teams/${slug}`),
-		},
+		alternates: { languages: getLanguageAlternates(`/teams/${slug}`) },
 		openGraph: { images: [buildTeam.backgroundImage || t('defaultOgImage')] },
 	}
 }
@@ -141,8 +137,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						></Avatar>
 						<h1>{buildTeam.name}</h1>
 					</Group>
+					{/* TODO: replace URL */}
 					<LinkButton
-						href={`https://my.buildtheearth.net/apply/${buildTeam.slug}`}
+						href={`https://beta.buildtheearth.net/teams/${buildTeam.slug}/apply`}
 						w={{ base: '100%', md: 'auto' }}
 						maw="none"
 						mb={{ base: 'xl', md: 0 }}
