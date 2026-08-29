@@ -14,9 +14,10 @@ async function bootstrap() {
 	try {
 		logger.debug('Trying to connect to database')
 		await prisma.$connect()
+		await prisma.$queryRaw`SELECT 1`
 		logger.info('Connected to database successfully')
 	} catch (error: any) {
-		logger.error('Database connection failed', { error })
+		logger.error('Database connection failed', { error: error?.message ?? error })
 		process.exit(1)
 	}
 

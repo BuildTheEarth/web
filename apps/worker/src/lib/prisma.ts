@@ -1,8 +1,31 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@repo/db'
+import { logger } from './logger'
 
 const prismaClientSingleton = () => {
-	const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
+	const connectionString = process.env.DATABASE_URL
+	if (!connectionString || connectionString.trim() === '') {
+		throw new Error(
+			'DATABASE_URL environment variable is missing or empty. Please ensure DATABASE_URL is set in your runtime environment.',
+		)
+	}
+
+	const adapter = new PrismaPg(
+		{
+			connectionString,
+			connectionTimeoutMillis: 10000,
+			max: 10,
+		},
+		{
+			onPoolError: (err) => {
+				logger.error('Prisma PostgreSQL pool error', { error: err.message })
+			},
+			onConnectionError: (err) => {
+				logger.error('Prisma PostgreSQL connection error', { error: err.message })
+			},
+		},
+	)
+
 	return new PrismaClient({ adapter }).$extends({
 		name: 'uploadSrc',
 		result: {

@@ -19,9 +19,9 @@ export class WorkerManager {
 		})
 
 		const workerHandler = async (job: Job) => {
-			const handler = taskRegistry[job.name]
+			const TaskClass = taskRegistry[job.name]
 
-			if (!handler) {
+			if (!TaskClass) {
 				throw new Error(`Unknown job type: ${job.name}`)
 			}
 
@@ -29,6 +29,7 @@ export class WorkerManager {
 
 			taskLogger.info(`Starting job execution`)
 
+			const handler = new TaskClass()
 			handler.setContext(taskLogger, prisma)
 			const data = handler.validate(job.data)
 			await handler.execute(data, job, this.queue)

@@ -10,19 +10,22 @@ import { SendDiscordLogTask } from './discord/sendLog.task'
 import { SyncDiscordRolesTask } from './discord/syncDiscordRoles.task'
 import { RevalidateWebsitePageTask } from './website/revalidatePage.task'
 
-export const taskRegistry: Record<string, BaseTask> = {}
+export type TaskConstructor = new () => BaseTask
 
-function register(task: BaseTask) {
-	taskRegistry[task.name] = task
+export const taskRegistry: Record<string, TaskConstructor> = {}
+
+function register(taskClass: TaskConstructor) {
+	const instance = new taskClass()
+	taskRegistry[instance.name] = taskClass
 }
 
-register(new SendDiscordDmTask())
-register(new SendDiscordLogTask())
-register(new SendBuildTeamWebhookTask())
-register(new ReviewActivityCheckTask())
-register(new PurgeClaimsTask())
-register(new PurgeVerificationsTask())
-register(new RemindApplicationsTask())
-register(new SyncClaimOsmTask())
-register(new SyncDiscordRolesTask())
-register(new RevalidateWebsitePageTask())
+register(SendDiscordDmTask)
+register(SendDiscordLogTask)
+register(SendBuildTeamWebhookTask)
+register(ReviewActivityCheckTask)
+register(PurgeClaimsTask)
+register(PurgeVerificationsTask)
+register(RemindApplicationsTask)
+register(SyncClaimOsmTask)
+register(SyncDiscordRolesTask)
+register(RevalidateWebsitePageTask)

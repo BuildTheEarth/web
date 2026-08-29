@@ -2,7 +2,7 @@ FROM node:22-alpine AS base
 
 FROM base AS builder
 RUN apk update
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat ca-certificates
 WORKDIR /app
 
 # Run turbo
@@ -14,7 +14,7 @@ RUN yarn dlx turbo@2.1.1 prune worker --docker
 # Add lockfile and package.json
 FROM base AS installer
 RUN apk update
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat ca-certificates
 WORKDIR /app
 
 # Install dependencies
