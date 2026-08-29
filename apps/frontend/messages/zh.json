@@ -31,6 +31,7 @@
 		},
 		"header": {
 			"cta": "開始使用",
+			"visit": "參觀",
 			"toggleNavigation": "切換導覽連結"
 		},
 		"links": {
@@ -199,46 +200,58 @@
 	},
 	"get-started": {
 		"seo": {
-			"title": "開始使用",
-			"description": "了解如何探索伺服器、尋找您的團隊，並開始在 BuildTheEarth 進行建設。"
+			"title": "開始建設",
+			"description": "了解如何尋找您的團隊，並開始在 BuildTheEarth 進行建設。"
 		},
-		"cards": {
-			"imageAlt": "開始使用圖卡"
-		},
-		"title": "開始進行建設",
+		"title": "開始建設",
+		"subtitle": "加入我們並為創作獻身，在 Minecraft 中以 1:1 的比例再現地球。",
 		"arrowDown": {
 			"alt": "向下捲動以了解更多關於如何開始的資訊"
 		},
-		"explore": {
-			"title": "探索 BuildTheEarth",
-			"description": "瀏覽我們的全球社群在重現世界時所取得的令人難以置信的進展。",
-			"cta": "尋找伺服器",
-			"searchCountries": "搜尋國家...",
-			"content": {
-				"text": "根據您想參觀的國家，有多個伺服器可供選擇。您可以在下方的方塊中搜尋國家。<br></br><br></br>此外，您也可以透過查看畫廊或造訪我們的地圖頁面來探索我們的進度。",
-				"ctaGallery": "查看畫廊",
-				"ctaMap": "探索地圖頁面"
-			},
-			"joinServer": {
-				"title": "探索 {country}",
-				"description": "加入 {name} Minecraft 伺服器以探索該地區令人嘆為觀止的建築。<br></br><br></br>如果您在伺服器上需要導覽方面的協助，請隨時在 Discord 上與我們聯絡！",
-				"ctaDiscord": "加入 Discord 伺服器",
-				"moreInformation": "更多資訊"
-			}
+		"searchCountries": "搜尋國家...",
+		"content": {
+			"text": "BuildTheEarth 由多個<b>建築團隊</b>組成，每個團隊負責重現世界的不同地區。建築團隊通常專注於特定的<b>國家或大陸</b>，您能夠為您熱愛的地區做出貢獻。<br></br><br></br>沒有限制您可以加入哪個或多少個建築團隊，因此請隨意探索！<br></br><br></br>每個建築團隊都有各自的伺服器，讓您可以與其他建築師合作、參與活動並獲得支援。因此，並沒有單一的「申請流程」。<br></br>而是需要加入您感興趣的建築團隊的<b> Discord 伺服器</b>，依照他們的指示即可輕鬆開始。<br></br><br></br>您也可以加入我們的中樞伺服器 (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) 以獲得協助並結識來自世界各地的其他建築師！"
 		},
-		"build": {
-			"title": "開始建設",
-			"description": "加入我們並為創作獻身，在 Minecraft 中以 1:1 的比例再現地球。",
-			"cta": "尋找您的團隊",
-			"content": {
-				"text": "BuildTheEarth 由多個<b>建築團隊</b>組成，每個團隊負責重現世界的不同地區。建築團隊通常專注於特定的<b>國家或大陸</b>，您能夠為您熱愛的地區做出貢獻。<br></br><br></br>沒有限制您可以加入哪個或多少個建築團隊，因此請隨意探索！<br></br><br></br>每個建築團隊都有各自的伺服器，讓您可以與其他建築師合作、參與活動並獲得支援。因此，並沒有單一的「申請流程」。<br></br>而是需要加入您感興趣的建築團隊的<b> Discord 伺服器</b>，依照他們的指示即可輕鬆開始。<br></br><br></br>您也可以加入我們的中樞伺服器 (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) 以獲得協助並結識來自世界各地的其他建築師！"
-			},
-			"joinServer": {
-				"title": "在 {country} 建設",
-				"description": "加入 {name} Minecraft 伺服器來協助建設這個地區！<br></br><br></br>別忘了透過下方的連結加入 Discord 伺服器！",
-				"ctaDiscord": "{name} Discord 伺服器",
-				"moreInformation": "更多資訊"
-			}
+		"joinServer": {
+			"title": "在 {country} 建設",
+			"description": "加入 {name} Minecraft 伺服器來協助建設這個地區！<br></br><br></br>別忘了透過下方的連結加入 Discord 伺服器！",
+			"ctaDiscord": "{name} Discord 伺服器",
+			"ctaHub": "中樞 Discord 伺服器",
+			"moreInformation": "更多資訊"
+		},
+		"visitCallout": {
+			"title": "只想參觀探索？",
+			"description": "如果您只想參觀我們的伺服器並欣賞我們的成果，請造訪我們的參觀頁面。",
+			"cta": "參觀 BuildTheEarth"
+		}
+	},
+	"visit": {
+		"seo": {
+			"title": "參觀 BuildTheEarth",
+			"description": "了解如何探索 Minecraft 伺服器並參觀全球 1:1 比例的建築。"
+		},
+		"title": "參觀 BuildTheEarth",
+		"subtitle": "瀏覽我們的全球社群在重現世界時所取得的令人難以置信的進展。",
+		"arrowDown": {
+			"alt": "向下捲動以了解更多關於參觀伺服器的資訊"
+		},
+		"searchCountries": "搜尋國家...",
+		"content": {
+			"text": "根據您想參觀的國家，有多個伺服器可供選擇。您可以在下方的方塊中搜尋國家。<br></br><br></br>您也可以加入我們的中央中樞伺服器 (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) 在 Java 版上一站式探索多個互相連接的地區！<br></br><br></br>此外，您也可以透過查看畫廊或造訪我們的地圖頁面來探索我們的進度。",
+			"ctaGallery": "查看畫廊",
+			"ctaMap": "探索地圖頁面"
+		},
+		"joinServer": {
+			"title": "探索 {country}",
+			"description": "加入 {name} Minecraft 伺服器以探索該地區令人嘆為觀止的建築。<br></br><br></br>如果您在伺服器上需要導覽方面的協助，請隨時在 Discord 上與我們聯絡！",
+			"ctaDiscord": "加入 Discord 伺服器",
+			"ctaHub": "中樞 Discord 伺服器",
+			"moreInformation": "更多資訊"
+		},
+		"buildCallout": {
+			"title": "想與我們一起建設？",
+			"description": "如果您想在 Minecraft 中貢獻並協助重現世界，請尋找您的團隊並開始建設。",
+			"cta": "開始建設"
 		}
 	},
 	"outreach": {

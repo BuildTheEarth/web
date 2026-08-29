@@ -42,6 +42,7 @@
 		},
 		"header": {
 			"cta": "Empezar",
+			"visit": "Visitar",
 			"toggleNavigation": "Alternar enlaces de navegación"
 		},
 		"links": {
@@ -210,46 +211,58 @@
 	},
 	"get-started": {
 		"seo": {
-			"title": "Empezar en BuildTheEarth",
-			"description": "Aprende cómo explorar servidores, encontrar tu equipo y empezar a construir con BuildTheEarth"
-		},
-		"cards": {
-			"imageAlt": "Tarjeta de tutorial de inicio"
+			"title": "Empieza a construir",
+			"description": "Aprende cómo encontrar tu equipo y empezar a construir con BuildTheEarth."
 		},
 		"title": "Empieza a construir",
+		"subtitle": "Únete y comienza a participar en la creación de una réplica de la Tierra a escala 1:1 en Minecraft.",
 		"arrowDown": {
 			"alt": "Desliza hacia abajo para aprender más sobre cómo empezar en el proyecto."
 		},
-		"explore": {
-			"title": "Explorar BuildTheEarth",
-			"description": "Descubra el increíble progreso realizado por nuestra comunidad global mientras recrean el mundo.",
-			"cta": "Encontrar un servidor",
-			"searchCountries": "Buscar países...",
-			"content": {
-				"text": "Dependiendo del país que quieras visitar, hay múltiples servidores disponibles. Puedes buscar un país en el cuadro inferior. <br></br><br></br>De lo contrario, también puedes explorar nuestro progreso revisando la galería o visitando el mapa de progreso.",
-				"ctaGallery": "Ver galería",
-				"ctaMap": "Explorar el mapa"
-			},
-			"joinServer": {
-				"title": "Explorar {country}",
-				"description": "Únete al servidor {name} para explorar las increíbles construcciones de esta región.<br></br><br></br>Si necesitas ayuda para navegar por el servidor, no dudes en contactarnos en Discord",
-				"ctaDiscord": "Unirse al servidor de Discord",
-				"moreInformation": "Más información"
-			}
+		"searchCountries": "Buscar países...",
+		"content": {
+			"text": "BuildTheEarth está organizado en múltiples <b>Equipos de Construcción</b>, cada uno responsable de recrear diferentes regiones del mundo. Los Equipos de Construcción a menudo se enfocan en <b>países o regiones específicas</b>, lo que te permite contribuir a áreas que te apasionan.<br></br><br></br>No hay restricciones sobre a cuáles o cuántos Equipos de Construcción puedes unirte, ¡así que siéntete libre de explorar tantos como quieras!<br></br><br></br>Cada Equipo de Construcción tiene su propio servidor donde puedes colaborar con otros constructores, participar en eventos y obtener apoyo. Debido a esto, no hay un \"proceso de aplicación\" único.<br></br>En cambio, simplemente <b>únete al servidor de Discord</b> del Equipo de Construcción que te interese y sigue sus simples instrucciones para comenzar.<br></br><br></br>¡También puedes unirte a nuestro Servidor Central (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) para obtener ayuda y conocer a otros constructores de todo el mundo!"
 		},
-		"build": {
-			"title": "Empezar a construir",
-			"description": "Únete y comienza a participar en la creación de una réplica de la Tierra a escala 1:1 en Minecraft.",
-			"cta": "Encuentra tu equipo",
-			"content": {
-				"text": "BuildTheEarth está organizado en múltiples <b>Equipos de Construcción</b>, cada uno responsable de recrear diferentes regiones del mundo. Los Equipos de Construcción a menudo se enfocan en <b>países o regiones específicas</b>, lo que te permite contribuir a áreas que te apasionan.<br></br><br></br>No hay restricciones sobre a cuáles o cuántos Equipos de Construcción puedes unirte, ¡así que siéntete libre de explorar tantos como quieras!<br></br><br></br>Cada Equipo de Construcción tiene su propio servidor donde puedes colaborar con otros constructores, participar en eventos y obtener apoyo. Debido a esto, no hay un \"proceso de aplicación\" único.<br></br>En cambio, simplemente <b>únete al servidor de Discord</b> del Equipo de Construcción que te interese y sigue sus simples instrucciones para comenzar.<br></br><br></br>¡También puedes unirte a nuestro Servidor Central (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) para obtener ayuda y conocer a otros constructores de todo el mundo!"
-			},
-			"joinServer": {
-				"title": "Construir en {country}",
-				"description": "¡Únete al servidor {name} de Minecraft para ayudar a construir en esta región!<br></br><br></br>¡No olvides unirte a los servidores de Discord con los enlaces de abajo!",
-				"ctaDiscord": "Servidor de Discord de {name}",
-				"moreInformation": "Más información"
-			}
+		"joinServer": {
+			"title": "Construir en {country}",
+			"description": "¡Únete al servidor {name} de Minecraft para ayudar a construir en esta región!<br></br><br></br>¡No olvides unirte a los servidores de Discord con los enlaces de abajo!",
+			"ctaDiscord": "Servidor de Discord de {name}",
+			"ctaHub": "Servidor de Discord Central",
+			"moreInformation": "Más información"
+		},
+		"visitCallout": {
+			"title": "¿Solo quieres explorar?",
+			"description": "Si solo quieres visitar nuestros servidores y ver lo que hemos construido, visita nuestra página para visitantes.",
+			"cta": "Visitar BuildTheEarth"
+		}
+	},
+	"visit": {
+		"seo": {
+			"title": "Visitar BuildTheEarth",
+			"description": "Aprende cómo explorar servidores y visitar construcciones de Minecraft en todo el mundo con BuildTheEarth."
+		},
+		"title": "Visitar BuildTheEarth",
+		"subtitle": "Descubre el increíble progreso realizado por nuestra comunidad global mientras recrean el mundo.",
+		"arrowDown": {
+			"alt": "Desliza hacia abajo para aprender más sobre cómo visitar servidores."
+		},
+		"searchCountries": "Buscar países...",
+		"content": {
+			"text": "Dependiendo del país que quieras visitar, hay múltiples servidores disponibles. Puedes buscar un país en el cuadro inferior.<br></br><br></br>¡También puedes unirte a nuestro Servidor Central (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) en Java Edition para explorar muchas regiones en un solo lugar!<br></br><br></br>De lo contrario, también puedes explorar nuestro progreso revisando la galería o visitando el mapa de progreso.",
+			"ctaGallery": "Ver galería",
+			"ctaMap": "Explorar el mapa"
+		},
+		"joinServer": {
+			"title": "Explorar {country}",
+			"description": "Únete al servidor {name} para explorar las increíbles construcciones de esta región.<br></br><br></br>Si necesitas ayuda para navegar por el servidor, no dudes en contactarnos en Discord",
+			"ctaDiscord": "Unirse al servidor de Discord",
+			"ctaHub": "Servidor de Discord Central",
+			"moreInformation": "Más información"
+		},
+		"buildCallout": {
+			"title": "¿Quieres construir con nosotros?",
+			"description": "Si quieres contribuir y ayudar a recrear el mundo en Minecraft, encuentra tu equipo y comienza a construir.",
+			"cta": "Empezar a construir"
 		}
 	},
 	"outreach": {

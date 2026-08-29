@@ -349,7 +349,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('globalCommunity.description')}</Text>
 								<LinkButton
 									variant="filled"
-									href="/get-started#build"
+									href="/get-started"
 									color="indigo"
 									rightSection={<IconChevronRight size={12} />}
 									mt="md"
@@ -422,7 +422,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('explore.description')}</Text>
 								<LinkButton
-									href="/get-started#explore"
+									href="/visit"
 									variant="filled"
 									color="indigo"
 									rightSection={<IconChevronRight size={12} />}

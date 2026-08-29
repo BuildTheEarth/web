@@ -42,6 +42,7 @@
 		},
 		"header": {
 			"cta": "Get Started",
+			"visit": "Visit",
 			"toggleNavigation": "Toggle navigation links"
 		},
 		"links": {
@@ -210,46 +211,58 @@
 	},
 	"get-started": {
 		"seo": {
-			"title": "Get Started",
-			"description": "Learn how to explore servers, find your team, and begin building with BuildTheEarth."
+			"title": "Start Building",
+			"description": "Learn how to find your team and begin building with BuildTheEarth."
 		},
-		"cards": {
-			"imageAlt": "Get started card image"
-		},
-		"title": "Get Started with Building",
+		"title": "Start Building",
+		"subtitle": "Join us and contribute to the creation of a 1:1 scale replica of Earth in Minecraft.",
 		"arrowDown": {
 			"alt": "Scroll down to learn more about how to get started"
 		},
-		"explore": {
-			"title": "Explore BuildTheEarth",
-			"description": "Discover the incredible progress made by our global community as they recreate the world.",
-			"cta": "Find a Server",
-			"searchCountries": "Search Countries...",
-			"content": {
-				"text": "Depending on the country which you would like to visit, there are multiple servers available. You can search for a country in the box below. <br></br><br></br>Otherwise, you can also explore our progress by checking out the gallery or visiting our map page.",
-				"ctaGallery": "View Gallery",
-				"ctaMap": "Explore Map Page"
-			},
-			"joinServer": {
-				"title": "Explore {country}",
-				"description": "Join the {name} Minecraft server to explore the amazing builds from this region.<br></br><br></br>If you need help navigating the server, dont hesitate to reach out to us on Discord!",
-				"ctaDiscord": "Join Discord Server",
-				"moreInformation": "More Information"
-			}
+		"searchCountries": "Search Countries...",
+		"content": {
+			"text": "BuildTheEarth is organized into multiple <b>Build Teams</b>, each responsible for recreating different regions of the world. Build Teams often focus on specific <b>countries or continents</b>, allowing you to contribute to areas you are passionate about.<br></br><br></br>There are no restrictions on which or how many Build Teams you can join, so feel free to explore how many as you like!<br></br><br></br>Each Build Team has its own server where you can collaborate with other builders, participate in events, and get support. Due to this, there is no single \"application process\".<br></br>Instead, simply <b>join the Discord server</b> of the Build Team you are interested in and follow their simple instructions to get started.<br></br><br></br>You can also join our Hub Server (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) to get help and meet other builders from around the world!"
 		},
-		"build": {
-			"title": "Start Building",
-			"description": "Join us and contribute to the creation of a 1:1 scale replica of Earth in Minecraft.",
-			"cta": "Find your Team",
-			"content": {
-				"text": "BuildTheEarth is organized into multiple <b>Build Teams</b>, each responsible for recreating different regions of the world. Build Teams often focus on specific <b>countries or continents</b>, allowing you to contribute to areas you are passionate about.<br></br><br></br>There are no restrictions on which or how many Build Teams you can join, so feel free to explore how many as you like!<br></br><br></br>Each Build Team has its own server where you can collaborate with other builders, participate in events, and get support. Due to this, there is no single \"application process\".<br></br>Instead, simply <b>join the Discord server</b> of the Build Team you are interested in and follow their simple instructions to get started.<br></br><br></br>You can also join our Hub Server (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) to get help and meet other builders from around the world!"
-			},
-			"joinServer": {
-				"title": "Build in {country}",
-				"description": "Join the {name} Minecraft server to help build in this region!<br></br><br></br>Dont forget to join the Discord Servers with the links below!",
-				"ctaDiscord": "{name} Discord Server",
-				"moreInformation": "More Information"
-			}
+		"joinServer": {
+			"title": "Build in {country}",
+			"description": "Join the {name} Minecraft server to help build in this region!<br></br><br></br>Dont forget to join the Discord Servers with the links below!",
+			"ctaDiscord": "{name} Discord Server",
+			"ctaHub": "Hub Discord",
+			"moreInformation": "More Information"
+		},
+		"visitCallout": {
+			"title": "Just looking to explore?",
+			"description": "If you simply want to visit our servers and see what we've built, head over to our visit page.",
+			"cta": "Visit BuildTheEarth"
+		}
+	},
+	"visit": {
+		"seo": {
+			"title": "Visit BuildTheEarth",
+			"description": "Learn how to explore servers and visit Minecraft builds across the globe with BuildTheEarth."
+		},
+		"title": "Visit BuildTheEarth",
+		"subtitle": "Discover the incredible progress made by our global community as they recreate the world.",
+		"arrowDown": {
+			"alt": "Scroll down to learn more about visiting servers"
+		},
+		"searchCountries": "Search Countries...",
+		"content": {
+			"text": "Depending on the country which you would like to visit, there are multiple servers available. You can search for a country in the box below.<br></br><br></br>You can also join our central Hub Server (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) on Java Edition to explore many regions in one place!<br></br><br></br>Otherwise, you can also explore our progress by checking out the gallery or visiting our map page.",
+			"ctaGallery": "View Gallery",
+			"ctaMap": "Explore Map Page"
+		},
+		"joinServer": {
+			"title": "Explore {country}",
+			"description": "Join the {name} Minecraft server to explore the amazing builds from this region.<br></br><br></br>If you need help navigating the server, dont hesitate to reach out to us on Discord!",
+			"ctaDiscord": "Join Discord Server",
+			"ctaHub": "Hub Discord",
+			"moreInformation": "More Information"
+		},
+		"buildCallout": {
+			"title": "Want to build with us?",
+			"description": "If you want to contribute and help recreate the world in Minecraft, find your team and start building.",
+			"cta": "Start Building"
 		}
 	},
 	"outreach": {

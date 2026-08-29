@@ -15,6 +15,7 @@ import { getLanguageAlternates } from '@/util/seo'
 import {
 	BackgroundImage,
 	Box,
+	Button,
 	Card,
 	Center,
 	Code,
@@ -27,7 +28,7 @@ import {
 	Text,
 	Title,
 } from '@mantine/core'
-import { IconBrandDiscord, IconChevronRight, IconCompass } from '@tabler/icons-react'
+import { IconBrandDiscord, IconChevronRight, IconHammer } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -40,14 +41,12 @@ export const revalidate = 3600 // 60m
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale
-	const t = (await getTranslations({ locale, namespace: 'get-started.seo' })) as (
-		key: 'title' | 'description',
-	) => string
+	const t = (await getTranslations({ locale, namespace: 'visit.seo' })) as (key: 'title' | 'description') => string
 
 	return {
 		title: t('title'),
 		description: t('description'),
-		alternates: { languages: getLanguageAlternates('/get-started') },
+		alternates: { languages: getLanguageAlternates('/visit') },
 	}
 }
 
@@ -56,14 +55,14 @@ export default async function Page({
 	searchParams,
 }: {
 	params: Promise<{ locale: Locale }>
-	searchParams: Promise<{ q?: string; c?: string; qbu?: string; cbu?: string }>
+	searchParams: Promise<{ q?: string; c?: string; qex?: string; cex?: string }>
 }) {
 	const locale = (await params).locale
 	setRequestLocale(locale)
-	const t = await getTranslations('get-started')
+	const t = await getTranslations('visit')
 	const sp = await searchParams
-	const q = sp.q || sp.qbu || ''
-	const c = sp.c || sp.cbu
+	const q = sp.q || sp.qex || ''
+	const c = sp.c || sp.cex
 
 	const teams = await prisma.buildTeam.findMany({
 		select: {
@@ -113,7 +112,7 @@ export default async function Page({
 	return (
 		<Wrapper offsetHeader={false} padded={false}>
 			<BackgroundImage
-				src="/thumbs/get-started/start-building.webp"
+				src="/thumbs/get-started/explore.webp"
 				aria-label={t('title')}
 				w="100%"
 				h="100%"
@@ -149,10 +148,10 @@ export default async function Page({
 						<AppearAnimation component="div" delay={0.4} duration={1}>
 							<Group justify="center" mt="xl">
 								<LinkButton
-									href="#build"
+									href="#visit"
 									size="lg"
 									rightSection={<IconChevronRight size={16} />}
-									data-umami-event="get-started-hero-build-click"
+									data-umami-event="visit-hero-explore-click"
 								>
 									{t('title')}
 								</LinkButton>
@@ -169,7 +168,7 @@ export default async function Page({
 							initial={{ opacity: 0 }}
 							animate={{ opacity: 1 }}
 							transition={{ delay: 0.3, duration: 1 }}
-							href="#build"
+							href="#visit"
 							aria-label={t('arrowDown.alt')}
 						>
 							<LottieAnimation animationData={chevronBounceLottie} loop={true} style={{ height: '54px' }} />
@@ -178,7 +177,7 @@ export default async function Page({
 				</Center>
 			</BackgroundImage>
 
-			<div style={{ width: '100%', position: 'relative' }} id="build">
+			<div style={{ width: '100%', position: 'relative' }} id="visit">
 				<EarthBackground
 					style={{
 						position: 'absolute',
@@ -207,7 +206,7 @@ export default async function Page({
 									b: (chunks: string) => <b>{chunks}</b>,
 									discord: (chunks: string) => (
 										<Anchor
-											href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
+											href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-visit&mtm_group=web"
 											target="_blank"
 										>
 											{chunks}
@@ -216,6 +215,26 @@ export default async function Page({
 									ip: (chunks: string) => <Code>{chunks}</Code>,
 								})}
 							</Text>
+							<Group mt="md">
+								<Button
+									component={Link}
+									rightSection={<IconChevronRight size={12} />}
+									href="/gallery"
+									variant="transparent"
+									data-umami-event="visit-gallery-click"
+								>
+									{t('content.ctaGallery')}
+								</Button>
+								<Button
+									component={Link}
+									rightSection={<IconChevronRight size={12} />}
+									href="/map"
+									variant="transparent"
+									data-umami-event="visit-map-click"
+								>
+									{t('content.ctaMap')}
+								</Button>
+							</Group>
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
 							<QuerySearchInput paramName="q" id="search-country" my="xl" placeholder={t('searchCountries')} />
@@ -232,7 +251,7 @@ export default async function Page({
 									.map((element) => (
 										<Link
 											key={`${element.location}-${element.slug}-group`}
-											href={`/get-started?q=${encodeURIComponent(element.location)}&c=${element.slug}#join`}
+											href={`/visit?q=${encodeURIComponent(element.location)}&c=${element.slug}#join`}
 											style={{ textDecoration: 'none', color: 'inherit' }}
 										>
 											<Group
@@ -277,7 +296,7 @@ export default async function Page({
 								mt="calc(var(--mantine-spacing-xl) * 3)"
 							>
 								{/* Compatibility anchor for old hash links */}
-								<span id="build-join" style={{ position: 'absolute', top: 0 }} />
+								<span id="explore-join" style={{ position: 'absolute', top: 0 }} />
 								<Title order={2}>{t('joinServer.title', { country: selectedTeam?.name })}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '80%', md: '50%' }}>
@@ -297,11 +316,11 @@ export default async function Page({
 										target="_blank"
 										mt="md"
 									>
-										{t('joinServer.ctaDiscord', { name: selectedTeam.name })}
+										{t('joinServer.ctaDiscord')}
 									</LinkButton>
 									<LinkButton
 										rightSection={<IconBrandDiscord size={12} />}
-										href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-getstarted&mtm_group=web"
+										href="https://go.buildtheearth.net/dc?mtm_campaign=web&mtm_kwd=gs&mtm_source=web-visit&mtm_group=web"
 										target="_blank"
 										mt="md"
 										ml="md"
@@ -331,19 +350,19 @@ export default async function Page({
 							>
 								<Group justify="space-between" align="center" wrap="wrap" gap="lg">
 									<div>
-										<Title order={3}>{t('visitCallout.title')}</Title>
+										<Title order={3}>{t('buildCallout.title')}</Title>
 										<Text c="dimmed" mt="xs" maw={600}>
-											{t('visitCallout.description')}
+											{t('buildCallout.description')}
 										</Text>
 									</div>
 									<LinkButton
-										href="/visit"
+										href="/get-started"
 										variant="light"
 										color="indigo"
 										rightSection={<IconChevronRight size={14} />}
-										data-umami-event="get-started-bottom-visit-click"
+										data-umami-event="visit-bottom-build-click"
 									>
-										{t('visitCallout.cta')}
+										{t('buildCallout.cta')}
 									</LinkButton>
 								</Group>
 							</Card>

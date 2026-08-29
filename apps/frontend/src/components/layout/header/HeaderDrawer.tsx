@@ -44,7 +44,17 @@ export function HeaderDrawer() {
 						</Stack>
 					</ScrollArea>
 
-					<Group mx="xl" mb="md" grow style={{}}>
+					<Group mx="xl" mb="md" grow>
+						<Button
+							variant="outline"
+							color="indigo"
+							component={Link}
+							href="/visit"
+							onClick={close}
+							data-umami-event="mobile-header-visit-click"
+						>
+							{t('visit')}
+						</Button>
 						<Button
 							variant="filled"
 							color="indigo"

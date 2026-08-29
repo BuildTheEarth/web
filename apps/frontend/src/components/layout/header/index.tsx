@@ -53,10 +53,20 @@ export async function Header() {
 						</Text>
 					</Group>
 				</Link>
-				<Group gap={5} visibleFrom="sm" className={classes.linksContainer}>
+				<Group gap={5} visibleFrom="md" className={classes.linksContainer}>
 					{items}
 				</Group>
 				<Group>
+					<Button
+						variant="outline"
+						color="white"
+						visibleFrom="xs"
+						component={Link}
+						href="/visit"
+						data-umami-event="header-visit-click"
+					>
+						{t('visit')}
+					</Button>
 					<Button
 						variant="filled"
 						color="indigo"

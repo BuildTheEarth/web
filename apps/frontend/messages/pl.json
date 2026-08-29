@@ -41,8 +41,9 @@
 			"copyright": "© {year} BuildTheEarth"
 		},
 		"header": {
-			"cta": "Zacznij teraz",
-			"toggleNavigation": "Przełącz menu nawigacji"
+			"cta": "Zacznij",
+			"visit": "Zwiedzaj",
+			"toggleNavigation": "Przełącz linki nawigacji"
 		},
 		"links": {
 			"faq": "FAQ",
@@ -210,46 +211,58 @@
 	},
 	"get-started": {
 		"seo": {
-			"title": "Zacznij",
-			"description": "Dowiedz się, jak zwiedzać serwery, znaleźć swój zespół i zacząć budować z BuildTheEarth."
-		},
-		"cards": {
-			"imageAlt": "Obrazek karty startowej"
+			"title": "Zacznij budować",
+			"description": "Dowiedz się, jak znaleźć swój zespół i zacząć budować z BuildTheEarth."
 		},
 		"title": "Zacznij budować",
+		"subtitle": "Dołącz do nas i pomóż w tworzeniu repliki Ziemi w skali 1:1 w Minecrafcie.",
 		"arrowDown": {
 			"alt": "Przewiń w dół, aby dowiedzieć się więcej o tym, jak zacząć"
 		},
-		"explore": {
-			"title": "Odkrywaj BuildTheEarth",
-			"description": "Odkryj niesamowity postęp naszej globalnej społeczności w odtwarzaniu świata.",
-			"cta": "Znajdź serwer",
-			"searchCountries": "Szukaj krajów...",
-			"content": {
-				"text": "W zależności od kraju, który chcesz odwiedzić, dostępnych jest wiele serwerów. Możesz wyszukać kraj w polu poniżej. <br></br><br></br>Możesz też poznać nasz postęp, zaglądając do galerii lub odwiedzając naszą mapę.",
-				"ctaGallery": "Zobacz galerię",
-				"ctaMap": "Przejdź do mapy"
-			},
-			"joinServer": {
-				"title": "Zwiedź {country}",
-				"description": "Dołącz do serwera Minecraft {name}, aby odkrywać niesamowite budowle z tego regionu.<br></br><br></br>Jeśli potrzebujesz pomocy w poruszaniu się po serwerze, śmiało napisz do nas na Discordzie!",
-				"ctaDiscord": "Dołącz do serwera Discord",
-				"moreInformation": "Więcej informacji"
-			}
+		"searchCountries": "Szukaj krajów...",
+		"content": {
+			"text": "BuildTheEarth jest zorganizowane w wiele <b>zespołów budowlanych</b>, z których każdy odpowiada za odtwarzanie innych regionów świata. Zespoły często skupiają się na konkretnych <b>krajach lub kontynentach</b>, dzięki czemu możesz współtworzyć obszary, które są Ci bliskie.<br></br><br></br>Nie ma żadnych ograniczeń co do tego, do których i do ilu zespołów możesz dołączyć, więc śmiało dołączaj do tylu, ilu chcesz!<br></br><br></br>Każdy zespół ma własny serwer, na którym możesz współpracować z innymi budowniczymi, brać udział w wydarzeniach i otrzymywać wsparcie. Z tego powodu nie ma jednego „procesu aplikacyjnego”.<br></br>Zamiast tego po prostu <b>dołącz do serwera Discord</b> zespołu, który Cię interesuje, i postępuj zgodnie z jego prostymi instrukcjami, aby zacząć.<br></br><br></br>Możesz też dołączyć do naszego serwera Hub (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>), aby uzyskać pomoc i poznać innych budowniczych z całego świata!"
 		},
-		"build": {
-			"title": "Zacznij budować",
-			"description": "Dołącz do nas i pomóż w tworzeniu repliki Ziemi w skali 1:1 w Minecrafcie.",
-			"cta": "Znajdź swój zespół",
-			"content": {
-				"text": "BuildTheEarth jest zorganizowane w wiele <b>zespołów budowlanych</b>, z których każdy odpowiada za odtwarzanie innych regionów świata. Zespoły często skupiają się na konkretnych <b>krajach lub kontynentach</b>, dzięki czemu możesz współtworzyć obszary, które są Ci bliskie.<br></br><br></br>Nie ma żadnych ograniczeń co do tego, do których i do ilu zespołów możesz dołączyć, więc śmiało dołączaj do tylu, ilu chcesz!<br></br><br></br>Każdy zespół ma własny serwer, na którym możesz współpracować z innymi budowniczymi, brać udział w wydarzeniach i otrzymywać wsparcie. Z tego powodu nie ma jednego „procesu aplikacyjnego”.<br></br>Zamiast tego po prostu <b>dołącz do serwera Discord</b> zespołu, który Cię interesuje, i postępuj zgodnie z jego prostymi instrukcjami, aby zacząć.<br></br><br></br>Możesz też dołączyć do naszego serwera Hub (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>), aby uzyskać pomoc i poznać innych budowniczych z całego świata!"
-			},
-			"joinServer": {
-				"title": "Buduj w {country}",
-				"description": "Dołącz do serwera Minecraft {name}, aby pomóc budować w tym regionie!<br></br><br></br>Nie zapomnij dołączyć do serwerów Discord przez linki poniżej!",
-				"ctaDiscord": "Serwer Discord {name}",
-				"moreInformation": "Więcej informacji"
-			}
+		"joinServer": {
+			"title": "Buduj w {country}",
+			"description": "Dołącz do serwera Minecraft {name}, aby pomóc budować w tym regionie!<br></br><br></br>Nie zapomnij dołączyć do serwerów Discord przez linki poniżej!",
+			"ctaDiscord": "Serwer Discord {name}",
+			"ctaHub": "Główny serwer Discord",
+			"moreInformation": "Więcej informacji"
+		},
+		"visitCallout": {
+			"title": "Chcesz tylko zwiedzać?",
+			"description": "Jeśli chcesz po prostu odwiedzić nasze serwery i zobaczyć, co zbudowaliśmy, przejdź do strony dla zwiedzających.",
+			"cta": "Odwiedź BuildTheEarth"
+		}
+	},
+	"visit": {
+		"seo": {
+			"title": "Odwiedź BuildTheEarth",
+			"description": "Dowiedz się, jak zwiedzać serwery Minecraft i podziwiać budowle w skali 1:1 z BuildTheEarth."
+		},
+		"title": "Odwiedź BuildTheEarth",
+		"subtitle": "Odkryj niesamowity postęp naszej globalnej społeczności w odtwarzaniu świata.",
+		"arrowDown": {
+			"alt": "Przewiń w dół, aby dowiedzieć się więcej o zwiedzaniu serwerów"
+		},
+		"searchCountries": "Szukaj krajów...",
+		"content": {
+			"text": "W zależności od kraju, który chcesz odwiedzić, dostępnych jest wiele serwerów. Możesz wyszukać kraj w polu poniżej.<br></br><br></br>Możesz też dołączyć do naszego centralnego serwera Hub (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) w edycji Java, aby zwiedzać wiele połączonych regionów w jednym miejscu!<br></br><br></br>Możesz też poznać nasz postęp, zaglądając do galerii lub odwiedzając naszą mapę.",
+			"ctaGallery": "Zobacz galerię",
+			"ctaMap": "Przejdź do mapy"
+		},
+		"joinServer": {
+			"title": "Zwiedź {country}",
+			"description": "Dołącz do serwera Minecraft {name}, aby odkrywać niesamowite budowle z tego regionu.<br></br><br></br>Jeśli potrzebujesz pomocy w poruszaniu się po serwerze, śmiało napisz do nas na Discordzie!",
+			"ctaDiscord": "Dołącz do serwera Discord",
+			"ctaHub": "Główny serwer Discord",
+			"moreInformation": "Więcej informacji"
+		},
+		"buildCallout": {
+			"title": "Chcesz budować z nami?",
+			"description": "Jeśli chcesz pomóc w tworzeniu repliki Ziemi w Minecrafcie, znajdź swój zespół i zacznij budować.",
+			"cta": "Zacznij budować"
 		}
 	},
 	"outreach": {
