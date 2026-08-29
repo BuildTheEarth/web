@@ -4,5 +4,5 @@ export const headerLinks = [
 	{ link: '/map', key: 'map' },
 	{ link: '/faq', key: 'faq' },
 	{ link: '/support-us', key: 'donate' },
-	{ link: 'https://go.buildtheearth/dc', key: 'discord' },
+	{ link: 'https://go.buildtheearth.net/dc', key: 'discord' },
 ]
