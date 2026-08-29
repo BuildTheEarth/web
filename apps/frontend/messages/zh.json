@@ -40,7 +40,8 @@
 			"contact": "聯繫",
 			"status": "狀態",
 			"gallery": "畫廊",
-			"map": "地圖"
+			"map": "地圖",
+			"discord": "Discord"
 		},
 		"cookieBanner": {
 			"title": "Cookie 設定",

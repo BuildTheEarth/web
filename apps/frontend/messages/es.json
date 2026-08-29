@@ -51,7 +51,8 @@
 			"contact": "Contacto",
 			"status": "Estado del servidor",
 			"gallery": "Galería",
-			"map": "Mapa"
+			"map": "Mapa",
+			"discord": "Discord"
 		},
 		"cookieBanner": {
 			"title": "Configuración de cookies",

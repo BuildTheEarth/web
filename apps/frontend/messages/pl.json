@@ -51,7 +51,8 @@
 			"contact": "Kontakt",
 			"status": "Status",
 			"gallery": "Galeria",
-			"map": "Mapa"
+			"map": "Mapa",
+			"discord": "Discord"
 		},
 		"cookieBanner": {
 			"title": "Ustawienia plików cookie",
