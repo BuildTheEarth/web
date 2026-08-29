@@ -30,6 +30,7 @@ import {
 	Title,
 } from '@mantine/core'
 import {
+	IconBrandDiscord,
 	IconBuildingSkyscraper,
 	IconChevronRight,
 	IconCornerRightUp,
@@ -175,16 +176,27 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 								<Title order={2}>{t('whoWeAre.title')}</Title>
 								<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-md)' }} />
 								<Text maw={{ base: '100%', xs: '85%' }}>{t('whoWeAre.description')}</Text>
-								<LinkButton
-									variant="filled"
-									href="/about-us"
-									color="indigo"
-									rightSection={<IconChevronRight size={12} />}
-									mt="md"
-									data-umami-event="whoweare-cta-click"
-								>
-									{t('whoWeAre.cta')}
-								</LinkButton>
+								<Group mt="md">
+									<LinkButton
+										variant="filled"
+										href="/about-us"
+										color="indigo"
+										rightSection={<IconChevronRight size={12} />}
+										data-umami-event="whoweare-cta-click"
+									>
+										{t('whoWeAre.cta')}
+									</LinkButton>
+									<LinkButton
+										variant="subtle"
+										href="https://go.buildtheearth.net/dc"
+										target="_blank"
+										color="indigo"
+										leftSection={<IconBrandDiscord size={16} />}
+										data-umami-event="whoweare-discord-click"
+									>
+										{t('whoWeAre.ctaDiscord')}
+									</LinkButton>
+								</Group>
 							</Box>
 						</GridCol>
 						<GridCol

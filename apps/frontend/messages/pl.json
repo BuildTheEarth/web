@@ -82,8 +82,9 @@
 		},
 		"whoWeAre": {
 			"title": "Kim jesteśmy",
-			"description": "BuildTheEarth to projekt społecznościowy tworzący kompletną replikę każdego budynku na Ziemi w skali 1:1 w grze komputerowej Minecraft – wirtualną kopię całego naszego świata, która ukazuje różnorodność kultur i przestrzeni życiowej na naszej planecie i jest dowodem na to, co możemy osiągnąć, działając wspólnie jako ludzkość. Razem łączymy się, dzielimy wiedzą i uczymy się od budowniczych z całego świata oraz odkrywamy Ziemię jak nigdy dotąd. Dołącz do naszej globalnej społeczności i pomóż ożywić nasz świat!",
-			"cta": "Czytaj więcej"
+			"description": "BuildTheEarth to projekt społecznościowy, który tworzy kompletną replikę w skali 1:1 każdego budynku na Ziemi w grze komputerowej Minecraft – wirtualną kopię całego naszego świata, która ukazuje różnorodność kultur i przestrzeni życiowych na naszej planecie oraz stanowi świadectwo tego, co możemy osiągnąć, gdy współpracujemy jako ludzkość. Razem łączymy się, dzielimy wiedzą i uczymy od budowniczych z całego świata, odkrywając Ziemię jak nigdy dotąd. Dołącz do naszej globalnej społeczności i pomóż ożywić nasz świat!",
+			"cta": "Więcej informacji",
+			"ctaDiscord": "Dołącz do Discorda"
 		},
 		"whatWeHaveDone": {
 			"title": "Co już zrobiliśmy",
