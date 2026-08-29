@@ -55,6 +55,8 @@ const OVERPASS_ENDPOINTS = [
 	process.env.OVERPASS_URL,
 	'https://overpass-api.de/api/interpreter',
 	'https://overpass.kumi.systems/api/interpreter',
+	'https://overpass.openstreetmap.fr/api/interpreter',
+	'https://overpass.osm.ch/api/interpreter',
 	'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
 ].filter((url): url is string => Boolean(url && url.trim().length > 0))
 
@@ -119,14 +121,20 @@ out count;`
 			try {
 				await SyncClaimOsmTask.pace()
 				this.logger.debug(`Attempting Overpass query via ${overpassUrl}`)
+
+				const params = new URLSearchParams()
+				params.append('data', overpassQuery)
+
 				const res = await fetch(overpassUrl, {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
 						'User-Agent': 'BuildTheEarth/1.0 (contact: development@buildtheearth.net)',
+						Referer: 'https://buildtheearth.net',
+						Origin: 'https://buildtheearth.net',
 					},
-					body: `data=${encodeURIComponent(overpassQuery.replace(/\n/g, ''))}`,
-					signal: AbortSignal.timeout(30000),
+					body: params.toString(),
+					signal: AbortSignal.timeout(45000),
 				})
 
 				if (!res.ok) {
@@ -142,7 +150,8 @@ out count;`
 				break
 			} catch (error: any) {
 				lastOverpassError = error
-				this.logger.warn(`Overpass request to ${overpassUrl} failed: ${error.message}`)
+				const detailedError = error?.cause?.message || error?.message || String(error)
+				this.logger.warn(`Overpass request to ${overpassUrl} failed: ${detailedError}`)
 			}
 		}
 
