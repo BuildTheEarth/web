@@ -68,11 +68,21 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const t = await getTranslations('home')
 	const formatter = await getFormatter()
 
-	const statClaims = await prisma.claim.aggregate({
-		_sum: { buildings: true, size: true },
-		where: { active: true, finished: true },
-	})
-	const statUsers = await prisma.user.count({ where: { ssoId: { not: { contains: 'o_' } } } })
+	const [buildingsAgg, finishedAreasAgg, communityMembers] = await prisma.$transaction([
+		prisma.claim.aggregate({
+			_sum: { buildings: true },
+			where: { active: true },
+		}),
+		prisma.claim.aggregate({
+			_sum: { size: true },
+			where: { active: true, finished: true },
+		}),
+		prisma.user.count({ where: { joinedBuildTeams: { some: {} } } }),
+	])
+
+	const statBuildings = buildingsAgg._sum.buildings || 0
+	const statAreaKm2 = (finishedAreasAgg._sum.size || 0) / 1_000_000
+	const statBuilders = communityMembers
 
 	const showcaseImages = await prisma.showcase.findMany({
 		where: { approved: true },
@@ -282,18 +292,18 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							>
 								{[
 									{
-										count: statClaims._sum.buildings,
+										count: statBuildings,
 										title: t('whatWeHaveDone.buildings'),
 										icon: IconBuildingSkyscraper,
 										suffix: ' ',
 									},
 									{
-										count: (statClaims._sum.size || 1) / 1_000_000,
+										count: statAreaKm2,
 										title: t('whatWeHaveDone.area'),
 										icon: IconMap,
 										suffix: 'km² ',
 									},
-									{ count: statUsers, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
+									{ count: statBuilders, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
@@ -322,18 +332,18 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 							>
 								{[
 									{
-										count: statClaims._sum.buildings,
+										count: statBuildings,
 										title: t('whatWeHaveDone.buildings'),
 										icon: IconBuildingSkyscraper,
 										suffix: ' ',
 									},
 									{
-										count: (statClaims._sum.size || 1) / 1_000_000,
+										count: statAreaKm2,
 										title: t('whatWeHaveDone.area'),
 										icon: IconMap,
 										suffix: 'km² ',
 									},
-									{ count: statUsers, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
+									{ count: statBuilders, title: t('whatWeHaveDone.users'), icon: IconUsersGroup, suffix: ' ' },
 								].map((stat) => (
 									<div style={{ flex: 1, padding: 'var(--mantine-spacing-sm)' }} key={stat.title}>
 										<stat.icon size={48} color="white" />
