@@ -87,27 +87,27 @@
 			"ctaDiscord": "Dołącz do Discorda"
 		},
 		"whatWeHaveDone": {
-			"title": "Co już zrobiliśmy",
+			"title": "Nasze osiągnięcia",
 			"buildings": "Budynki",
 			"area": "Powierzchnia",
-			"users": "Użytkownicy"
+			"users": "Budowniczowie"
 		},
 		"globalCommunity": {
 			"title": "Nasza globalna społeczność",
-			"description": "Każdy region lub kraj jest budowany na osobnym serwerze Minecraft, a postępami zarządzają podzespoły BuildTheEarth. Aby zacząć budować, wyszukaj zespół danego regionu i zobacz, jak możesz mu pomóc! Wiele osób zaczyna od zbudowania własnej okolicy, a nawet po prostu własnego domu, a potem budują coraz więcej. Nie bój się, że nie jesteś wystarczająco dobry, by budować. Wszyscy zaczynamy od czegoś małego. Pamiętaj, że jesteśmy tu po to, by pomóc Ci nauczyć się budować bardziej skomplikowane rzeczy.",
-			"cta": "Dołącz już teraz"
+			"description": "Projekt BuildTheEarth tworzą regionalne zespoły z całego świata, zarządzające serwerami dla poszczególnych krajów. Wielu budowniczych zaczyna od odtworzenia własnego domu lub okolicy, przechodząc później do większych obiektów. Doświadczenie nie jest wymagane – nasza społeczność zapewnia narzędzia i pomoc na każdym etapie.",
+			"cta": "Zacznij budować"
 		},
 		"explore": {
 			"title": "Odkrywaj Ziemię",
-			"description": "Cały postęp BuildTheEarth można bezpłatnie oglądać i zwiedzać. Postępy są podzielone na różne serwery w zależności od tego, której części świata dotyczą. Wystarczy znaleźć IP regionu, który chcesz zwiedzić, i się z nim połączyć! Z wieloma serwerami można połączyć się przez nasz centralny hub dostępny pod adresem buildtheearth.net w edycji Java.",
-			"cta": "Znajdź serwer"
+			"description": "Wszystkie serwery BuildTheEarth są otwarte i bezpłatne dla odwiedzających. Odkrywaj ikoniczne zabytki i miasta odtworzone z niezwykłą dokładnością. Połącz się bezpośrednio z serwerem regionalnym lub dołącz do naszego centralnego Huba pod adresem buildtheearth.net w edycji Java.",
+			"cta": "Przeglądaj serwery"
 		},
 		"howToHelp": {
 			"title": "Jak możesz pomóc",
-			"description": "Aby zacząć budować, wyszukaj zespół danego regionu i zobacz, jak możesz mu pomóc! Wszystkie zespoły wymagają przejścia „aplikacji”, która ma nauczyć Cię podstaw budowania w świecie Ziemi. Zwykle polega to na odtworzeniu 1 lub 2 małych budynków na ich serwerze. Zawsze możesz poprosić o pomoc i porady dotyczące budowania na naszym serwerze Discord. Doświadczeni budowniczowie zawsze chętnie pomogą Ci zacząć.",
+			"description": "Rozpoczęcie jest bardzo proste. Znajdź zespół dla regionu, który chcesz budować, i dołącz do jego serwera Discord. Zespoły oferują krótki proces wdrożeniowy, aby nauczyć Cię zasad skali i narzędzi. Doświadczeni budowniczowie na Discordzie zawsze chętnie odpowiedzą na Twoje pytania.",
 			"step1": "Znajdź swój zespół",
-			"step2": "Dołącz do serwera",
-			"step3": "Zbuduj swój pierwszy budynek"
+			"step2": "Dołącz do serwera i Discorda",
+			"step3": "Zbuduj swoją pierwszą strukturę"
 		},
 		"gallery": {
 			"subtitle": "Nasza dotychczasowa podróż",
@@ -115,9 +115,9 @@
 			"cta": "Przeglądaj galerię"
 		},
 		"mediaList": {
-			"title": "Mogłeś widzieć",
+			"title": "Wyróżnieni w mediach",
 			"cta": "Czytaj dalej",
-			"mainCta": "Zobacz wszystko"
+			"mainCta": "Zobacz wszystkie artykuły"
 		}
 	},
 	"notfound": {

@@ -87,37 +87,37 @@
 			"ctaDiscord": "Únete a Discord"
 		},
 		"whatWeHaveDone": {
-			"title": "Que temos feito",
+			"title": "O noso progreso",
 			"buildings": "Construcións",
 			"area": "Área",
-			"users": "Usuarios"
+			"users": "Construtores"
 		},
 		"globalCommunity": {
 			"title": "A nosa comunidade global",
-			"description": "Cada rexión ou país contrúese nun servidor de Minecraft e o progreso está administrado polos sub-equipos de BuildTheEarth. Para comezar a construír, busca o equipo que queiras e mira como podes axudar! Moita xente empeza construíndo o seu propio veciñanza ou só fan a súa casa e despois van a por máis.  Non teñas medo de crer que non es o suficientemente bo para construír. Todos empezamos por algo pequeno. Lembra que sempre estaremos aí para axudarte con cousas máis complexas.",
-			"cta": "Únete a nós agora"
+			"description": "Cada rexión ou país constrúese nun servidor de Minecraft e o progreso é xestionado polos equipos de BuildTheEarth. Para comezar a construír, busca o equipo que queiras e aprende como axudar. Moita xente empeza pola súa propia casa ou barrio e despois amplía. Non fai falta experiencia previa: a nosa comunidade axudarache paso a paso.",
+			"cta": "Comezar a construír"
 		},
 		"explore": {
 			"title": "Explora a Terra",
-			"description": "Visitar e ver todo o proxecto de BuildTheEarth é de balde. O progreso está separado en diferentes servidores dependendo no lugar. Todo o que tes que facer é atopar a IP do servidor e entrar nel! Podes entrar a moitos servidores dende o noso servidor central de IP buildtheearth.net en Java Edition.",
-			"cta": "Find a server"
+			"description": "Visitar e ver todo o proxecto de BuildTheEarth é de balde. Descubre monumentos emblemáticos e cidades recreadas con gran detalle. Podes entrar aos servidores rexionais directamente ou a través do noso servidor central en buildtheearth.net en Java Edition.",
+			"cta": "Explorar servidores"
 		},
 		"howToHelp": {
 			"title": "Como podes axudar",
-			"description": "Para comezar a construír, busca o equipo rexional e mira como podes botarlles unha man! Todos os equipos requiren que \"solicitude\" que ten como obxectivo ensinarche os conceptos básicos da construcción nos servidores. Isto normalmente consta en facer unha ou duas casas no servidor rexional. Sempre podes preguntar por axuda ou consellos no servidor de Discord. Os construtores experimentados sempre están dispostos a axudarte a comezar.",
+			"description": "Para comezar a construír, busca o equipo rexional e únete ao seu Discord. Os equipos contan cun proceso guiado para aprender a usar as ferramentas de escala e construción. Os construtores experimentados de Discord estarán encantados de axudarche.",
 			"step1": "Atopa o teu equipo",
-			"step2": "Únete ao servidor",
+			"step2": "Únete ao servidor e a Discord",
 			"step3": "Fai a túa primeira construción"
 		},
 		"gallery": {
 			"subtitle": "O noso camiño ata o de agora",
 			"alt": "Galería de imaxes de BuildTheEarth",
-			"cta": "Botarlle unha ollada á galería"
+			"cta": "Explora a galería"
 		},
 		"mediaList": {
-			"title": "Podes ter visto",
+			"title": "Destacados nos medios",
 			"cta": "Continúa lendo",
-			"mainCta": "Ver todo"
+			"mainCta": "Ver todos os artigos"
 		}
 	},
 	"notfound": {

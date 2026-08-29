@@ -4,7 +4,7 @@
 		"locale_short": "en",
 		"locale_name": "English",
 		"site_name": "BuildTheEarth",
-		"description": "Building the Earth in Minecraft - Join the world's largest community project to recreate our planet the video-game Minecraft.",
+		"description": "Join the world's largest collaborative project to recreate planet Earth in Minecraft at a 1:1 scale.",
 		"title": {
 			"template": "%s | BuildTheEarth",
 			"default": "Building the Earth in Minecraft 1:1 | BuildTheEarth"
@@ -82,7 +82,7 @@
 		},
 		"whoWeAre": {
 			"title": "Who we are",
-			"description": "BuildTheEarth is a community project creating a complete 1:1 scale replicate of every building on Earth in the computer game Minecraft, a virtual copy of our whole world that showcases the diversity of culture and living space on our planet and stands as a testament for what we can achieve when we work together as humanity. Together we connect, share and learn from builders worldwide, and explore Earth like never before. Join our global community and help bring our world to life!",
+			"description": "BuildTheEarth is a global community project recreating our entire planet in Minecraft at a 1:1 scale. We are constructing a digital twin of the Earth that showcases the diverse cultures, architecture, and landscapes of our world - standing as a testament to what humanity can achieve together. Join and collaborate with thousands of builders worldwide and help bring our world to life block by block.",
 			"cta": "Read more",
 			"ctaDiscord": "Join Discord"
 		},
@@ -90,24 +90,24 @@
 			"title": "What we have done",
 			"buildings": "Buildings",
 			"area": "Area",
-			"users": "Users"
+			"users": "Builders"
 		},
 		"globalCommunity": {
-			"title": "Our global Community",
-			"description": "Each region or country is built on a Minecraft server and the progress is managed by subteams of BuildTheEarth. To start building, search for the region's Team and see how you can help them out! Many people start by building their own neighborhood or even just their own house and then they go on to build more. Don't be scared that you are not good enough to build. We all start with something small. Remember that we are there to help you learn how to build more complicated things.",
-			"cta": "Join us now"
+			"title": "Our Global Community",
+			"description": "BuildTheEarth is powered by dedicated regional Build Teams across the globe, each managing servers for specific countries and areas. Many builders start by recreating their own house, school, or neighborhood before taking on larger landmarks. No prior experience is required - our welcoming community provides tutorials, tools, and mentorship to help you grow from your first building to complex cityscapes.",
+			"cta": "Start Building"
 		},
 		"explore": {
 			"title": "Explore the Earth",
-			"description": "All of BuildTheEarth's progress is free to view and explore for visitors. The progress is separated onto different servers depending on where in the world it is. All you have to do is find the IP of the region you want to explore and connect to it! Many servers can be connected to though our central hub accessible from buildtheearth.net on Java edition.",
-			"cta": "Find a server"
+			"description": "All BuildTheEarth servers are open and free to explore for visitors. Discover iconic landmarks, bustling cities, and rural landscapes recreated in stunning detail. Connect directly to regional team servers, or join our central Hub at buildtheearth.net on Minecraft Java Edition to easily teleport between featured builds and regions.",
+			"cta": "Explore Servers"
 		},
 		"howToHelp": {
 			"title": "How you can help",
-			"description": "To start building, search for the region's team and see how you can help them out! All Teams require you to \"apply\" which is aimed at teaching you the basics of building on the Earth world. This usually consists of recreating 1 or 2 small buildings on their server. You can always ask for help and building advice on our Discord server. Experienced builders are always more than willing to help you get started.",
-			"step1": "Find your Team",
-			"step2": "Join the server",
-			"step3": "Build your first building"
+			"description": "Getting started is simple. Find the Build Team for the region you want to recreate and join their Discord server. Most teams have a quick onboarding process where you build a small trial structure to learn the projection and scaling tools. Experienced builders and staff are always available on Discord to answer questions, provide feedback, and guide you every step of the way.",
+			"step1": "Find Your Team",
+			"step2": "Join the Server & Discord",
+			"step3": "Build Your First Structure"
 		},
 		"gallery": {
 			"subtitle": "Our journey so far",
@@ -115,9 +115,9 @@
 			"cta": "Explore the Gallery"
 		},
 		"mediaList": {
-			"title": "You might have seen",
+			"title": "Featured In The News",
 			"cta": "Continue reading",
-			"mainCta": "View all"
+			"mainCta": "View all articles"
 		}
 	},
 	"notfound": {
@@ -193,8 +193,8 @@
 		},
 		"title": "Frequently Asked Questions",
 		"differentLanguageAlert": {
-			"title": "Translation of Frequently asked Questions",
-			"description": "All questions listed on this page are written and answered in English. If you need help with getting an answer, please message us on Discord."
+			"title": "Translation of Frequently Asked Questions",
+			"description": "All questions listed on this page are written and answered in English. If you need help, feel free to ask our multilingual community on Discord."
 		}
 	},
 	"contact": {
@@ -207,7 +207,7 @@
 		"staffContacts": "Project Management",
 		"appeals": {
 			"title": "Ban Appeals",
-			"description": "If you wish to appeal your ban on our Discord server, please send an E-Mail to <mail></mail>. In order to submit a ban appeal, you must include your Discord name and ID, screenshot of your ban message and your reason for appealing. Illegitimate appeals will be ignored."
+			"description": "If you wish to appeal a ban on our Discord server or Minecraft network, please send an email to <mail></mail>. Please include your Discord username, numeric ID, a screenshot of the ban notice, and your appeal reasoning."
 		}
 	},
 	"get-started": {
@@ -226,7 +226,7 @@
 		},
 		"joinServer": {
 			"title": "Build in {country}",
-			"description": "Join the {name} Minecraft server to help build in this region!<br></br><br></br>Dont forget to join the Discord Servers with the links below!",
+			"description": "Join the {name} Minecraft server to help build in this region!<br></br><br></br>Don't forget to join the Discord server using the link below for building guidance and claims!",
 			"ctaDiscord": "{name} Discord Server",
 			"ctaHub": "Hub Discord",
 			"moreInformation": "More Information"
@@ -255,7 +255,7 @@
 		},
 		"joinServer": {
 			"title": "Explore {country}",
-			"description": "Join the {name} Minecraft server to explore the amazing builds from this region.<br></br><br></br>If you need help navigating the server, dont hesitate to reach out to us on Discord!",
+			"description": "Join the {name} Minecraft server to explore the amazing builds from this region.<br></br><br></br>If you need help navigating the server or finding landmarks, don't hesitate to reach out to us on Discord!",
 			"ctaDiscord": "Join Discord Server",
 			"ctaHub": "Hub Discord",
 			"moreInformation": "More Information"

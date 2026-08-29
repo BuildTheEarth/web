@@ -90,24 +90,24 @@
 			"title": "Qué hemos completado",
 			"buildings": "Edificios",
 			"area": "Área",
-			"users": "Usuarios"
+			"users": "Constructores"
 		},
 		"globalCommunity": {
 			"title": "Nuestra comunidad global",
 			"description": "Cada región o país se construye en un servidor de Minecraft y el progreso es gestionado por los equipos de BuildTheEarth. Para comenzar a construir, busca el equipo de una región y aprende cómo puedes ayudar. Muchas personas empiezan construyendo su propio vecindario o incluso solo su propia casa y luego continúan construyendo más. No tengas miedo de no ser lo suficientemente bueno para construir, todos comenzamos con algo pequeño. Recuerda que estamos aquí para ayudarte a aprender a construir cosas más complicadas.",
-			"cta": "Únete ahora"
+			"cta": "Comenzar a construir"
 		},
 		"explore": {
 			"title": "Explora la Tierra",
 			"description": "Todo el progreso de BuildTheEarth está disponible para visitar y explorar de forma gratuita. El progreso se guarda en diferentes servidores dependiendo de la región o país del mundo. Basta con encontrar la IP de la región que quieres explorar y conectarte a ella. Muchos servidores se pueden conectar a través de nuestro servidor central que está disponible desde buildtheearth.net en Java edition.",
-			"cta": "Encuentra un servidor"
+			"cta": "Explorar servidores"
 		},
 		"howToHelp": {
-			"title": "Como puedes ayudar",
-			"description": "Para empezar a construir, busca el equipo de la región y aprende cómo puedes ayudar. Todos los equipos tienen un \"proceso de aplicación\" lo cual tiene como objetivo enseñarte los conceptos básicos de la construcción en el mundo de BuildTheEarth. Esto generalmente consiste en recrear 1 o 2 edificios pequeños en su servidor. Siempre puedes pedir ayuda y consejos de construcción en nuestro servidor de Discord. Los constructores experimentados estarán más que dispuestos a ayudarte a comenzar.",
+			"title": "Cómo puedes ayudar",
+			"description": "Para empezar a construir, busca el equipo de la región y aprende cómo puedes ayudar. Todos los equipos tienen un proceso de aprendizaje para enseñarte los conceptos básicos de la construcción a escala en BuildTheEarth. Esto generalmente consiste en recrear 1 o 2 edificios pequeños en su servidor. Siempre puedes pedir ayuda y consejos de construcción en nuestro servidor de Discord.",
 			"step1": "Encuentra tu Equipo",
-			"step2": "Únete al servidor",
-			"step3": "Construye tu primer edificio"
+			"step2": "Únete al servidor y a Discord",
+			"step3": "Construye tu primera estructura"
 		},
 		"gallery": {
 			"subtitle": "Nuestro viaje hasta ahora",
@@ -115,9 +115,9 @@
 			"cta": "Explora la galería"
 		},
 		"mediaList": {
-			"title": "Puedes haber visto...",
+			"title": "Destacados en las noticias",
 			"cta": "Seguir leyendo",
-			"mainCta": "Ver todo"
+			"mainCta": "Ver todos los artículos"
 		}
 	},
 	"notfound": {

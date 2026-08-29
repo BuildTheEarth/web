@@ -90,24 +90,24 @@
 			"title": "Ce que nous avons construit",
 			"buildings": "Bâtiments",
 			"area": "Superficie",
-			"users": "Utilisateurs"
+			"users": "Bâtisseurs"
 		},
 		"globalCommunity": {
 			"title": "Notre communauté globale",
-			"description": "Chaque région ou pays est construit sur un serveur Minecraft et l'avancement des constructions est géré par des sous-équipes de BuildTheEarth. Pour commencer à construire, recherche l'équipe de la région et découvre comment tu peux les aider ! Beaucoup de gens commencent par construire leur propre quartier, voire simplement leur propre maison, puis continuent à construire davantage. N'ayez pas peur de ne pas être assez doué pour construire. Nous commençons tous par quelque chose de simple. N'oubliez pas que nous sommes là pour vous aider à apprendre à construire des choses plus complexes.",
-			"cta": "Rejoins-nous maintenant"
+			"description": "Chaque région ou pays est construit sur un serveur Minecraft et l'avancement des constructions est géré par les équipes de BuildTheEarth. Pour commencer à construire, recherche l'équipe de ta région et rejoins le projet. Beaucoup de bâtisseurs commencent par leur propre maison ou leur quartier. Aucune expérience préalable n'est requise : notre communauté est là pour t'accompagner pas à pas.",
+			"cta": "Commencer à bâtir"
 		},
 		"explore": {
 			"title": "Explorer la Terre",
-			"description": "Les visiteurs peuvent consulter et explorer gratuitement l'ensemble des avancées de BuildTheEarth. Ces avancées sont réparties sur différents serveurs en fonction de leur emplacement géographique. Il te suffit de trouver l'adresse IP de la région que tu souhaites explorer et de t'y connecter ! De nombreux serveurs sont accessibles via notre plateforme centrale, disponible sur buildtheearth.net pour l'édition Java.",
-			"cta": "Trouver un serveur"
+			"description": "Les visiteurs peuvent consulter et explorer gratuitement l'ensemble des avancées de BuildTheEarth. Découvre des monuments emblématiques et des paysages fidèlement reproduits. Connecte-toi directement aux serveurs régionaux ou rejoins notre Hub central à buildtheearth.net sur Java Edition.",
+			"cta": "Explorer les serveurs"
 		},
 		"howToHelp": {
-			"title": "Comment peux-tu nous aider",
-			"description": "Pour commencer à construire, cherche l'équipe de ta région et découvre comment tu peux leur donner un coup de main ! Toutes les équipes te demandent de postuler, ce qui a pour but de t'enseigner les bases de la construction dans le monde Minecraft. Cela consiste généralement à recréer un ou deux petits bâtiments sur leur serveur. Tu peux toujours demander de l'aide et des conseils de construction sur notre serveur Discord. Les constructeurs expérimentés sont toujours ravis de t'aider à te lancer.",
-			"step1": "Trouve ton Equipe",
-			"step2": "Rejoins le serveur",
-			"step3": "Construis ton premier bâtiment"
+			"title": "Comment nous aider",
+			"description": "Pour commencer à construire, trouve l'équipe de ta région et rejoins son Discord. Les équipes proposent un apprentissage simple pour te familiariser avec les outils d'échelle et de projection. Des bâtisseurs expérimentés sont toujours disponibles sur Discord pour t'aider et répondre à tes questions.",
+			"step1": "Trouve ton équipe",
+			"step2": "Rejoins le serveur et Discord",
+			"step3": "Construis ta première structure"
 		},
 		"gallery": {
 			"subtitle": "Notre parcours jusqu'à présent",
@@ -115,9 +115,9 @@
 			"cta": "Découvre la galerie"
 		},
 		"mediaList": {
-			"title": "Tu as peut-être remarqué",
+			"title": "Vu dans les médias",
 			"cta": "Lire la suite",
-			"mainCta": "Tout afficher"
+			"mainCta": "Voir tous les articles"
 		}
 	},
 	"notfound": {
