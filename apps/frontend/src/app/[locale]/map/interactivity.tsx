@@ -235,7 +235,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 					)}
 				</Title>
 				<Text size="sm" c="dimmed" mb="md">
-					{claimData.center}
+					{claimData.center?.split(',').reverse().join(', ')}
 				</Text>
 				<Text size="md">
 					{claimData.description || claimData.osmName || 'No description was provided for this claim.'}
