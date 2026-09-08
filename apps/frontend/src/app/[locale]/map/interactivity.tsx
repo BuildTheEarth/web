@@ -5,7 +5,21 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
 import { CustomMapControls } from '@/components/map/CustomMapControls'
 import { Carousel, CarouselSlide } from '@mantine/carousel'
-import { Box, Button, Divider, Drawer, Flex, Group, Image, Stack, Text, ThemeIcon, Title, Tooltip } from '@mantine/core'
+import {
+	Avatar,
+	Box,
+	Button,
+	Divider,
+	Drawer,
+	Flex,
+	Group,
+	Image,
+	Stack,
+	Text,
+	ThemeIcon,
+	Title,
+	Tooltip,
+} from '@mantine/core'
 import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react'
 import { useFormatter } from 'next-intl'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -291,6 +305,40 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 							</Flex>
 							<Flex align="center" gap={'sm'} py="xs">
 								{claimData.owner && <UserDisplay user={claimData.owner} />}
+							</Flex>
+						</Group>
+						<Divider style={{ margin: '0' }} my="xs" />
+						<Group justify="space-between">
+							<Flex align="center" gap="sm" py="xs">
+								<IconUsers size={20} />
+								<Text c="dimmed">Builders</Text>
+							</Flex>
+							<Flex align="center" gap={'sm'} py="xs">
+								{claimData.builders && claimData.builders.length > 0 ? (
+									<>
+										{claimData.builders.slice(0, 3).map((builder) => (
+											<Tooltip key={builder.id} label={builder.username || builder.minecraft}>
+												<Avatar color="initials" name={builder.username!} key={builder.id} size={30}>
+													{(builder.username || builder.id!)[0].toUpperCase()}
+												</Avatar>
+											</Tooltip>
+										))}
+										{claimData.builders.length > 3 && (
+											<Tooltip
+												label={claimData.builders
+													.slice(3)
+													.map((b) => b.username || b.minecraft)
+													.join(', ')}
+											>
+												<Text c="dimmed" fz="sm">
+													+{claimData.builders.length - 3}
+												</Text>
+											</Tooltip>
+										)}
+									</>
+								) : (
+									<Text c="dimmed">No additional builders</Text>
+								)}
 							</Flex>
 						</Group>
 						<Divider style={{ margin: '0' }} my="xs" />
