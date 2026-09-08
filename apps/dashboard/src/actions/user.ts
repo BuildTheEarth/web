@@ -299,7 +299,7 @@ export const adminInvalidateUserSessions = async (prevState: any, ssoId: string)
 export const adminUserBatchAction = async (
 	prevState: any,
 	data:
-		| { step: 'load'; data: string[] }
+		| { step: 'load'; data: (string | number)[] }
 		| { step: 'preview' }
 		| { step: 'createMissing' }
 		| { step: 'finish'; data: { slug: string } }
@@ -319,13 +319,13 @@ export const adminUserBatchAction = async (
 		} else if (data.step === 'load') {
 			console.log('Batch user data loaded:', data.data.length, 'items')
 
-			const rawIds = data.data.map((id) => String(id)).filter((id) => id.length > 0)
+			const rawIds = data.data.map((id) => String(id).trim()).filter((id) => id.length > 0)
 
 			// allow o_ prefix
 			const candidates = Array.from(
 				new Set(
 					rawIds.flatMap((v) => {
-						const variants = [v]
+						const variants = [String(v)]
 						if (v.startsWith('o_')) variants.push(v.replace(/^o_/, ''))
 						else variants.push('o_' + v)
 						return variants
@@ -345,35 +345,60 @@ export const adminUserBatchAction = async (
 				},
 			})
 
-			const store = await prisma.jsonStore.create({
-				data: {
+			const mappedUsers = rawIds.map((id) => {
+				const sid = String(id)
+				const cleanSid = sid.startsWith('o_') ? sid.slice(2) : sid
+				const match = (u: any) => {
+					const cleanUserSso = u.ssoId?.startsWith('o_') ? u.ssoId.slice(2) : u.ssoId
+					const cleanUserDiscord = u.discordId?.startsWith('o_') ? u.discordId.slice(2) : u.discordId
+					return (
+						u.id === sid ||
+						u.ssoId === sid ||
+						u.ssoId === `o_${cleanSid}` ||
+						cleanUserSso === cleanSid ||
+						u.discordId === sid ||
+						u.discordId === cleanSid ||
+						cleanUserDiscord === cleanSid
+					)
+				}
+				const found = users.find(match)
+
+				if (found) {
+					return {
+						id: found.id,
+						ssoId: found.ssoId,
+						username: found.username,
+						discordId: found.discordId,
+						found: true,
+					}
+				} else {
+					return {
+						id: sid,
+						ssoId: '',
+						username: '',
+						discordId: '',
+						found: false,
+					}
+				}
+			})
+
+			const foundCount = mappedUsers.filter((u) => u.found).length
+
+			const store = await prisma.jsonStore.upsert({
+				where: { id: 'batchUserData' },
+				create: {
 					id: 'batchUserData',
 					data: {
-						users: data.data.map((id) => {
-							const sid = String(id)
-							const match = (u: any) => u.ssoId === sid || u.ssoId === 'o_' + sid || u.id === sid || u.discordId === sid
-							const found = users.find(match as any)
-
-							if (found) {
-								return {
-									id: found.id,
-									ssoId: found.ssoId,
-									username: found.username,
-									discordId: found.discordId,
-									found: true,
-								}
-							} else {
-								return {
-									id: id,
-									ssoId: '',
-									username: '',
-									discordId: '',
-									found: false,
-								}
-							}
-						}),
-						total: data.data.length,
-						foundCount: users.length,
+						users: mappedUsers,
+						total: mappedUsers.length,
+						foundCount,
+					},
+				},
+				update: {
+					data: {
+						users: mappedUsers,
+						total: mappedUsers.length,
+						foundCount,
 					},
 				},
 			})
@@ -404,12 +429,23 @@ export const adminUserBatchAction = async (
 			}
 
 			const usersToCreate = batchData.data!.users.filter((u: any) => !u.found && u.id.length >= 17)
+			const uniqueIdsToCreate = Array.from(new Set(usersToCreate.map((u: any) => u.id)))
 
 			const created = await prisma.user.createMany({
-				data: usersToCreate.map((u: any) => ({
-					ssoId: 'o_' + u.id,
-					discordId: u.id,
+				data: uniqueIdsToCreate.map((id) => ({
+					ssoId: id.startsWith('o_') ? id : 'o_' + id,
+					discordId: id.startsWith('o_') ? id.slice(2) : id,
 				})),
+				skipDuplicates: true,
+			})
+
+			const updatedUsers = batchData.data.users.map((u: any) => {
+				if (!u.found && u.id.length >= 17) {
+					const ssoId = u.id.startsWith('o_') ? u.id : 'o_' + u.id
+					const discordId = u.id.startsWith('o_') ? u.id.slice(2) : u.id
+					return { ...u, found: true, ssoId, discordId }
+				}
+				return u
 			})
 
 			await prisma.jsonStore.update({
@@ -417,12 +453,8 @@ export const adminUserBatchAction = async (
 				data: {
 					data: {
 						...batchData.data,
-						users: batchData.data.users.map((u: any) => {
-							if (!u.found && u.id.length >= 17) {
-								return { ...u, found: true, ssoId: 'o_' + u.id }
-							}
-							return u
-						}),
+						users: updatedUsers,
+						foundCount: updatedUsers.filter((u: any) => u.found).length,
 					},
 				},
 			})

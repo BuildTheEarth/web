@@ -22,40 +22,35 @@ export function BatchUploadStepOne() {
 		if (format === 'csv' && !csvColumn) return
 
 		if (format === 'json') {
-			// read raw text first to avoid JS numeric precision loss for large unquoted IDs
+			// read raw text and quote unquoted numbers to avoid JS numeric precision loss for large IDs (e.g. Discord snowflake IDs)
 			const reader = new FileReader()
 			reader.onload = (e) => {
 				const text = e.target?.result as string
-				// If user provided an ID key, try to extract unquoted numeric IDs directly from the raw text
-				if (jsonIdKey) {
-					const unquotedRegex = new RegExp(`"${jsonIdKey}"\\s*:\\s*(\\d{6,})`, 'g')
-					const rawMatches = Array.from(text.matchAll(unquotedRegex))
-					if (rawMatches.length > 0) {
-						for (const m of rawMatches) {
-							out.push(m[1])
-						}
-						console.log('Extracted IDs from raw JSON text (unquoted numbers):', out.length, 'items')
-						finish()
-						return
-					}
-				}
-				// Fallback to safe JSON.parse and extract IDs (works when IDs are quoted or not too large)
 				try {
-					const json = JSON.parse(text)
+					const safeJsonText = text.replace(
+						/("(?:\\.|[^"\\])*")|\b(-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?)\b/g,
+						(match, strVal, numVal) => {
+							if (strVal) return strVal
+							return `"${numVal}"`
+						},
+					)
+					const json = JSON.parse(safeJsonText)
 					const arr = jsonPath ? jsonPath.split('.').reduce((obj, key) => obj?.[key], json) : json
 					if (Array.isArray(arr)) {
 						console.log('Extracted array from JSON:', arr.length, 'items')
 						for (const item of arr) {
 							if (jsonIdKey) {
-								if (jsonIdKey in item) {
-									out.push(String(item[jsonIdKey]))
+								if (typeof item === 'object' && item !== null && jsonIdKey in item) {
+									out.push(String(item[jsonIdKey]).trim())
 								} else {
 									alert(`ID key "${jsonIdKey}" not found in some items. Please check your JSON ID key.`)
 									return
 								}
 							} else {
 								// item itself may be primitive
-								out.push(String(item))
+								if (item !== null && item !== undefined) {
+									out.push(String(item).trim())
+								}
 							}
 						}
 					} else {
