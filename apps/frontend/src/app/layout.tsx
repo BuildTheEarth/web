@@ -1,4 +1,3 @@
-'use server'
 import '@/styles/global.css'
 import '@mantine/carousel/styles.css'
 import '@mantine/charts/styles.layer.css'

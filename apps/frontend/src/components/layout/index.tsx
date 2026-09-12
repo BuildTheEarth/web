@@ -1,5 +1,3 @@
-'use server'
-
 import { Box } from '@mantine/core'
 import Footer from './footer'
 import Header from './header'

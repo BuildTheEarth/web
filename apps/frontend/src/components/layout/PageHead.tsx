@@ -1,5 +1,3 @@
-'use server'
-
 import BackgroundImage from '../core/BackgroundImage'
 
 /**

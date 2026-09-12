@@ -1,5 +1,3 @@
-'use server'
-
 import { Box, Container } from '@mantine/core'
 import PageHead from './PageHead'
 

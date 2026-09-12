@@ -6,13 +6,16 @@ import { useEffect, useState } from 'react'
 const LEGACY_BASE_URL = 'https://beta.buildtheearth.net'
 
 export default function NotFound() {
-	const [targetUrl, setTargetUrl] = useState<string>(LEGACY_BASE_URL)
+	const [targetUrl] = useState<string>(() =>
+		typeof window !== 'undefined'
+			? `${LEGACY_BASE_URL}${window.location.pathname}${window.location.search}${window.location.hash}`
+			: LEGACY_BASE_URL,
+	)
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return
 
 		const fullUrl = `${LEGACY_BASE_URL}${window.location.pathname}${window.location.search}${window.location.hash}`
-		setTargetUrl(fullUrl)
 
 		let active = true
 		const track = () => {

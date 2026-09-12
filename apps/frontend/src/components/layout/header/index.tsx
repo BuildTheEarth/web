@@ -1,5 +1,3 @@
-'use server'
-
 import { Button, Container, Group, Text } from '@mantine/core'
 
 import Link from '@/components/core/Link'

@@ -1,4 +1,3 @@
-'use server'
 import directus from '@/util/directus'
 import { Card, CardSection, Group, Image, Text, Tooltip } from '@mantine/core'
 import { IconCalendar, IconChevronRight } from '@tabler/icons-react'
