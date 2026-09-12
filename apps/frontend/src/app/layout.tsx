@@ -4,20 +4,13 @@ import '@mantine/charts/styles.layer.css'
 import '@mantine/core/styles.layer.css'
 import '@mantine/notifications/styles.layer.css'
 
-import { ColorSchemeScript, MantineProvider } from '@mantine/core'
-
+import { MantineProvider } from '@mantine/core'
 import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck'
-import AppLayout from '@/components/layout'
-import { routing } from '@/i18n/routing'
 import { theme } from '@/util/theme'
 import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
-import { Metadata } from 'next'
-import { Locale, NextIntlClientProvider } from 'next-intl'
-import { getLocale, getTranslations } from 'next-intl/server'
 import { Cairo, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
-import CookieConsent from '@/components/CookieConsent'
 
 const cairoFont = Cairo({ subsets: ['latin'], variable: '--font-cairo' })
 const catamaranFont = Inter({ subsets: ['latin'], variable: '--font-catamaran' })
@@ -29,54 +22,16 @@ const minecraftFont = localFont({
 	variable: '--font-minecraft',
 })
 
-export async function generateStaticParams() {
-	return routing.locales.map((locale) => ({ locale }))
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
-	const { locale } = await params
-	const t = (await getTranslations({ namespace: 'seo', locale })) as any
-
-	return {
-		metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL!),
-		title: { default: t('title.default'), template: t('title.template') },
-		description: t('description'),
-		generator: t('site_name'),
-		applicationName: t('site_name'),
-		referrer: 'origin-when-cross-origin',
-		openGraph: {
-			type: 'website',
-			siteName: t('site_name'),
-			// images: ['/opengraph-image.png'],
-			locale: t('locale_long'),
-			alternateLocale: routing.locales.filter((currentLocale) => currentLocale !== locale),
-		},
-		twitter: {
-			card: 'summary_large_image',
-			// images: ['/opengraph-image.png'],
-		},
-		// assets: ['/favicon.ico', '/opengraph-image.png'],
-		keywords: t.raw('keywords') as string[],
-	}
-}
-
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-	const locale = await getLocale()
-
-	const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html
-			lang={locale}
 			className={`${catamaranFont.variable} ${cairoFont.variable} ${minecraftFont.variable}`}
 			suppressHydrationWarning
 			data-mantine-color-scheme="dark"
 			style={{ overflowX: 'hidden', width: '100vw', colorScheme: 'dark' }}
 			data-scroll-behavior="smooth"
 		>
-			<head>
-				<ColorSchemeScript forceColorScheme="dark" />
-			</head>
+			<head />
 			<body
 				style={{
 					overflowX: 'hidden',
@@ -87,19 +42,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					color: '#c1c2c5',
 				}}
 			>
-				<NextIntlClientProvider>
-					<MantineProvider theme={theme} forceColorScheme="dark">
-						<ModalsProvider>
-							<Notifications limit={3} />
-							{
-								//  Only in development
-								process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />
-							}
-							<AppLayout>{children}</AppLayout>
-							<CookieConsent websiteId={websiteId} />
-						</ModalsProvider>
-					</MantineProvider>
-				</NextIntlClientProvider>
+				<MantineProvider theme={theme} forceColorScheme="dark">
+					<ModalsProvider>
+						<Notifications limit={3} />
+						{
+							// Only in development
+							process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />
+						}
+						{children}
+					</ModalsProvider>
+				</MantineProvider>
 			</body>
 		</html>
 	)

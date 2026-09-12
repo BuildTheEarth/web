@@ -1,30 +1,59 @@
-import '@/styles/global.css'
-import '@mantine/carousel/styles.css'
-import '@mantine/charts/styles.layer.css'
-import '@mantine/core/styles.layer.css'
-import '@mantine/notifications/styles.layer.css'
-
+import AppLayout from '@/components/layout'
 import { routing } from '@/i18n/routing'
 import { Locale, NextIntlClientProvider, hasLocale } from 'next-intl'
-import { setRequestLocale } from 'next-intl/server'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
+import CookieConsent from '@/components/CookieConsent'
+import { Metadata } from 'next'
 
 export function generateStaticParams() {
 	return routing.locales.map((locale) => ({ locale }))
 }
 
-export default async function RootLayout({
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const { locale } = await params
+	const t = (await getTranslations({ namespace: 'seo', locale })) as any
+
+	return {
+		metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://buildtheearth.net'),
+		title: { default: t('title.default'), template: t('title.template') },
+		description: t('description'),
+		generator: t('site_name'),
+		applicationName: t('site_name'),
+		referrer: 'origin-when-cross-origin',
+		openGraph: {
+			type: 'website',
+			siteName: t('site_name'),
+			locale: t('locale_long'),
+			alternateLocale: routing.locales.filter((currentLocale) => currentLocale !== locale),
+		},
+		twitter: {
+			card: 'summary_large_image',
+		},
+		keywords: t.raw('keywords') as string[],
+	}
+}
+
+export default async function LocaleLayout({
 	children,
 	params,
 }: {
 	children: React.ReactNode
-	params: Promise<{ locale: any }>
+	params: Promise<{ locale: Locale }>
 }) {
 	const { locale } = await params
 	if (!hasLocale(routing.locales, locale)) {
 		notFound()
 	}
-	setRequestLocale(locale as Locale)
+	setRequestLocale(locale)
 
-	return <NextIntlClientProvider>{children}</NextIntlClientProvider>
+	const messages = await getMessages()
+	const websiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || ''
+
+	return (
+		<NextIntlClientProvider messages={messages}>
+			<AppLayout>{children}</AppLayout>
+			<CookieConsent websiteId={websiteId} />
+		</NextIntlClientProvider>
+	)
 }

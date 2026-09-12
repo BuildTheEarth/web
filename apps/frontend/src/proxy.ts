@@ -8,5 +8,9 @@ export const config = {
 	// - … if they start with `/api`, `/trpc`, `/_next` or `/_vercel`
 	// - … metadata image routes handled by Next.js (`/opengraph-image`, `/twitter-image`)
 	// - … the ones containing a dot (e.g. `favicon.ico`)
-	matcher: '/((?!api|trpc|_next|_vercel|opengraph-image|twitter-image|.*\\..*).*)',
+	matcher: [
+		'/',
+		'/(es|fr|gl|pl|zh|en)/:path*',
+		'/((?!api|trpc|_next|_vercel|opengraph-image|twitter-image|.*\\..*).*)',
+	],
 }

@@ -1,6 +1,8 @@
 'use client'
 
 import ErrorDisplay from '@/components/core/ErrorDisplay'
+import { NextIntlClientProvider } from 'next-intl'
+import messages from '../../messages/en.json'
 import { useEffect, useState } from 'react'
 
 const LEGACY_BASE_URL = 'https://beta.buildtheearth.net'
@@ -45,11 +47,13 @@ export default function NotFound() {
 	}, [])
 
 	return (
-		<ErrorDisplay
-			title="Redirecting..."
-			message="This page has moved to our legacy platform. Redirecting you to beta.buildtheearth.net..."
-			backButton="Continue to beta.buildtheearth.net"
-			backHref={targetUrl}
-		/>
+		<NextIntlClientProvider locale="en" messages={messages}>
+			<ErrorDisplay
+				title="Redirecting..."
+				message="This page has moved to our legacy platform. Redirecting you to beta.buildtheearth.net..."
+				backButton="Continue to beta.buildtheearth.net"
+				backHref={targetUrl}
+			/>
+		</NextIntlClientProvider>
 	)
 }
