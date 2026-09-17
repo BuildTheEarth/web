@@ -1,4 +1,3 @@
-'use server'
 import { getSession, hasRole } from '@/util/auth'
 
 import ErrorDisplay from './core/ErrorDisplay'

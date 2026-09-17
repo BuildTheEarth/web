@@ -14,21 +14,23 @@ import {
 } from '@tabler/icons-react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { redirect, usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export function UserButton() {
 	const pathname = usePathname()
+	const router = useRouter()
 	const session = useSession()
 	const [isLoggingOut, setIsLoggingOut] = useState(false)
 
-	if (session.status === 'loading') return null
-	if (session.status === 'unauthenticated') {
-		if (pathname !== '/auth/signin') {
-			redirect('/auth/signin')
+	useEffect(() => {
+		if (session.status === 'unauthenticated' && pathname !== '/auth/signin') {
+			router.push('/auth/signin')
 		}
-		return null
-	}
+	}, [session.status, pathname, router])
+
+	if (session.status === 'loading') return null
+	if (session.status === 'unauthenticated') return null
 	if (!session.data || !session.data.user || !session.data.user.username) return null
 
 	const handleSignOut = async () => {

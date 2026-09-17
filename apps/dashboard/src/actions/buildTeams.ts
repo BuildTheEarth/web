@@ -1299,3 +1299,16 @@ function parseApplicationMessage(
 		)
 		.replace('{id}', application.id.toString().split('-')[0])
 }
+
+export const getBuildTeams = async () => {
+	const data = await prisma.buildTeam.findMany({
+		select: {
+			id: true,
+			slug: true,
+			name: true,
+			location: true,
+			allowBuilderClaim: true,
+		},
+	})
+	return data
+}

@@ -19,6 +19,7 @@ export function constructClaimGeoJSONQuery(filters: {
 					center: true,
 					finished: true,
 					active: true,
+					createdAt: true,
 					owner: {
 						select: {
 							id: true,

@@ -17,7 +17,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		})
 	).map((c) => ({ ...c, imgSrc: c.images[0]?.src, images: undefined }))
 	return (
-		<AppLayout hideNavbar customNavbar={<EditorNavbar claims={claims} />} p={0}>
+		<AppLayout hideNavbar customNavbar={<EditorNavbar claims={claims} />} noPadding p={0}>
 			{children}
 		</AppLayout>
 	)

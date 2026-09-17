@@ -2,7 +2,7 @@
 
 import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core'
 import { IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react'
-import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { adminDeleteClaim } from '@/actions/claims'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
@@ -113,7 +113,7 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 												labels: { confirm: 'Delete', cancel: 'Cancel' },
 												onConfirm: () => {
 													adminDeleteClaim({ claimId: claim.id })
-													redirect('/am/claims')
+													router.push('/am/claims')
 												},
 											})
 										}

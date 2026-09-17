@@ -1,37 +1,43 @@
-'use server'
+'use client'
 
-import prisma from '@/util/db'
+import { getBuildTeams } from '@/actions/buildTeams'
 import { Select } from '@mantine/core'
+import { useEffect, useState } from 'react'
 
-export async function BuildTeamSelect(
+export interface BuildTeamOption {
+	id: string
+	slug: string
+	name: string
+	location: string
+	allowBuilderClaim: boolean | null
+}
+
+export function BuildTeamSelect(
 	props: Omit<React.ComponentProps<typeof Select>, 'filter' | 'data'> & {
-		filter?: (buildTeam: {
-			id: string
-			slug: string
-			name: string
-			location: string
-			allowBuilderClaim: boolean | null
-		}) => boolean
+		filter?: (buildTeam: BuildTeamOption) => boolean
 	},
 ) {
-	const data = await prisma.buildTeam.findMany({
-		select: {
-			id: true,
-			slug: true,
-			name: true,
-			location: true,
-			allowBuilderClaim: true,
-		},
-	})
+	const [teams, setTeams] = useState<BuildTeamOption[]>([])
+	const [loading, setLoading] = useState(true)
 
-	return (
-		<Select
-			data={(props.filter ? (data || []).filter(props.filter) : data || []).map((team: any) => ({
-				label: team.name,
-				value: team.id,
-			}))}
-			disabled={!data}
-			{...{ ...props, filter: undefined }}
-		/>
-	)
+	useEffect(() => {
+		getBuildTeams()
+			.then((data) => {
+				setTeams(data || [])
+				setLoading(false)
+			})
+			.catch(() => {
+				setLoading(false)
+			})
+	}, [])
+
+	const filteredTeams = props.filter ? teams.filter(props.filter) : teams
+	const data = filteredTeams.map((team) => ({
+		label: team.name,
+		value: team.id,
+	}))
+
+	const { filter, ...selectProps } = props
+
+	return <Select data={data} disabled={props.disabled || loading} {...selectProps} />
 }

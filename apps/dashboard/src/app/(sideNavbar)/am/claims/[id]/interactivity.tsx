@@ -24,10 +24,11 @@ import type { BuildTeam, Claim } from '@repo/db'
 import { IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } }) {
+	const router = useRouter()
 	const session = useSession()
 	const clipboard = useClipboard({ timeout: 500 })
 
@@ -104,7 +105,7 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 							labels: { confirm: 'Delete', cancel: 'Cancel' },
 							onConfirm: () => {
 								adminDeleteClaim({ claimId: claim.id })
-								redirect('/am/claims')
+								router.push('/am/claims')
 							},
 						})
 					}

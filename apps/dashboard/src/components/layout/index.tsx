@@ -13,6 +13,7 @@ export interface LayoutProps {
 	children: React.ReactNode
 	hideNavbar?: boolean
 	customNavbar?: React.ReactNode
+	noPadding?: boolean
 }
 
 /**
@@ -22,6 +23,7 @@ export default function AppLayout({
 	children,
 	hideNavbar,
 	customNavbar,
+	noPadding,
 	...props
 }: LayoutProps & Omit<AppShellProps, 'navbar'>) {
 	const [opened, { toggle, close }] = useDisclosure(false)
@@ -33,6 +35,8 @@ export default function AppLayout({
 		close()
 	}, [pathname, close])
 
+	const isNoPadding = noPadding || props.p === 0
+
 	return (
 		<AppShell
 			header={{
@@ -43,7 +47,7 @@ export default function AppLayout({
 				breakpoint: 'sm',
 				collapsed: { mobile: !opened, desktop: false },
 			}}
-			p="md"
+			p={isNoPadding ? 0 : 'md'}
 			{...props}
 		>
 			<AppShellHeader
@@ -71,7 +75,15 @@ export default function AppLayout({
 
 			{customNavbar}
 
-			<AppShellMain style={{ position: 'relative', paddingBottom: 'calc(var(--mantine-spacing-xl) * 1.5)' }}>
+			<AppShellMain
+				style={{
+					position: 'relative',
+					paddingBottom: isNoPadding ? 0 : 'calc(var(--mantine-spacing-xl) * 1.5)',
+					height: isNoPadding ? '100vh' : undefined,
+					display: isNoPadding ? 'flex' : undefined,
+					flexDirection: isNoPadding ? 'column' : undefined,
+				}}
+			>
 				{children}
 			</AppShellMain>
 		</AppShell>

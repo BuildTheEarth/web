@@ -1,10 +1,10 @@
 'use server'
 
-import { getSession } from '@/util/auth'
 import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.geojson/query'
+import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
-import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { Prisma } from '@repo/db'
+import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { revalidatePath } from 'next/cache'
 
 export const getPersonalClaims = async () => {
@@ -37,52 +37,14 @@ export const getAllowedBuildTeams = async () => {
 	return buildTeams.map((bt: { id: string }) => bt.id)
 }
 
-export const saveClaim = async (data: { id: string; area?: string[] }): Promise<void> => {
-	const session = await getSession()
-	if (!session) throw new Error('Unauthorized')
-	const userId = session.user.id
-
-	try {
-		const claim = await prisma.claim.findFirst({
-			where: { id: data.id, owner: { ssoId: userId } },
-		})
-
-		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
-		}
-
-		const claim2 = await prisma.claim.update({
-			where: { id: data.id, owner: { ssoId: userId } },
-			data: {
-				area: data.area,
-			},
-		})
-
-		await redisEventQueue.addJob(RedisEvent.SYNC_CLAIM_OSM, {
-			claimId: data.id,
-		})
-
-		revalidatePath('/editor')
-		return
-	} catch (e) {
-		let msg = 'Unknown error'
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code
-			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to edit this claim.'
-			}
-		}
-		return Promise.reject(msg)
-	}
-}
-export const saveAdvancedClaim = async (data: {
+export const saveClaim = async (data: {
 	id: string
+	area?: string[]
 	name?: string
 	description?: string
 	city?: string
 	finished?: boolean
 	active?: boolean
-	builders?: { id: string }[]
 }): Promise<void> => {
 	const session = await getSession()
 	if (!session) throw new Error('Unauthorized')
@@ -94,35 +56,47 @@ export const saveAdvancedClaim = async (data: {
 		})
 
 		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
+			throw new Error('Claim not found or you do not have permission to edit this claim.')
 		}
 
-		const claim2 = await prisma.claim.update({
+		await prisma.claim.update({
 			where: { id: data.id, owner: { ssoId: userId } },
 			data: {
-				name: data.name,
-				description: data.description,
-				city: data.city,
-				finished: data.finished,
-				active: data.active,
-				builders: data.builders ? { set: data.builders.map((b) => ({ id: b.id })) } : undefined,
+				area: data.area,
+				name: data.name !== undefined ? data.name : undefined,
+				description: data.description !== undefined ? data.description : undefined,
+				city: data.city !== undefined ? data.city : undefined,
+				finished: data.finished !== undefined ? data.finished : undefined,
+				active: data.active !== undefined ? data.active : undefined,
 			},
 		})
 
-		revalidatePath(`/editor/${data.id}`)
-		return
+		if (data.area) {
+			await redisEventQueue.addJob(RedisEvent.SYNC_CLAIM_OSM, {
+				claimId: data.id,
+			})
+		}
+
+		revalidatePath('/claims/editor')
 	} catch (e) {
 		let msg = 'Unknown error'
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code
-			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to edit this claim.'
-			}
+		if (e instanceof Error) {
+			msg = e.message
+		} else if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			msg = e.code === 'P2025' ? 'Claim not found or you do not have permission to edit this claim.' : e.code
 		}
-		return Promise.reject(msg)
+		throw new Error(msg)
 	}
 }
-export const createClaim = async (data: { id: string; area: string[]; buildTeamId: string }): Promise<void> => {
+
+export const createClaim = async (data: {
+	id: string
+	area: string[]
+	buildTeamId: string
+	name?: string
+	description?: string
+	city?: string
+}): Promise<void> => {
 	const session = await getSession()
 	if (!session) throw new Error('Unauthorized')
 	const userId = session.user.id
@@ -133,12 +107,15 @@ export const createClaim = async (data: { id: string; area: string[]; buildTeamI
 		})
 
 		if (!buildTeam) {
-			return Promise.reject('You do not have permission to create a claim in this BuildTeam.')
+			throw new Error('You do not have permission to create a claim in this BuildTeam.')
 		}
 
-		const claim = await prisma.claim.create({
+		await prisma.claim.create({
 			data: {
 				id: data.id,
+				name: data.name || '',
+				description: data.description || undefined,
+				city: data.city || undefined,
 				owner: { connect: { ssoId: userId } },
 				buildTeam: { connect: { id: data.buildTeamId } },
 				area: data.area,
@@ -151,23 +128,18 @@ export const createClaim = async (data: { id: string; area: string[]; buildTeamI
 			claimId: data.id,
 		})
 
-		revalidatePath('/editor')
-		return
+		revalidatePath('/claims/editor')
 	} catch (e) {
 		let msg = 'Unknown error'
 		if (e instanceof Error) {
 			msg = e.message
-			throw e
+		} else if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			msg = e.code === 'P2025' ? 'Claim not found or you do not have permission to edit this claim.' : e.code
 		}
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code
-			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to edit this claim.'
-			}
-		}
-		return Promise.reject(msg)
+		throw new Error(msg)
 	}
 }
+
 export const deleteClaim = async (data: { id: string }): Promise<void> => {
 	const session = await getSession()
 	if (!session) throw new Error('Unauthorized')
@@ -179,159 +151,21 @@ export const deleteClaim = async (data: { id: string }): Promise<void> => {
 		})
 
 		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to delete this claim.')
+			throw new Error('Claim not found or you do not have permission to delete this claim.')
 		}
 
 		await prisma.claim.delete({
 			where: { id: data.id, owner: { ssoId: userId } },
 		})
 
-		revalidatePath('/editor')
-		return
+		revalidatePath('/claims/editor')
 	} catch (e) {
 		let msg = 'Unknown error'
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code
-			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to delete this claim.'
-			}
+		if (e instanceof Error) {
+			msg = e.message
+		} else if (e instanceof Prisma.PrismaClientKnownRequestError) {
+			msg = e.code === 'P2025' ? 'Claim not found or you do not have permission to delete this claim.' : e.code
 		}
-		return Promise.reject(msg)
+		throw new Error(msg)
 	}
 }
-export const transferClaim = async (data: { id: string; newUserId: string }): Promise<void> => {
-	const session = await getSession()
-	if (!session) throw new Error('Unauthorized')
-	const userId = session.user.id
-
-	try {
-		const claim = await prisma.claim.findFirst({
-			where: { id: data.id, owner: { ssoId: userId } },
-			include: { builders: { select: { id: true } } },
-		})
-
-		if (!claim) {
-			return Promise.reject('Claim not found or you do not have permission to edit this claim.')
-		}
-
-		await prisma.claim.update({
-			where: { id: data.id, owner: { ssoId: userId } },
-			data: {
-				owner: { connect: { id: data.newUserId } },
-				builders: {
-					set: [
-						...(claim.builders.filter((b: { id: string }) => b.id != data.newUserId) || []),
-						...(claim.ownerId ? [{ id: claim.ownerId }] : []),
-					],
-				},
-			},
-		})
-
-		revalidatePath('/editor')
-		return
-	} catch (e) {
-		let msg = 'Unknown error'
-		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-			msg = e.code
-			if (e.code === 'P2025') {
-				msg = 'Claim not found or you do not have permission to delete this claim.'
-			}
-		}
-		return Promise.reject(msg)
-	}
-}
-
-// export const createClaim = async (data: {
-// 	id: string;
-// 	userId: string;
-// 	area: string[];
-// 	finished?: boolean;
-// 	active?: boolean;
-// 	description?: string;
-// 	buildTeamId: string;
-// 	city?: string;
-// 	name?: string;
-// }): Promise<void> => {
-// 	try {
-// 		if (!data.area || data.area.length == 0) {
-// 			return Promise.reject('Claim area is required.');
-// 		}
-
-// 		const buildteam = await prisma.buildTeam.findUnique({
-// 			where:  { id: data.buildTeamId },
-// 			select: {
-// 				allowBuilderClaim: true,
-// 				id: true,
-// 				members: { where: { ssoId: data.userId } },
-// 			},
-// 		});
-
-// 		if (!buildteam) {
-// 			return Promise.reject('BuildTeam not found.');
-// 		}
-
-// 		if (buildteam.allowBuilderClaim === false) {
-// 			return Promise.reject('BuildTeam does not allow claims.');
-// 		}
-
-// 		if (buildteam.members.length <= 0) {
-// 			return Promise.reject('You are not a member of this BuildTeam.');
-// 		}
-
-// 		let center = turf.center(toPolygon(data.area)).geometry.coordinates.join(', ');
-
-// 		const buildingCount = data.area && (await updateClaimBuildingCount({ area: data.area }));
-
-// 		if (typeof buildingCount !== 'number') {
-// 			if (buildingCount && typeof (buildingCount as { message?: string }).message === 'string') {
-// 				return Promise.reject((buildingCount as { message: string }).message);
-// 			}
-// 			return Promise.reject('Failed to get building count for claim.');
-// 		}
-
-// 		let osmDetails = await updateClaimOSMDetails({ id: data.id, name: data.name, center });
-
-// 		if (!osmDetails) {
-// 			return Promise.reject('Failed to update OSM details for claim.');
-// 		}
-
-// 		const claim = await prisma.claim.create({
-// 			data: {
-// 				buildTeam: { connect: { id: data.buildTeamId } },
-// 				id: data.id,
-// 				owner: { connect: { ssoId: data.userId } },
-// 				area: data.area,
-// 				center: center,
-// 				finished: data.finished,
-// 				active: data.active,
-// 				description: data.description,
-// 				buildings: buildingCount,
-// 				...osmDetails,
-// 			},
-// 			include: {
-// 				buildTeam: {
-// 					select: {
-// 						webhook: true,
-// 					},
-// 				},
-// 			},
-// 		});
-
-// 		await sendBtWebhook(claim.buildTeam.webhook, WebhookType.CLAIM_CREATE, {
-// 			...claim,
-// 			buildTeam: undefined,
-// 		});
-
-// 		revalidatePath('/editor');
-// 		return;
-// 	} catch (e) {
-// 		let msg = 'Unknown error';
-// 		if (e instanceof Prisma.PrismaClientKnownRequestError) {
-// 			msg = e.code;
-// 			if (e.code === 'P2025') {
-// 				msg = 'Claim not found or you do not have permission to edit this claim.';
-// 			}
-// 		}
-// 		return Promise.reject(msg);
-// 	}
-// };

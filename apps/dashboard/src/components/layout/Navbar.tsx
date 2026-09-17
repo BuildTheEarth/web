@@ -54,7 +54,7 @@ const data: (NavbarLink | NavbarLinkGroup)[] = [
 	{
 		label: 'Claims',
 		icon: IconPolygon,
-		links: [{ label: 'Claim Editor', link: '/editor' }],
+		links: [{ label: 'Claim Editor', link: '/claims/editor' }],
 	},
 	{
 		label: 'BuildTeams',

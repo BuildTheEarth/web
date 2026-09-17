@@ -169,7 +169,7 @@ export default async function Page() {
 		{ label: 'Register your account', completed: true },
 		{ label: 'Connect your Discord account', completed: isDiscordLinked, link: '/me/connections' },
 		{ label: 'Join a Build Team', completed: hasJoinedTeam, link: 'https://buildtheearth.net/teams' },
-		{ label: 'Create your first claim', completed: hasCreatedClaim, link: '/editor' },
+		{ label: 'Create your first claim', completed: hasCreatedClaim, link: '/claims/editor' },
 	]
 
 	const showOnboarding = onboardingSteps.some((step) => !step.completed)
@@ -177,7 +177,7 @@ export default async function Page() {
 	const actionLinks = [
 		{
 			title: 'Claim Editor',
-			url: '/editor',
+			url: '/claims/editor',
 			color: 'teal',
 			icon: IconPolygon,
 		},
@@ -397,7 +397,7 @@ export default async function Page() {
 									Start building the Earth by selecting an area in the claim editor and submitting your request.
 								</Text>
 								<LinkButton
-									href="/editor"
+									href="/claims/editor"
 									variant="light"
 									color="teal"
 									leftSection={<IconPolygon size={16} />}
