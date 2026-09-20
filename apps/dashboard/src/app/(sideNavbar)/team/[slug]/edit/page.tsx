@@ -8,6 +8,7 @@ import prisma from '@/util/db'
 import {
 	Button,
 	ColorInput,
+	Divider,
 	Group,
 	SimpleGrid,
 	Stack,
@@ -74,16 +75,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				<form action={userEditTeamInfo}>
 					<input type="hidden" name="id" value={team.id} />
 					<input type="hidden" name="about" value={team.about} /> {/* Changed in RTE dynamically */}
-					<Group justify="space-between" w="100%" mt="xl" mb="md">
-						<Title order={1}>Edit Build Team Information</Title>
-						<Group gap="xs">
-							<Tooltip label="Save Changes on main Settings">
-								<Button color="green" rightSection={<IconDeviceFloppy size={14} />} type="submit">
-									Save
-								</Button>
-							</Tooltip>
-						</Group>
-					</Group>
+					<Title order={1} mt="xl" mb="md">
+						Edit Build Team Information
+					</Title>
 					<Stack gap="md">
 						<TextCard title={`Branding`} icon={IconCamera} style={{ width: '100%', height: '100%', flexGrow: 1 }}>
 							<SimpleGrid cols={2} spacing="xl" w="100%">
@@ -316,13 +310,21 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 							</SimpleGrid>
 						</TextCard>
 					</Stack>
+					<Tooltip label="Save Changes on main Settings">
+						<Button color="green" type="submit" mt="md" fullWidth>
+							Save
+						</Button>
+					</Tooltip>
 				</form>
 				<form action={ownerGenerateTokenAction}>
-					<Button variant="light" color="red" type="submit" w="100%" mt="md">
-						Generate new API Key
-					</Button>
+					<Tooltip label="Generate a new API Key">
+						<Button variant="light" color="red" type="submit" w="100%" mt="md">
+							Generate new API Key
+						</Button>
+					</Tooltip>
 				</form>
 
+				<Divider my="xl" />
 				<SocialLinksEditor teamId={team.id} userId={user.id} socials={team.socials} />
 			</ContentWrapper>
 		</Protection>

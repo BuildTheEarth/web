@@ -247,8 +247,6 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 		throw Error('User does not have permission to edit this information')
 	}
 
-	console.log(formData.keys())
-
 	const name = formData.get('name') as string
 	const color = formData.get('color') as string
 	const icon = formData.get('icon') as string
@@ -294,6 +292,7 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 
 	revalidateWebsitePaths(['/teams', `/teams/${updatedTeam.slug}`])
 	revalidatePath(`/team/${updatedTeam.slug}`)
+	revalidatePath(`/apply/${updatedTeam.slug}`)
 	redirect(`/team/${updatedTeam.slug}/edit?saved=1`)
 }
 
