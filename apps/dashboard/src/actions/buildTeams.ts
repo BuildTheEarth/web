@@ -150,11 +150,11 @@ export const adminTransferTeam = async (
 				where: { id },
 			})
 			console.log('team', team)
-			revalidateWebsitePaths(['/teams', `/teams/${team.slug}`])
+			await revalidateWebsitePaths(['/teams', `/teams/${team.slug}`])
 			return team
 		case 'reload-data':
 			revalidatePath('/am/teams')
-			revalidateWebsitePaths(['/', '/gallery', '/map'])
+			await revalidateWebsitePaths(['/', '/gallery', '/map'])
 			return {}
 		default:
 			return {}
@@ -224,7 +224,7 @@ export const adminChangeTeamOwner = async (
 		})
 	}
 
-	revalidateWebsitePaths(['/teams', `/teams/${team.slug}`])
+	await revalidateWebsitePaths(['/teams', `/teams/${team.slug}`])
 	revalidatePath('/am/teams')
 	revalidatePath(`/am/teams/${team.id}`)
 	revalidatePath(`/am/users/${oldOwner?.id}`)
@@ -290,10 +290,10 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 		throw Error('Could not update Build Team')
 	}
 
-	revalidateWebsitePaths(['/teams', `/teams/${updatedTeam.slug}`])
+	await revalidateWebsitePaths(['/teams', `/teams/${updatedTeam.slug}`])
 	revalidatePath(`/team/${updatedTeam.slug}`)
+	revalidatePath(`/team/${updatedTeam.slug}/edit`)
 	revalidatePath(`/apply/${updatedTeam.slug}`)
-	redirect(`/team/${updatedTeam.slug}/edit?saved=1`)
 }
 
 export const userEditTeamSocials = async (
@@ -395,9 +395,10 @@ export const userEditTeamSocials = async (
 		}
 	})
 
-	revalidateWebsitePaths(['/teams', `/teams/${team.slug}`])
+	await revalidateWebsitePaths(['/teams', `/teams/${team.slug}`])
 	revalidatePath(`/team/${team.slug}`)
-	redirect(`/team/${team.slug}/edit?saved=1`)
+	revalidatePath(`/team/${team.slug}/edit`)
+	return { status: 'success' }
 }
 
 export const ownerGenerateToken = async ({ id }: { id: string }): Promise<void> => {

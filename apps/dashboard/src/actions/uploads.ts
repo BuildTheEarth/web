@@ -37,7 +37,7 @@ export const adminDeleteUpload = async (id: string) => {
 	})
 
 	revalidatePath('/am/uploads/check')
-	revalidateWebsitePath('/gallery')
+	await revalidateWebsitePath('/gallery')
 }
 
 export const adminApproveShowcase = async (id: string) => {

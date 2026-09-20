@@ -20,7 +20,7 @@ export const adminAddFaqQuestion = async (data: { question: string; answer: stri
 	})
 
 	revalidatePath('/am/faq')
-	revalidateWebsitePath('/faq')
+	await revalidateWebsitePath('/faq')
 	return faq
 }
 
@@ -41,7 +41,7 @@ export const adminEditFaqQuestion = async (data: { question: string; answer: str
 	})
 
 	revalidatePath('/am/faq')
-	revalidateWebsitePath('/faq')
+	await revalidateWebsitePath('/faq')
 	return faq
 }
 
@@ -58,6 +58,6 @@ export const adminDeleteFaqQuestion = async (id: any) => {
 	})
 
 	revalidatePath('/am/faq')
-	revalidateWebsitePath('/faq')
+	await revalidateWebsitePath('/faq')
 	return faq
 }

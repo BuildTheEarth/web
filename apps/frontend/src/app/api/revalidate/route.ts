@@ -1,3 +1,4 @@
+import { routing } from '@/i18n/routing'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
@@ -40,6 +41,9 @@ export async function POST(req: NextRequest) {
 
 	for (const path of paths) {
 		revalidatePath(path)
+		for (const locale of routing.locales) {
+			revalidatePath(`/${locale}${path}`)
+		}
 	}
 
 	for (const tag of tags) {

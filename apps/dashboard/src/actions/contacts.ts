@@ -15,7 +15,7 @@ export const adminAddContact = async (data: { name: string; role: string; email:
 	})
 
 	revalidatePath('/am/contacts')
-	revalidateWebsitePath('/contact')
+	await revalidateWebsitePath('/contact')
 	return contact
 }
 
@@ -44,7 +44,7 @@ export const adminEditContact = async (data: {
 	})
 
 	revalidatePath('/am/contacts')
-	revalidateWebsitePath('/contact')
+	await revalidateWebsitePath('/contact')
 	return contact
 }
 
@@ -61,6 +61,6 @@ export const adminDeleteContact = async (id: any) => {
 	})
 
 	revalidatePath('/am/contacts')
-	revalidateWebsitePath('/contact')
+	await revalidateWebsitePath('/contact')
 	return contact
 }
