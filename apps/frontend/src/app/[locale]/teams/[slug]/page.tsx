@@ -62,8 +62,6 @@ export async function generateStaticParams() {
 	const teams = await prisma.buildTeam.findMany({ select: { slug: true } })
 	return teams
 }
-export const dynamicParams = false
-export const dynamic = 'force-static'
 export const revalidate = 3600 // 60 minutes
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale; slug: string }> }) {
