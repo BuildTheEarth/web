@@ -141,6 +141,7 @@
 			"overview": "簡介",
 			"details": "詳情",
 			"ip": "Minecraft IP",
+			"discord": "Discord 邀請",
 			"version": "Minecraft 版本",
 			"location": "{count, plural, =1 {個地點} other {個地點}}",
 			"moreLocations": "{list}, +{count}",

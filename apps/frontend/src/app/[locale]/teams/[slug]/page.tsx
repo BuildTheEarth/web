@@ -7,6 +7,7 @@ import { getCountryNames } from '@/util/countries'
 import prisma from '@/util/db'
 import { getLanguageAlternates } from '@/util/seo'
 import {
+	ActionIcon,
 	Avatar,
 	Badge,
 	Box,
@@ -23,11 +24,20 @@ import {
 	Text,
 	Title,
 } from '@mantine/core'
-import { IconAddressBook, IconBrandMinecraft, IconChevronRight, IconMap, IconUsers } from '@tabler/icons-react'
+import {
+	IconAddressBook,
+	IconBrandDiscord,
+	IconBrandDiscordFilled,
+	IconBrandMinecraft,
+	IconChevronRight,
+	IconMap,
+	IconUsers,
+} from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 import JoinServerGuide from './interactivity'
+import { CustomSocialIcon } from '@/components/data/CustomSocialIcon'
 
 export async function generateMetadata({
 	params,
@@ -78,12 +88,14 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 			backgroundImage: true,
 			icon: true,
 			ip: true,
+			invite: true,
 			version: true,
 			location: true,
 			slug: true,
 			color: true,
 			_count: { select: { members: true, claims: true } },
 			showcases: { take: 2, include: { image: { select: { name: true, src: true } } } },
+			socials: { select: { icon: true, url: true, name: true, id: true } },
 		},
 	})
 	if (!buildTeam)
@@ -135,15 +147,34 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						></Avatar>
 						<h1>{buildTeam.name}</h1>
 					</Group>
-					{/* TODO: replace URL */}
-					<LinkButton
-						href={`https://beta.buildtheearth.net/teams/${buildTeam.slug}/apply`}
-						w={{ base: '100%', md: 'auto' }}
-						maw="none"
-						mb={{ base: 'xl', md: 0 }}
-					>
-						{t('apply')}
-					</LinkButton>
+					<Group>
+						{[...buildTeam.socials, { name: 'discord', id: 'discord', icon: 'discord', url: buildTeam.invite }]
+							.sort((a, b) => a.name.localeCompare(b.name))
+							.map((social) => (
+								<ActionIcon
+									key={social.id}
+									component={Link}
+									href={social.url}
+									target="_blank"
+									rel="noopener noreferrer"
+									size="lg"
+									variant="subtle"
+									color={buildTeam.color}
+									radius="sm"
+								>
+									<CustomSocialIcon icon={social.icon} style={{ width: '70%', height: '70%' }} />
+								</ActionIcon>
+							))}
+						{/* TODO: replace URL */}
+						<LinkButton
+							href={`https://beta.buildtheearth.net/teams/${buildTeam.slug}/apply`}
+							w={{ base: '100%', md: 'auto' }}
+							maw="none"
+							mb={{ base: 'xl', md: 0 }}
+						>
+							{t('apply')}
+						</LinkButton>
+					</Group>
 				</Flex>
 			</Group>
 			<Container
@@ -189,6 +220,26 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										href="#join-server"
 									>
 										<Text c="indigo">{buildTeam.ip} </Text>
+										<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
+									</Flex>
+								</Group>
+								<Divider style={{ margin: '0' }} my="xs" />
+								<Group justify="space-between">
+									<Flex align="center" gap="sm" py="xs">
+										<IconBrandDiscord size={20} />
+										<Text c="dimmed">{t('discord')}</Text>
+									</Flex>
+									<Flex
+										align="center"
+										gap={1}
+										py="xs"
+										style={{ cursor: 'pointer', textDecoration: 'none' }}
+										component={Link}
+										href={buildTeam.invite}
+										target="_blank"
+										rel="noopener noreferrer"
+									>
+										<Text c="indigo">.gg/{buildTeam.invite.split('/')[3]} </Text>
 										<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
 									</Flex>
 								</Group>

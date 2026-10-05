@@ -152,6 +152,7 @@
 			"overview": "Vista xeral",
 			"details": "Detalles",
 			"ip": "IP de Minecraft",
+			"discord": "Convite de Discord",
 			"version": "Versión de Minecraft",
 			"location": "{count, plural, =1 {Localización} other {Localizacións}}",
 			"moreLocations": "{list}, +{count}",
