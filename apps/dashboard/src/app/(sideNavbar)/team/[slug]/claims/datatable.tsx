@@ -18,6 +18,7 @@ import {
 	IconBlendMode,
 	IconCirclesRelation,
 	IconDots,
+	IconEdit,
 	IconExternalLink,
 	IconEye,
 	IconId,
@@ -30,10 +31,11 @@ import { adminDeleteClaim } from '@/actions/claims'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
 import { useClipboard } from '@mantine/hooks'
-import { closeAllModals, openConfirmModal } from '@mantine/modals'
+import { closeAllModals, modals, openConfirmModal } from '@mantine/modals'
 import type { Claim } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
 import Link from 'next/link'
+import { EditClaimModal } from './[id]/interactivity'
 
 export default function ClaimsDatatable({
 	claims,
@@ -118,6 +120,22 @@ export default function ClaimsDatatable({
 									</ActionIcon>
 								</MenuTarget>
 								<MenuDropdown>
+									<MenuItem
+										leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
+										aria-label="Edit Claim"
+										disabled={!permissions?.includes('team.claims.edit') && !permissions?.includes('team.claim.list')}
+										onClick={() =>
+											modals.open({
+												id: 'edit-claim',
+												title: 'Edit Claim',
+												centered: true,
+												size: 'lg',
+												children: <EditClaimModal {...claim} buildTeamSlug={buildTeamSlug} />,
+											})
+										}
+									>
+										Edit Claim
+									</MenuItem>
 									{claim.externalId && (
 										<MenuItem
 											leftSection={<IconCirclesRelation style={{ width: rem(14), height: rem(14) }} />}

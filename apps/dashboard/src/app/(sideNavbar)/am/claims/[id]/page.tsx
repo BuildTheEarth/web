@@ -18,13 +18,14 @@ import ContentWrapper from '@/components/core/ContentWrapper'
 import { TextCard } from '@/components/core/card/TextCard'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
+import { getSession, hasRole } from '@/util/auth'
 import { getCountryNames } from '@/util/countries'
 import { toHumanDateTime } from '@/util/date'
 import prisma from '@/util/db'
 import { IconAlertCircle, IconCheck, IconClockExclamation, IconExternalLink } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import LinkButton from '@/components/core/LinkButton'
-import { EditMenu } from './interactivity'
+import { EditClaimButton, EditMenu } from './interactivity'
 import { Map } from './map'
 
 export const metadata: Metadata = {
@@ -33,6 +34,7 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
 	const id = (await params).id
+	const session = await getSession()
 
 	const claim = await prisma.claim.findUnique({
 		where: { id },
@@ -61,6 +63,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 						>
 							Open on Map
 						</LinkButton>
+						<EditClaimButton claim={claim} disabled={!hasRole(session, 'edit-claims')} />
 						<EditMenu claim={claim as any} />
 					</Group>
 				</Group>

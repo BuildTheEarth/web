@@ -34,6 +34,7 @@ import type { ApplicationStatus } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
 import moment from 'moment'
 import Link from 'next/link'
+import LinkButton from '@/components/core/LinkButton'
 
 export default function ApplicationsDatatable({
 	applications,
@@ -96,7 +97,22 @@ export default function ApplicationsDatatable({
 				{
 					accessor: 'reviewedAt',
 					title: 'Reviewed',
-					render: ({ reviewedAt }) => (reviewedAt ? toHumanDate(reviewedAt) : '-/-'),
+					render: ({ reviewedAt, id }) =>
+						reviewedAt ? (
+							toHumanDate(reviewedAt)
+						) : (
+							<LinkButton
+								size="xs"
+								variant="light"
+								color="cyan"
+								aria-label="Review"
+								disabled={!permissions?.includes('team.application.review')}
+								href={`/team/${activeBuildTeam?.slug}/applications/${id}`}
+								rel="noopener"
+							>
+								Review
+							</LinkButton>
+						),
 				},
 				{
 					accessor: '',

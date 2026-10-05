@@ -13,12 +13,13 @@ import {
 	Tooltip,
 } from '@mantine/core'
 
+import { getUserPermissions } from '@/actions/getUser'
 import { Protection } from '@/components/Protection'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import LinkButton from '@/components/core/LinkButton'
 import { TextCard } from '@/components/core/card/TextCard'
 import { UserDisplay } from '@/components/data/User'
-import { getSession } from '@/util/auth'
+import { getSession, hasRole } from '@/util/auth'
 import { getCountryNames } from '@/util/countries'
 import { toHumanDate } from '@/util/date'
 import prisma from '@/util/db'
@@ -32,7 +33,7 @@ import {
 } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { EditMenu } from './interactivity'
+import { EditClaimButton, EditMenu } from './interactivity'
 import { Map } from './map'
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
@@ -47,6 +48,19 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 	const id = (await params).id
 	const slug = (await params).slug
 	const session = await getSession()
+	const userPermissions = await getUserPermissions(session?.user.id)
+
+	const activePermissions = userPermissions
+		.filter((p) => p.buildTeam?.slug == slug || p.buildTeam == null)
+		.map((p) => p.permission.id)
+
+	if (hasRole(session, 'edit-claims') || hasRole(session, 'review-claims') || hasRole(session, 'get-claims')) {
+		if (!activePermissions.includes('team.claims.edit')) {
+			activePermissions.push('team.claims.edit')
+		}
+	}
+
+	const canEdit = activePermissions.includes('team.claims.edit') || activePermissions.includes('team.claim.list')
 
 	const claim = await prisma.claim.findUnique({
 		where: { id, buildTeam: { slug } },
@@ -75,7 +89,8 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 						>
 							Open on Map
 						</LinkButton>
-						<EditMenu claim={claim as any} buildTeamSlug={slug} userId={session?.user.id!} />
+						<EditClaimButton claim={claim} buildTeamSlug={slug} disabled={!canEdit} />
+						<EditMenu claim={claim as any} buildTeamSlug={slug} userId={session?.user.id!} disabled={!canEdit} />
 					</Group>
 				</Group>
 				<Grid>

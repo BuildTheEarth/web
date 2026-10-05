@@ -1,31 +1,68 @@
 'use client'
 
-import { adminChangeTeam, adminDeleteClaim } from '@/actions/claims'
+import { adminChangeTeam, adminDeleteClaim, adminEditClaim } from '@/actions/claims'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
-import { useFormAction } from '@/hooks/useFormAction'
+import { useFormAction, useFormActions } from '@/hooks/useFormAction'
 import { hasRole } from '@/util/auth'
 import {
 	ActionIcon,
 	Button,
+	Group,
 	Menu,
 	MenuDropdown,
 	MenuItem,
 	MenuLabel,
 	MenuTarget,
+	NumberInput,
 	Paper,
 	rem,
+	SimpleGrid,
+	Switch,
 	Text,
+	Textarea,
+	TextInput,
 	Title,
 } from '@mantine/core'
+import { useForm } from '@mantine/form'
 import { useClipboard } from '@mantine/hooks'
 import { modals, openConfirmModal } from '@mantine/modals'
 import type { BuildTeam, Claim } from '@repo/db'
-import { IconDots, IconId, IconTransfer, IconTrash } from '@tabler/icons-react'
+import {
+	IconDeviceFloppy,
+	IconDots,
+	IconEdit,
+	IconExternalLink,
+	IconId,
+	IconTransfer,
+	IconTrash,
+} from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+
+export function EditClaimButton({ claim, disabled }: { claim: Claim; disabled?: boolean }) {
+	return (
+		<Button
+			color="yellow"
+			variant="light"
+			disabled={disabled}
+			leftSection={<IconEdit size={14} />}
+			onClick={() =>
+				modals.open({
+					id: 'edit-claim',
+					title: 'Edit Claim',
+					centered: true,
+					size: 'lg',
+					children: <EditClaimModal {...claim} />,
+				})
+			}
+		>
+			Edit Claim
+		</Button>
+	)
+}
 
 export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } }) {
 	const router = useRouter()
@@ -47,6 +84,21 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 			</MenuTarget>
 			<MenuDropdown>
 				<MenuItem
+					leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
+					aria-label="Edit Claim"
+					onClick={() =>
+						modals.open({
+							id: 'edit-claim',
+							title: 'Edit Claim',
+							centered: true,
+							size: 'lg',
+							children: <EditClaimModal {...claim} />,
+						})
+					}
+				>
+					Edit Claim
+				</MenuItem>
+				<MenuItem
 					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 					aria-label="Copy ID"
 					onClick={() => clipboard.copy(claim.id)}
@@ -54,9 +106,8 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 					Copy ID
 				</MenuItem>
 				<MenuItem
-					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy ID"
-					onClick={() => clipboard.copy(claim.id)}
+					leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+					aria-label="Open in OSM Nominatim"
 					component={Link}
 					disabled={!claim.center}
 					target="_blank"
@@ -68,7 +119,7 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 							: '#'
 					}
 				>
-					Copy ID
+					Open in OSM Nominatim
 				</MenuItem>
 				<MenuItem
 					leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
@@ -114,6 +165,122 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
+	)
+}
+
+export function EditClaimModal(
+	props: {
+		isAdd?: boolean
+	} & Partial<Claim> & { id: string },
+) {
+	const router = useRouter()
+	const form = useForm({
+		initialValues: {
+			id: props.id,
+			name: props.name || '',
+			city: props.city || '',
+			description: props.description || '',
+			size: props.size || 0,
+			buildings: props.buildings ?? 1,
+			osmName: props.osmName || '',
+			externalId: props.externalId || '',
+			active: props.active ?? false,
+			finished: props.finished ?? false,
+		},
+	})
+	const [[editClaimAction, deleteClaimAction], isPending] = useFormActions([adminEditClaim, adminDeleteClaim])
+
+	const handleSubmit = (values: typeof form.values) => {
+		editClaimAction(values)
+		modals.closeAll()
+	}
+
+	return (
+		<form onSubmit={form.onSubmit(handleSubmit)}>
+			<TextInput
+				mt="md"
+				placeholder="Claim Name"
+				label="Name"
+				description="Name of the claim"
+				{...form.getInputProps('name')}
+			/>
+			<SimpleGrid cols={{ base: 1, sm: 2 }} mt="md">
+				<TextInput
+					placeholder="City"
+					label="City"
+					description="City location of the claim"
+					{...form.getInputProps('city')}
+				/>
+				<TextInput
+					placeholder="Berlin, Germany"
+					label="OSM Name / Country"
+					description="Country or OSM location name"
+					{...form.getInputProps('osmName')}
+				/>
+			</SimpleGrid>
+			<Textarea
+				mt="md"
+				placeholder="Claim description..."
+				label="Description"
+				description="Description of the claim"
+				autosize
+				minRows={3}
+				{...form.getInputProps('description')}
+			/>
+			<SimpleGrid cols={{ base: 1, sm: 2 }} mt="md">
+				<NumberInput
+					label="Size (m²)"
+					description="Size of the claim in square meters"
+					min={0}
+					thousandSeparator=","
+					{...form.getInputProps('size')}
+				/>
+				<NumberInput
+					label="Buildings"
+					description="Number of buildings in the claim"
+					min={0}
+					thousandSeparator=","
+					{...form.getInputProps('buildings')}
+				/>
+			</SimpleGrid>
+			<TextInput
+				mt="md"
+				placeholder="External ID (optional)"
+				label="External ID"
+				description="External identifier for this claim"
+				{...form.getInputProps('externalId')}
+			/>
+			<SimpleGrid cols={{ base: 1, sm: 2 }} mt="lg">
+				<Switch
+					label="Active"
+					description="Visible on the map"
+					{...form.getInputProps('active', { type: 'checkbox' })}
+				/>
+				<Switch
+					label="Finished"
+					description="Mark as completed"
+					{...form.getInputProps('finished', { type: 'checkbox' })}
+				/>
+			</SimpleGrid>
+			<Group mt="xl" justify="space-between">
+				<Button type="submit" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
+					Save Changes
+				</Button>
+				<Button
+					variant="outline"
+					onClick={() => {
+						deleteClaimAction(props.id)
+						modals.closeAll()
+						router.push('/am/claims')
+					}}
+					leftSection={<IconTrash size={14} />}
+					color="red"
+					loading={isPending}
+				>
+					Delete Claim
+				</Button>
+			</Group>
+		</form>
 	)
 }
 

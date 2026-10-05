@@ -1237,6 +1237,57 @@ export const saveBuildTeamApplicationQuestions = async ({ buildTeamSlug, questio
 	return
 }
 
+export const editClaim = async (data: {
+	id: string
+	buildTeamSlug: string
+	name?: string
+	city?: string | null
+	description?: string | null
+	externalId?: string | null
+	active?: boolean
+	finished?: boolean
+}) => {
+	const session = await getSession()
+	if (!session) throw Error('Unauthorized')
+	const userId = session.user.id
+	if (!data.buildTeamSlug) {
+		throw Error('Missing build team context')
+	}
+
+	const hasPermission =
+		(await checkBuildTeamPermission(userId, {
+			slug: data.buildTeamSlug,
+			permission: 'team.claims.edit',
+		})) ||
+		(await checkBuildTeamPermission(userId, {
+			slug: data.buildTeamSlug,
+			permission: 'team.claim.list',
+		}))
+
+	if (!hasPermission) {
+		throw Error('You do not have permission to edit claims in this Build Team')
+	}
+
+	const claim = await prisma.claim.update({
+		where: {
+			id: data.id,
+			buildTeam: { slug: data.buildTeamSlug },
+		},
+		data: {
+			name: data.name ?? undefined,
+			city: data.city || null,
+			description: data.description || null,
+			externalId: data.externalId || null,
+			active: data.active !== undefined ? Boolean(data.active) : undefined,
+			finished: data.finished !== undefined ? Boolean(data.finished) : undefined,
+		},
+	})
+
+	revalidatePath(`/team/${data.buildTeamSlug}/claims`)
+	revalidatePath(`/team/${data.buildTeamSlug}/claims/${claim.id}`)
+	return claim
+}
+
 export const deleteClaim = async ({ removeId, buildTeamSlug }: { removeId: string; buildTeamSlug: string }) => {
 	const session = await getSession()
 	if (!session) throw Error('Unauthorized')
@@ -1245,10 +1296,15 @@ export const deleteClaim = async ({ removeId, buildTeamSlug }: { removeId: strin
 		throw Error('Missing build team context')
 	}
 
-	const hasPermission = await checkBuildTeamPermission(userId, {
-		slug: buildTeamSlug,
-		permission: 'team.claim.list',
-	})
+	const hasPermission =
+		(await checkBuildTeamPermission(userId, {
+			slug: buildTeamSlug,
+			permission: 'team.claims.edit',
+		})) ||
+		(await checkBuildTeamPermission(userId, {
+			slug: buildTeamSlug,
+			permission: 'team.claim.list',
+		}))
 
 	if (!hasPermission) {
 		throw Error('You do not have permission to delete claims from this Build Team')
@@ -1259,7 +1315,7 @@ export const deleteClaim = async ({ removeId, buildTeamSlug }: { removeId: strin
 	})
 
 	revalidatePath(`/team/${buildTeamSlug}/claims`)
-	redirect(`/team/${buildTeamSlug}/claims`)
+	return claim
 }
 
 /**
