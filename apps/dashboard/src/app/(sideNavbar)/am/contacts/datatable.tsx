@@ -41,7 +41,7 @@ export default function ContactsDatatable({ contacts, canEdit }: { contacts: Con
 								size="sm"
 								variant="subtle"
 								color="cyan"
-								aria-label="View Question on Website"
+								aria-label="Open on Website"
 								component={Link}
 								href={`https://buildtheearth.net/contact#:~:text=${encodeURIComponent(contact.name)}`}
 								target="_blank"

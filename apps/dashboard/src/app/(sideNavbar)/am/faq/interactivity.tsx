@@ -26,7 +26,7 @@ export function AddFaqQuestionButton({ disabled }: { disabled?: boolean }) {
 				})
 			}
 		>
-			Add New
+			Add Question
 		</Button>
 	)
 }
@@ -92,7 +92,7 @@ function EditFaqQuestionModal(
 			</InputWrapper>
 			{!props.isAdd ? (
 				<Group mt="md">
-					<Button type="submit" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
+					<Button type="submit" color="green" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
 						Save Changes
 					</Button>
 					<Button
@@ -109,7 +109,7 @@ function EditFaqQuestionModal(
 					</Button>
 				</Group>
 			) : (
-				<Button type="submit" mt="md" leftSection={<IconPlus size={14} />} loading={isPending}>
+				<Button type="submit" color="green" mt="md" leftSection={<IconPlus size={14} />} loading={isPending}>
 					Add Question
 				</Button>
 			)}

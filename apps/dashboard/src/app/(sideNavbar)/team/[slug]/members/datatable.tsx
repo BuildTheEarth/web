@@ -22,6 +22,7 @@ import {
 	Tooltip,
 } from '@mantine/core'
 import {
+	IconBrandDiscord,
 	IconCheck,
 	IconCrown,
 	IconDots,
@@ -34,6 +35,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { removeMember, removeMembers, setMemberPermissions } from '@/actions/buildTeams'
+import { ACTION_COLORS } from '@/util/actions'
 import { toHumanDate } from '@/util/date'
 import { useClipboard } from '@mantine/hooks'
 import { closeAllModals, openModal } from '@mantine/modals'
@@ -165,16 +167,19 @@ export default function MembersDatatable({
 								</MenuTarget>
 								<MenuDropdown>
 									{isAdmin && (
-										<MenuItem
-											leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-											aria-label="Open Details"
-											color="cyan"
-											component={Link}
-											href={`/am/users/${user.ssoId}`}
-											target="_blank"
-										>
-											Open Details
-										</MenuItem>
+										<>
+											<MenuItem
+												leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+												aria-label="Open Details"
+												color={ACTION_COLORS.view}
+												component={Link}
+												href={`/am/users/${user.ssoId}`}
+												target="_blank"
+											>
+												Open Details
+											</MenuItem>
+											<MenuDivider />
+										</>
 									)}
 									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
@@ -185,16 +190,26 @@ export default function MembersDatatable({
 									</MenuItem>
 									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-										aria-label="Copy Discord ID"
+										aria-label="Copy SSO ID"
 										onClick={() => clipboard.copy(user.ssoId)}
 									>
-										Copy Discord ID
+										Copy SSO ID
 									</MenuItem>
+									{user.discordId && (
+										<MenuItem
+											leftSection={<IconBrandDiscord style={{ width: rem(14), height: rem(14) }} />}
+											aria-label="Copy Discord ID"
+											onClick={() => clipboard.copy(user.discordId || '')}
+										>
+											Copy Discord ID
+										</MenuItem>
+									)}
 									<MenuDivider />
 									<MenuLabel>Danger Zone</MenuLabel>
 									<MenuItem
 										leftSection={<IconFingerprint style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Change Permissions"
+										color="red"
 										disabled={!(permissions?.includes('permission.remove') && permissions?.includes('permission.add'))}
 										onClick={() => {
 											let newPermissions = user.permissions.map((p) => p.permission.id)
@@ -245,7 +260,7 @@ export default function MembersDatatable({
 															onChange={(event) => (notifyUser = event.currentTarget.checked)}
 														/>
 														<Group justify="end" mt="lg">
-															<Button color="red" onClick={() => changeUserPermissions()}>
+															<Button color="green" onClick={() => changeUserPermissions()}>
 																Update
 															</Button>
 															<Button variant="default" onClick={() => closeAllModals()}>

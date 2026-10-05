@@ -5,11 +5,13 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
 import { useFormAction, useFormActions } from '@/hooks/useFormAction'
 import { hasRole } from '@/util/auth'
+import { ACTION_COLORS } from '@/util/actions'
 import {
 	ActionIcon,
 	Button,
 	Group,
 	Menu,
+	MenuDivider,
 	MenuDropdown,
 	MenuItem,
 	MenuLabel,
@@ -29,6 +31,7 @@ import { useClipboard } from '@mantine/hooks'
 import { modals, openConfirmModal } from '@mantine/modals'
 import type { BuildTeam, Claim } from '@repo/db'
 import {
+	IconCirclesRelation,
 	IconDeviceFloppy,
 	IconDots,
 	IconEdit,
@@ -84,29 +87,35 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 			</MenuTarget>
 			<MenuDropdown>
 				<MenuItem
-					leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Edit Claim"
-					onClick={() =>
-						modals.open({
-							id: 'edit-claim',
-							title: 'Edit Claim',
-							centered: true,
-							size: 'lg',
-							children: <EditClaimModal {...claim} />,
-						})
-					}
-				>
-					Edit Claim
-				</MenuItem>
-				<MenuItem
 					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 					aria-label="Copy ID"
 					onClick={() => clipboard.copy(claim.id)}
 				>
 					Copy ID
 				</MenuItem>
+				{claim.externalId && (
+					<MenuItem
+						leftSection={<IconCirclesRelation style={{ width: rem(14), height: rem(14) }} />}
+						aria-label="Copy External ID"
+						onClick={() => clipboard.copy(claim.externalId)}
+					>
+						Copy External ID
+					</MenuItem>
+				)}
+				<MenuDivider />
 				<MenuItem
 					leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+					color={ACTION_COLORS.view}
+					aria-label="Open on Website"
+					component={Link}
+					target="_blank"
+					href={`https://buildtheearth.net/map?claim=${claim.id}`}
+				>
+					Open on Website
+				</MenuItem>
+				<MenuItem
+					leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+					color={ACTION_COLORS.view}
 					aria-label="Open in OSM Nominatim"
 					component={Link}
 					disabled={!claim.center}
@@ -121,9 +130,26 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 				>
 					Open in OSM Nominatim
 				</MenuItem>
+				<MenuDivider />
+				<MenuItem
+					leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
+					color="yellow"
+					aria-label="Edit Claim"
+					onClick={() =>
+						modals.open({
+							id: 'edit-claim',
+							title: 'Edit Claim',
+							centered: true,
+							size: 'lg',
+							children: <EditClaimModal {...claim} />,
+						})
+					}
+				>
+					Edit Claim
+				</MenuItem>
 				<MenuItem
 					leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Transfer Claim to other Build Team"
+					aria-label="Change Build Team"
 					rel="noopener"
 					onClick={() => {
 						modals.open({
@@ -137,6 +163,7 @@ export function EditMenu({ claim }: { claim: Claim & { buildTeam: BuildTeam } })
 				>
 					Change Build Team
 				</MenuItem>
+				<MenuDivider />
 				<MenuLabel>Danger Zone</MenuLabel>
 				<MenuItem
 					leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
@@ -263,7 +290,7 @@ export function EditClaimModal(
 				/>
 			</SimpleGrid>
 			<Group mt="xl" justify="space-between">
-				<Button type="submit" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
+				<Button type="submit" color="green" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
 					Save Changes
 				</Button>
 				<Button

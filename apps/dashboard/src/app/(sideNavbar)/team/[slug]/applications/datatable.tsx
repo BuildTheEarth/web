@@ -26,6 +26,7 @@ import { removeMember } from '@/actions/buildTeams'
 import { ApplicationStatusBadge } from '@/components/data/ApplicationStatusBadge'
 import { UserDisplay } from '@/components/data/User'
 import { useActiveBuildTeam } from '@/hooks/useBuildTeamData'
+import { ACTION_COLORS } from '@/util/actions'
 import { toHumanDate } from '@/util/date'
 import { useClipboard } from '@mantine/hooks'
 import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals'
@@ -142,7 +143,7 @@ export default function ApplicationsDatatable({
 									<MenuItem
 										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Open Details"
-										color="cyan"
+										color={ACTION_COLORS.view}
 										component={Link}
 										disabled={!permissions?.includes('team.application.review')}
 										href={`/team/${activeBuildTeam?.slug}/applications/${application.id}`}
@@ -150,6 +151,7 @@ export default function ApplicationsDatatable({
 									>
 										Open Details
 									</MenuItem>
+									<MenuDivider />
 									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Copy ID"
@@ -157,6 +159,15 @@ export default function ApplicationsDatatable({
 									>
 										Copy ID
 									</MenuItem>
+									{application.user?.ssoId && (
+										<MenuItem
+											leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+											aria-label="Copy SSO ID"
+											onClick={() => clipboard.copy(application.user.ssoId)}
+										>
+											Copy SSO ID
+										</MenuItem>
+									)}
 								</MenuDropdown>
 							</Menu>
 						</Group>

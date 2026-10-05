@@ -126,7 +126,9 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 									onChange={(event) => (notifyUser = event.currentTarget.checked)}
 								/>
 								<Group justify="end" mt="lg">
-									<Button onClick={addUser}>Add</Button>
+									<Button color="green" onClick={addUser}>
+										Add
+									</Button>
 									<Button variant="default" onClick={() => closeAllModals()}>
 										Cancel
 									</Button>
@@ -158,6 +160,7 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 				<MenuDropdown>
 					<MenuItem
 						leftSection={<IconUsersPlus size={14} stroke={1.5} />}
+						color="green"
 						onClick={() => {
 							let addMessage: string | undefined = undefined
 							let notifyUsers = true
@@ -212,7 +215,9 @@ export function AddMemberButton({ disabled, userId, slug }: { disabled?: boolean
 											onChange={(event) => (notifyUsers = event.currentTarget.checked)}
 										/>
 										<Group justify="end" mt="lg">
-											<Button onClick={addUsers}>Add</Button>
+											<Button color="green" onClick={addUsers}>
+												Add
+											</Button>
 											<Button variant="default" onClick={() => closeAllModals()}>
 												Cancel
 											</Button>

@@ -57,7 +57,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 					<Title order={1} mt="xl" mb="md">
 						{application.trial ? 'Trial' : ''} Application {id.split('-')[0]}
 					</Title>
-					<EditMenu application={application} />
+					<EditMenu application={application} slug={slug} />
 				</Group>
 				<Grid>
 					<GridCol span={{ base: 12, sm: 6, xl: 2 }}>

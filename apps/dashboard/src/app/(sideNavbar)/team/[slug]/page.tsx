@@ -30,6 +30,7 @@ import {
 	IconCalendar,
 	IconCamera,
 	IconEdit,
+	IconExternalLink,
 	IconForms,
 	IconInfoSmall,
 	IconMap,
@@ -100,6 +101,15 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						<LinkButton
 							variant="light"
 							color="cyan"
+							href={`https://buildtheearth.net/teams/${team.slug}`}
+							target="_blank"
+							rightSection={<IconExternalLink size={14} />}
+						>
+							Open on Website
+						</LinkButton>
+						<LinkButton
+							variant="light"
+							color="yellow"
 							href={`/team/${team.slug}/edit`}
 							rightSection={<IconEdit size={14} />}
 							disabled={!hasEditPermission}

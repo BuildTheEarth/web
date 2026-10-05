@@ -1,9 +1,22 @@
 'use client'
 
-import { ActionIcon, Badge, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, rem, Tooltip } from '@mantine/core'
-import { IconDots, IconEye, IconId, IconMessage2 } from '@tabler/icons-react'
+import {
+	ActionIcon,
+	Badge,
+	Code,
+	Group,
+	Menu,
+	MenuDivider,
+	MenuDropdown,
+	MenuItem,
+	MenuTarget,
+	rem,
+	Tooltip,
+} from '@mantine/core'
+import { IconBrandDiscord, IconDots, IconEye, IconId, IconMessage2 } from '@tabler/icons-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
+import { ACTION_COLORS } from '@/util/actions'
 import { useClipboard } from '@mantine/hooks'
 import type { User } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
@@ -60,7 +73,7 @@ export default function UsersDatatabe({ users, count }: { users: User[]; count: 
 								size="sm"
 								variant="subtle"
 								color="cyan"
-								aria-label="View Question on Website"
+								aria-label="View User"
 								component={Link}
 								href={`/am/users/${user.ssoId}`}
 								rel="noopener"
@@ -75,6 +88,17 @@ export default function UsersDatatabe({ users, count }: { users: User[]; count: 
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
+										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="View User"
+										component={Link}
+										href={`/am/users/${user.ssoId}`}
+										rel="noopener"
+									>
+										View User
+									</MenuItem>
+									<MenuDivider />
+									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Copy ID"
 										onClick={() => clipboard.copy(user.id)}
@@ -88,11 +112,24 @@ export default function UsersDatatabe({ users, count }: { users: User[]; count: 
 									>
 										Copy SSO ID
 									</MenuItem>
+									{user.discordId && (
+										<MenuItem
+											leftSection={<IconBrandDiscord style={{ width: rem(14), height: rem(14) }} />}
+											aria-label="Copy Discord ID"
+											onClick={() => clipboard.copy(user.discordId || '')}
+										>
+											Copy Discord ID
+										</MenuItem>
+									)}
+									<MenuDivider />
 									<MenuItem
 										leftSection={<IconMessage2 style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="Open DMs"
 										component={Link}
+										disabled={!user.discordId}
 										target="_blank"
-										href={`https://discord.com/channels/@me/${user.discordId}`}
+										href={user.discordId ? `https://discord.com/channels/@me/${user.discordId}` : '#'}
 									>
 										Open DMs
 									</MenuItem>

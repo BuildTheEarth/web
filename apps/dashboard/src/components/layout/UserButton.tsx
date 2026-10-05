@@ -90,18 +90,37 @@ export function UserButton() {
 				<Menu.Item component={Link} href="/me/connections" leftSection={<IconPlugConnected size={14} />}>
 					Social Connections
 				</Menu.Item>
+				<Menu.Divider />
 				<Menu.Label>Links</Menu.Label>
-				<Menu.Item component={Link} href="https://buildtheearth.net" leftSection={<IconWorld size={14} />}>
+				<Menu.Item
+					component={Link}
+					href="https://buildtheearth.net"
+					target="_blank"
+					color="cyan"
+					leftSection={<IconWorld size={14} />}
+				>
 					BuildTheEarth
 				</Menu.Item>
-				<Menu.Item component={Link} href="https://buildtheearth.net/map" leftSection={<IconMap size={14} />}>
+				<Menu.Item
+					component={Link}
+					href="https://buildtheearth.net/map"
+					target="_blank"
+					color="cyan"
+					leftSection={<IconMap size={14} />}
+				>
 					Map
 				</Menu.Item>
-				<Menu.Item component={Link} href="https://buildtheearth.net/contact" leftSection={<IconMail size={14} />}>
+				<Menu.Item
+					component={Link}
+					href="https://buildtheearth.net/contact"
+					target="_blank"
+					color="cyan"
+					leftSection={<IconMail size={14} />}
+				>
 					Contact
 				</Menu.Item>
 				<Menu.Divider />
-				<Menu.Label>Actions</Menu.Label>
+				<Menu.Label>Danger Zone</Menu.Label>
 				<Menu.Item leftSection={<IconLogout size={14} />} color="red" disabled={isLoggingOut} onClick={handleSignOut}>
 					Sign out
 				</Menu.Item>

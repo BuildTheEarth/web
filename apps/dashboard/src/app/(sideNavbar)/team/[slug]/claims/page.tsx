@@ -6,7 +6,7 @@ import LinkButton from '@/components/core/LinkButton'
 import { Protection } from '@/components/Protection'
 import { getSession, hasRole } from '@/util/auth'
 import prisma from '@/util/db'
-import { IconExternalLink } from '@tabler/icons-react'
+import { IconExternalLink, IconPlus } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import ClaimsDatatable from './datatable'
 import { SearchClaims } from './interactivity'
@@ -102,6 +102,9 @@ export default async function Page({
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Claims</Title>
 					<Group gap="xs">
+						<LinkButton color="green" href="/claims/editor" leftSection={<IconPlus size={14} />}>
+							Create Claim
+						</LinkButton>
 						<LinkButton
 							variant="light"
 							color="cyan"

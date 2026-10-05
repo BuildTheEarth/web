@@ -1,8 +1,10 @@
-import { Title } from '@mantine/core'
+import { Group, Title } from '@mantine/core'
 
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
 import { Protection } from '@/components/Protection'
 import prisma from '@/util/db'
+import { IconChevronRight } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import UsersDatatabe from './datatable'
 import { SearchUsers } from './interactivity'
@@ -44,9 +46,19 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 	return (
 		<Protection requiredRole="get-users">
 			<ContentWrapper maw="90vw">
-				<Title order={1} mt="xl" mb="md">
-					Website Users
-				</Title>
+				<Group justify="space-between" w="100%" mt="xl" mb="md">
+					<Title order={1}>Website Users</Title>
+					<Group gap="xs">
+						<LinkButton
+							variant="light"
+							color="cyan"
+							href="/am/users/batch"
+							rightSection={<IconChevronRight size={14} />}
+						>
+							Batch Actions
+						</LinkButton>
+					</Group>
+				</Group>
 				<SearchUsers mb="md" maw={{ base: '100%', md: '60%', lg: '30%' }} />
 				<UsersDatatabe users={users} count={userCount} />
 			</ContentWrapper>

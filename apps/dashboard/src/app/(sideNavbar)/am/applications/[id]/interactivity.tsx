@@ -1,5 +1,4 @@
 'use client'
-import { hasRole } from '@/util/auth'
 import { ActionIcon, Menu, MenuDropdown, MenuItem, MenuTarget, rem } from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
 import type { Application } from '@repo/db'
@@ -23,6 +22,15 @@ export function EditMenu({ application }: { application: Application }) {
 				>
 					Copy ID
 				</MenuItem>
+				{application.userId && (
+					<MenuItem
+						leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+						aria-label="Copy SSO ID"
+						onClick={() => clipboard.copy(application.userId)}
+					>
+						Copy SSO ID
+					</MenuItem>
+				)}
 			</MenuDropdown>
 		</Menu>
 	)

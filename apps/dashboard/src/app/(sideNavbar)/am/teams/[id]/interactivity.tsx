@@ -1,11 +1,22 @@
 'use client'
 
 import { useImpersonateBuildTeam } from '@/hooks/useBuildTeamData'
+import { ACTION_COLORS } from '@/util/actions'
 import { hasRole } from '@/util/auth'
-import { ActionIcon, Button, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem } from '@mantine/core'
+import {
+	ActionIcon,
+	Button,
+	Menu,
+	MenuDivider,
+	MenuDropdown,
+	MenuItem,
+	MenuLabel,
+	MenuTarget,
+	rem,
+} from '@mantine/core'
 import { useClipboard } from '@mantine/hooks'
 import type { BuildTeam } from '@repo/db'
-import { IconDots, IconId, IconTransfer, IconUserCheck, IconUserCog } from '@tabler/icons-react'
+import { IconDots, IconExternalLink, IconId, IconTransfer, IconUserCheck, IconUserCog } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
@@ -38,6 +49,25 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 			</MenuTarget>
 			<MenuDropdown>
 				<MenuItem
+					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+					aria-label="Copy ID"
+					onClick={() => clipboard.copy(team.id)}
+				>
+					Copy ID
+				</MenuItem>
+				<MenuDivider />
+				<MenuItem
+					leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+					color={ACTION_COLORS.view}
+					aria-label="Open on Website"
+					component={Link}
+					target="_blank"
+					href={`https://buildtheearth.net/teams/${team.slug}`}
+				>
+					Open on Website
+				</MenuItem>
+				<MenuDivider />
+				<MenuItem
 					leftSection={<IconUserCheck style={{ width: rem(14), height: rem(14) }} />}
 					color="green"
 					aria-label="Impersonate BuildTeam"
@@ -45,13 +75,7 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				>
 					Impersonate BuildTeam
 				</MenuItem>
-				<MenuItem
-					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy ID"
-					onClick={() => clipboard.copy(team.id)}
-				>
-					Copy ID
-				</MenuItem>
+				<MenuDivider />
 				<MenuLabel>Danger Zone</MenuLabel>
 				<MenuItem
 					leftSection={<IconUserCog style={{ width: rem(14), height: rem(14) }} />}
@@ -66,7 +90,7 @@ export function EditMenu({ team }: { team: BuildTeam }) {
 				<MenuItem
 					leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
-					aria-label="Delete or Transfer Team"
+					aria-label="Transfer Team"
 					component={Link}
 					href={`/am/teams/${team.id}/transfer?ref=transfer`}
 					rel="noopener"

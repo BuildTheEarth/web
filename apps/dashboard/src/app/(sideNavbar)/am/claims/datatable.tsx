@@ -1,12 +1,25 @@
 'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuLabel, MenuTarget, rem, Text } from '@mantine/core'
-import { IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react'
+import {
+	ActionIcon,
+	Code,
+	Group,
+	Menu,
+	MenuDivider,
+	MenuDropdown,
+	MenuItem,
+	MenuLabel,
+	MenuTarget,
+	rem,
+	Text,
+} from '@mantine/core'
+import { IconCirclesRelation, IconDots, IconExternalLink, IconEye, IconId, IconTrash } from '@tabler/icons-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { adminDeleteClaim } from '@/actions/claims'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
+import { ACTION_COLORS } from '@/util/actions'
 import { useClipboard } from '@mantine/hooks'
 import { openConfirmModal } from '@mantine/modals'
 import type { Claim } from '@repo/db'
@@ -79,20 +92,44 @@ export default function ClaimsDatatable({ claims, count }: { claims: Claim[]; co
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
+										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="View Details"
+										component={Link}
+										href={`/am/claims/${claim.id}`}
+										rel="noopener"
+									>
+										View Details
+									</MenuItem>
+									<MenuDivider />
+									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Copy ID"
 										onClick={() => clipboard.copy(claim.id)}
 									>
 										Copy ID
 									</MenuItem>
+									{claim.externalId && (
+										<MenuItem
+											leftSection={<IconCirclesRelation style={{ width: rem(14), height: rem(14) }} />}
+											aria-label="Copy External ID"
+											onClick={() => clipboard.copy(claim.externalId)}
+										>
+											Copy External ID
+										</MenuItem>
+									)}
+									<MenuDivider />
 									<MenuItem
 										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="Open on Website"
 										component={Link}
 										target="_blank"
 										href={`https://buildtheearth.net/map?claim=${claim.id}`}
 									>
 										Open on Website
 									</MenuItem>
+									<MenuDivider />
 									<MenuLabel>Danger Zone</MenuLabel>
 									<MenuItem
 										leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}

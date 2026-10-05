@@ -5,12 +5,14 @@ import { adminChangeTeam } from '@/actions/claims'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
 import { useFormAction, useFormActions } from '@/hooks/useFormAction'
+import { ACTION_COLORS } from '@/util/actions'
 import { hasRole } from '@/util/auth'
 import {
 	ActionIcon,
 	Button,
 	Group,
 	Menu,
+	MenuDivider,
 	MenuDropdown,
 	MenuItem,
 	MenuLabel,
@@ -29,15 +31,17 @@ import { useClipboard } from '@mantine/hooks'
 import { closeAllModals, modals, openConfirmModal } from '@mantine/modals'
 import type { BuildTeam, Claim } from '@repo/db'
 import {
-	IconBlendMode,
+	IconCirclesRelation,
 	IconDeviceFloppy,
 	IconDots,
 	IconEdit,
+	IconExternalLink,
 	IconId,
 	IconTransfer,
 	IconTrash,
 } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -100,7 +104,36 @@ export function EditMenu({
 			</MenuTarget>
 			<MenuDropdown>
 				<MenuItem
+					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+					aria-label="Copy ID"
+					onClick={() => clipboard.copy(claim.id)}
+				>
+					Copy ID
+				</MenuItem>
+				{claim.externalId && (
+					<MenuItem
+						leftSection={<IconCirclesRelation style={{ width: rem(14), height: rem(14) }} />}
+						aria-label="Copy External ID"
+						onClick={() => clipboard.copy(claim.externalId)}
+					>
+						Copy External ID
+					</MenuItem>
+				)}
+				<MenuDivider />
+				<MenuItem
+					leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+					color={ACTION_COLORS.view}
+					aria-label="Open on Map"
+					component={Link}
+					target="_blank"
+					href={`https://buildtheearth.net/map?claim=${claim.id}`}
+				>
+					Open on Map
+				</MenuItem>
+				<MenuDivider />
+				<MenuItem
 					leftSection={<IconEdit style={{ width: rem(14), height: rem(14) }} />}
+					color="yellow"
 					aria-label="Edit Claim"
 					onClick={() =>
 						modals.open({
@@ -114,21 +147,7 @@ export function EditMenu({
 				>
 					Edit Claim
 				</MenuItem>
-				<MenuItem
-					leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy ID"
-					onClick={() => clipboard.copy(claim.id)}
-				>
-					Copy ID
-				</MenuItem>
-				<MenuItem
-					leftSection={<IconBlendMode style={{ width: rem(14), height: rem(14) }} />}
-					aria-label="Copy External ID"
-					disabled={!claim.externalId}
-					onClick={() => clipboard.copy(claim.externalId)}
-				>
-					Copy External ID
-				</MenuItem>
+				<MenuDivider />
 				<MenuLabel>Danger Zone</MenuLabel>
 				<MenuItem
 					leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
@@ -233,7 +252,7 @@ export function EditClaimModal(
 				/>
 			</SimpleGrid>
 			<Group mt="xl" justify="space-between">
-				<Button type="submit" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
+				<Button type="submit" color="green" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
 					Save Changes
 				</Button>
 				<Button

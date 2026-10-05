@@ -6,6 +6,7 @@ import {
 	Code,
 	Group,
 	Menu,
+	MenuDivider,
 	MenuDropdown,
 	MenuItem,
 	MenuLabel,
@@ -27,6 +28,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 import { UserDisplay } from '@/components/data/User'
 import { useImpersonateBuildTeam } from '@/hooks/useBuildTeamData'
+import { ACTION_COLORS } from '@/util/actions'
 import { useClipboard } from '@mantine/hooks'
 import type { BuildTeam } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
@@ -147,13 +149,16 @@ export default function BuildTeamsDatatable({
 								</MenuTarget>
 								<MenuDropdown>
 									<MenuItem
-										leftSection={<IconUserCheck style={{ width: rem(14), height: rem(14) }} />}
-										color="green"
-										aria-label="Impersonate BuildTeam"
-										onClick={() => impersonate(team)}
+										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="View Details"
+										component={Link}
+										href={`/am/teams/${team.id}`}
+										rel="noopener"
 									>
-										Impersonate BuildTeam
+										View Details
 									</MenuItem>
+									<MenuDivider />
 									<MenuItem
 										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
 										aria-label="Copy ID"
@@ -161,14 +166,27 @@ export default function BuildTeamsDatatable({
 									>
 										Copy ID
 									</MenuItem>
+									<MenuDivider />
 									<MenuItem
 										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="Open on Website"
 										component={Link}
 										target="_blank"
 										href={`https://buildtheearth.net/teams/${team.slug}`}
 									>
 										Open on Website
 									</MenuItem>
+									<MenuDivider />
+									<MenuItem
+										leftSection={<IconUserCheck style={{ width: rem(14), height: rem(14) }} />}
+										color="green"
+										aria-label="Impersonate BuildTeam"
+										onClick={() => impersonate(team)}
+									>
+										Impersonate BuildTeam
+									</MenuItem>
+									<MenuDivider />
 									<MenuLabel>Danger Zone</MenuLabel>
 									<MenuItem
 										leftSection={<IconUserCog style={{ width: rem(14), height: rem(14) }} />}
@@ -183,7 +201,7 @@ export default function BuildTeamsDatatable({
 									<MenuItem
 										leftSection={<IconTransfer style={{ width: rem(14), height: rem(14) }} />}
 										color="red"
-										aria-label="Delete or Transfer Team"
+										aria-label="Transfer Team"
 										component={Link}
 										href={`/am/teams/${team.id}/transfer?ref=transfer`}
 										rel="noopener"

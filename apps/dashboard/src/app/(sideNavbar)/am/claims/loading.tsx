@@ -3,7 +3,7 @@ import { Group, Title } from '@mantine/core'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import LinkButton from '@/components/core/LinkButton'
 import { Protection } from '@/components/Protection'
-import { IconExternalLink } from '@tabler/icons-react'
+import { IconExternalLink, IconPlus } from '@tabler/icons-react'
 import { DataTable } from 'mantine-datatable'
 import { SearchClaims } from './interactivity'
 
@@ -14,6 +14,9 @@ export default function Page() {
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Claims</Title>
 					<Group gap="xs">
+						<LinkButton color="green" href="/claims/editor" leftSection={<IconPlus size={14} />}>
+							Create Claim
+						</LinkButton>
 						<LinkButton
 							variant="light"
 							color="cyan"

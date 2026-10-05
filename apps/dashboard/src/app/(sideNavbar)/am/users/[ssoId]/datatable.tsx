@@ -1,9 +1,22 @@
 'use client'
 
-import { ActionIcon, Code, Group, Menu, MenuDropdown, MenuItem, MenuTarget, Text, rem } from '@mantine/core'
-import { IconDots, IconEye, IconMessage2 } from '@tabler/icons-react'
+import {
+	ActionIcon,
+	Code,
+	Group,
+	Menu,
+	MenuDivider,
+	MenuDropdown,
+	MenuItem,
+	MenuTarget,
+	Text,
+	rem,
+} from '@mantine/core'
+import { IconDots, IconExternalLink, IconEye, IconId } from '@tabler/icons-react'
 
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
+import { ACTION_COLORS } from '@/util/actions'
+import { useClipboard } from '@mantine/hooks'
 import { DataTable } from 'mantine-datatable'
 import Link from 'next/link'
 import { useState } from 'react'
@@ -27,6 +40,7 @@ export default function ClaimDatatabe({
 	}[]
 }) {
 	const [page, setPage] = useState(1)
+	const clipboard = useClipboard({ timeout: 500 })
 
 	return (
 		<DataTable
@@ -109,16 +123,27 @@ export default function ClaimDatatabe({
 								<MenuDropdown>
 									<MenuItem
 										leftSection={<IconEye style={{ width: rem(14), height: rem(14) }} />}
-										color="cyan"
-										aria-label="View Claim"
+										color={ACTION_COLORS.view}
+										aria-label="View Details"
 										component={Link}
 										href={`/am/claims/${claim.id}`}
 										rel="noopener"
 									>
 										View Details
 									</MenuItem>
+									<MenuDivider />
 									<MenuItem
-										leftSection={<IconMessage2 style={{ width: rem(14), height: rem(14) }} />}
+										leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+										aria-label="Copy ID"
+										onClick={() => clipboard.copy(claim.id)}
+									>
+										Copy ID
+									</MenuItem>
+									<MenuDivider />
+									<MenuItem
+										leftSection={<IconExternalLink style={{ width: rem(14), height: rem(14) }} />}
+										color={ACTION_COLORS.view}
+										aria-label="Open on Website"
 										component={Link}
 										target="_blank"
 										href={`https://buildtheearth.net/map?claim=${claim.id}`}

@@ -275,23 +275,26 @@ export default function QuestionsEditor({
 				</Text>
 				<Group mt="md">
 					<Button
+						color="green"
+						leftSection={<IconDeviceFloppy size={14} />}
 						onClick={() => {
 							if (!editingQuestion) return
 							handleUpdateQuestion(editingQuestion.id, editingQuestion)
 							setEditingQuestion(null)
 						}}
 					>
-						Save
+						Save Changes
 					</Button>
 					<Button
 						variant="outline"
+						color="red"
 						leftSection={<IconTrash size={16} />}
 						onClick={() => {
 							if (!editingQuestion) return
 							handleDeleteQuestion(editingQuestion.id)
 						}}
 					>
-						Delete
+						Delete Question
 					</Button>
 				</Group>
 				<Divider my="md" label="Example" labelPosition="center" />
@@ -326,7 +329,13 @@ export default function QuestionsEditor({
 				<Group>
 					<Menu withinPortal>
 						<Menu.Target>
-							<Button leftSection={<IconPlus size={16} />} pr={12} variant="outline" disabled={saveLoading}>
+							<Button
+								leftSection={<IconPlus size={16} />}
+								color="green"
+								pr={12}
+								variant="outline"
+								disabled={saveLoading}
+							>
 								Add new Question
 							</Button>
 						</Menu.Target>
@@ -349,13 +358,8 @@ export default function QuestionsEditor({
 							})}
 						</Menu.Dropdown>
 					</Menu>
-					<Button
-						loading={saveLoading}
-						onClick={handleSave}
-						color="green"
-						rightSection={<IconDeviceFloppy size={14} />}
-					>
-						Save
+					<Button loading={saveLoading} onClick={handleSave} color="green" leftSection={<IconDeviceFloppy size={14} />}>
+						Save Changes
 					</Button>
 				</Group>
 			</Group>

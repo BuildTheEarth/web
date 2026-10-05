@@ -25,7 +25,7 @@ export function AddContactButton({ disabled }: { disabled?: boolean }) {
 				})
 			}
 		>
-			Add New
+			Add Contact
 		</Button>
 	)
 }
@@ -103,7 +103,7 @@ function EditContactModal(
 			/>
 			{!props.isAdd ? (
 				<Group mt="md">
-					<Button type="submit" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
+					<Button type="submit" color="green" leftSection={<IconDeviceFloppy size={14} />} loading={isPending}>
 						Save Changes
 					</Button>
 					<Button
@@ -116,12 +116,12 @@ function EditContactModal(
 						color="red"
 						loading={isPending}
 					>
-						Delete Question
+						Delete Contact
 					</Button>
 				</Group>
 			) : (
-				<Button type="submit" mt="md" leftSection={<IconPlus size={14} />} loading={isPending}>
-					Add Question
+				<Button type="submit" color="green" mt="md" leftSection={<IconPlus size={14} />} loading={isPending}>
+					Add Contact
 				</Button>
 			)}
 		</form>

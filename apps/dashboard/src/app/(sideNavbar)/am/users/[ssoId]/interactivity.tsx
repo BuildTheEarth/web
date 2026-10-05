@@ -5,6 +5,7 @@ import {
 	Button,
 	Loader,
 	Menu,
+	MenuDivider,
 	MenuDropdown,
 	MenuItem,
 	MenuLabel,
@@ -21,8 +22,9 @@ import {
 	IconFileMinus,
 	IconFilePlus,
 	IconFiles,
-	IconKarate,
+	IconId,
 	IconTrash,
+	IconUser,
 	IconUsersMinus,
 	IconUsersPlus,
 } from '@tabler/icons-react'
@@ -35,6 +37,7 @@ import {
 	adminRemoveFromTeam,
 	adminRemovePermission,
 } from '@/actions/user'
+import { ACTION_COLORS } from '@/util/actions'
 import { closeAllModals, openConfirmModal, openModal } from '@mantine/modals'
 import { showNotification } from '@mantine/notifications'
 import type { Permisision, User } from '@repo/db'
@@ -52,10 +55,10 @@ export function BuildTeamMenu(props: { team: { slug: string; name: string }; sso
 			</MenuTarget>
 			<MenuDropdown>
 				<MenuItem
-					leftSection={isLoading ? <Loader color="red" /> : <IconKarate style={{ width: rem(14), height: rem(14) }} />}
+					leftSection={isLoading ? <Loader color="red" /> : <IconTrash style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
 					disabled={!props.canEdit}
-					aria-label="Remove from this Team"
+					aria-label="Remove from Team"
 					rel="noopener"
 					onClick={() => {
 						openConfirmModal({
@@ -110,7 +113,7 @@ export function PermissionMenu(props: { permission: { id: string; key: string };
 					leftSection={isLoading ? <Loader color="red" /> : <IconTrash style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
 					disabled={!props.canEdit}
-					aria-label="Remove this permission"
+					aria-label="Remove Permission"
 					rel="noopener"
 					onClick={() => {
 						openConfirmModal({
@@ -175,65 +178,53 @@ export function UserMenu({
 					</Menu.Sub.Target>
 
 					<Menu.Sub.Dropdown>
-						<MenuItem aria-label="SSO ID" onClick={() => window.navigator.clipboard.writeText(user.ssoId)}>
+						<MenuItem
+							leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+							aria-label="SSO ID"
+							onClick={() => window.navigator.clipboard.writeText(user.ssoId)}
+						>
 							SSO ID
 						</MenuItem>
-						<MenuItem aria-label="Website ID" onClick={() => window.navigator.clipboard.writeText(user.id)}>
+						<MenuItem
+							leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+							aria-label="Website ID"
+							onClick={() => window.navigator.clipboard.writeText(user.id)}
+						>
 							Website ID
 						</MenuItem>
-						<MenuItem aria-label="Website ID" onClick={() => window.navigator.clipboard.writeText(user.username || '')}>
+						<MenuItem
+							leftSection={<IconUser style={{ width: rem(14), height: rem(14) }} />}
+							aria-label="Username"
+							onClick={() => window.navigator.clipboard.writeText(user.username || '')}
+						>
 							Username
 						</MenuItem>
 						<MenuItem
-							aria-label="Website ID"
+							leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
+							aria-label="Discord ID"
 							onClick={() => window.navigator.clipboard.writeText(user.discordId || '')}
 						>
 							Discord ID
 						</MenuItem>
 					</Menu.Sub.Dropdown>
 				</Menu.Sub>
-				<MenuLabel>Sessions</MenuLabel>
+
+				<MenuDivider />
+				<MenuLabel>Applications</MenuLabel>
 				<MenuItem
-					leftSection={<IconDevices style={{ width: rem(14), height: rem(14) }} />}
-					color="red"
-					disabled={!canEdit}
-					onClick={async () => {
-						if (!user.ssoId) return
-
-						openConfirmModal({
-							title: 'Confirm Action',
-							centered: true,
-							confirmProps: { color: 'red' },
-							children: (
-								<Text size="sm">
-									Are you sure you want to perform this action? The user will be logged out of all session and will be
-									forced to log in again.
-								</Text>
-							),
-							labels: { confirm: 'Confirm', cancel: 'Cancel' },
-							onConfirm: async () => {
-								await new Promise<void>((resolve) => {
-									startTransition(() => {
-										invalidateSessionsAction(user.ssoId)
-										resolve()
-									})
-								})
-
-								showNotification({
-									title: 'Success',
-									message: `Successfully invalidated all sessions for ${user.username || user.ssoId}`,
-									color: 'green',
-								})
-							},
-						})
-					}}
+					leftSection={<IconFiles style={{ width: rem(14), height: rem(14) }} />}
+					color={ACTION_COLORS.view}
+					component={Link}
+					href={`/am/applications?query=${user.ssoId}&searchType=applicant&onlyPending=false&page=1`}
 				>
-					Log out of all sessions
+					View all applications
 				</MenuItem>
 
+				<MenuDivider />
 				<MenuLabel>Teams</MenuLabel>
 				<MenuItem
 					leftSection={<IconUsersPlus style={{ width: rem(14), height: rem(14) }} />}
+					color="green"
 					disabled={!canEdit}
 					onClick={() => {
 						let teamSlug = ''
@@ -248,7 +239,7 @@ export function UserMenu({
 										Team&apos;s page in the dashboard.
 									</Text>
 									<TextInput placeholder="BuildTeam Slug..." mb="md" onChange={(e) => (teamSlug = e.target.value)} />
-									<Button fullWidth onClick={() => confirmAddToTeam()}>
+									<Button fullWidth color="green" onClick={() => confirmAddToTeam()}>
 										Add to Build Team
 									</Button>
 								</>
@@ -278,6 +269,7 @@ export function UserMenu({
 				</MenuItem>
 				<MenuItem
 					leftSection={<IconUsersMinus style={{ width: rem(14), height: rem(14) }} />}
+					color="red"
 					disabled={!canEdit}
 					onClick={() => {
 						let teamSlug = ''
@@ -292,7 +284,7 @@ export function UserMenu({
 										Build Team&apos;s page in the dashboard.
 									</Text>
 									<TextInput placeholder="BuildTeam Slug..." mb="md" onChange={(e) => (teamSlug = e.target.value)} />
-									<Button fullWidth onClick={() => confirmRemoveFromTeam()}>
+									<Button fullWidth color="red" onClick={() => confirmRemoveFromTeam()}>
 										Remove from Build Team
 									</Button>
 								</>
@@ -321,17 +313,11 @@ export function UserMenu({
 					Remove from BuildTeam
 				</MenuItem>
 
-				<MenuLabel>Applications</MenuLabel>
-				<MenuItem
-					leftSection={<IconFiles style={{ width: rem(14), height: rem(14) }} />}
-					component={Link}
-					href={`/am/applications?query=${user.ssoId}&searchType=applicant&onlyPending=false&page=1`}
-				>
-					View all applications
-				</MenuItem>
+				<MenuDivider />
 				<MenuLabel>Permissions</MenuLabel>
 				<MenuItem
 					leftSection={<IconFilePlus style={{ width: rem(14), height: rem(14) }} />}
+					color="green"
 					disabled={!canEdit}
 					onClick={() => {
 						let teamSlug = ''
@@ -363,7 +349,7 @@ export function UserMenu({
 										mb="md"
 										onChange={(e) => (teamSlug = e.target.value)}
 									/>
-									<Button fullWidth onClick={() => confirmAddPermissions()}>
+									<Button fullWidth color="green" onClick={() => confirmAddPermissions()}>
 										Add Permissions
 									</Button>
 								</>
@@ -409,6 +395,46 @@ export function UserMenu({
 					}}
 				>
 					Remove permission
+				</MenuItem>
+
+				<MenuDivider />
+				<MenuLabel>Danger Zone</MenuLabel>
+				<MenuItem
+					leftSection={<IconDevices style={{ width: rem(14), height: rem(14) }} />}
+					color="red"
+					disabled={!canEdit}
+					onClick={async () => {
+						if (!user.ssoId) return
+
+						openConfirmModal({
+							title: 'Confirm Action',
+							centered: true,
+							confirmProps: { color: 'red' },
+							children: (
+								<Text size="sm">
+									Are you sure you want to perform this action? The user will be logged out of all session and will be
+									forced to log in again.
+								</Text>
+							),
+							labels: { confirm: 'Confirm', cancel: 'Cancel' },
+							onConfirm: async () => {
+								await new Promise<void>((resolve) => {
+									startTransition(() => {
+										invalidateSessionsAction(user.ssoId)
+										resolve()
+									})
+								})
+
+								showNotification({
+									title: 'Success',
+									message: `Successfully invalidated all sessions for ${user.username || user.ssoId}`,
+									color: 'green',
+								})
+							},
+						})
+					}}
+				>
+					Log out of all sessions
 				</MenuItem>
 			</MenuDropdown>
 		</Menu>
