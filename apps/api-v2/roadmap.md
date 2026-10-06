@@ -130,27 +130,27 @@ del /applications/templates/[tempId]
 
 ## Socials
 
-get /socials \
-get /[teamId]/socials \
-post /socials \
-put /socials -> also needs to support adding new ones (upsert) \
-put /socials/[soId] \
-del /socials/[soId] \
+✅ get /socials \
+✅ get /[teamId]/socials \
+✅ post /socials \
+✅ put /socials -> also needs to support adding new ones (upsert) \
+✅ put /socials/[soId] \
+✅ del /socials/[soId] \
 
 ## Claims
 
-get /claims \
-get /[teamId]/claims \
-get /claims/[claimId]?external={bool} \
-post /claims \
-post /claims/import \
-put /claims/[claimId]?external={bool} \
-del /claims/[claimId]?external={bool} \
-get /claims.geojson \
-get /[teamId]/claims.geojson \
+✅ get /claims \
+✅ get /[teamId]/claims \
+✅ get /claims/[claimId]?external={bool} \
+✅ post /claims \
+✅ post /claims/import \
+✅ put /claims/[claimId]?external={bool} \
+✅ del /claims/[claimId]?external={bool} \
+✅ get /claims.geojson \
+✅ get /[teamId]/claims.geojson \
 
 ( \
-get /claims/images \
+✅ get /claims/images \
 del /claims/[claimId]/images/[imgId] \
 )
 
@@ -164,15 +164,15 @@ del /claims/[claimId]/images/[imgId] \
 
 ## Members
 
-get /members \
-post /members \
-get /members/[userId] \
-del /members/[userId] \
-put /members/[userId] \
+✅ get /members \
+✅ post /members \
+✅ get /members/[userId] \
+✅ del /members/[userId] \
+✅ put /members/[userId] \
 
-get /members/[userId]/permissions \
-put /members/[userId]/permissions -> also needs to support adding new ones (upsert) \
-del /members/[userId]/permissions/[permId]
+✅ get /members/[userId]/permissions \
+✅ put /members/[userId]/permissions -> also needs to support adding new ones (upsert) \
+✅ del /members/[userId]/permissions/[permId]
 
 # Network API routes
 
