@@ -10,8 +10,8 @@ import { ApplicationTemplatesModule } from './sections/applications/templates/ap
 import { AuthModule } from './sections/auth/auth.module';
 import { BuildTeamsModule } from './sections/buildteams/buildteams.module';
 import { ClaimsModule } from './sections/claims/claims.module';
+import { MembersModule } from './sections/members/members.module';
 import { SocialsModule } from './sections/socials/socials.module';
-import { StatusModule } from './sections/status/status.module';
 import { UtilityModule } from './sections/utility/utility.module';
 
 @Module({
@@ -25,9 +25,9 @@ import { UtilityModule } from './sections/utility/utility.module';
 		AuthModule,
 		ClaimsModule,
 		ConfigModule.forRoot({ isGlobal: true, cache: true }),
+		MembersModule,
 		QueueModule,
 		SocialsModule,
-		StatusModule,
 		UtilityModule,
 		// Last on purpose. BuildTeamsController owns `/` and `/:teamId`, and that
 		// wildcard matches any top level path, so it has to be tried after every
