@@ -103,11 +103,11 @@ post /auth/account/link
 
 ## BuildTeam
 
-get /[teamId] \
-get / \
-get /modpack \
-get /[teamId]/modpack \
-put /
+✅ get /[teamId] \
+✅ get / \
+✅ get /modpack \
+✅ get /[teamId]/modpack \
+✅ put /
 
 ## Applications
 
