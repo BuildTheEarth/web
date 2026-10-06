@@ -43,6 +43,10 @@ export const discordBotMessageMessageSchema = z.object({
 	footer: z.string().optional(),
 })
 
+export function escapeControlCharacters(text: string): string {
+	return text.replaceAll('\r', '\\r').replaceAll('\n', '\\n')
+}
+
 export async function sendDiscordDm(
 	message: string | z.infer<typeof discordBotMessageMessageSchema>,
 	users: string[],
@@ -60,14 +64,20 @@ export async function sendDiscordDm(
 			message.footer ? `\n\n-# ${message.footer} (ℹ️: This system is currently in beta, expect bugs)` : ''
 		}`
 
+		const escapedContent = escapeControlCharacters(content)
+
 		const res = await fetch(process.env.DISCORD_BOT_API_URL + '/api/v1/website/message/blank', {
 			method: 'POST',
 			headers: {
 				'Content-type': 'application/json',
 				authorization: `Bearer ${process.env.DISCORD_BOT_SECRET}`,
 			},
-			body: JSON.stringify({ params: { text: content }, ids: users }),
+			body: JSON.stringify({ params: { text: escapedContent }, ids: users }),
 		})
+		if (!res.ok) {
+			const text = await res.text().catch(() => '')
+			throw new Error(`Status ${res.status} - ${text}`)
+		}
 		const json = await res.json()
 		return {
 			success: json.success || [],
