@@ -1,7 +1,7 @@
 import LinkButton from '@/components/core/LinkButton'
 import Wrapper from '@/components/layout/Wrapper'
 import directus from '@/util/directus'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { readItems } from '@directus/sdk'
 import { Card, CardSection, Group, Image, SimpleGrid, Text, Title, Tooltip } from '@mantine/core'
 import { IconCalendar, IconChevronRight } from '@tabler/icons-react'
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/blog'),
 			languages: getLanguageAlternates('/blog'),
 		},
 	}

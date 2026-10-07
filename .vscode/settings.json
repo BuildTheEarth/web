@@ -37,7 +37,8 @@
 		"frontend/download",
 		"frontend",
 		"dash/claims",
-		"frontend/teams"
+		"frontend/teams",
+		"frontend/seo"
 	],
 	"js/ts.tsdk.path": "node_modules\\typescript\\lib"
 }

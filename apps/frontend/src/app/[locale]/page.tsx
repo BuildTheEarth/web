@@ -8,7 +8,7 @@ import Link from '@/components/core/Link'
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
 import prisma from '@/util/db'
 import directus from '@/util/directus'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { readItems } from '@directus/sdk'
 import { Carousel, CarouselSlide } from '@mantine/carousel'
 import {
@@ -57,6 +57,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/'),
 			languages: getLanguageAlternates('/'),
 		},
 	}

@@ -1,7 +1,7 @@
 import Wrapper from '@/components/layout/Wrapper'
 import styles from '@/styles/Blog.module.css'
 import directus from '@/util/directus'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { readItem, readItems } from '@directus/sdk'
 import { Box, Group, Text, Tooltip } from '@mantine/core'
 import { IconCalendar } from '@tabler/icons-react'
@@ -55,6 +55,7 @@ export async function generateMetadata({
 		description: post.summary,
 		authors: [{ name: post.user_created.display_name || 'BuildTheEarth' }],
 		alternates: {
+			canonical: getLocalizedUrl(locale, `/blog/${slug}`),
 			languages: getLanguageAlternates(`/blog/${slug}`),
 		},
 		openGraph: { images: [ogImage] },

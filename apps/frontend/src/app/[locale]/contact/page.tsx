@@ -1,7 +1,7 @@
 import Anchor from '@/components/core/Anchor'
 import Wrapper from '@/components/layout/Wrapper'
 import prisma from '@/util/db'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { ActionIcon, Box, Group, Paper, SimpleGrid, Text, Title } from '@mantine/core'
 import {
 	IconAt,
@@ -28,6 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/contact'),
 			languages: getLanguageAlternates('/contact'),
 		},
 	}

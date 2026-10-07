@@ -1,7 +1,7 @@
 import { QuerySearchInput } from '@/components/core/SearchInput'
 import Wrapper from '@/components/layout/Wrapper'
 import directus from '@/util/directus'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { readItems } from '@directus/sdk'
 import { Accordion, AccordionControl, AccordionItem, AccordionPanel, Alert, Group } from '@mantine/core'
 import { IconLanguage } from '@tabler/icons-react'
@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/faq'),
 			languages: getLanguageAlternates('/faq'),
 		},
 	}

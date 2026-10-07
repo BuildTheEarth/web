@@ -1,5 +1,5 @@
 import Wrapper from '@/components/layout/Wrapper'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/map'),
 			languages: getLanguageAlternates('/map'),
 		},
 	}

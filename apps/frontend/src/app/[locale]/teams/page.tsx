@@ -4,7 +4,7 @@ import Wrapper from '@/components/layout/Wrapper'
 import Link from '@/components/core/Link'
 import { getCountryNames } from '@/util/countries'
 import prisma from '@/util/db'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { Avatar, Button, Group, SimpleGrid, Stack, Text, Tooltip } from '@mantine/core'
 import { IconPin, IconUsers, IconWorld } from '@tabler/icons-react'
 import { Metadata } from 'next'
@@ -20,6 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/teams'),
 			languages: getLanguageAlternates('/teams'),
 		},
 	}

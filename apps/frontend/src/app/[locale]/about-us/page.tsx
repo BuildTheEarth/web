@@ -1,7 +1,7 @@
 import Wrapper from '@/components/layout/Wrapper'
 import prisma from '@/util/db'
 import directus from '@/util/directus'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { readItems } from '@directus/sdk'
 import { Text, Title, Box, Stack, Grid, GridCol, Image, Flex } from '@mantine/core'
 import { IconChevronRight, IconCornerRightUp } from '@tabler/icons-react'
@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/about-us'),
 			languages: getLanguageAlternates('/about-us'),
 		},
 	}

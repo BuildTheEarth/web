@@ -3,7 +3,7 @@ import SplitTextAnimation from '@/components/animations/SplitText'
 import Wrapper from '@/components/layout/Wrapper'
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
 import prisma from '@/util/db'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import {
 	Accordion,
 	AccordionControl,
@@ -39,7 +39,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 			builders,
 		)} people who make BuildTheEarth possible!`,
 		alternates: {
-			languages: getLanguageAlternates('/our-progress'),
+			canonical: getLocalizedUrl(locale, '/contributors'),
+			languages: getLanguageAlternates('/contributors'),
 		},
 	}
 }

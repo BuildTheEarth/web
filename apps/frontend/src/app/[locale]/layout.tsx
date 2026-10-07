@@ -5,6 +5,7 @@ import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server
 import { notFound } from 'next/navigation'
 import CookieConsent from '@/components/CookieConsent'
 import { Metadata } from 'next'
+import { getLocalizedUrl } from '@/util/seo'
 
 export function generateStaticParams() {
 	return routing.locales.map((locale) => ({ locale }))
@@ -29,6 +30,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 		},
 		twitter: {
 			card: 'summary_large_image',
+		},
+		alternates: {
+			canonical: getLocalizedUrl(locale, '/'),
 		},
 		keywords: t.raw('keywords') as string[],
 	}

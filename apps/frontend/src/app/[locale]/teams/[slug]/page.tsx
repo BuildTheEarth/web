@@ -5,7 +5,7 @@ import LinkButton from '@/components/core/LinkButton'
 import Link from '@/components/core/Link'
 import { getCountryNames } from '@/util/countries'
 import prisma from '@/util/db'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import {
 	ActionIcon,
 	Avatar,
@@ -57,14 +57,20 @@ export async function generateMetadata({
 		return {
 			title: t('notFoundTitle'),
 			description: t('notFoundDescription'),
-			alternates: { languages: getLanguageAlternates(`/teams/${slug}`) },
+			alternates: {
+				canonical: getLocalizedUrl(locale, `/teams/${slug}`),
+				languages: getLanguageAlternates(`/teams/${slug}`),
+			},
 		}
 	}
 
 	return {
 		title: buildTeam.name,
 		description: buildTeam.about,
-		alternates: { languages: getLanguageAlternates(`/teams/${slug}`) },
+		alternates: {
+			canonical: getLocalizedUrl(locale, `/teams/${slug}`),
+			languages: getLanguageAlternates(`/teams/${slug}`),
+		},
 		openGraph: { images: [buildTeam.backgroundImage || t('defaultOgImage')] },
 	}
 }

@@ -1,10 +1,24 @@
 import Anchor from '@/components/core/Anchor'
 import Wrapper from '@/components/layout/Wrapper'
 import { List, ListItem, Text, Title } from '@mantine/core'
+import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 
 export const dynamic = 'force-static'
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
+	const locale = (await params).locale
+
+	return {
+		title: 'Public Attribution',
+		alternates: {
+			canonical: getLocalizedUrl(locale, '/about-us/attribution'),
+			languages: getLanguageAlternates('/about-us/attribution'),
+		},
+	}
+}
 
 export default async function Page({ params }: { params: Promise<{ locale: Locale }> }) {
 	const locale = (await params).locale

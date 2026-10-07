@@ -1,7 +1,7 @@
 import StatCard from '@/components/core/card/StatCard'
 import LinkButton from '@/components/core/LinkButton'
 import Wrapper from '@/components/layout/Wrapper'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { Box, Container, Grid, GridCol, Group, SimpleGrid, Text, Title } from '@mantine/core'
 import { IconBrandDiscord, IconChevronRight, IconFileDownload } from '@tabler/icons-react'
 import { Metadata } from 'next'
@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/download'),
 			languages: getLanguageAlternates('/download'),
 		},
 	}

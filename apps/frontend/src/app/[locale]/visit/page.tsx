@@ -11,7 +11,7 @@ import Anchor from '@/components/core/Anchor'
 import chevronBounceLottie from '@/public/animations/chevron-bounce.json'
 import getCountryName from '@/util/countries'
 import prisma from '@/util/db'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import {
 	BackgroundImage,
 	Box,
@@ -46,7 +46,10 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 	return {
 		title: t('title'),
 		description: t('description'),
-		alternates: { languages: getLanguageAlternates('/visit') },
+		alternates: {
+			canonical: getLocalizedUrl(locale, '/visit'),
+			languages: getLanguageAlternates('/visit'),
+		},
 	}
 }
 

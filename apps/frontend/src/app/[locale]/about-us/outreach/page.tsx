@@ -2,7 +2,7 @@ import { OutreachArticle, OutreachArticleCard } from '@/components/data/Outreach
 import Wrapper from '@/components/layout/Wrapper'
 import Anchor from '@/components/core/Anchor'
 import directus from '@/util/directus'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { readItems } from '@directus/sdk'
 import { Accordion, AccordionControl, AccordionItem, AccordionPanel, SimpleGrid, Text, Title } from '@mantine/core'
 import { IconInfoCircle } from '@tabler/icons-react'
@@ -22,6 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/about-us/outreach'),
 			languages: getLanguageAlternates('/about-us/outreach'),
 		},
 	}

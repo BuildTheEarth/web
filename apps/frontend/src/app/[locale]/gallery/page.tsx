@@ -1,7 +1,7 @@
 import GalleryClient, { type GalleryShowcase } from '@/components/gallery/GalleryClient'
 import Wrapper from '@/components/layout/Wrapper'
 import prisma from '@/util/db'
-import { getLanguageAlternates } from '@/util/seo'
+import { getLanguageAlternates, getLocalizedUrl } from '@/util/seo'
 import { Container } from '@mantine/core'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
@@ -17,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 		title: t('title'),
 		description: t('description'),
 		alternates: {
+			canonical: getLocalizedUrl(locale, '/gallery'),
 			languages: getLanguageAlternates('/gallery'),
 		},
 	}
