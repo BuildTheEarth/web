@@ -12,7 +12,6 @@ RUN apk update && apk add --no-cache libc6-compat openssl
 RUN ln -s /usr/lib/libssl.so.3 /lib/libssl.so.3
 WORKDIR /app
 
-ARG CMS_URL
 ARG NEXT_PUBLIC_API_URL
 ARG NEXT_PUBLIC_FRONTEND_URL
 ARG NEXT_PUBLIC_CDN_URL
@@ -20,7 +19,6 @@ ARG NEXT_PUBLIC_MAP_STYLE_URL
 ARG NEXT_PUBLIC_UMAMI_URL
 ARG NEXT_PUBLIC_UMAMI_WEBSITE_ID
 
-ENV CMS_URL=$CMS_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_FRONTEND_URL=$NEXT_PUBLIC_FRONTEND_URL
 ENV NEXT_PUBLIC_CDN_URL=$NEXT_PUBLIC_CDN_URL
@@ -33,7 +31,9 @@ RUN yarn install
 
 COPY --from=builder /app/out/full/ .
 RUN --mount=type=secret,id=database_url \
-    DATABASE_URL="$(cat /run/secrets/database_url)" \
+    --mount=type=secret,id=cms_url,required=false \
+    DATABASE_URL="$(cat /run/secrets/database_url 2>/dev/null || echo '')" \
+    CMS_URL="$(cat /run/secrets/cms_url 2>/dev/null || echo '')" \
     yarn turbo run build --filter=frontend...
 
 FROM base AS runner
