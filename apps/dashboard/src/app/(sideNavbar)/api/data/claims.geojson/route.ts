@@ -1,9 +1,15 @@
 import prisma from '@/util/db'
-import { Claim } from '@repo/db'
 import { NextRequest } from 'next/server'
 import { constructClaimGeoJSONQuery } from './query'
+import { getSession } from '@/util/auth'
 
 export async function GET(req: NextRequest) {
+	const session = await getSession()
+
+	if (!session || !session.user) {
+		return new Response('Unauthorized', { status: 401 })
+	}
+
 	const searchParams = req.nextUrl.searchParams
 
 	const returnAsPoints = searchParams.get('points') ? searchParams.get('points') === 'true' : false
