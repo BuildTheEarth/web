@@ -26,7 +26,7 @@ export default function JoinServerGuide(props: { ip: string; version: string; na
 			</Code>
 		),
 		link: (c: string) => (
-			<Anchor href="http://docs.buildtheearth.net/joining-build-teams-othkh12RGf#h-change-your-game-version" fz="sm">
+			<Anchor href="https://docs.buildtheearth.net/joining-build-teams-othkh12RGf#h-change-your-game-version" fz="sm">
 				{c}
 			</Anchor>
 		),

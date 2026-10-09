@@ -111,7 +111,7 @@ export function MapContextMenu({ contextMenuInfo, setContextMenuInfo, oLat, oLng
 						component={Link}
 						target="_blank"
 						color="cyan"
-						href={`http://www.openstreetmap.org/?lat=${lat}&lon=${lng}&zoom=18&layers=M`}
+						href={`https://www.openstreetmap.org/?lat=${lat}&lon=${lng}&zoom=18&layers=M`}
 						disabled={!data.mc}
 						leftSection={<IconMap style={{ width: rem(14), height: rem(14) }} />}
 					>

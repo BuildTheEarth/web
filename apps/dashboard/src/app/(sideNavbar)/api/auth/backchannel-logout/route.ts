@@ -35,7 +35,7 @@ type LogoutTokenPayload = JsonObject & {
 	nbf?: number
 	jti?: string
 	events?: {
-		'http://schemas.openid.net/event/backchannel-logout'?: Record<string, never>
+		'https://schemas.openid.net/event/backchannel-logout'?: Record<string, never>
 	}
 }
 
@@ -195,7 +195,8 @@ const verifyLogoutToken = async (logoutToken: string) => {
 	}
 
 	const logoutPayload = await verifySignature(logoutToken, issuer)
-	const hasBackchannelEvent = logoutPayload.events?.['http://schemas.openid.net/event/backchannel-logout'] !== undefined
+	const hasBackchannelEvent =
+		logoutPayload.events?.['https://schemas.openid.net/event/backchannel-logout'] !== undefined
 
 	if (!logoutPayload.iss || normalizeUrl(logoutPayload.iss) !== normalizeUrl(issuer)) {
 		throw new Error('Invalid logout token: issuer mismatch')

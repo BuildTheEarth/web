@@ -43,14 +43,14 @@ export default function Footer({ style }: FooterProps) {
 					{items}
 					<ActionIcon
 						component={Link}
-						href="http://go.buildtheearth.net/dc"
+						href="https://go.buildtheearth.net/dc"
 						variant="transparent"
 						aria-label="Discord"
 						target="_blank"
 						c="dimmed"
 						size="sm"
 						data-umami-event="footer-discord-click"
-						data-umami-event-url="http://go.buildtheearth.net/dc"
+						data-umami-event-url="https://go.buildtheearth.net/dc"
 					>
 						<IconBrandDiscord />
 					</ActionIcon>
