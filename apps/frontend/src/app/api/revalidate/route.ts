@@ -2,7 +2,7 @@ import { routing } from '@/i18n/routing'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { headers } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-
+import { timingSafeEqual } from 'crypto'
 export async function POST(req: NextRequest) {
 	let payload: {
 		paths?: string[]
@@ -18,7 +18,14 @@ export async function POST(req: NextRequest) {
 		payload = {}
 	}
 
-	if (!secret || secret !== process.env.FRONTEND_SECRET) {
+	const secretBuffer = Buffer.from(secret || '')
+	const envSecretBuffer = Buffer.from(process.env.FRONTEND_SECRET || '')
+
+	if (
+		!secret?.trim() ||
+		secretBuffer.length !== envSecretBuffer.length ||
+		!timingSafeEqual(secretBuffer, envSecretBuffer)
+	) {
 		return NextResponse.json({ revalidated: false, message: 'Unauthorized' }, { status: 401 })
 	}
 
@@ -37,6 +44,10 @@ export async function POST(req: NextRequest) {
 			{ revalidated: false, message: 'Provide at least one entry in paths or tags' },
 			{ status: 400 },
 		)
+	}
+
+	if (paths.length > 25 || tags.length > 25) {
+		return NextResponse.json({ revalidated: false, message: 'Maximum 25 paths and 25 tags allowed' }, { status: 400 })
 	}
 
 	for (const path of paths) {
