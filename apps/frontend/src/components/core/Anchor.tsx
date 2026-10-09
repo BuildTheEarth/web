@@ -23,6 +23,16 @@ export default function Anchor(
 	const umamiEvent = props['data-umami-event'] || (outbound ? 'link-click' : undefined)
 	const umamiUrl = props['data-umami-event-url'] || (outbound ? href : undefined)
 
+	if (
+		!href.toString().startsWith('mailto:') &&
+		!href.toString().startsWith('#') &&
+		!href.toString().startsWith('https://') &&
+		!href.toString().startsWith('http://') &&
+		!href.toString().startsWith('/')
+	) {
+		throw new Error('Link component requires a valid href prop')
+	}
+
 	return (
 		<MantineAnchor
 			{...rest}
@@ -30,6 +40,7 @@ export default function Anchor(
 			component={Link as any}
 			data-umami-event={umamiEvent}
 			data-umami-event-url={umamiUrl}
+			{...(rest?.target === '_blank' ? { rel: 'noopener noreferrer' } : {})}
 		/>
 	)
 }

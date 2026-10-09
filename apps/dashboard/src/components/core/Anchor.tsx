@@ -8,5 +8,21 @@ import Link, { LinkProps } from 'next/link'
 export default function Anchor(
 	props: AnchorProps & LinkProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & { children: any },
 ) {
-	return <MantineAnchor {...props} component={Link} />
+	if (
+		!props.href.toString().startsWith('mailto:') &&
+		!props.href.toString().startsWith('#') &&
+		!props.href.toString().startsWith('https://') &&
+		!props.href.toString().startsWith('http://') &&
+		!props.href.toString().startsWith('/')
+	) {
+		throw new Error('Link component requires a valid href prop')
+	}
+
+	return (
+		<MantineAnchor
+			{...props}
+			component={Link}
+			{...(props?.target === '_blank' ? { rel: 'noopener noreferrer' } : {})}
+		/>
+	)
 }

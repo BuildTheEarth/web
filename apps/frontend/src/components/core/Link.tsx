@@ -16,5 +16,23 @@ export default function Link(
 	const umamiEvent = props['data-umami-event'] || (outbound ? 'link-click' : undefined)
 	const umamiUrl = props['data-umami-event-url'] || (outbound ? href : undefined)
 
-	return <NextIntlLink {...rest} href={href} data-umami-event={umamiEvent} data-umami-event-url={umamiUrl} />
+	if (
+		!href.toString().startsWith('mailto:') &&
+		!href.toString().startsWith('#') &&
+		!href.toString().startsWith('https://') &&
+		!href.toString().startsWith('http://') &&
+		!href.toString().startsWith('/')
+	) {
+		throw new Error('Link component requires a valid href prop')
+	}
+
+	return (
+		<NextIntlLink
+			{...rest}
+			href={href}
+			data-umami-event={umamiEvent}
+			data-umami-event-url={umamiUrl}
+			{...(rest?.target === '_blank' ? { rel: 'noopener noreferrer' } : {})}
+		/>
+	)
 }

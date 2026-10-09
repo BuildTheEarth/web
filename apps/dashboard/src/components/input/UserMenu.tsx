@@ -16,6 +16,7 @@ const UserMenu = ({ children }: { children: any }) => {
 					component={Link}
 					href="https://buildtheearth.net"
 					target="_blank"
+					rel="noopener noreferrer"
 					color={ACTION_COLORS.view}
 					leftSection={<IconWorld size={14} />}
 				>
@@ -25,6 +26,7 @@ const UserMenu = ({ children }: { children: any }) => {
 					component={Link}
 					href="https://buildtheearth.net/map"
 					target="_blank"
+					rel="noopener noreferrer"
 					color={ACTION_COLORS.view}
 					leftSection={<IconMap size={14} />}
 				>

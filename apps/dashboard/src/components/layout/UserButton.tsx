@@ -96,6 +96,7 @@ export function UserButton() {
 					component={Link}
 					href="https://buildtheearth.net"
 					target="_blank"
+					rel="noopener noreferrer"
 					color="cyan"
 					leftSection={<IconWorld size={14} />}
 				>
@@ -105,6 +106,7 @@ export function UserButton() {
 					component={Link}
 					href="https://buildtheearth.net/map"
 					target="_blank"
+					rel="noopener noreferrer"
 					color="cyan"
 					leftSection={<IconMap size={14} />}
 				>
@@ -114,6 +116,7 @@ export function UserButton() {
 					component={Link}
 					href="https://buildtheearth.net/contact"
 					target="_blank"
+					rel="noopener noreferrer"
 					color="cyan"
 					leftSection={<IconMail size={14} />}
 				>
