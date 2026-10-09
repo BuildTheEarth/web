@@ -16,7 +16,7 @@ export async function GET(req: NextRequest) {
 		includeAvatar: req.nextUrl.searchParams.get('includeAvatar') === 'true',
 		includeDiscord: req.nextUrl.searchParams.get('includeDiscord') === 'true',
 		includeMinecraft: req.nextUrl.searchParams.get('includeMinecraft') === 'true',
-		limit: parseInt(req.nextUrl.searchParams.get('limit') || '10', 10) || 10,
+		limit: Math.min(parseInt(req.nextUrl.searchParams.get('limit') || '10', 10), 50) || 10,
 	}
 
 	if (!searchQuery) {
