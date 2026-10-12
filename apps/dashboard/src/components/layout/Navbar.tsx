@@ -116,7 +116,7 @@ const data: (NavbarLink | NavbarLinkGroup)[] = [
 			{ label: 'FAQ', link: '/am/faq', permission: 'get-faq' },
 			{ label: 'Contacts', link: '/am/contacts', permission: 'get-contacts' },
 			{ label: 'SSO Configuration', link: '/am/sso', permission: 'get-config' },
-			{ label: 'Worker Queue', link: '/am/worker', permission: 'get-config' },
+			{ label: 'Worker Queue', link: '/am/worker', permission: 'manage-worker' },
 		],
 	},
 ]

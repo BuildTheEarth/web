@@ -4,6 +4,7 @@ import ContentWrapper from '@/components/core/ContentWrapper'
 import { Protection } from '@/components/Protection'
 import redisEventQueue from '@repo/shared/utils/redis'
 import { Metadata } from 'next'
+import { getSession, hasRole } from '@/util/auth'
 import JobsDatatable from './datatable'
 
 export const metadata: Metadata = {
@@ -12,6 +13,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
 	const jobs = await redisEventQueue.getJobs(undefined, true)
+	const session = await getSession()
 
 	if (!jobs) {
 		throw new Error('Failed to fetch jobs from Redis queue.')
@@ -25,12 +27,13 @@ export default async function Page() {
 	// TODO: manually add job modal
 
 	return (
-		<Protection requiredRole="get-contacts">
+		<Protection requiredRole="manage-worker">
 			<ContentWrapper maw="90vw">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Worker Queue</Title>
 				</Group>
 				<JobsDatatable
+					canEdit={hasRole(session, 'manage-worker')}
 					jobs={jobs.map((job) => ({
 						name: job.name,
 						data: JSON.stringify(job.data),

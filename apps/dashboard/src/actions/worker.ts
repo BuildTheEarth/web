@@ -1,30 +1,43 @@
 'use server'
 
-import { getSession } from '@/util/auth'
+import { getSession, hasRole } from '@/util/auth'
 import redisEventQueue from '@repo/shared/utils/redis'
 import { revalidatePath } from 'next/cache'
 
-export async function retryFailedJob(jobId: string) {
+async function requireWorkerManagementAccess() {
 	const session = await getSession()
-	if (!session) throw new Error('Unauthorized')
+	if (!hasRole(session, 'manage-worker')) {
+		throw new Error('Forbidden')
+	}
+	return session
+}
+
+export async function retryFailedJob(jobId: string) {
+	await requireWorkerManagementAccess()
 
 	const success = await redisEventQueue.retryJob(jobId)
 	revalidatePath('/am/worker')
 	return success
 }
 
+export async function retryJob(jobId: string) {
+	return retryFailedJob(jobId)
+}
+
 export async function retryAllFailedJobs() {
-	const session = await getSession()
-	if (!session) throw new Error('Unauthorized')
+	await requireWorkerManagementAccess()
 
 	const count = await redisEventQueue.retryFailedJobs()
 	revalidatePath('/am/worker')
 	return count
 }
 
+export async function retryFailedJobs() {
+	return retryAllFailedJobs()
+}
+
 export async function removeJob(jobId: string) {
-	const session = await getSession()
-	if (!session) throw new Error('Unauthorized')
+	await requireWorkerManagementAccess()
 
 	const success = await redisEventQueue.removeJob(jobId)
 	revalidatePath('/am/worker')
@@ -32,8 +45,7 @@ export async function removeJob(jobId: string) {
 }
 
 export async function clearQueue() {
-	const session = await getSession()
-	if (!session) throw new Error('Unauthorized')
+	await requireWorkerManagementAccess()
 
 	await redisEventQueue.clearQueue()
 	revalidatePath('/am/worker')

@@ -94,7 +94,7 @@ export default function JobsDatatable({
 
 	return (
 		<>
-			{failedCount > 0 && (
+			{failedCount > 0 && canEdit !== false && (
 				<Group justify="flex-end" mb="sm">
 					<Button
 						variant="light"
@@ -190,7 +190,7 @@ export default function JobsDatatable({
 						textAlign: 'right',
 						render: (job) => (
 							<Group gap={4} justify="right" wrap="nowrap">
-								{job.id && job.state === 'failed' && (
+								{job.id && job.state === 'failed' && canEdit !== false && (
 									<Tooltip label="Retry Job">
 										<ActionIcon
 											size="sm"
@@ -204,7 +204,7 @@ export default function JobsDatatable({
 										</ActionIcon>
 									</Tooltip>
 								)}
-								{job.id && (
+								{job.id && canEdit !== false && (
 									<Tooltip label="Remove Job">
 										<ActionIcon
 											size="sm"
