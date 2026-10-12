@@ -44,7 +44,6 @@ export default async function WelcomePage() {
 			.update(nonce + sessionState + clientId + 'discord')
 			.digest('base64url')
 
-		console.log(sessionState, nonce, clientId, hash)
 		return `${baseUrl}/broker/discord/link?client_id=${clientId}&redirect_uri=${encodeURIComponent(
 			redirectUri,
 		)}&nonce=${nonce}&hash=${hash}`

@@ -5,9 +5,14 @@ import keycloakAdmin from '@/util/keycloak'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { cache } from 'react'
 
-export const getUser = async () => {
+export const getUser = async (ssoId?: string) => {
 	const session = await getSession()
 	if (!session) throw Error('No session found')
+
+	const targetId = ssoId || session.user.id
+	if (targetId !== session.user.id && !hasRole(session, 'get-users') && !hasRole(session, 'edit-users')) {
+		throw Error('Unauthorized')
+	}
 
 	const user = await cache(
 		async (id: string) =>
@@ -22,7 +27,7 @@ export const getUser = async () => {
 					avatar: true,
 				},
 			}),
-	)(session.user.id)
+	)(targetId)
 
 	if (!user) throw Error('User not found')
 
@@ -161,39 +166,45 @@ export const ensureUserCreated = async () => {
 }
 
 export const getUserFederatedIdentities = async (ssoId?: string) => {
-	if (!ssoId) {
-		const session = await getSession()
-		if (!session) throw Error('No session found')
-		ssoId = session.user.id
+	const session = await getSession()
+	if (!session) throw Error('No session found')
+
+	const targetId = ssoId || session.user.id
+	if (targetId !== session.user.id && !hasRole(session, 'get-users') && !hasRole(session, 'edit-users')) {
+		throw Error('Unauthorized')
 	}
 
-	const kcUser = await keycloakAdmin.users.findOne({ id: ssoId })
+	const kcUser = await keycloakAdmin.users.findOne({ id: targetId })
 
 	return kcUser?.federatedIdentities || []
 }
 
 export const getUserSessions = async (ssoId?: string) => {
-	if (!ssoId) {
-		const session = await getSession()
-		if (!session) throw Error('No session found')
-		ssoId = session.user.id
+	const session = await getSession()
+	if (!session) throw Error('No session found')
+
+	const targetId = ssoId || session.user.id
+	if (targetId !== session.user.id && !hasRole(session, 'get-users') && !hasRole(session, 'edit-users')) {
+		throw Error('Unauthorized')
 	}
 
-	const sessions = await keycloakAdmin.users.listSessions({ id: ssoId })
+	const sessions = await keycloakAdmin.users.listSessions({ id: targetId })
 
 	return sessions || []
 }
 
 export const getUserPermissions = async (ssoId?: string) => {
-	if (!ssoId) {
-		const session = await getSession()
-		if (!session) throw Error('No session found')
-		ssoId = session.user.id
+	const session = await getSession()
+	if (!session) throw Error('No session found')
+
+	const targetId = ssoId || session.user.id
+	if (targetId !== session.user.id && !hasRole(session, 'get-users') && !hasRole(session, 'edit-users')) {
+		throw Error('Unauthorized')
 	}
 
 	const permissions = await prisma.userPermission.findMany({
 		where: {
-			user: { ssoId },
+			user: { ssoId: targetId },
 		},
 		include: {
 			permission: true,
@@ -208,6 +219,8 @@ export const checkBuildTeamPermission = async (
 	requiredBuildTeam: ({ id: string } | { slug: string }) & { permission: string },
 ): Promise<boolean> => {
 	const session = await getSession()
+	if (!session) return false
+
 	if (session) {
 		const req = requiredBuildTeam.permission
 		if (

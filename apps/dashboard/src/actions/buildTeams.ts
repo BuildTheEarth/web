@@ -961,11 +961,13 @@ export const reviewApplication = async ({
 }
 
 export const applyToBuildTeam = async (
-	data: { userId: string; buildTeamSlug: string },
+	data: { userId?: string; buildTeamSlug: string },
 	formData: FormData,
 ): Promise<void> => {
-	console.log(Object.fromEntries(formData))
-	console.log(data)
+	const session = await getSession()
+	if (!session) {
+		throw Error('Unauthorized')
+	}
 
 	let buildteam = await prisma.buildTeam.findUnique({
 		where: { slug: data.buildTeamSlug },
@@ -983,7 +985,7 @@ export const applyToBuildTeam = async (
 	})
 
 	const user = await prisma.user.findUnique({
-		where: { ssoId: data.userId },
+		where: { ssoId: session.user.id },
 		select: { id: true, discordId: true, ssoId: true, username: true },
 	})
 
