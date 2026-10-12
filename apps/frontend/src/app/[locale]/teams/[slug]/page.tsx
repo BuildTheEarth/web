@@ -155,6 +155,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					</Group>
 					<Group>
 						{[...buildTeam.socials, { name: 'discord', id: 'discord', icon: 'discord', url: buildTeam.invite }]
+							.filter((social) => Boolean(social.url))
 							.sort((a, b) => a.name.localeCompare(b.name))
 							.map((social) => (
 								<ActionIcon
@@ -229,26 +230,30 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
 									</Flex>
 								</Group>
-								<Divider style={{ margin: '0' }} my="xs" />
-								<Group justify="space-between">
-									<Flex align="center" gap="sm" py="xs">
-										<IconBrandDiscord size={20} />
-										<Text c="dimmed">{t('discord')}</Text>
-									</Flex>
-									<Flex
-										align="center"
-										gap={1}
-										py="xs"
-										style={{ cursor: 'pointer', textDecoration: 'none' }}
-										component={Link}
-										href={buildTeam.invite}
-										target="_blank"
-										rel="noopener noreferrer"
-									>
-										<Text c="indigo">.gg/{buildTeam.invite.split('/')[3]} </Text>
-										<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
-									</Flex>
-								</Group>
+								{buildTeam.invite ? (
+									<>
+										<Divider style={{ margin: '0' }} my="xs" />
+										<Group justify="space-between">
+											<Flex align="center" gap="sm" py="xs">
+												<IconBrandDiscord size={20} />
+												<Text c="dimmed">{t('discord')}</Text>
+											</Flex>
+											<Flex
+												align="center"
+												gap={1}
+												py="xs"
+												style={{ cursor: 'pointer', textDecoration: 'none' }}
+												component={Link}
+												href={buildTeam.invite}
+												target="_blank"
+												rel="noopener noreferrer"
+											>
+												<Text c="indigo">.gg/{buildTeam.invite.split('/').filter(Boolean).pop()} </Text>
+												<IconChevronRight size={20} stroke={2} color="var(--mantine-color-indigo-4)" />
+											</Flex>
+										</Group>
+									</>
+								) : null}
 								<Divider style={{ margin: '0' }} my="xs" />
 								<Group justify="space-between">
 									<Flex align="center" gap="sm" py="xs">
