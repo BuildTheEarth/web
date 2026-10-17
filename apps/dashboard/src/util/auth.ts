@@ -150,7 +150,38 @@ export const authOptions: AuthOptions = {
 				token.refreshTokenExpired = refreshExpiresIn ? Date.now() + (refreshExpiresIn - 15) * 1000 : undefined
 				token.sessionId = account.session_state
 				token.user = user
+
+				// Automatically ensure user database record and permissions exist upon initial authentication
+				if (typeof window === 'undefined') {
+					try {
+						const { ensureUserRecord } = await import('./ensureUser')
+						await ensureUserRecord({
+							ssoId: user.id,
+							username: (user as any).username,
+						})
+						token.userEnsured = true
+					} catch (error) {
+						console.error('Failed to ensure user record during jwt callback:', error)
+					}
+				}
+
 				return token
+			}
+
+			// If token was not marked as ensured yet, ensure it once and persist in token
+			if (!token.userEnsured && token.sub) {
+				if (typeof window === 'undefined') {
+					try {
+						const { ensureUserRecord } = await import('./ensureUser')
+						await ensureUserRecord({
+							ssoId: token.sub,
+							username: (token.user as any)?.username,
+						})
+						token.userEnsured = true
+					} catch (error) {
+						console.error('Failed to ensure user record for existing token:', error)
+					}
+				}
 			}
 
 			// If token already has an error (from previous check), return it immediately
