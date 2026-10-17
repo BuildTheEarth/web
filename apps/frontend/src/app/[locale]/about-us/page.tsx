@@ -10,6 +10,7 @@ import { Locale } from 'next-intl'
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 import LinkButton from '@/components/core/LinkButton'
 import AppearAnimation from '@/components/animations/AppearAnimation'
+import { SafeHtml } from '@repo/shared'
 
 export const dynamic = 'force-static'
 export const revalidate = 86400 // 24h
@@ -98,12 +99,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									{formatDate(item.date, item.date_display, formatter)}
 								</Text>
 
-								<Text
-									maw="100%"
-									component="div"
-									style={{ lineHeight: 1.6 }}
-									dangerouslySetInnerHTML={{ __html: item.content }}
-								/>
+								<Text maw="100%" component="div" style={{ lineHeight: 1.6 }}>
+									<SafeHtml html={item.content} />
+								</Text>
 
 								{item.link && (
 									<LinkButton

@@ -24,6 +24,7 @@
 		"@next/bundle-analyzer": "16.2.4",
 		"@prisma/adapter-pg": "^7.8.0",
 		"@repo/db": "*",
+		"@repo/shared": "*",
 		"@tabler/icons-react": "^3.31.0",
 		"clsx": "^2.1.1",
 		"embla-carousel": "^8.5.2",

@@ -28,6 +28,7 @@ import {
 	Tooltip,
 } from '@mantine/core'
 import { ApplicationStatus } from '@repo/db'
+import { SafeHtml } from '@repo/shared'
 import {
 	IconAlertCircle,
 	IconBrandDiscord,
@@ -118,7 +119,7 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 							style={{ width: '100%', height: '100%', flexGrow: 1 }}
 						>
 							<ScrollAreaAutosize h="100%" type="auto" offsetScrollbars>
-								<div dangerouslySetInnerHTML={{ __html: team.about }} />
+								<SafeHtml html={team.about} />
 							</ScrollAreaAutosize>
 						</TextCard>
 					</Flex>

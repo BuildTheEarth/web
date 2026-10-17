@@ -15,10 +15,21 @@
 	"dependencies": {
 		"@repo/typescript-config": "*",
 		"bullmq": "^5.77.0",
-		"ioredis": "^5.10.1"
+		"ioredis": "^5.10.1",
+		"sanitize-html": "^2.18.1"
 	},
 	"devDependencies": {
+		"@types/react": "^19.3.0",
+		"@types/sanitize-html": "^2.16.2",
 		"typescript": "^5.6.3"
+	},
+	"peerDependencies": {
+		"react": ">=18"
+	},
+	"peerDependenciesMeta": {
+		"react": {
+			"optional": true
+		}
 	},
 	"exports": {
 		".": {
@@ -28,6 +39,14 @@
 		"./utils": {
 			"types": "./src/utils/index.ts",
 			"default": "./src/utils/index.ts"
+		},
+		"./sanitizer": {
+			"types": "./src/utils/sanitizer.ts",
+			"default": "./src/utils/sanitizer.ts"
+		},
+		"./components": {
+			"types": "./src/components/index.ts",
+			"default": "./src/components/index.ts"
 		}
 	}
 }

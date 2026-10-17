@@ -9,6 +9,7 @@ import { Protection } from '@/components/Protection'
 import { getCountryNames } from '@/util/countries'
 import { toHumanDate } from '@/util/date'
 import prisma from '@/util/db'
+import { SafeHtml } from '@repo/shared'
 import {
 	Alert,
 	Button,
@@ -153,7 +154,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 							style={{ width: '100%', height: '100%', flexGrow: 1 }}
 						>
 							<ScrollAreaAutosize h="100%" type="auto" offsetScrollbars>
-								<div dangerouslySetInnerHTML={{ __html: team.about }} />
+								<SafeHtml html={team.about} />
 							</ScrollAreaAutosize>
 						</TextCard>
 						<TextCard title="Locations / Countries" icon={IconMap} style={{ width: '100%' }}>

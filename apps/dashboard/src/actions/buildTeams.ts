@@ -4,6 +4,7 @@ import { checkBuildTeamPermission } from './getUser'
 import { revalidateWebsitePaths } from '@/util/data'
 import prisma from '@/util/db'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
+import { sanitizeHtml } from '@repo/shared'
 import { Application, ApplicationQuestionType, ApplicationStatus } from '@repo/db'
 import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
@@ -252,7 +253,8 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 	const icon = formData.get('icon') as string
 	const backgroundImage = formData.get('backgroundImage') as string
 	const location = formData.get('location') as string
-	const about = formData.get('about') as string
+	const rawAbout = formData.get('about') as string | null
+	const about = rawAbout !== null ? sanitizeHtml(rawAbout) : undefined
 	const ip = formData.get('ip') as string
 	const version = formData.get('version') as string
 	const invite = formData.get('invite') as string

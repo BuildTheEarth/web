@@ -8,6 +8,7 @@ import { IconLanguage } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { SafeHtml } from '@repo/shared'
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }): Promise<Metadata> {
 	const locale = (await params).locale
@@ -66,7 +67,7 @@ export default async function Page({
 					<AccordionItem key={faq.id} value={faq.question}>
 						<AccordionControl>{faq.question}</AccordionControl>
 						<AccordionPanel>
-							<div dangerouslySetInnerHTML={{ __html: faq.answer }} />
+							<SafeHtml html={faq.answer} />
 						</AccordionPanel>
 					</AccordionItem>
 				))}

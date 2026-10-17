@@ -38,6 +38,7 @@ import { Locale } from 'next-intl'
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 import JoinServerGuide from './interactivity'
 import { CustomSocialIcon } from '@/components/data/CustomSocialIcon'
+import { SafeHtml } from '@repo/shared'
 
 export async function generateMetadata({
 	params,
@@ -195,7 +196,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 						<Box>
 							<Title order={2}>{t('overview')}</Title>
 							<div className="heading-underline" style={{ marginBottom: 'var(--mantine-spacing-lg)' }} />
-							<Box maw={{ base: '100%', xs: '90%' }} dangerouslySetInnerHTML={{ __html: buildTeam.about }} />
+							<Box maw={{ base: '100%', xs: '90%' }}>
+								<SafeHtml html={buildTeam.about} />
+							</Box>
 						</Box>
 					</GridCol>
 					<GridCol span={{ xl: 4 }} offset={{ xl: 2 }} style={{ position: 'relative' }}>

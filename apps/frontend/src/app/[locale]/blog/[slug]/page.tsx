@@ -9,6 +9,7 @@ import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getFormatter, getTranslations, setRequestLocale } from 'next-intl/server'
 import { notFound } from 'next/navigation'
+import { SafeHtml } from '@repo/shared'
 export const dynamic = 'force-static'
 export const revalidate = 86400 // 24h minutes
 
@@ -71,7 +72,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 
 	return (
 		<Wrapper offsetHeader={false} head={{ title: post.title, src: `${directus.url}assets/${post.hero_image}` }}>
-			<Box dangerouslySetInnerHTML={{ __html: post.content }} className={styles.blogContent} />
+			<Box className={styles.blogContent}>
+				<SafeHtml html={post.content} />
+			</Box>
 
 			<Group wrap="nowrap" gap={10} mt="xs" mb="md" justify="flex-end">
 				<Tooltip label={'Published on ' + formatter.dateTime(new Date(post.published_at), { dateStyle: 'medium' })}>
