@@ -269,6 +269,7 @@ class Routes {
 			body('slug').isString().optional(),
 			body('version').isString().optional(),
 			body('ip').isString().optional(),
+			body('supportsBedrock').isBoolean().optional(),
 			checkUserPermission(this.web.getCore().getPrisma(), 'buildteam.settings.edit', 'id'),
 		)
 		router.addRoute(
@@ -571,62 +572,6 @@ class Routes {
 			param('id').isUUID(),
 			checkUserPermission(this.web.getCore().getPrisma(), 'faq.remove'),
 		)
-
-		/*
-		 *
-		 * Calendar Routes
-		 *
-		 */
-
-		router.addRoute(
-			RequestMethods.GET,
-			'/calendar',
-			async (request, response) => {
-				await controllers.calendar.getCalendarEvents(request, response)
-			},
-			query('page').isNumeric().optional(),
-		)
-		router.addRoute(
-			RequestMethods.POST,
-			'/calendar',
-			async (request, response) => {
-				await controllers.calendar.addCalendarEvent(request, response)
-			},
-			body('name').isString(),
-			body('description').isString().optional(),
-			body('start').isString(),
-			body('end').isString(),
-			body('city').isString().optional(),
-			body('country').isString().optional(),
-			body('discordLink').isString().optional(),
-			body('buildTeam').isString().optional(),
-			query('slug').optional(),
-			checkUserPermission(this.web.getCore().getPrisma(), 'calendar.manage'),
-		)
-		router.addRoute(RequestMethods.GET, '/calendar/:id', async (request, response) => {
-			await controllers.calendar.getCalendarEvent(request, response)
-		})
-		// router.addRoute(
-		//   RequestMethods.POST,
-		//   "/calendar/:id",
-		//   async (request, response) => {
-		//     await controllers.calendar.editFaqQuestion(request, response);
-		//   },
-		//   param("id").isUUID(),
-		//   body("answer").isString().optional(),
-		//   body("question").isString().optional(),
-		//   body("links").isArray().optional(),
-		//   checkUserPermission(this.web.getCore().getPrisma(), "faq.edit")
-		// );
-		// router.addRoute(
-		//   RequestMethods.DELETE,
-		//   "/calendar/:id",
-		//   async (request, response) => {
-		//     await controllers.calendar.deleteFaqQuestions(request, response);
-		//   },
-		//   param("id").isUUID(),
-		//   checkUserPermission(this.web.getCore().getPrisma(), "faq.remove")
-		// );
 
 		/*
 		 *

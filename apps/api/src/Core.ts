@@ -5,7 +5,7 @@ import { LIB_LICENSE, LIB_VERSION } from './util/package.js'
 import { applicationReminder, purgeClaims, purgeVerifications } from './util/Prisma.js'
 
 import { PrismaPg } from '@prisma/adapter-pg'
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@repo/db'
 
 import Keycloak from 'keycloak-connect'
 import AmazonAWS from './util/AmazonAWS.js'

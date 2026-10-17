@@ -8,7 +8,6 @@ import AdminController from '../controllers/AdminController.js'
 import ApplicationController from '../controllers/ApplicationController.js'
 import BlogController from '../controllers/BlogController.js'
 import BuildTeamController from '../controllers/BuildTeamController.js'
-import CalendarController from '../controllers/CalendarController.js'
 import ClaimController from '../controllers/ClaimController.js'
 import ContactController from '../controllers/ContactController.js'
 import FaqController from '../controllers/FAQController.js'
@@ -39,7 +38,6 @@ class Web {
 		blog: BlogController
 		admin: AdminController
 		tokenRoute: TokenRouteContoller
-		calendar: CalendarController
 	}
 
 	fileStorage: any
@@ -101,7 +99,6 @@ class Web {
 			tokenRoute: new TokenRouteContoller(core),
 			blog: new BlogController(core),
 			admin: new AdminController(core),
-			calendar: new CalendarController(core),
 		}
 	}
 

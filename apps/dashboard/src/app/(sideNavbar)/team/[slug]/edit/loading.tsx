@@ -132,6 +132,14 @@ export default function Loading() {
 									name="invite"
 									description="A link to your BuildTeam's Discord server."
 								/>
+
+								<Switch
+									label="Supports Bedrock"
+									disabled
+									id="supportsBedrock"
+									name="supportsBedrock"
+									description="Set that your buildteam supports Bedrock players."
+								/>
 							</SimpleGrid>
 						</TextCard>
 						<TextCard title={`Applications`} icon={IconSocial} style={{ width: '100%', height: '100%', flexGrow: 1 }}>

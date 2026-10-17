@@ -1740,6 +1740,10 @@
 						"type": "boolean",
 						"example": true
 					},
+					"supportsBedrock": {
+						"type": "boolean",
+						"example": false
+					},
 					"_count": {
 						"type": "object",
 						"properties": {

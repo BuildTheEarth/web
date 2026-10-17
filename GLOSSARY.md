@@ -24,10 +24,6 @@ _Avoid_: Portfolio item, gallery post, spotlight
 A stored binary media file (such as an in-game screenshot) associated with a showcase or claim.
 _Avoid_: Attachment, screenshot, asset, picture
 
-**Calendar Event**:
-A scheduled public or team-specific building session, contest, or milestone event.
-_Avoid_: Schedule entry, meetup, session, contest
-
 ### People & Roles
 
 **User**:

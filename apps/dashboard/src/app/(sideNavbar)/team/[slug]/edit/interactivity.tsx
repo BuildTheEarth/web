@@ -90,6 +90,7 @@ export function EditTeamForm({ team }: { team: BuildTeam }) {
 	const [allowApplications, setAllowApplications] = useState(team.allowApplications ?? false)
 	const [allowTrial, setAllowTrial] = useState(team.allowTrial ?? false)
 	const [allowBuilderClaim, setAllowBuilderClaim] = useState(team.allowBuilderClaim ?? false)
+	const [supportsBedrock, setSupportsBedrock] = useState(team.supportsBedrock ?? false)
 
 	useEffect(() => {
 		setName(team.name)
@@ -100,6 +101,7 @@ export function EditTeamForm({ team }: { team: BuildTeam }) {
 		setAllowApplications(team.allowApplications ?? false)
 		setAllowTrial(team.allowTrial ?? false)
 		setAllowBuilderClaim(team.allowBuilderClaim ?? false)
+		setSupportsBedrock(team.supportsBedrock ?? false)
 	}, [team])
 
 	return (
@@ -296,6 +298,15 @@ export function EditTeamForm({ team }: { team: BuildTeam }) {
 							id="invite"
 							name="invite"
 							description="A link to your BuildTeam's Discord server."
+						/>
+
+						<Switch
+							label="Supports Bedrock"
+							checked={supportsBedrock}
+							onChange={(e) => setSupportsBedrock(e.currentTarget.checked)}
+							id="supportsBedrock"
+							name="supportsBedrock"
+							description="Set that your buildteam supports Bedrock players."
 						/>
 					</SimpleGrid>
 				</TextCard>

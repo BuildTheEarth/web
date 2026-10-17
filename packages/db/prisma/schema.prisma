@@ -59,6 +59,7 @@ model BuildTeam {
   webhook              String?
   allowApplications    Boolean?                      @default(true)
   color                String                        @default("#1098AD")
+  supportsBedrock      Boolean?                      @default(false)
   Application          Application[]
   applicationQuestions ApplicationQuestion[]         @relation("applicationQuestions")
   creator              User                          @relation("creator", fields: [creatorId], references: [id])
@@ -67,7 +68,6 @@ model BuildTeam {
   socials              Social[]                      @relation("socials")
   UserPermission       UserPermission[]
   members              User[]                        @relation("members")
-  CalendarEvent        CalendarEvent[]
   responseTemplate     ApplicationResponseTemplate[]
 }
 
@@ -218,18 +218,6 @@ model Upload {
   claimId   String?
 }
 
-model CalendarEvent {
-  id          String     @id @default(uuid())
-  name        String
-  description String?
-  city        String?
-  country     String?
-  start       DateTime
-  end         DateTime
-  discordLink String?
-  buildTeam   BuildTeam? @relation(fields: [buildTeamId], references: [id])
-  buildTeamId String?
-}
 
 model JsonStore {
   id   String @id @default(uuid())

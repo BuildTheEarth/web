@@ -82,13 +82,6 @@ export const adminTransferTeam = async (
 			})
 			console.log('showcases', showcases)
 			return showcases
-		case 'move-calendar':
-			const calendar = await prisma.calendarEvent.updateMany({
-				where: { buildTeamId: id },
-				data: { buildTeamId: destinationId },
-			})
-			console.log('calendar', calendar)
-			return calendar
 		case 'copy-members':
 			const members = await prisma.user.findMany({
 				where: { joinedBuildTeams: { some: { id } } },
@@ -265,6 +258,7 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 	const rejectionMessage = formData.get('rejectionMessage') as string
 	const trialMessage = formData.get('trialMessage') as string
 	const webhook = formData.get('webhook') as string
+	const supportsBedrock = formData.get('supportsBedrock') === 'on'
 
 	const updatedTeam = await prisma.buildTeam.update({
 		where: { id },
@@ -285,6 +279,7 @@ export const userEditTeamInfo = async (formData: FormData): Promise<void> => {
 			rejectionMessage: rejectionMessage ?? undefined,
 			trialMessage: trialMessage ?? undefined,
 			webhook: webhook ?? undefined,
+			supportsBedrock: supportsBedrock ?? undefined,
 		},
 	})
 

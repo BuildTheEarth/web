@@ -4,7 +4,6 @@ import { Alert, Box, Button, Checkbox, SimpleGrid, Stepper, Text, Title, rem } f
 import {
 	Icon,
 	IconBrandDiscord,
-	IconCalendar,
 	IconExclamationCircle,
 	IconForms,
 	IconMessage,
@@ -50,13 +49,6 @@ export function TransferStepper({ id }: { id: string }) {
 			title: 'Move Showcase Images',
 			description: `Transfer all showcase images made by this Build Team to the destination Build Team.`,
 			button: 'Showcase Images',
-		},
-		{
-			id: 'move-calendar',
-			icon: IconCalendar,
-			title: 'Move Calendar Events',
-			description: `Transfer all calendar events made by this Build Team to the destination Build Team.`,
-			button: 'Calendar Events',
 		},
 		{
 			id: 'copy-members',
@@ -129,7 +121,7 @@ export function TransferStepper({ id }: { id: string }) {
 				<Alert title="Warning" color="red" mb="md" icon={<IconExclamationCircle />}>
 					Actions performed on this page are irreversible and cause heavy data mutations. Please be careful of what you
 					are doing here. You will need to confirm every action. To get started, select the destination Build Team you
-					want to transfer some of the data (Showcase Images, Claims, Members, Calendar Events) to below.
+					want to transfer some of the data (Showcase Images, Claims, Members) to below.
 				</Alert>
 
 				<BuildTeamSelect
