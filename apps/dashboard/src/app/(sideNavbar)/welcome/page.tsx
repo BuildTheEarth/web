@@ -17,8 +17,8 @@ import {
 import ContentWrapper from '@/components/core/ContentWrapper'
 import LinkButton from '@/components/core/LinkButton'
 import Anchor from '@/components/core/Anchor'
-import Link from 'next/link'
 import { Metadata } from 'next'
+import SkipButton from './SkipButton'
 
 export const metadata: Metadata = {
 	title: 'Welcome',
@@ -51,12 +51,15 @@ export default async function WelcomePage() {
 
 	return (
 		<ContentWrapper maw="800px">
-			<Title order={1} mt="xl" mb="md">
-				Welcome, {session.user.username}!
-			</Title>
-			<Text c="dimmed" size="md" mb="lg">
-				Thank you for joining the BuildTheEarth community!
-			</Text>
+			<Group justify="space-between" align="flex-start" mt="xl" mb="md">
+				<div>
+					<Title order={1}>Welcome, {session.user.username}!</Title>
+					<Text c="dimmed" size="md">
+						Thank you for joining the BuildTheEarth community!
+					</Text>
+				</div>
+				<SkipButton />
+			</Group>
 			<Text mt="md">
 				To get started, please follow the steps below to finish setting up your account. If you have any questions or
 				need assistance, feel free to reach out to our community on Discord or check our guides and resources.
@@ -163,6 +166,14 @@ export default async function WelcomePage() {
 					</Anchor>
 				</Text>
 			</Stack>
+
+			<Divider my="xl" />
+			<Group justify="space-between" align="center" mb="xl">
+				<Text size="sm" c="dimmed">
+					Want to explore the dashboard first? You can always return to this setup page later.
+				</Text>
+				<SkipButton />
+			</Group>
 		</ContentWrapper>
 	)
 }

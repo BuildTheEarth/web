@@ -15,6 +15,8 @@ export interface ProvisionedUser {
 	discordId: string | null
 	minecraft: string | null
 	avatar: string | null
+	onboardingCompletedAt?: Date | null
+	onboardingDismissed?: boolean
 }
 
 export interface EnsureUserResult {
@@ -59,6 +61,8 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 			discordId: true,
 			minecraft: true,
 			avatar: true,
+			onboardingCompletedAt: true,
+			onboardingDismissed: true,
 		},
 	})
 
@@ -97,6 +101,8 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 					discordId: true,
 					minecraft: true,
 					avatar: true,
+					onboardingCompletedAt: true,
+					onboardingDismissed: true,
 				},
 			})
 		}
@@ -139,6 +145,8 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 				discordId: true,
 				minecraft: true,
 				avatar: true,
+				onboardingCompletedAt: true,
+				onboardingDismissed: true,
 			},
 		})
 
@@ -178,6 +186,8 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 				discordId: true,
 				minecraft: true,
 				avatar: true,
+				onboardingCompletedAt: true,
+				onboardingDismissed: true,
 			},
 		})
 	} catch (error: any) {
@@ -192,6 +202,8 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 					discordId: true,
 					minecraft: true,
 					avatar: true,
+					onboardingCompletedAt: true,
+					onboardingDismissed: true,
 				},
 			})
 			if (existing) {

@@ -25,8 +25,10 @@ model User {
   discordId         String?
   avatar            String?
   username          String?
-  minecraft         String?
-  reviewed          Application[]            @relation("reviewer")
+  minecraft             String?
+  onboardingCompletedAt DateTime?
+  onboardingDismissed   Boolean                  @default(false)
+  reviewed              Application[]            @relation("reviewer")
   applications      Application[]            @relation("user")
   createdBuildTeams BuildTeam[]              @relation("creator")
   claims            Claim[]                  @relation("owner")

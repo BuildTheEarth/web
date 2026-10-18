@@ -155,11 +155,15 @@ export const authOptions: AuthOptions = {
 				if (typeof window === 'undefined') {
 					try {
 						const { ensureUserRecord } = await import('./ensureUser')
-						await ensureUserRecord({
+						const result = await ensureUserRecord({
 							ssoId: user.id,
 							username: (user as any).username,
 						})
 						token.userEnsured = true
+						token.onboardingCompletedAt = result.user.onboardingCompletedAt
+							? result.user.onboardingCompletedAt.toISOString()
+							: null
+						token.onboardingDismissed = result.user.onboardingDismissed ?? false
 					} catch (error) {
 						console.error('Failed to ensure user record during jwt callback:', error)
 					}
@@ -168,16 +172,20 @@ export const authOptions: AuthOptions = {
 				return token
 			}
 
-			// If token was not marked as ensured yet, ensure it once and persist in token
-			if (!token.userEnsured && token.sub) {
+			// If token was not marked as ensured yet, or onboarding status is missing, ensure it and persist in token
+			if ((!token.userEnsured || token.onboardingDismissed === undefined) && token.sub) {
 				if (typeof window === 'undefined') {
 					try {
 						const { ensureUserRecord } = await import('./ensureUser')
-						await ensureUserRecord({
+						const result = await ensureUserRecord({
 							ssoId: token.sub,
 							username: (token.user as any)?.username,
 						})
 						token.userEnsured = true
+						token.onboardingCompletedAt = result.user.onboardingCompletedAt
+							? result.user.onboardingCompletedAt.toISOString()
+							: null
+						token.onboardingDismissed = result.user.onboardingDismissed ?? false
 					} catch (error) {
 						console.error('Failed to ensure user record for existing token:', error)
 					}
@@ -215,7 +223,11 @@ export const authOptions: AuthOptions = {
 				}
 
 				// @ts-expect-error shut up typescript
-				session.user = token.user
+				session.user = {
+					...token.user,
+					onboardingCompletedAt: token.onboardingCompletedAt,
+					onboardingDismissed: token.onboardingDismissed,
+				}
 				session.error = token.error
 				session.accessToken = token.accessToken
 			}

@@ -25,6 +25,8 @@ export const getUser = async (ssoId?: string) => {
 					discordId: true,
 					minecraft: true,
 					avatar: true,
+					onboardingCompletedAt: true,
+					onboardingDismissed: true,
 				},
 			}),
 	)(targetId)
