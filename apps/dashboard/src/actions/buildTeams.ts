@@ -3,6 +3,7 @@ import { getSession, hasRole } from '@/util/auth'
 import { checkBuildTeamPermission } from './getUser'
 import { revalidateWebsitePaths } from '@/util/data'
 import prisma from '@/util/db'
+import keycloakAdmin from '@/util/keycloak'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { sanitizeHtml } from '@repo/shared'
 import { Application, ApplicationQuestionType, ApplicationStatus } from '@repo/db'
@@ -992,6 +993,28 @@ export const applyToBuildTeam = async (
 
 	if (!user) {
 		throw Error('User not found')
+	}
+
+	let discordId = user.discordId
+	if (!discordId) {
+		try {
+			const kcUser = await keycloakAdmin.users.findOne({ id: session.user.id })
+			const discordIdentity = kcUser?.federatedIdentities?.find((fi: any) => fi.identityProvider === 'discord')
+			if (discordIdentity?.userId) {
+				discordId = discordIdentity.userId
+				user.discordId = discordId
+				await prisma.user.update({
+					where: { id: user.id },
+					data: { discordId },
+				})
+			}
+		} catch (e) {
+			console.error('Failed to check Discord identity in applyToBuildTeam:', e)
+		}
+	}
+
+	if (!discordId) {
+		throw Error('You must connect your Discord account before applying to a Build Team')
 	}
 
 	// TODO: check if user is on BTE.net discord
