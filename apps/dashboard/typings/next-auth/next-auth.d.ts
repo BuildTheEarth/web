@@ -37,6 +37,7 @@ declare module 'next-auth' {
 			}
 			minecraft?: string
 			minecraft_verified?: boolean
+			minecraftVerified?: boolean
 			onboardingCompletedAt?: string | null
 			onboardingDismissed?: boolean
 		}
@@ -113,6 +114,7 @@ declare module 'next-auth/jwt' {
 		error: string
 		userEnsured?: boolean
 		minecraft?: string | null
+		minecraftVerified?: boolean
 		onboardingCompletedAt?: string | null
 		onboardingDismissed?: boolean
 	}

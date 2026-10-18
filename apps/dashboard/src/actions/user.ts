@@ -4,6 +4,7 @@ import prisma from '@/util/db'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import keycloakAdmin from '@/util/keycloak'
 import { revalidatePath } from 'next/cache'
+import { markUserConfirmed } from '@/util/ensureUser'
 
 const requireEditUsersPermission = async () => {
 	const session = await getSession()
@@ -124,24 +125,126 @@ export const getUserBuildTeams = async (ssoId?: string) => {
 	return buildteams
 }
 
-export const editOwnProfile = async (prevState: any, data: { email: string; username: string }): Promise<any> => {
+export const editOwnProfile = async (
+	prevState: any,
+	data: { username: string; minecraft?: string; minecraftUuid?: string },
+): Promise<any> => {
 	try {
 		const session = await getSession()
-		if (!session) {
+		if (!session || !session.user) {
 			return { status: 'error', error: 'Unauthorized' }
 		}
 		const ssoId = session.user.id
 
-		const user = await prisma.user.update({
-			where: { ssoId },
-			data: { username: data.username },
+		const trimmedUsername = data.username?.trim()
+		if (!trimmedUsername || trimmedUsername.length < 3) {
+			return { status: 'error', error: 'Username must be at least 3 characters long' }
+		}
+		if (trimmedUsername.length > 25) {
+			return { status: 'error', error: 'Username must be at most 25 characters long' }
+		}
+		if (!/^[a-zA-Z0-9_]+$/.test(trimmedUsername)) {
+			return { status: 'error', error: 'Username can only contain letters, numbers and underscores' }
+		}
+
+		const dbUser = await prisma.user.findFirst({
+			where: {
+				OR: [{ ssoId }, { id: ssoId }],
+			},
 		})
-		await keycloakAdmin.users.update({ id: user.ssoId }, { username: data.username, email: data.email })
-		const kcUser = await keycloakAdmin.users.findOne({ id: user.ssoId })
+
+		if (!dbUser) {
+			return { status: 'error', error: 'User not found' }
+		}
+
+		const updateData: { username: string; minecraft?: string } = {
+			username: trimmedUsername,
+		}
+
+		let trimmedMinecraft: string | undefined = undefined
+		if (typeof data.minecraft !== 'undefined') {
+			trimmedMinecraft = data.minecraft.trim()
+			if (trimmedMinecraft) {
+				if (!/^[a-zA-Z0-9_]{3,16}$/.test(trimmedMinecraft)) {
+					return {
+						status: 'error',
+						error: 'Minecraft Java Edition usernames must be 3-16 characters (letters, numbers, underscores)',
+					}
+				}
+				updateData.minecraft = trimmedMinecraft
+			}
+		}
+
+		const user = await prisma.user.update({
+			where: { id: dbUser.id },
+			data: updateData,
+			select: {
+				id: true,
+				ssoId: true,
+				username: true,
+				minecraft: true,
+				discordId: true,
+				avatar: true,
+				onboardingCompletedAt: true,
+				onboardingDismissed: true,
+			},
+		})
+
+		markUserConfirmed(user.ssoId, user)
+
+		// Update Keycloak profile: update username and minecraft attributes
+		// Note: email updates are blocked to prevent unauthorized or unverified email changes
+		try {
+			const kcUser = await keycloakAdmin.users.findOne({ id: user.ssoId })
+			const attributes: Record<string, any> = {
+				...kcUser?.attributes,
+			}
+			if (typeof trimmedMinecraft !== 'undefined' && trimmedMinecraft) {
+				attributes.minecraft = trimmedMinecraft
+				if (dbUser.minecraft?.toLowerCase() !== trimmedMinecraft.toLowerCase()) {
+					attributes.minecraftVerified = false
+				}
+				if (data.minecraftUuid) {
+					attributes.minecraftUuid = data.minecraftUuid
+				}
+			}
+
+			await keycloakAdmin.users.update(
+				{ id: user.ssoId },
+				{
+					username: trimmedUsername,
+					attributes,
+				},
+			)
+		} catch (kcError: any) {
+			console.error('Failed to update Keycloak profile:', kcError?.response?.data || kcError?.message || kcError)
+		}
+
+		revalidatePath('/', 'layout')
+		revalidatePath('/me/settings')
 		return { status: 'success', user }
 	} catch (error) {
 		console.error('Error updating user:', error)
 		return { status: 'error', error: 'Failed to update user' }
+	}
+}
+
+export const getMinecraftVerificationStatus = async (): Promise<{ isVerified: boolean; minecraft: string | null }> => {
+	try {
+		const session = await getSession()
+		if (!session || !session.user) return { isVerified: false, minecraft: null }
+		const kcUser = await keycloakAdmin.users.findOne({ id: session.user.id })
+		const verifiedAttr = kcUser?.attributes?.minecraftVerified
+		const isVerified = Array.isArray(verifiedAttr)
+			? verifiedAttr[0] === 'true' || verifiedAttr[0] === true
+			: verifiedAttr === 'true' || verifiedAttr === true
+		const minecraftAttr = kcUser?.attributes?.minecraft
+		const minecraft =
+			(Array.isArray(minecraftAttr) ? minecraftAttr[0] : minecraftAttr) || session.user.minecraft || null
+		return { isVerified, minecraft }
+	} catch (e) {
+		console.error('Failed to get minecraft verification status:', e)
+		return { isVerified: false, minecraft: null }
 	}
 }
 

@@ -5,6 +5,7 @@ import prisma from '@/util/db'
 import { Metadata } from 'next'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import WelcomeStepper from './WelcomeStepper'
+import keycloakAdmin from '@/util/keycloak'
 
 export const metadata: Metadata = {
 	title: 'Welcome',
@@ -21,11 +22,17 @@ export default async function WelcomePage({
 
 	const { user } = await ensureUserCreated()
 
+	let isMinecraftVerified = false
 	let federatedIdentities: any[] = []
 	try {
-		federatedIdentities = await getUserFederatedIdentities(session.user.id)
+		const kcUser = await keycloakAdmin.users.findOne({ id: session.user.id })
+		federatedIdentities = kcUser?.federatedIdentities || []
+		const verifiedAttr = kcUser?.attributes?.minecraftVerified
+		isMinecraftVerified = Array.isArray(verifiedAttr)
+			? verifiedAttr[0] === 'true' || verifiedAttr[0] === true
+			: verifiedAttr === 'true' || verifiedAttr === true
 	} catch (e) {
-		console.warn('Could not fetch federated identities on welcome page:', e)
+		console.warn('Could not fetch Keycloak details on welcome page:', e)
 	}
 	const discordIdentity = federatedIdentities.find((fi: any) => fi.identityProvider === 'discord')
 	const isDiscordLinked = !!(user.discordId || discordIdentity?.userId)
@@ -68,6 +75,7 @@ export default async function WelcomePage({
 					username: user.username,
 					discordId: user.discordId,
 					minecraft: user.minecraft,
+					minecraftVerified: isMinecraftVerified,
 				}}
 				discordIdentity={
 					discordIdentity

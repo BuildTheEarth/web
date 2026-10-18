@@ -136,8 +136,20 @@ export const authOptions: AuthOptions = {
 
 		jwt: async ({ token, account, user, trigger, session: updateSession }) => {
 			if (trigger === 'update' && updateSession) {
+				if (typeof updateSession.username !== 'undefined') {
+					if (token.user) {
+						;(token.user as any).username = updateSession.username
+					}
+				}
 				if (typeof updateSession.minecraft !== 'undefined') {
 					token.minecraft = updateSession.minecraft
+				}
+				if (typeof updateSession.minecraftVerified !== 'undefined') {
+					token.minecraftVerified = updateSession.minecraftVerified
+				} else if (typeof updateSession.minecraft_verified !== 'undefined') {
+					token.minecraftVerified = updateSession.minecraft_verified
+				} else if (typeof updateSession.minecraft !== 'undefined') {
+					token.minecraftVerified = false
 				}
 				if (typeof updateSession.onboardingCompletedAt !== 'undefined') {
 					token.onboardingCompletedAt = updateSession.onboardingCompletedAt
@@ -243,6 +255,16 @@ export const authOptions: AuthOptions = {
 				session.user = {
 					...token.user,
 					minecraft: token.minecraft ?? (token.user as any)?.minecraft ?? null,
+					minecraftVerified:
+						token.minecraftVerified ??
+						(token.user as any)?.minecraftVerified ??
+						(token.user as any)?.minecraft_verified ??
+						false,
+					minecraft_verified:
+						token.minecraftVerified ??
+						(token.user as any)?.minecraftVerified ??
+						(token.user as any)?.minecraft_verified ??
+						false,
 					onboardingCompletedAt: token.onboardingCompletedAt,
 					onboardingDismissed: token.onboardingDismissed,
 				}

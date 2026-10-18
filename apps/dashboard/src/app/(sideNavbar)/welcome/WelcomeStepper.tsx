@@ -48,6 +48,7 @@ export interface WelcomeStepperProps {
 		username: string | null
 		discordId: string | null
 		minecraft: string | null
+		minecraftVerified?: boolean
 	}
 	discordIdentity: {
 		userId?: string
@@ -195,7 +196,10 @@ export default function WelcomeStepper({
 	}
 
 	const isChangingUsername =
-		!!savedMinecraft && lookupResult != null && savedMinecraft.toLowerCase() !== lookupResult.username.toLowerCase()
+		!!savedMinecraft &&
+		!!user.minecraftVerified &&
+		lookupResult != null &&
+		savedMinecraft.toLowerCase() !== lookupResult.username.toLowerCase()
 
 	return (
 		<div>

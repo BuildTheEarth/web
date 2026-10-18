@@ -30,3 +30,63 @@ export function UserDisplay({
 		</Link>
 	)
 }
+
+export function MinecraftDisplay({
+	minecraft,
+	skinUrl,
+	fallbackUrl,
+	noAnchor = false,
+}: {
+	minecraft?: string | null
+	skinUrl?: string | null
+	fallbackUrl?: string | null
+	noAnchor?: boolean
+}) {
+	const trimmed = minecraft?.trim()
+	const avatarSrc = skinUrl || (trimmed ? `https://mineskin.eu/helm/${encodeURIComponent(trimmed)}/100.png` : undefined)
+	const fallback =
+		fallbackUrl || (trimmed ? `https://mc-heads.net/avatar/${encodeURIComponent(trimmed)}/100.png` : undefined)
+
+	const content = (
+		<Group gap="sm" key={trimmed || 'no-minecraft'} c="gray" td="none">
+			<Avatar
+				src={avatarSrc}
+				size={30}
+				radius="sm"
+				alt={trimmed || 'Minecraft skin'}
+				imageProps={
+					fallback
+						? {
+								onError: (e) => {
+									const img = e.currentTarget as HTMLImageElement
+									if (img.src !== fallback) {
+										img.src = fallback
+									}
+								},
+							}
+						: undefined
+				}
+			>
+				{trimmed ? trimmed[0].toUpperCase() : '?'}
+			</Avatar>
+			<Text fz="sm" fw={500} c={trimmed ? undefined : 'dimmed'}>
+				{trimmed || 'No Minecraft linked'}
+			</Text>
+		</Group>
+	)
+
+	if (noAnchor || !trimmed) {
+		return content
+	}
+
+	return (
+		<Link
+			href={`https://namemc.com/profile/${encodeURIComponent(trimmed)}`}
+			target="_blank"
+			rel="noopener noreferrer"
+			style={{ textDecoration: 'none', color: 'inherit' }}
+		>
+			{content}
+		</Link>
+	)
+}
