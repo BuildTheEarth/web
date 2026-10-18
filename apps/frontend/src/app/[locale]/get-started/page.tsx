@@ -27,7 +27,7 @@ import {
 	Text,
 	Title,
 } from '@mantine/core'
-import { IconBrandDiscord, IconChevronRight, IconCompass } from '@tabler/icons-react'
+import { IconBrandDiscord, IconChevronRight } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { Locale } from 'next-intl'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
@@ -64,6 +64,7 @@ export default async function Page({
 	const locale = (await params).locale
 	setRequestLocale(locale)
 	const t = await getTranslations('get-started')
+	const dashboardUrl = (process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://my.buildtheearth.net').replace(/\/$/, '')
 	const sp = await searchParams
 	const q = sp.q || sp.qbu || ''
 	const c = sp.c || sp.cbu
@@ -219,6 +220,86 @@ export default async function Page({
 									ip: (chunks: string) => <Code>{chunks}</Code>,
 								})}
 							</Text>
+
+							<SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg" mt="xl">
+								<Card
+									padding="lg"
+									style={{
+										backgroundColor: 'var(--mantine-color-dark-6)',
+										boxShadow: 'var(--mantine-shadow-block)',
+										border: '1px solid var(--mantine-color-indigo-8)',
+									}}
+								>
+									<Stack justify="space-between" h="100%">
+										<div>
+											<Title order={4} mb="xs">
+												{t('builderNotice.builderTitle')}
+											</Title>
+											<Text size="sm" c="dimmed">
+												{t('builderNotice.builderDescription')}
+											</Text>
+										</div>
+										<Group mt="md">
+											<LinkButton
+												href={`${dashboardUrl}/auth/signup`}
+												size="sm"
+												color="indigo"
+												data-umami-event="get-started-builder-signup-click"
+											>
+												{t('builderNotice.signUp')}
+											</LinkButton>
+											<LinkButton
+												href={`${dashboardUrl}/auth/signin`}
+												size="sm"
+												variant="default"
+												data-umami-event="get-started-builder-login-click"
+											>
+												{t('builderNotice.logIn')}
+											</LinkButton>
+										</Group>
+									</Stack>
+								</Card>
+
+								<Card
+									padding="lg"
+									style={{
+										backgroundColor: 'var(--mantine-color-dark-6)',
+										boxShadow: 'var(--mantine-shadow-block)',
+										border: '1px solid var(--mantine-color-dark-4)',
+									}}
+								>
+									<Stack justify="space-between" h="100%">
+										<div>
+											<Title order={4} mb="xs">
+												{t('builderNotice.visitorTitle')}
+											</Title>
+											<Text size="sm" c="dimmed">
+												{t('builderNotice.visitorDescription')}
+											</Text>
+										</div>
+										<Group mt="md">
+											<LinkButton
+												href="/visit"
+												size="sm"
+												variant="outline"
+												color="gray"
+												data-umami-event="get-started-visitor-visit-click"
+											>
+												{t('builderNotice.visitServers')}
+											</LinkButton>
+											<LinkButton
+												href="/map"
+												size="sm"
+												variant="subtle"
+												color="gray"
+												data-umami-event="get-started-visitor-map-click"
+											>
+												{t('builderNotice.exploreMap')}
+											</LinkButton>
+										</Group>
+									</Stack>
+								</Card>
+							</SimpleGrid>
 						</GridCol>
 						<GridCol span={10} offset={1} style={{ scrollMargin: '10vh' }} id="search-country">
 							<QuerySearchInput paramName="q" id="search-country" my="xl" placeholder={t('searchCountries')} />

@@ -6,7 +6,7 @@ import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
-export async function dismissOnboarding() {
+export async function dismissOnboarding(redirectUrl?: string) {
 	const session = await getSession()
 	if (!session || !session.user) {
 		throw new Error('Unauthorized')
@@ -25,10 +25,10 @@ export async function dismissOnboarding() {
 	})
 
 	revalidatePath('/', 'layout')
-	redirect('/')
+	redirect(redirectUrl || '/')
 }
 
-export async function completeOnboarding() {
+export async function completeOnboarding(redirectUrl?: string) {
 	const session = await getSession()
 	if (!session || !session.user) {
 		throw new Error('Unauthorized')
@@ -47,5 +47,5 @@ export async function completeOnboarding() {
 	})
 
 	revalidatePath('/', 'layout')
-	redirect('/')
+	redirect(redirectUrl || '/')
 }

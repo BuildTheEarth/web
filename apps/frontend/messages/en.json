@@ -43,6 +43,10 @@
 		"header": {
 			"cta": "Get Started",
 			"visit": "Visit",
+			"dashboard": "Dashboard",
+			"account": "Account",
+			"login": "Log In",
+			"signup": "Sign Up",
 			"toggleNavigation": "Toggle navigation links"
 		},
 		"links": {
@@ -224,6 +228,16 @@
 		"searchCountries": "Search Countries...",
 		"content": {
 			"text": "BuildTheEarth is organized into multiple <b>Build Teams</b>, each responsible for recreating different regions of the world. Build Teams often focus on specific <b>countries or continents</b>, allowing you to contribute to areas you are passionate about.<br></br><br></br>There are no restrictions on which or how many Build Teams you can join, so feel free to explore how many as you like!<br></br><br></br>Each Build Team has its own server where you can collaborate with other builders, participate in events, and get support. Due to this, there is no single \"application process\".<br></br>Instead, simply <b>join the Discord server</b> of the Build Team you are interested in and follow their simple instructions to get started.<br></br><br></br>You can also join our Hub Server (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) to get help and meet other builders from around the world!"
+		},
+		"builderNotice": {
+			"builderTitle": "Accounts for upcoming Builders",
+			"builderDescription": "Accounts are intended for upcoming builders who want to claim land and build with a Build Team. Registration is not required to explore.",
+			"signUp": "Sign Up as Builder",
+			"logIn": "Log In",
+			"visitorTitle": "Just Exploring? No Account Required",
+			"visitorDescription": "You do not need an account to explore! Discover our interactive map, browse community showcases, or join our servers as a visitor.",
+			"exploreMap": "Explore Map",
+			"visitServers": "Visit Servers"
 		},
 		"joinServer": {
 			"title": "Build in {country}",

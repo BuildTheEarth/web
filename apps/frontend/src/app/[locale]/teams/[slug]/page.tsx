@@ -86,6 +86,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	setRequestLocale(locale)
 	const t = await getTranslations('teams.ownPage')
 	const format = await getFormatter()
+	const dashboardUrl = (process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://my.buildtheearth.net').replace(/\/$/, '')
 
 	const buildTeam = await prisma.buildTeam.findUnique({
 		where: { slug: (await params).slug },
@@ -173,12 +174,13 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 									<CustomSocialIcon icon={social.icon} style={{ width: '70%', height: '70%' }} />
 								</ActionIcon>
 							))}
-						{/* TODO: replace URL */}
 						<LinkButton
-							href={`https://beta.buildtheearth.net/teams/${buildTeam.slug}/apply`}
+							href={`${dashboardUrl}/apply/${buildTeam.slug}?team=${buildTeam.slug}`}
 							w={{ base: '100%', md: 'auto' }}
 							maw="none"
 							mb={{ base: 'xl', md: 0 }}
+							data-umami-event="team-apply-click"
+							data-umami-event-url={`${dashboardUrl}/apply/${buildTeam.slug}?team=${buildTeam.slug}`}
 						>
 							{t('apply')}
 						</LinkButton>

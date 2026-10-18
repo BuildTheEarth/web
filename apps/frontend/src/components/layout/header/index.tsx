@@ -1,16 +1,15 @@
-import { Button, Container, Group, Text } from '@mantine/core'
+import { Container, Group, Text } from '@mantine/core'
 
 import Link from '@/components/core/Link'
-import classes from '@/styles/layout/Header.module.css'
 import SmartImage from '@/components/core/SmartImage'
-import { IconChevronRight } from '@tabler/icons-react'
+import classes from '@/styles/layout/Header.module.css'
 import { getTranslations } from 'next-intl/server'
-import HeaderDrawer from './HeaderDrawer'
+import HeaderActions from './HeaderActions'
 import { headerLinks } from './links'
 
 export async function Header() {
-	const t = await getTranslations('common.header')
 	const tLinks = await getTranslations('common.links')
+	const dashboardUrl = (process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://my.buildtheearth.net').replace(/\/$/, '')
 	const items = headerLinks.map((link) => (
 		<Link
 			key={link.key}
@@ -54,30 +53,7 @@ export async function Header() {
 				<Group gap={5} visibleFrom="md" className={classes.linksContainer}>
 					{items}
 				</Group>
-				<Group>
-					<Button
-						variant="outline"
-						color="white"
-						visibleFrom="xs"
-						component={Link}
-						href="/visit"
-						data-umami-event="header-visit-click"
-					>
-						{t('visit')}
-					</Button>
-					<Button
-						variant="filled"
-						color="indigo"
-						visibleFrom="xs"
-						rightSection={<IconChevronRight size={12} />}
-						component={Link}
-						href="/get-started"
-						data-umami-event="header-cta-click"
-					>
-						{t('cta')}
-					</Button>
-					<HeaderDrawer />
-				</Group>
+				<HeaderActions dashboardUrl={dashboardUrl} />
 			</Container>
 		</header>
 	)

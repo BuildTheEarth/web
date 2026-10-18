@@ -43,6 +43,10 @@
 		"header": {
 			"cta": "Zacznij",
 			"visit": "Zwiedzaj",
+			"dashboard": "Panel",
+			"account": "Konto",
+			"login": "Zaloguj się",
+			"signup": "Zarejestruj się",
 			"toggleNavigation": "Przełącz linki nawigacji"
 		},
 		"links": {
@@ -223,7 +227,17 @@
 		},
 		"searchCountries": "Szukaj krajów...",
 		"content": {
-			"text": "BuildTheEarth jest zorganizowane w wiele <b>zespołów budowlanych</b>, z których każdy odpowiada za odtwarzanie innych regionów świata. Zespoły często skupiają się na konkretnych <b>krajach lub kontynentach</b>, dzięki czemu możesz współtworzyć obszary, które są Ci bliskie.<br></br><br></br>Nie ma żadnych ograniczeń co do tego, do których i do ilu zespołów możesz dołączyć, więc śmiało dołączaj do tylu, ilu chcesz!<br></br><br></br>Każdy zespół ma własny serwer, na którym możesz współpracować z innymi budowniczymi, brać udział w wydarzeniach i otrzymywać wsparcie. Z tego powodu nie ma jednego „procesu aplikacyjnego”.<br></br>Zamiast tego po prostu <b>dołącz do serwera Discord</b> zespołu, który Cię interesuje, i postępuj zgodnie z jego prostymi instrukcjami, aby zacząć.<br></br><br></br>Możesz też dołączyć do naszego serwera Hub (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>), aby uzyskać pomoc i poznać innych budowniczych z całego świata!"
+			"text": "BuildTheEarth jest zorganizowane w wiele <b>zespołów budowlanych</b>, z których każdy odpowiada za odtwarzanie innych regionów świata. Zespoły często skupiają się na konkretnych <b>krajach lub kontynentach</b>, dzięki czemu możesz współtworzyć obszary, które są Ci bliskie.<br></br><br></br>Nie ma żadnych ograniczeń co do tego, do których i do ilu zespołów możesz dołączyć, więc śmiało dołączaj do tylu, ilu chcesz!<br></br><br></br>Każdy zespół ma własny serwer, na którym możesz współpracować z innymi budowniczymi, brać udział w wydarzeniach i otrzymywać wsparcie. Z tego powodu nie ma jednego „procesu aplikacyjnego”.<br></br>Zamiast tego po prostu <b>dołącz do serwera Discord</b> zespołu, który Cię interesuje, i postępuj zgodnie z jego prostymi instrukcjami, aby zacząć.<br></br><br></br>Możesz też dołączyć do naszego serwera Hub (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) aby uzyskać pomoc i poznać innych budowniczych z całego świata!"
+		},
+		"builderNotice": {
+			"builderTitle": "Konta dla przyszłych budowniczych",
+			"builderDescription": "Konta na platformie są przeznaczone wyłącznie dla osób, które chcą zgłaszać działki i budować w zespole budowlanym. Rejestracja nie jest wymagana do przeglądania.",
+			"signUp": "Zarejestruj się jako budowniczy",
+			"logIn": "Zaloguj się",
+			"visitorTitle": "Chcesz tylko pozwiedzać? Konto nie jest wymagane",
+			"visitorDescription": "Nie potrzebujesz konta, aby zwiedzać! Odkryj naszą interaktywną mapę, przeglądaj wyróżnione budowle lub dołącz do naszych serwerów jako gość.",
+			"exploreMap": "Odkryj mapę",
+			"visitServers": "Odwiedź serwery"
 		},
 		"joinServer": {
 			"title": "Buduj w {country}",

@@ -43,6 +43,10 @@
 		"header": {
 			"cta": "Commencer",
 			"visit": "Visiter",
+			"dashboard": "Tableau de bord",
+			"account": "Compte",
+			"login": "Se connecter",
+			"signup": "S'inscrire",
 			"toggleNavigation": "Basculer les liens de navigation"
 		},
 		"links": {
@@ -224,6 +228,16 @@
 		"searchCountries": "Chercher un pays...",
 		"content": {
 			"text": "BuildTheEarth est organisé en plusieurs <b>équipes de construction</b>, chacune chargée de recréer différentes régions du monde. Les équipes de construction se concentrent souvent sur des <b>pays ou continents</b> spécifiques, ce qui te permet de contribuer aux zones qui te passionnent. <br></br><br></br>Il n'y a aucune restriction quant au nombre d'équipes de construction que tu peux rejoindre, alors n'hésite pas à en explorer autant que tu le souhaites !<br></br><br></br>Chaque équipe de construction dispose de son propre serveur où tu peux collaborer avec d'autres constructeurs, participer à des événements et obtenir de l'aide. De ce fait, il n'y a pas de \"processus de candidature\" à proprement parler. <br></br>Il te suffit simplement de <b>rejoindre le serveur Discord</b> de l'équipe de construction qui t'intéresse et de suivre leurs instructions pour commencer.<br></br><br></br>Tu peux également rejoindre notre serveur central (Minecraft : <ip>buildtheearth.net</ip>, <discord>Discord</discord>) pour obtenir de l'aide et rencontrer d'autres constructeurs du monde entier!"
+		},
+		"builderNotice": {
+			"builderTitle": "Comptes pour les aspirants constructeurs",
+			"builderDescription": "Les comptes de la plateforme sont exclusivement destinés aux aspirants constructeurs qui souhaitent revendiquer des terrains et construire avec une équipe de construction. L'inscription n'est pas requise pour explorer.",
+			"signUp": "S'inscrire comme constructeur",
+			"logIn": "Se connecter",
+			"visitorTitle": "Vous souhaitez simplement explorer ? Aucun compte requis",
+			"visitorDescription": "Vous n'avez pas besoin d'un compte pour explorer ! Découvrez notre carte interactive, parcourez les présentations de la communauté ou rejoignez nos serveurs en tant que visiteur.",
+			"exploreMap": "Explorer la carte",
+			"visitServers": "Visiter les serveurs"
 		},
 		"joinServer": {
 			"title": "Construire en {country}",

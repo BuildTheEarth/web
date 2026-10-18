@@ -20,7 +20,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 					select: { onboardingCompletedAt: true, onboardingDismissed: true },
 				})
 				if (dbUser && !dbUser.onboardingCompletedAt && !dbUser.onboardingDismissed) {
-					redirect('/welcome')
+					const search = headerList.get('x-search') || ''
+					redirect(`/welcome${search}`)
 				}
 			}
 		}

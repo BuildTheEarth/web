@@ -32,6 +32,10 @@
 		"header": {
 			"cta": "開始使用",
 			"visit": "參觀",
+			"dashboard": "儀表板",
+			"account": "帳號",
+			"login": "登入",
+			"signup": "註冊",
 			"toggleNavigation": "切換導覽連結"
 		},
 		"links": {
@@ -213,6 +217,16 @@
 		"searchCountries": "搜尋國家...",
 		"content": {
 			"text": "BuildTheEarth 由多個<b>建築團隊</b>組成，每個團隊負責重現世界的不同地區。建築團隊通常專注於特定的<b>國家或大陸</b>，您能夠為您熱愛的地區做出貢獻。<br></br><br></br>沒有限制您可以加入哪個或多少個建築團隊，因此請隨意探索！<br></br><br></br>每個建築團隊都有各自的伺服器，讓您可以與其他建築師合作、參與活動並獲得支援。因此，並沒有單一的「申請流程」。<br></br>而是需要加入您感興趣的建築團隊的<b> Discord 伺服器</b>，依照他們的指示即可輕鬆開始。<br></br><br></br>您也可以加入我們的中樞伺服器 (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) 以獲得協助並結識來自世界各地的其他建築師！"
+		},
+		"builderNotice": {
+			"builderTitle": "建築師專用帳號",
+			"builderDescription": "平台帳號專為希望認領地塊並加入建築團隊的建築師設計。純粹探索與參觀無需註冊。",
+			"signUp": "註冊為建築師",
+			"logIn": "登入",
+			"visitorTitle": "僅想參觀？無需帳號",
+			"visitorDescription": "您無需帳號即可自由探索！瀏覽我們的互動地圖、欣賞精選建築，或以訪客身分加入伺服器。",
+			"exploreMap": "探索地圖",
+			"visitServers": "參觀伺服器"
 		},
 		"joinServer": {
 			"title": "在 {country} 建設",

@@ -1,6 +1,30 @@
 import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
 
+function applySessionCookies(response: NextResponse, req: any) {
+	const isProd = process.env.NODE_ENV === 'production'
+	const hostname = req.nextUrl.hostname
+	const cookieDomain = isProd && hostname.endsWith('buildtheearth.net') ? '.buildtheearth.net' : undefined
+
+	response.cookies.set('bte_has_session', 'true', {
+		path: '/',
+		domain: cookieDomain,
+		maxAge: 60 * 60 * 24 * 365, // 1 year
+		sameSite: 'lax',
+		secure: isProd,
+		httpOnly: false,
+	})
+	response.cookies.set('bte_active_session', 'true', {
+		path: '/',
+		domain: cookieDomain,
+		maxAge: 60 * 60 * 24 * 30, // 30 days
+		sameSite: 'lax',
+		secure: isProd,
+		httpOnly: false,
+	})
+	return response
+}
+
 export default withAuth(
 	function middleware(req) {
 		const token = req.nextauth.token
@@ -18,17 +42,29 @@ export default withAuth(
 			if (needsOnboarding && pathname !== '/welcome') {
 				const welcomeUrl = new URL('/welcome', req.url)
 				welcomeUrl.search = req.nextUrl.search
-				return NextResponse.redirect(welcomeUrl)
+				if (!welcomeUrl.searchParams.has('team') && pathname.startsWith('/apply/')) {
+					const slug = pathname.split('/')[2]
+					if (slug) {
+						welcomeUrl.searchParams.set('team', slug)
+					}
+				}
+				const redirectRes = NextResponse.redirect(welcomeUrl)
+				return applySessionCookies(redirectRes, req)
 			}
 		}
 
 		const requestHeaders = new Headers(req.headers)
 		requestHeaders.set('x-pathname', pathname)
-		return NextResponse.next({
+		requestHeaders.set('x-search', req.nextUrl.search)
+		const response = NextResponse.next({
 			request: {
 				headers: requestHeaders,
 			},
 		})
+		if (token) {
+			applySessionCookies(response, req)
+		}
+		return response
 	},
 	{
 		callbacks: {

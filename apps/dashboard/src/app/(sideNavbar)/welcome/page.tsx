@@ -17,6 +17,7 @@ import {
 import ContentWrapper from '@/components/core/ContentWrapper'
 import LinkButton from '@/components/core/LinkButton'
 import Anchor from '@/components/core/Anchor'
+import prisma from '@/util/db'
 import { Metadata } from 'next'
 import SkipButton from './SkipButton'
 
@@ -24,8 +25,10 @@ export const metadata: Metadata = {
 	title: 'Welcome',
 }
 
-export default async function WelcomePage() {
+export default async function WelcomePage({ searchParams }: { searchParams?: Promise<{ team?: string }> }) {
 	const session = (await getSession())!!
+	const sp = await searchParams
+	const teamSlug = sp?.team
 
 	const { user } = await ensureUserCreated()
 
@@ -33,11 +36,25 @@ export default async function WelcomePage() {
 	const discordIdentity = federatedIdentities.find((fi: any) => fi.identityProvider === 'discord')
 	const isDiscordLinked = !!discordIdentity
 
+	const referredTeam = teamSlug
+		? await prisma.buildTeam.findUnique({
+				where: { slug: teamSlug },
+				select: {
+					id: true,
+					name: true,
+					slug: true,
+					icon: true,
+					color: true,
+					location: true,
+				},
+			})
+		: null
+
 	const generateDiscordLinkUrl = () => {
 		// {auth-server-root}/realms/{realm}/broker/{provider}/link?client_id={id}&redirect_uri={uri}&nonce={nonce}&hash={hash}
 		const baseUrl = process.env.NEXT_PUBLIC_KEYCLOAK_URL
 		const clientId = process.env.NEXT_PUBLIC_KEYCLOAK_ID
-		const redirectUri = `${process.env.NEXTAUTH_URL}/welcome`
+		const redirectUri = `${process.env.NEXTAUTH_URL}/welcome${teamSlug ? `?team=${encodeURIComponent(teamSlug)}` : ''}`
 		const nonce = randomUUID()
 		const sessionState = session.user.sid
 		const hash = createHash('sha256')
@@ -49,6 +66,8 @@ export default async function WelcomePage() {
 		)}&nonce=${nonce}&hash=${hash}`
 	}
 
+	const skipDestination = referredTeam ? `/apply/${referredTeam.slug}?team=${referredTeam.slug}` : '/'
+
 	return (
 		<ContentWrapper maw="800px">
 			<Group justify="space-between" align="flex-start" mt="xl" mb="md">
@@ -58,7 +77,7 @@ export default async function WelcomePage() {
 						Thank you for joining the BuildTheEarth community!
 					</Text>
 				</div>
-				<SkipButton />
+				<SkipButton destination={skipDestination} />
 			</Group>
 			<Text mt="md">
 				To get started, please follow the steps below to finish setting up your account. If you have any questions or
@@ -121,19 +140,70 @@ export default async function WelcomePage() {
 				can find a list and map of all BuildTeams on our website or with the links below. Once you find a BuildTeam, you
 				will see a link to apply to that BuildTeam.
 			</Text>
-			<Stack mt="md" gap="sm">
-				<LinkButton rightSection={<IconBook size={16} />} href="https://buildtheearth.net/teams" target="_blank">
-					BuildTeam List
-				</LinkButton>
-				<LinkButton
-					rightSection={<IconMap size={16} />}
-					href="https://buildtheearth.net/map/teams"
-					target="_blank"
-					variant="outline"
-				>
-					BuildTeam Map
-				</LinkButton>
-			</Stack>
+
+			{referredTeam ? (
+				<Stack mt="md" gap="xs">
+					<Card shadow="sm" p="lg" radius="sm">
+						<Group justify="space-between" align="center" wrap="wrap" gap="md">
+							<Group gap="md">
+								{referredTeam.icon && (
+									<img
+										src={referredTeam.icon}
+										alt={referredTeam.name}
+										style={{
+											width: 44,
+											height: 44,
+											borderRadius: 'var(--mantine-radius-sm)',
+											objectFit: 'cover',
+										}}
+									/>
+								)}
+								<div>
+									<Text size="xs" c="dimmed" tt="uppercase" fw={700}>
+										Referred Build Team
+									</Text>
+									<Title order={3}>{referredTeam.name}</Title>
+								</div>
+							</Group>
+							<LinkButton
+								href={`/apply/${referredTeam.slug}?team=${referredTeam.slug}`}
+								rightSection={<IconChevronRight size={16} />}
+								color="buildtheearth"
+							>
+								Apply to {referredTeam.name}
+							</LinkButton>
+						</Group>
+					</Card>
+					<Group justify="center" gap="xs" mt="xs">
+						<Text size="xs" c="dimmed">
+							Looking for a different region?
+						</Text>
+						<Anchor href="https://buildtheearth.net/teams" target="_blank" fz="xs">
+							BuildTeam List
+						</Anchor>
+						<Text size="xs" c="dimmed">
+							•
+						</Text>
+						<Anchor href="https://buildtheearth.net/map/teams" target="_blank" fz="xs">
+							BuildTeam Map
+						</Anchor>
+					</Group>
+				</Stack>
+			) : (
+				<Group grow mt="md">
+					<LinkButton rightSection={<IconBook size={16} />} href="https://buildtheearth.net/teams" target="_blank">
+						BuildTeam List
+					</LinkButton>
+					<LinkButton
+						rightSection={<IconMap size={16} />}
+						href="https://buildtheearth.net/map/teams"
+						target="_blank"
+						variant="outline"
+					>
+						BuildTeam Map
+					</LinkButton>
+				</Group>
+			)}
 
 			<Title order={2} mt="xl" mb="md">
 				Resources and Help
@@ -172,7 +242,7 @@ export default async function WelcomePage() {
 				<Text size="sm" c="dimmed">
 					Want to explore the dashboard first? You can always return to this setup page later.
 				</Text>
-				<SkipButton />
+				<SkipButton destination={skipDestination} />
 			</Group>
 		</ContentWrapper>
 	)

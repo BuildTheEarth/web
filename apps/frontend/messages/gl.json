@@ -43,6 +43,10 @@
 		"header": {
 			"cta": "Comezar",
 			"visit": "Visitar",
+			"dashboard": "Panel",
+			"account": "Conta",
+			"login": "Iniciar sesión",
+			"signup": "Rexistrarse",
 			"toggleNavigation": "Activar ligazóns de navegación"
 		},
 		"links": {
@@ -224,6 +228,16 @@
 		"searchCountries": "Buscar países...",
 		"content": {
 			"text": "BuildTheEarth está organizado en diferentes <b>equipos de construción</b>, cada un responsable de facer unha parte do noso globo. Estes equipos normalmente concéntranse en facer <b>países ou continentes</b>, permitíndoche contribuír a áreas que che apaixonan.<br></br><br></br>non hai límite no número de equipos de construción aos que podes unirte, así que síntete libre de explorar o que queiras!<br></br><br></br>Cada equipo de construción ten o seu propio servidor onde podes colaborar con outros construtores, participar en eventos, e conseguir apoio. Debido a esto, non hai unha soa forma de solicitar ser construtor \"proceso de solicitude\".<br></br>En cambio, simplemente <b>únete ao servidor de Discord</b> do equipo no que estés interesado e segue as súas propias construcións para comezar a colaborar.<br></br><br></br>Tamén podes unirte dende o servidor central (Minecraft: <ip>buildtheearth.net</ip>, <discord>Discord</discord>) para conseguir axuda e coñecer xente de outras partes da Terra"
+		},
+		"builderNotice": {
+			"builderTitle": "Contas para aspirantes a construtores",
+			"builderDescription": "As contas da plataforma están destinadas exclusivamente aos aspirantes a construtores que desexan reclamar terreos e construír cun equipo de construción. Non é necesario rexistrarse para explorar.",
+			"signUp": "Rexistrarse como construtor",
+			"logIn": "Iniciar sesión",
+			"visitorTitle": "Só explorando? Non se require conta",
+			"visitorDescription": "Non precisas unha conta para explorar! Descobre o noso mapa interactivo, explora os proxectos destacados ou únete aos nosos servidores como visitante.",
+			"exploreMap": "Explorar mapa",
+			"visitServers": "Visitar servidores"
 		},
 		"joinServer": {
 			"title": "Constúe en {country}",
