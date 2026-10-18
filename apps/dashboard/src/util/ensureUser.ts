@@ -68,7 +68,7 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 
 	if (user) {
 		let needsUpdate = false
-		const updateData: { username?: string; discordId?: string } = {}
+		const updateData: { username?: string; discordId?: string; minecraft?: string } = {}
 
 		// Update username in DB if changed or newly provided
 		if (username && user.username !== username) {
@@ -235,26 +235,24 @@ export const provisionUserRecord = async (userInfo: UserInfo): Promise<EnsureUse
 	return { user, isNew: true }
 }
 
-// In-memory cache of ssoIds that have already been confirmed in the DB
-const confirmedUsersCache = new Map<string, ProvisionedUser>()
+// In-memory cache of confirmed user IDs
+const confirmedUsersCache = new Set<string>()
 
 export const isUserConfirmed = (ssoId: string): boolean => confirmedUsersCache.has(ssoId)
-export const markUserConfirmed = (ssoId: string, user: ProvisionedUser): void => {
-	confirmedUsersCache.set(ssoId, user)
+export const markUserConfirmed = (ssoId: string, user?: ProvisionedUser): void => {
+	confirmedUsersCache.add(ssoId)
+}
+export const invalidateConfirmedUser = (ssoId: string): void => {
+	confirmedUsersCache.delete(ssoId)
 }
 export const clearConfirmedUsersCache = (): void => {
 	confirmedUsersCache.clear()
 }
 
 const ensureUserRecordInternal = async (ssoId: string, username: string | null): Promise<EnsureUserResult> => {
-	const cachedUser = confirmedUsersCache.get(ssoId)
-	if (cachedUser) {
-		return { user: cachedUser, isNew: false }
-	}
-
 	const result = await provisionUserRecord({ ssoId, username })
 	if (result?.user) {
-		confirmedUsersCache.set(ssoId, result.user)
+		confirmedUsersCache.add(ssoId)
 	}
 	return result
 }

@@ -59,9 +59,13 @@ export const getUserFederatedIdentities = async (ssoId?: string) => {
 		throw Error('Unauthorized')
 	}
 
-	const kcUser = await keycloakAdmin.users.findOne({ id: targetId })
-
-	return kcUser?.federatedIdentities || []
+	try {
+		const kcUser = await keycloakAdmin.users.findOne({ id: targetId })
+		return kcUser?.federatedIdentities || []
+	} catch (e) {
+		console.warn('Failed to fetch federated identities from Keycloak:', e)
+		return []
+	}
 }
 
 export const getUserSessions = async (ssoId?: string) => {

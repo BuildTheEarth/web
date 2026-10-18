@@ -12,7 +12,6 @@ export default function SkipButton(props: ButtonProps & { destination?: string }
 	return (
 		<Button
 			variant="default"
-			size="sm"
 			loading={isPending}
 			rightSection={<IconArrowRight size={14} />}
 			onClick={() => {

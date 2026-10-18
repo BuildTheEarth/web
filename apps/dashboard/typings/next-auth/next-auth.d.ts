@@ -112,6 +112,7 @@ declare module 'next-auth/jwt' {
 		user: User
 		error: string
 		userEnsured?: boolean
+		minecraft?: string | null
 		onboardingCompletedAt?: string | null
 		onboardingDismissed?: boolean
 	}

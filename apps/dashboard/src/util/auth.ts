@@ -134,7 +134,19 @@ export const authOptions: AuthOptions = {
 			}
 		},
 
-		jwt: async ({ token, account, user }) => {
+		jwt: async ({ token, account, user, trigger, session: updateSession }) => {
+			if (trigger === 'update' && updateSession) {
+				if (typeof updateSession.minecraft !== 'undefined') {
+					token.minecraft = updateSession.minecraft
+				}
+				if (typeof updateSession.onboardingCompletedAt !== 'undefined') {
+					token.onboardingCompletedAt = updateSession.onboardingCompletedAt
+				}
+				if (typeof updateSession.onboardingDismissed !== 'undefined') {
+					token.onboardingDismissed = updateSession.onboardingDismissed
+				}
+			}
+
 			// Initial sign in
 			if (account && user) {
 				// Add access_token, refresh_token and expirations to the token right after signin
@@ -160,6 +172,7 @@ export const authOptions: AuthOptions = {
 							username: (user as any).username,
 						})
 						token.userEnsured = true
+						token.minecraft = result.user.minecraft
 						token.onboardingCompletedAt = result.user.onboardingCompletedAt
 							? result.user.onboardingCompletedAt.toISOString()
 							: null
@@ -173,7 +186,10 @@ export const authOptions: AuthOptions = {
 			}
 
 			// If token was not marked as ensured yet, or onboarding status is missing, ensure it and persist in token
-			if ((!token.userEnsured || token.onboardingDismissed === undefined) && token.sub) {
+			if (
+				(!token.userEnsured || token.onboardingDismissed === undefined || token.minecraft === undefined) &&
+				token.sub
+			) {
 				if (typeof window === 'undefined') {
 					try {
 						const { ensureUserRecord } = await import('./ensureUser')
@@ -182,6 +198,7 @@ export const authOptions: AuthOptions = {
 							username: (token.user as any)?.username,
 						})
 						token.userEnsured = true
+						token.minecraft = result.user.minecraft
 						token.onboardingCompletedAt = result.user.onboardingCompletedAt
 							? result.user.onboardingCompletedAt.toISOString()
 							: null
@@ -225,6 +242,7 @@ export const authOptions: AuthOptions = {
 				// @ts-expect-error shut up typescript
 				session.user = {
 					...token.user,
+					minecraft: token.minecraft ?? (token.user as any)?.minecraft ?? null,
 					onboardingCompletedAt: token.onboardingCompletedAt,
 					onboardingDismissed: token.onboardingDismissed,
 				}
