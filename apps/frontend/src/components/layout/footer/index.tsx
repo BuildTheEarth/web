@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Group, Text } from '@mantine/core'
+import { ActionIcon, Box, Divider, Group, Text } from '@mantine/core'
 import Anchor from '@/components/core/Anchor'
 
 import Link from '@/components/core/Link'
@@ -31,7 +31,7 @@ export default function Footer({ style }: FooterProps) {
 			c="dimmed"
 			key={link.link}
 			href={link.link}
-			size="sm"
+			size="xs"
 			data-umami-event={`footer-link-click`}
 			data-umami-event-url={link.link}
 		>
@@ -51,8 +51,8 @@ export default function Footer({ style }: FooterProps) {
 				<Text style={{ fontSize: '14px' }} c="dimmed" variant="text" className={classes.copyright}>
 					{t('copyright', { year: new Date().getFullYear() })}
 				</Text>
-				<Group gap="md" className={classes.links}>
-					{items}
+				<Group gap="xs" wrap="wrap">
+					{' '}
 					<ActionIcon
 						component={Link}
 						href="https://go.buildtheearth.net/dc"
@@ -66,8 +66,8 @@ export default function Footer({ style }: FooterProps) {
 					>
 						<IconBrandDiscord />
 					</ActionIcon>
-				</Group>
-				<Group gap="xs" wrap="wrap">
+					{items}
+					<Divider orientation="vertical" />
 					{legalItems}
 				</Group>
 			</Box>
