@@ -9,18 +9,7 @@
 			"template": "%s | BuildTheEarth",
 			"default": "在 Minecraft 中 1:1 建造地球 | BuildTheEarth"
 		},
-		"keywords": [
-			"BuildTheEarth",
-			"Minecraft",
-			"BTE",
-			"社群",
-			"地球",
-			"地圖",
-			"Minecraft",
-			"伺服器",
-			"1:1",
-			"全球"
-		],
+		"keywords": ["BuildTheEarth", "Minecraft", "BTE", "社群", "地球", "地圖", "Minecraft", "伺服器", "1:1", "全球"],
 		"og": {
 			"title": "BuildTheEarth",
 			"subtitle": "在 Minecraft 中重建地球"
@@ -60,7 +49,7 @@
 			"discord": "Discord",
 			"tos": "服務條款",
 			"privacy": "隱私政策",
-			"impressum": "法律聲明 (Impressum)"
+			"impressum": "法律聲明"
 		},
 		"cookieBanner": {
 			"title": "Cookie 設定",
