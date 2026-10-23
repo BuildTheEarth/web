@@ -70,7 +70,7 @@ const data: (NavbarLink | NavbarLinkGroup)[] = [
 		prefix: '/team/[team_slug]',
 		teamPermission: 'get-teams',
 		links: [
-			{ label: 'Overview', link: '/' },
+			{ label: 'Overview', link: '' },
 			{ label: 'Applications', link: '/applications' },
 			{ label: 'Members', link: '/members' },
 			{ label: 'Claims', link: '/claims' },

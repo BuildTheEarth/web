@@ -8,6 +8,10 @@ import { sanitizeHref } from './Anchor'
  * Default Button component with direct usage of Next.js Link
  */
 export default function LinkButton(props: ButtonProps & React.AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps) {
+	if (props.disabled) {
+		return <Button {...(props as any)} component="button" />
+	}
+
 	const safeHref = sanitizeHref(props.href)
 	const rel =
 		props?.target === '_blank'

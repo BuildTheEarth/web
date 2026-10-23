@@ -6,21 +6,34 @@ export function UserDisplay({
 	user,
 	noAnchor = false,
 }: {
-	user: { id: string; username?: string; ssoId: string }
+	user?: { id?: string; username?: string | null; ssoId?: string | null } | null
 	noAnchor?: boolean
 }) {
+	if (!user) {
+		return (
+			<Group gap="sm" c="gray" td="none">
+				<Avatar color="gray" size={30}>
+					?
+				</Avatar>
+				<Text fz="sm" fw={500} c="dimmed">
+					Unknown
+				</Text>
+			</Group>
+		)
+	}
+
 	const content = (
-		<Group gap="sm" key={user.id || user.ssoId} c="gray" td="none">
-			<Avatar color="initials" name={user.username} size={30}>
-				{(user.username || user.ssoId)[0].toUpperCase()}
+		<Group gap="sm" key={user.id || user.ssoId || 'unknown-user'} c="gray" td="none">
+			<Avatar color="initials" name={user.username || undefined} size={30}>
+				{(user.username || user.ssoId || '?')[0]?.toUpperCase()}
 			</Avatar>
 			<Text fz="sm" fw={500}>
-				{user.username || user.ssoId.slice(0, 10)}
+				{user.username || user.ssoId?.slice(0, 10) || 'Unknown'}
 			</Text>
 		</Group>
 	)
 
-	if (noAnchor) {
+	if (noAnchor || !user.ssoId) {
 		return content
 	}
 

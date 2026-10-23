@@ -42,7 +42,6 @@ import {
 	IconUsers,
 } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
 import { EditMenu } from './interactivity'
 
 export const metadata: Metadata = {
@@ -185,16 +184,18 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						</GridCol>
 						<GridCol span={{ base: 6, lg: 4 }}>
 							<TextCard title="Discord Link" icon={IconBrandDiscord}>
-								<Anchor href={team.invite} target="_blank">
-									{team.invite.replace('https://discord', '')}
-								</Anchor>
+								{team.invite ? (
+									<Anchor href={team.invite} target="_blank">
+										{team.invite.replace('https://discord', '')}
+									</Anchor>
+								) : (
+									<Text c="dimmed">None</Text>
+								)}
 							</TextCard>
 						</GridCol>
 						<GridCol span={{ base: 6, lg: 5 }}>
-							<TextCard title="Server IP" icon={IconBrandMinecraft}>
-								<Anchor href={team.ip} target="_blank">
-									{team.ip}
-								</Anchor>
+							<TextCard title="Server IP" icon={IconBrandMinecraft} isText>
+								{team.ip || 'None'}
 							</TextCard>
 						</GridCol>
 						<GridCol span={{ base: 5, lg: 3 }}>

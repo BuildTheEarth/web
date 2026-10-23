@@ -6,12 +6,19 @@ import { Box, Collapse, Group, Text, ThemeIcon, UnstyledButton } from '@mantine/
 import { IconChevronRight } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { useParams } from 'next/navigation'
 import { useState } from 'react'
 import { NavbarLink, NavbarLinkGroup } from './Navbar'
 
 export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 	const session = useSession()
 	const activeBuildTeam = useActiveBuildTeam()
+	const params = useParams()
+	const currentSlug =
+		(typeof params?.slug === 'string' ? params.slug : Array.isArray(params?.slug) ? params.slug[0] : '') ||
+		activeBuildTeam?.slug ||
+		''
+	const isTeamContext = 'prefix' in props && props.prefix?.includes('[team_slug]')
 	const isGroup = 'links' in props && Array.isArray(props.links)
 	const permissionType =
 		props.permissionType || (props.permission ? 'permission' : props.teamPermission ? 'teamPermission' : 'public')
@@ -21,7 +28,11 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 		return null
 	}
 
-	if (permissionType === 'teamPermission' && props.teamPermission && !activeBuildTeam) {
+	if (permissionType === 'teamPermission' && props.teamPermission && !activeBuildTeam && !currentSlug) {
+		return null
+	}
+
+	if (isTeamContext && !currentSlug) {
 		return null
 	}
 
@@ -34,20 +45,22 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 				return hasRole({ user: session.data?.user }, link.permission)
 			}
 			if (permissionType === 'teamPermission' && link.teamPermission) {
-				return activeBuildTeam != null
+				return activeBuildTeam != null || !!currentSlug
 			}
 			return true
 		})
-		.map((link) => (
-			<Text
-				component={Link}
-				className={classes.link}
-				href={`${isGroup ? props.prefix || '' : ''}${link.link}`.replaceAll('[team_slug]', activeBuildTeam?.slug || '')}
-				key={link.label}
-			>
-				{link.label}
-			</Text>
-		))
+		.map((link) => {
+			let rawHref = `${isGroup ? props.prefix || '' : ''}${link.link}`
+			if (currentSlug) {
+				rawHref = rawHref.replaceAll('[team_slug]', currentSlug)
+			}
+			const href = rawHref.startsWith('/') ? rawHref.replace(/\/+/g, '/') : rawHref
+			return (
+				<Text component={Link} className={classes.link} href={href} key={link.label}>
+					{link.label}
+				</Text>
+			)
+		})
 
 	const content = (
 		<Group justify="space-between" gap={0}>
@@ -81,7 +94,17 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 					{content}
 				</UnstyledButton>
 			) : (
-				<UnstyledButton className={classes.control} component={Link} href={'link' in props ? props.link : '#'}>
+				<UnstyledButton
+					className={classes.control}
+					component={Link}
+					href={
+						'link' in props && props.link
+							? currentSlug
+								? props.link.replaceAll('[team_slug]', currentSlug)
+								: props.link
+							: '#'
+					}
+				>
 					{content}
 				</UnstyledButton>
 			)}

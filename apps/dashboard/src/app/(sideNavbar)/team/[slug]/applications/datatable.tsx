@@ -72,6 +72,7 @@ export default function ApplicationsDatatable({
 	const page = Number(params.get('page')) || 1
 	const clipboard = useClipboard({ timeout: 500 })
 	const activeBuildTeam = useActiveBuildTeam()
+	const teamSlug = slug || activeBuildTeam?.slug
 
 	return (
 		<DataTable
@@ -108,7 +109,7 @@ export default function ApplicationsDatatable({
 								color="cyan"
 								aria-label="Review"
 								disabled={!permissions?.includes('team.application.review')}
-								href={`/team/${activeBuildTeam?.slug}/applications/${id}`}
+								href={`/team/${teamSlug}/applications/${id}`}
 								rel="noopener"
 							>
 								Review
@@ -128,7 +129,7 @@ export default function ApplicationsDatatable({
 								aria-label="View Details"
 								component={Link}
 								disabled={!permissions?.includes('team.application.review')}
-								href={`/team/${activeBuildTeam?.slug}/applications/${application.id}`}
+								href={`/team/${teamSlug}/applications/${application.id}`}
 								rel="noopener"
 							>
 								<IconEye size={16} />
@@ -146,7 +147,7 @@ export default function ApplicationsDatatable({
 										color={ACTION_COLORS.view}
 										component={Link}
 										disabled={!permissions?.includes('team.application.review')}
-										href={`/team/${activeBuildTeam?.slug}/applications/${application.id}`}
+										href={`/team/${teamSlug}/applications/${application.id}`}
 										target="_blank"
 									>
 										Open Details
