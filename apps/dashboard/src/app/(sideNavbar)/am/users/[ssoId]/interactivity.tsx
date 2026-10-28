@@ -16,6 +16,7 @@ import {
 	TextInput,
 } from '@mantine/core'
 import {
+	IconBrandMinecraft,
 	IconCopy,
 	IconDevices,
 	IconDots,
@@ -198,6 +199,14 @@ export function UserMenu({
 							onClick={() => window.navigator.clipboard.writeText(user.username || '')}
 						>
 							Username
+						</MenuItem>
+						<MenuItem
+							leftSection={<IconBrandMinecraft style={{ width: rem(14), height: rem(14) }} />}
+							aria-label="Minecraft Name"
+							disabled={!user.minecraft}
+							onClick={() => window.navigator.clipboard.writeText(user.minecraft || '')}
+						>
+							Minecraft Name
 						</MenuItem>
 						<MenuItem
 							leftSection={<IconId style={{ width: rem(14), height: rem(14) }} />}
