@@ -323,13 +323,12 @@ export default async function Page() {
 									highlightOnHover
 									stickyHeader
 									data={{
-										head: ['Role Name', 'Container / Client', 'Description', 'Composite'],
+										head: ['Role Name', 'Container / Client', 'Composite'],
 										body: Array.from({ length: 8 }, (_, rowIndex) => [
 											<Code key={`role-row-${rowIndex}-name`} color="blue">
 												role.placeholder
 											</Code>,
 											<Skeleton key={`role-row-${rowIndex}-container`} h={14} w="50%" radius="sm" />,
-											<Skeleton key={`role-row-${rowIndex}-desc`} h={14} w="70%" radius="sm" />,
 											<Badge key={`role-row-${rowIndex}-composite`} variant="light" color="gray">
 												STATUS
 											</Badge>,

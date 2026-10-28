@@ -763,13 +763,13 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 								highlightOnHover
 								stickyHeader
 								data={{
-									head: ['Role Name', 'Container / Client', 'Description', 'Composite'],
+									head: ['Role Name', 'Container / Client', 'Composite'],
 									body: keycloakRoles.map((role) => {
 										const roleKey = role.id || `${role.container}/${role.name}`
 										return [
-											<Code key={`${roleKey}-name`} color="blue">
-												{role.name || '-/-'}
-											</Code>,
+											<Tooltip key={`${roleKey}-name`} label={role.description} disabled={!role.description}>
+												<Code color="blue">{role.name || '-/-'}</Code>
+											</Tooltip>,
 											<Badge
 												key={`${roleKey}-container`}
 												variant="light"
@@ -777,9 +777,6 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 											>
 												{role.container}
 											</Badge>,
-											<Text key={`${roleKey}-desc`} fz="sm" c={role.description ? undefined : 'dimmed'}>
-												{role.description || '-/-'}
-											</Text>,
 											<Badge key={`${roleKey}-composite`} variant="light" color={role.composite ? 'teal' : 'gray'}>
 												{role.composite ? 'Composite' : 'Standard'}
 											</Badge>,
