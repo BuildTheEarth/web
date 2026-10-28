@@ -1,6 +1,6 @@
 'use client'
 
-import { getAllowedBuildTeams, getPersonalClaims } from '@/actions/claimEditor'
+import { getAllowedBuildTeams, getClaimEditorPermissions, getPersonalClaims } from '@/actions/claimEditor'
 import { Alert, Box, Divider } from '@mantine/core'
 import { IconAlertTriangle } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
@@ -22,9 +22,15 @@ export default function ClaimEditorPage() {
 
 		const initialize = async () => {
 			try {
-				const [claims, allowedTeams] = await Promise.all([getPersonalClaims(), getAllowedBuildTeams()])
-				store.setClaims(claims)
+				const [claims, allowedTeams, perms] = await Promise.all([
+					getPersonalClaims(),
+					getAllowedBuildTeams(),
+					getClaimEditorPermissions(),
+				])
+				store.setIsAdmin(perms.isAdmin)
+				store.setEditableBuildTeamIds(perms.editableBuildTeamIds)
 				store.setAllowedBuildTeamIds(allowedTeams)
+				store.setClaims(claims)
 			} catch (e) {
 				console.error('Failed to load claim editor initial data:', e)
 			}

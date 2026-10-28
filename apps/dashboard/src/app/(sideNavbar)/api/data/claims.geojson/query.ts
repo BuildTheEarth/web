@@ -56,6 +56,14 @@ export function constructClaimGeoJSONQuery(filters: {
 						},
 					},
 				}
-			: { id: true, area: true, center: true, name: true, owner: { select: { id: true, ssoId: true } } },
+			: {
+					id: true,
+					area: true,
+					center: true,
+					name: true,
+					owner: { select: { id: true, ssoId: true } },
+					buildTeam: { select: { id: true, slug: true } },
+					buildTeamId: true,
+				},
 	}
 }

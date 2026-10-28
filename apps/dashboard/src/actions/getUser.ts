@@ -150,6 +150,18 @@ export const checkBuildTeamPermission = async (
 		}
 	}
 
+	// Check if user is the creator (BTO) of the Build Team
+	const isCreator = await prisma.buildTeam.findFirst({
+		where: {
+			...('id' in requiredBuildTeam ? { id: requiredBuildTeam.id } : { slug: requiredBuildTeam.slug }),
+			creator: { ssoId: userId },
+		},
+		select: { id: true },
+	})
+	if (isCreator) {
+		return true
+	}
+
 	// Check permissions in the database (handles team-specific and global DB permissions)
 	const permissions = await getUserPermissions(userId)
 	return hasBuildTeamPermission(permissions, requiredBuildTeam)

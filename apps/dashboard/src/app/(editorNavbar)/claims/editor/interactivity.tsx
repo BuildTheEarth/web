@@ -127,14 +127,16 @@ export function NewClaimButton() {
 
 export function CreateClaimModal({
 	allowedBuildTeamIds,
+	initialBuildTeamId,
 	onSubmit,
 	onCancel,
 }: {
 	allowedBuildTeamIds: string[] | null
+	initialBuildTeamId?: string | null
 	onSubmit: (data: { buildTeamId: string; name?: string; city?: string; description?: string }) => void
 	onCancel: () => void
 }) {
-	const [buildTeamId, setBuildTeamId] = useState<string | null>(null)
+	const [buildTeamId, setBuildTeamId] = useState<string | null>(initialBuildTeamId || null)
 	const [name, setName] = useState('')
 	const [city, setCity] = useState('')
 	const [description, setDescription] = useState('')
@@ -145,9 +147,10 @@ export function CreateClaimModal({
 				label="Build Team"
 				required
 				placeholder="Select a Build Team"
-				filter={(bt) =>
-					Boolean(bt.allowBuilderClaim && (!allowedBuildTeamIds?.length || allowedBuildTeamIds.includes(bt.id)))
-				}
+				filter={(bt) => {
+					if (!allowedBuildTeamIds?.length) return Boolean(bt.allowBuilderClaim)
+					return allowedBuildTeamIds.includes(bt.id)
+				}}
 				searchable
 				value={buildTeamId}
 				onChange={setBuildTeamId}

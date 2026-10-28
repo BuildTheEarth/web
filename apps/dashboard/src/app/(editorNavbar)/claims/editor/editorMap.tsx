@@ -45,6 +45,8 @@ export default function EditorMap() {
 	const selectedClaimId = useClaimEditorStore((s) => s.selectedClaimId)
 	const claims = useClaimEditorStore((s) => s.claims)
 	const userId = useClaimEditorStore((s) => s.userId)
+	const isAdmin = useClaimEditorStore((s) => s.isAdmin)
+	const editableBuildTeamIds = useClaimEditorStore((s) => s.editableBuildTeamIds)
 	const setDrawInstance = useClaimEditorStore((s) => s.setDrawInstance)
 	const setSelectedClaim = useClaimEditorStore((s) => s.setSelectedClaim)
 
@@ -174,9 +176,12 @@ export default function EditorMap() {
 			...claimsData,
 			features: claimsData.features.map((f: any) => {
 				const fid = String(f.id || f.properties?.id || '')
+				const teamId = f.properties?.buildTeamId || f.properties?.buildTeam?.id
 				const isOwner =
 					(userId && (f.properties?.owner?.ssoId === userId || f.properties?.owner?.id === userId)) ||
 					personalClaimIdSet.has(fid)
+				const canEdit =
+					Boolean(isOwner) || Boolean(isAdmin) || Boolean(teamId && editableBuildTeamIds?.includes(teamId))
 				return {
 					...f,
 					id: fid,
@@ -184,11 +189,12 @@ export default function EditorMap() {
 						...f.properties,
 						id: fid,
 						isOwner: Boolean(isOwner),
+						canEdit: Boolean(canEdit),
 					},
 				}
 			}),
 		}
-	}, [claimsData, userId, personalClaimIdSet])
+	}, [claimsData, userId, personalClaimIdSet, isAdmin, editableBuildTeamIds])
 
 	useEffect(() => {
 		const unsubscribe = useClaimEditorStore.subscribe(
@@ -236,9 +242,9 @@ export default function EditorMap() {
 			const feature = event.features?.[0]
 			if (feature && feature.properties) {
 				const clickedId = String(feature.properties.id || feature.id || '')
-				const isOwner = Boolean(feature.properties.isOwner)
+				const canEdit = Boolean(feature.properties.canEdit)
 
-				if (!isOwner) {
+				if (!canEdit) {
 					showNotification({
 						title: 'Permission Denied',
 						message: 'You cannot edit claims belonging to other builders.',
@@ -399,7 +405,7 @@ export default function EditorMap() {
 						const searchParams = new URLSearchParams(window.location.search)
 						const initialClaimId = searchParams.get('id')
 						if (initialClaimId) {
-							setSelectedClaim(initialClaimId)
+							useClaimEditorStore.getState().switchClaim(initialClaimId)
 						}
 						if (searchParams.get('new') === 'true') {
 							try {
@@ -439,11 +445,11 @@ export default function EditorMap() {
 							paint={{
 								'fill-color': [
 									'case',
-									['==', ['get', 'isOwner'], true],
+									['==', ['get', 'canEdit'], true],
 									'rgb(34, 139, 230)', // Blue for editable
 									'rgb(134, 142, 150)', // Gray for others
 								],
-								'fill-opacity': ['case', ['==', ['get', 'isOwner'], true], 0.55, 0.35],
+								'fill-opacity': ['case', ['==', ['get', 'canEdit'], true], 0.55, 0.35],
 							}}
 						/>
 						<Layer
@@ -454,7 +460,7 @@ export default function EditorMap() {
 							paint={{
 								'line-color': [
 									'case',
-									['==', ['get', 'isOwner'], true],
+									['==', ['get', 'canEdit'], true],
 									'rgb(28, 126, 214)', // Blue border
 									'rgb(73, 80, 87)', // Dark gray border
 								],
