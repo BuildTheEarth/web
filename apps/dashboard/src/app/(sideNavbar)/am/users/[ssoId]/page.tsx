@@ -3,6 +3,8 @@ import type UserConsentRepresentation from '@keycloak/keycloak-admin-client/lib/
 import type CredentialRepresentation from '@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation.js'
 import type GroupRepresentation from '@keycloak/keycloak-admin-client/lib/defs/groupRepresentation.js'
 import type UserSessionRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userSessionRepresentation.js'
+import type RoleRepresentation from '@keycloak/keycloak-admin-client/lib/defs/roleRepresentation.js'
+import type ClientRepresentation from '@keycloak/keycloak-admin-client/lib/defs/clientRepresentation.js'
 import { capitalize, snakeCaseToStartCase } from '@/util/string'
 import {
 	Alert,
@@ -32,6 +34,7 @@ import {
 	IconFileCheck,
 	IconFiles,
 	IconInfoCircle,
+	IconKey,
 	IconLink,
 	IconMail,
 	IconPolygon,
@@ -78,19 +81,76 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 		)
 	}
 
-	const keycloakData = (await keycloakAdmin.users.findOne({ id: ssoId })) as UserRepresentation
-	const keycloakConsentsData = (await keycloakAdmin.users.listConsents({
-		id: ssoId,
-	})) as UserConsentRepresentation[]
-	const keycloakCredentialsData = (await keycloakAdmin.users.getCredentials({
-		id: ssoId,
-	})) as CredentialRepresentation[]
-	const keycloakGroupsData = (await keycloakAdmin.users.listGroups({
-		id: ssoId,
-	})) as GroupRepresentation[]
-	const keycloakSessionsData = (await keycloakAdmin.users.listSessions({
-		id: ssoId,
-	})) as UserSessionRepresentation[]
+	const [
+		keycloakData,
+		keycloakConsentsData,
+		keycloakCredentialsData,
+		keycloakGroupsData,
+		keycloakSessionsData,
+		keycloakRealmRolesData,
+		keycloakClientsData,
+	] = await Promise.all([
+		keycloakAdmin.users.findOne({ id: ssoId }) as Promise<UserRepresentation>,
+		keycloakAdmin.users.listConsents({
+			id: ssoId,
+		}) as Promise<UserConsentRepresentation[]>,
+		keycloakAdmin.users.getCredentials({
+			id: ssoId,
+		}) as Promise<CredentialRepresentation[]>,
+		keycloakAdmin.users.listGroups({
+			id: ssoId,
+		}) as Promise<GroupRepresentation[]>,
+		keycloakAdmin.users.listSessions({
+			id: ssoId,
+		}) as Promise<UserSessionRepresentation[]>,
+		keycloakAdmin.users.listCompositeRealmRoleMappings({
+			id: ssoId,
+		}) as Promise<RoleRepresentation[]>,
+		keycloakAdmin.clients.find() as Promise<ClientRepresentation[]>,
+	])
+
+	const keycloakClientRolesData = (
+		await Promise.all(
+			(keycloakClientsData || []).map(async (client) => {
+				if (!client.id) return []
+				try {
+					const roles = await keycloakAdmin.users.listCompositeClientRoleMappings({
+						id: ssoId,
+						clientUniqueId: client.id,
+					})
+					return (roles || []).map((role) => ({
+						...role,
+						container: client.clientId || client.name || client.id,
+					}))
+				} catch {
+					return []
+				}
+			}),
+		)
+	).flat()
+
+	const keycloakEffectiveRoles = [
+		...(keycloakRealmRolesData || []).map((role) => ({
+			...role,
+			container: 'realm',
+		})),
+		...keycloakClientRolesData,
+	]
+
+	const keycloakRolesMap = new Map<string, (typeof keycloakEffectiveRoles)[number]>()
+	for (const role of keycloakEffectiveRoles) {
+		const key = role.id || `${role.container}/${role.name}`
+		if (!keycloakRolesMap.has(key)) {
+			keycloakRolesMap.set(key, role)
+		}
+	}
+	const keycloakRoles = Array.from(keycloakRolesMap.values()).sort((a, b) => {
+		if (a.container === 'realm' && b.container !== 'realm') return -1
+		if (a.container !== 'realm' && b.container === 'realm') return 1
+		const containerCompare = (a.container || '').localeCompare(b.container || '')
+		if (containerCompare !== 0) return containerCompare
+		return (a.name || '').localeCompare(b.name || '')
+	})
 	const websiteData = await prisma.user.findFirst({
 		where: { ssoId },
 		include: {
@@ -578,7 +638,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 				Permissions
 			</Title>
 			<Grid>
-				<GridCol span={{ base: 12, md: 4 }}>
+				<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 					<TextCard
 						isText
 						title="Managed Build Teams"
@@ -598,7 +658,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 						/>
 					</TextCard>
 				</GridCol>
-				<GridCol span={{ base: 12, md: 4 }}>
+				<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 					<TextCard
 						isText
 						title="Global Permissions"
@@ -611,7 +671,7 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 						/>
 					</TextCard>
 				</GridCol>
-				<GridCol span={{ base: 12, md: 4 }}>
+				<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 					<TextCard
 						isText
 						title="Internal Groups"
@@ -620,6 +680,17 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 						style={{ height: '100%' }}
 					>
 						<PluralSingular count={keycloakGroupsData.length || 0} singular="Group" />
+					</TextCard>
+				</GridCol>
+				<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
+					<TextCard
+						isText
+						title="Keycloak Roles"
+						icon={IconKey}
+						subtitle="effective realm and client roles"
+						style={{ height: '100%' }}
+					>
+						<PluralSingular count={keycloakRoles.length} singular="Role" />
 					</TextCard>
 				</GridCol>
 				<GridCol span={12}>
@@ -675,6 +746,45 @@ export default async function Page({ params }: { params: Promise<{ ssoId: string
 											canEdit={hasRole(session, 'edit-users')}
 										/>,
 									]),
+								}}
+							/>
+						</ScrollArea>
+					</TextCard>
+				</GridCol>
+				<GridCol span={12}>
+					<TextCard
+						title="Keycloak Roles"
+						icon={IconKey}
+						href={`https://auth.buildtheearth.net/admin/master/console/#/website/users/${ssoId}/role-mappings`}
+						hrefText="Edit in Keycloak"
+					>
+						<ScrollArea h="40vh" w="100%" type="always">
+							<Table
+								highlightOnHover
+								stickyHeader
+								data={{
+									head: ['Role Name', 'Container / Client', 'Description', 'Composite'],
+									body: keycloakRoles.map((role) => {
+										const roleKey = role.id || `${role.container}/${role.name}`
+										return [
+											<Code key={`${roleKey}-name`} color="blue">
+												{role.name || '-/-'}
+											</Code>,
+											<Badge
+												key={`${roleKey}-container`}
+												variant="light"
+												color={role.container === 'realm' ? 'grape' : 'cyan'}
+											>
+												{role.container}
+											</Badge>,
+											<Text key={`${roleKey}-desc`} fz="sm" c={role.description ? undefined : 'dimmed'}>
+												{role.description || '-/-'}
+											</Text>,
+											<Badge key={`${roleKey}-composite`} variant="light" color={role.composite ? 'teal' : 'gray'}>
+												{role.composite ? 'Composite' : 'Standard'}
+											</Badge>,
+										]
+									}),
 								}}
 							/>
 						</ScrollArea>

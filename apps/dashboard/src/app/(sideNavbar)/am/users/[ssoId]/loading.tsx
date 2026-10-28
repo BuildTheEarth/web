@@ -25,6 +25,7 @@ import {
 	IconExternalLink,
 	IconFileCheck,
 	IconFiles,
+	IconKey,
 	IconLink,
 	IconMail,
 	IconPolygon,
@@ -246,7 +247,7 @@ export default async function Page() {
 					Permissions
 				</Title>
 				<Grid>
-					<GridCol span={{ base: 12, md: 4 }}>
+					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 						<TextCard
 							isText
 							title="Managed Build Teams"
@@ -257,7 +258,7 @@ export default async function Page() {
 							-- Teams
 						</TextCard>
 					</GridCol>
-					<GridCol span={{ base: 12, md: 4 }}>
+					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 						<TextCard
 							isText
 							title="Global Permissions"
@@ -267,7 +268,7 @@ export default async function Page() {
 							-- Nodes
 						</TextCard>
 					</GridCol>
-					<GridCol span={{ base: 12, md: 4 }}>
+					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
 						<TextCard
 							isText
 							title="Internal Groups"
@@ -276,6 +277,17 @@ export default async function Page() {
 							style={{ height: '100%' }}
 						>
 							-- Groups
+						</TextCard>
+					</GridCol>
+					<GridCol span={{ base: 12, sm: 6, lg: 3 }}>
+						<TextCard
+							isText
+							title="Keycloak Roles"
+							icon={IconKey}
+							subtitle="effective realm and client roles"
+							style={{ height: '100%' }}
+						>
+							-- Roles
 						</TextCard>
 					</GridCol>
 					<GridCol span={12}>
@@ -298,6 +310,29 @@ export default async function Page() {
 											<ActionIcon key={`perm-row-${rowIndex}-actions`} size="sm" variant="subtle" disabled>
 												<IconDots style={{ width: '70%', height: '70%' }} stroke={1.5} />
 											</ActionIcon>,
+										]),
+									}}
+								/>
+							</ScrollArea>
+						</TextCard>
+					</GridCol>
+					<GridCol span={12}>
+						<TextCard title="Keycloak Roles" icon={IconKey} href="#" hrefText="Edit in Keycloak">
+							<ScrollArea h="40vh" w="100%" type="always">
+								<Table
+									highlightOnHover
+									stickyHeader
+									data={{
+										head: ['Role Name', 'Container / Client', 'Description', 'Composite'],
+										body: Array.from({ length: 8 }, (_, rowIndex) => [
+											<Code key={`role-row-${rowIndex}-name`} color="blue">
+												role.placeholder
+											</Code>,
+											<Skeleton key={`role-row-${rowIndex}-container`} h={14} w="50%" radius="sm" />,
+											<Skeleton key={`role-row-${rowIndex}-desc`} h={14} w="70%" radius="sm" />,
+											<Badge key={`role-row-${rowIndex}-composite`} variant="light" color="gray">
+												STATUS
+											</Badge>,
 										]),
 									}}
 								/>
