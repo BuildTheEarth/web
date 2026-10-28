@@ -1,15 +1,14 @@
 'use server'
 import { getSession, hasRole } from '@/util/auth'
-import { checkBuildTeamPermission } from './getUser'
 import { revalidateWebsitePaths } from '@/util/data'
 import prisma from '@/util/db'
 import keycloakAdmin from '@/util/keycloak'
-import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
-import { sanitizeHtml } from '@repo/shared'
 import { Application, ApplicationQuestionType, ApplicationStatus } from '@repo/db'
+import { sanitizeHtml } from '@repo/shared'
+import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
-import { redirect } from 'next/navigation'
+import { checkBuildTeamPermission } from './getUser'
 
 const socialNameOptions = [
 	'twitter',
@@ -435,7 +434,7 @@ export const ownerGenerateToken = async ({ id }: { id: string }): Promise<void> 
 		discordIds: [userIsOwner.creator.discordId!],
 		content: {
 			title: `${userIsOwner.name} Token Generated`,
-			body: 'You requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.\n\nToken: ||${token}|| \nSlug: `${userIsOwner.slug}`',
+			body: `You requested a new API Token for the BuildTheEarth API at https://api.buildtheearth.net. Below you will find this token. Please save it somewhere secure.\n\nToken: ||${token}|| \nSlug: \`${userIsOwner.slug}\``,
 			emoji: 'FORWARDED',
 		},
 	})
