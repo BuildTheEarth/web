@@ -10,12 +10,18 @@ export function toPoint(coords: string, splitter?: string): Point {
 
 // ["lat, lng","lat, lng","lat, lng","lat, lng"]
 export function toPolygon(coords: string[], splitter?: string, reverse?: boolean): Polygon {
-	return polygon([
-		coords.map((c) => {
-			const s = c.split(splitter || ', ')
-			return [parseFloat(s[reverse ? 1 : 0]), parseFloat(s[reverse ? 0 : 1])]
-		}),
-	]).geometry
+	const points = coords.map((c) => {
+		const s = c.split(splitter || ', ')
+		return [parseFloat(s[reverse ? 1 : 0]), parseFloat(s[reverse ? 0 : 1])]
+	})
+	if (points.length > 0) {
+		const first = points[0]
+		const last = points[points.length - 1]
+		if (first[0] !== last[0] || first[1] !== last[1]) {
+			points.push([first[0], first[1]])
+		}
+	}
+	return polygon([points]).geometry
 }
 
 export function toLngLat(coords: string, latFirst?: boolean, splitter?: string): { lat: number; lng: number } {

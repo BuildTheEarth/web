@@ -2,6 +2,7 @@
 
 import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.geojson/query'
 import { getSession, hasRole } from '@/util/auth'
+import turf, { toPolygon } from '@/util/coordinates'
 import prisma from '@/util/db'
 import { Prisma } from '@repo/db'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
@@ -196,10 +197,20 @@ export const saveClaim = async (data: {
 			throw new Error('Claim not found or you do not have permission to edit this claim.')
 		}
 
+		let size: number | undefined = undefined
+		if (data.area) {
+			try {
+				size = data.area.length >= 3 ? Math.round(turf.area(toPolygon(data.area))) : 0
+			} catch (e) {
+				size = 0
+			}
+		}
+
 		await prisma.claim.update({
 			where: { id: data.id },
 			data: {
 				area: data.area,
+				size,
 				name: data.name !== undefined ? data.name : undefined,
 				description: data.description !== undefined ? data.description : undefined,
 				city: data.city !== undefined ? data.city : undefined,
@@ -269,6 +280,15 @@ export const createClaim = async (data: {
 			throw new Error('You do not have permission to create a claim in this BuildTeam.')
 		}
 
+		let size = 0
+		if (data.area && data.area.length >= 3) {
+			try {
+				size = Math.round(turf.area(toPolygon(data.area)))
+			} catch (e) {
+				size = 0
+			}
+		}
+
 		await prisma.claim.create({
 			data: {
 				id: data.id,
@@ -278,6 +298,7 @@ export const createClaim = async (data: {
 				owner: { connect: { ssoId: userId } },
 				buildTeam: { connect: { id: data.buildTeamId } },
 				area: data.area,
+				size,
 				active: true,
 				finished: false,
 			},
