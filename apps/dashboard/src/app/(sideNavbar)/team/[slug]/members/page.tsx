@@ -25,70 +25,104 @@ export default async function Page({
 	const page = (await searchParams).page
 	const searchQuery = (await searchParams).query
 
-	const builderCount = await prisma.user.count({
-		where: {
-			AND: [
-				{
-					OR: searchQuery
-						? [
-								{ username: { contains: searchQuery || undefined } },
-								{ minecraft: { contains: searchQuery || undefined } },
-								{ discordId: { contains: searchQuery || undefined } },
-								{ ssoId: { contains: searchQuery || undefined } },
-							]
-						: undefined,
-				},
-				{
-					OR: [
-						{ joinedBuildTeams: { some: { slug } } },
-						{ createdBuildTeams: { some: { slug } } },
-						{ permissions: { some: { buildTeam: { slug } } } },
-					],
-				},
-			],
-		},
-	})
-	const builders = await prisma.user.findMany({
-		take: 50,
-		skip: (Number(page || '1') - 1) * 50,
-		where: {
-			AND: [
-				{
-					OR: searchQuery
-						? [
-								{ username: { contains: searchQuery || undefined } },
-								{ minecraft: { contains: searchQuery || undefined } },
-								{ discordId: { contains: searchQuery || undefined } },
-								{ ssoId: { contains: searchQuery || undefined } },
-							]
-						: undefined,
-				},
-				{
-					OR: [
-						{ joinedBuildTeams: { some: { slug } } },
-						{ createdBuildTeams: { some: { slug } } },
-						{ permissions: { some: { buildTeam: { slug } } } },
-					],
-				},
-			],
-		},
-		orderBy: {
-			username: 'asc',
-		},
-		select: {
-			id: true,
-			ssoId: true,
-			username: true,
-			discordId: true,
-			minecraft: true,
-			applications: { where: { buildteam: { slug } }, select: { id: true, status: true, reviewedAt: true } },
-			createdBuildTeams: { where: { slug }, select: { id: true } },
-			permissions: {
-				where: { buildTeam: { slug } },
-				select: { permission: { select: { id: true, description: true } } },
+	const searchFilter = searchQuery
+		? {
+				OR: [
+					{ username: { contains: searchQuery || undefined } },
+					{ minecraft: { contains: searchQuery || undefined } },
+					{ discordId: { contains: searchQuery || undefined } },
+					{ ssoId: { contains: searchQuery || undefined } },
+				],
+			}
+		: {}
+
+	const privilegedWhere = {
+		AND: [
+			searchFilter,
+			{
+				OR: [{ createdBuildTeams: { some: { slug } } }, { permissions: { some: { buildTeam: { slug } } } }],
 			},
+		],
+	}
+
+	const normalWhere = {
+		AND: [
+			searchFilter,
+			{ joinedBuildTeams: { some: { slug } } },
+			{
+				NOT: [{ createdBuildTeams: { some: { slug } } }, { permissions: { some: { buildTeam: { slug } } } }],
+			},
+		],
+	}
+
+	const userSelect = {
+		id: true,
+		ssoId: true,
+		username: true,
+		discordId: true,
+		minecraft: true,
+		applications: { where: { buildteam: { slug } }, select: { id: true, status: true, reviewedAt: true } },
+		createdBuildTeams: { where: { slug }, select: { id: true } },
+		permissions: {
+			where: { buildTeam: { slug } },
+			select: { permission: { select: { id: true, description: true } } },
 		},
+	} as const
+
+	const [privilegedUsers, normalCount] = await Promise.all([
+		prisma.user.findMany({
+			where: privilegedWhere,
+			select: userSelect,
+		}),
+		prisma.user.count({
+			where: normalWhere,
+		}),
+	])
+
+	privilegedUsers.sort((a, b) => {
+		const aOwner = a.createdBuildTeams.length > 0 ? 0 : 1
+		const bOwner = b.createdBuildTeams.length > 0 ? 0 : 1
+		if (aOwner !== bOwner) return aOwner - bOwner
+		return (a.username || '').localeCompare(b.username || '', undefined, { sensitivity: 'base' })
 	})
+
+	const pageSize = 50
+	const currentPage = Math.max(1, Number(page || '1') || 1)
+	const skip = (currentPage - 1) * pageSize
+	const builderCount = privilegedUsers.length + normalCount
+
+	let builders: typeof privilegedUsers = []
+
+	if (skip < privilegedUsers.length) {
+		const pagePrivileged = privilegedUsers.slice(skip, skip + pageSize)
+		const neededFromNormal = pageSize - pagePrivileged.length
+
+		if (neededFromNormal > 0) {
+			const normalUsers = await prisma.user.findMany({
+				where: normalWhere,
+				skip: 0,
+				take: neededFromNormal,
+				orderBy: {
+					username: 'asc',
+				},
+				select: userSelect,
+			})
+			builders = [...pagePrivileged, ...normalUsers]
+		} else {
+			builders = pagePrivileged
+		}
+	} else {
+		const normalSkip = skip - privilegedUsers.length
+		builders = await prisma.user.findMany({
+			where: normalWhere,
+			skip: normalSkip,
+			take: pageSize,
+			orderBy: {
+				username: 'asc',
+			},
+			select: userSelect,
+		})
+	}
 
 	const availablePermissions = await prisma.permisision.findMany({
 		where: {
