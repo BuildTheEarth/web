@@ -37,14 +37,22 @@ export const getUser = async (ssoId?: string) => {
 }
 
 export const ensureUserCreated = async (userInfo?: { ssoId?: string; username?: string | null }) => {
-	let ssoId = userInfo?.ssoId
-	let username = userInfo?.username
+	const session = await getSession()
+	if (!session || !session.user) {
+		throw new Error('Unauthorized')
+	}
 
-	if (!ssoId) {
-		const session = await getSession()
-		if (!session) throw Error('No session found')
-		ssoId = session.user.id
-		username = session.user.username
+	let ssoId: string = session.user.id
+	let username: string | null | undefined = session.user.username
+
+	if (userInfo?.ssoId && userInfo.ssoId !== session.user.id) {
+		if (!hasRole(session, 'edit-users')) {
+			throw new Error('Unauthorized')
+		}
+		ssoId = userInfo.ssoId
+		username = userInfo.username
+	} else if (userInfo?.username && hasRole(session, 'edit-users')) {
+		username = userInfo.username
 	}
 
 	return await ensureUserRecord({ ssoId, username })
