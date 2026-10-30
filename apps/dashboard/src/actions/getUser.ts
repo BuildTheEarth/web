@@ -110,8 +110,9 @@ export const checkBuildTeamPermission = async (
 	const session = await getSession()
 	if (!session) return false
 
+	const req = requiredBuildTeam.permission
+
 	if (session) {
-		const req = requiredBuildTeam.permission
 		if (
 			req === 'any' &&
 			(hasRole(session, 'get-teams') ||
@@ -136,6 +137,12 @@ export const checkBuildTeamPermission = async (
 				hasRole(session, 'get-applications') ||
 				hasRole(session, 'get-team-questions') ||
 				hasRole(session, 'review-team'))
+		) {
+			return true
+		}
+		if (
+			req === 'team.claim.list' &&
+			(hasRole(session, 'get-claims') || hasRole(session, 'edit-claims') || hasRole(session, 'review-claims'))
 		) {
 			return true
 		}
@@ -164,5 +171,11 @@ export const checkBuildTeamPermission = async (
 
 	// Check permissions in the database (handles team-specific and global DB permissions)
 	const permissions = await getUserPermissions(userId)
+	if (req === 'team.claim.list') {
+		return (
+			hasBuildTeamPermission(permissions, requiredBuildTeam) ||
+			hasBuildTeamPermission(permissions, { ...requiredBuildTeam, permission: 'team.claims.edit' })
+		)
+	}
 	return hasBuildTeamPermission(permissions, requiredBuildTeam)
 }

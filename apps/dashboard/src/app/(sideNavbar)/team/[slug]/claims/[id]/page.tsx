@@ -58,6 +58,9 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 		if (!activePermissions.includes('team.claims.edit')) {
 			activePermissions.push('team.claims.edit')
 		}
+		if (!activePermissions.includes('team.claim.list')) {
+			activePermissions.push('team.claim.list')
+		}
 	}
 
 	const canEdit = activePermissions.includes('team.claims.edit') || activePermissions.includes('team.claim.list')
@@ -74,7 +77,7 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 	if (!claim) throw Error('Could not find Claim')
 
 	return (
-		<Protection requiredRole="get-claims">
+		<Protection requiredBuildTeam={{ permission: 'team.claim.list', slug }}>
 			<ContentWrapper maw="90vw" mih="100vh">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>{claim.name || `Claim ${id.split('-')[0]}`}</Title>

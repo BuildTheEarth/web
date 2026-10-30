@@ -42,6 +42,9 @@ export default async function Page({
 		if (!activePermissions.includes('team.claims.edit')) {
 			activePermissions.push('team.claims.edit')
 		}
+		if (!activePermissions.includes('team.claim.list')) {
+			activePermissions.push('team.claim.list')
+		}
 	}
 
 	const claimCount = await prisma.claim.count({
@@ -97,7 +100,7 @@ export default async function Page({
 	}
 
 	return (
-		<Protection requiredRole="get-claims">
+		<Protection requiredBuildTeam={{ permission: 'team.claim.list', slug }}>
 			<ContentWrapper maw="90vw">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1}>Claims</Title>
