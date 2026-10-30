@@ -186,7 +186,27 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					style={{ borderBottom: '1px solid var(--mantine-color-default-border)' }}
 				>
 					<Container size="responsive">
+						{referenceCompanies.length > 0 && (
+							<Center hiddenFrom="sm">
+								<Link
+									href={referenceCompanies[0].link}
+									target="_blank"
+									aria-label={referenceCompanies[0].name + "'s website"}
+									style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+								>
+									<Image
+										src={`${directus.url}assets/${referenceCompanies[0].icon}?height=100&width=350&fit=inside`}
+										alt={referenceCompanies[0].name + "'s logo"}
+										h={80}
+										w="auto"
+										maw={{ base: 280, md: 350 }}
+										fit="contain"
+									/>
+								</Link>
+							</Center>
+						)}
 						<ScrollArea
+							visibleFrom="sm"
 							type="hover"
 							scrollbars="x"
 							style={{
@@ -216,9 +236,9 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 										<Image
 											src={`${directus.url}assets/${company.icon}?height=100&width=350&fit=inside`}
 											alt={company.name + "'s logo"}
-											h={{ base: 60, sm: 80, md: 100 }}
+											h={80}
 											w="auto"
-											maw={{ base: 220, sm: 280, md: 350 }}
+											maw={{ base: 280, md: 350 }}
 											fit="contain"
 										/>
 									</Link>
