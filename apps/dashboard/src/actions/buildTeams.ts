@@ -11,6 +11,7 @@ import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
 import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { checkBuildTeamPermission } from './getUser'
+import { updateMinecraftProfile } from './onboarding'
 
 const socialNameOptions = [
 	'twitter',
@@ -987,6 +988,41 @@ export const reviewApplication = async ({
 	return application
 }
 
+/**
+ * Checks the Minecraft name given in an application against the user's profile.
+ * - verified profile name: the answer has to match it, otherwise the application is rejected
+ * - unverified profile name: the profile is updated to the given name (stays unverified)
+ */
+const syncApplicationMinecraftName = async (ssoId: string, answer: string) => {
+	let profileName: string | null = null
+	let verified = false
+	try {
+		const kcUser = await keycloakAdmin.users.findOne({ id: ssoId })
+		const verifiedAttr = kcUser?.attributes?.minecraftVerified
+		verified = Array.isArray(verifiedAttr)
+			? verifiedAttr[0] === 'true' || verifiedAttr[0] === true
+			: verifiedAttr === 'true' || verifiedAttr === true
+		const nameAttr = kcUser?.attributes?.minecraft
+		profileName = (Array.isArray(nameAttr) ? nameAttr[0] : nameAttr) || null
+	} catch (e) {
+		console.error('Failed to check Minecraft verification in applyToBuildTeam:', e)
+		throw Error('Could not check your Minecraft account verification, please try again later')
+	}
+
+	if (verified && profileName) {
+		if (profileName.toLowerCase() !== answer.toLowerCase()) {
+			throw Error(
+				`The Minecraft name you entered does not match your verified Minecraft account (${profileName}). Please use your verified name.`,
+			)
+		}
+		return
+	}
+
+	if (profileName !== answer) {
+		await updateMinecraftProfile(answer)
+	}
+}
+
 export const applyToBuildTeam = async (
 	data: { userId?: string; buildTeamSlug: string },
 	formData: FormData,
@@ -1090,6 +1126,12 @@ export const applyToBuildTeam = async (
 			},
 		})
 
+		// Same as accepting via review: the user becomes a member of the Build Team
+		await prisma.buildTeam.update({
+			where: { id: buildteam.id },
+			data: { members: { connect: { ssoId: user.ssoId } } },
+		})
+
 		await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
 			discordIds: [user.discordId!],
 			content: parseApplicationMessage(buildteam.acceptionMessage, application, user, buildteam),
@@ -1105,6 +1147,7 @@ export const applyToBuildTeam = async (
 	}
 
 	const validatedAnswers: { id: string; answer: string }[] = []
+	let minecraftAnswer: string | null = null
 
 	for (const question of buildteam.applicationQuestions) {
 		// Only validate questions of the chosen application mode (builder / trial)
@@ -1125,13 +1168,18 @@ export const applyToBuildTeam = async (
 			validatedAnswers.push({ id: question.id, answer })
 		}
 
-		// TODO: update minecraft account name / check if account name is the same as verified name
-		// (Old API: compared with the verified profile name and wrote unverified names back to Keycloak, see report)
+		if (question.type === ApplicationQuestionType.MINECRAFT && answer !== '') {
+			minecraftAnswer = answer
+		}
 	}
 
 	// Save answers
 	if (validatedAnswers.length <= 0) {
 		throw Error('No valid answers provided')
+	}
+
+	if (minecraftAnswer) {
+		await syncApplicationMinecraftName(session.user.id, minecraftAnswer)
 	}
 	const application = await prisma.application.create({
 		data: {
@@ -1164,11 +1212,13 @@ export const applyToBuildTeam = async (
 		select: { user: { select: { id: true, discordId: true } } },
 	})
 
+	const dashboardUrl = (process.env.NEXTAUTH_URL || 'https://my.buildtheearth.net').replace(/\/$/, '')
+
 	await redisEventQueue.addJob(RedisEvent.SEND_DISCORD_DM, {
 		discordIds: reviewers.map((r) => r.user.discordId!),
 		content: {
 			title: `New Application for ${buildteam.name}`,
-			body: `A new application has been submitted for the Build Team \`${buildteam.name}\`.\n\n[Review Application](https://buildtheearth.net/team/${buildteam.slug}/applications/${application.id})`,
+			body: `A new application has been submitted for the Build Team \`${buildteam.name}\`.\n\n[Review Application](${dashboardUrl}/team/${buildteam.slug}/applications/${application.id})`,
 			emoji: 'INFORMATION',
 		},
 	})
