@@ -6,6 +6,42 @@ import keycloakAdmin from '@/util/keycloak'
 import { revalidatePath } from 'next/cache'
 import { markUserConfirmed } from '@/util/ensureUser'
 
+/**
+ * Sends MEMBER_ADD / MEMBER_REMOVE BuildTeam webhooks (one per user), if the BuildTeam has a webhook configured.
+ * Failing to enqueue must never break the membership change itself.
+ */
+const sendMemberWebhook = async (
+	type: 'MEMBER_ADD' | 'MEMBER_REMOVE',
+	team: { id: string; webhook: string | null },
+	users: {
+		id: string
+		username: string | null
+		discordId: string | null
+		minecraft: string | null
+		avatar: string | null
+	}[],
+) => {
+	if (!team.webhook) return
+	for (const user of users) {
+		try {
+			await redisEventQueue.addJob(RedisEvent.BUILDTEAM_WEBHOOK, {
+				type,
+				data: {
+					id: user.id,
+					username: user.username,
+					discordId: user.discordId,
+					minecraft: user.minecraft,
+					avatar: user.avatar,
+					buildTeamId: team.id,
+				},
+				destination: [{ url: team.webhook }],
+			})
+		} catch (e) {
+			console.error(`Failed to enqueue ${type} webhook`, e)
+		}
+	}
+}
+
 const requireEditUsersPermission = async () => {
 	const session = await getSession()
 
@@ -284,6 +320,7 @@ export const adminRemoveFromTeam = async (prevState: any, data: { ssoId: string;
 				buildTeamId: team.id,
 			},
 		})
+		await sendMemberWebhook('MEMBER_REMOVE', team, [user])
 
 		revalidatePath(`/am/users/${data.ssoId}`)
 		return { status: 'success', message: 'User removed from team successfully' }
@@ -321,6 +358,7 @@ export const adminAddToTeam = async (prevState: any, data: { ssoId: string; slug
 				},
 			},
 		})
+		await sendMemberWebhook('MEMBER_ADD', team, [user])
 
 		revalidatePath(`/am/users/${data.ssoId}`)
 		return {
@@ -662,6 +700,12 @@ export const adminUserBatchAction = async (
 					},
 				},
 			})
+
+			const addedUsers = await prisma.user.findMany({
+				where: { ssoId: { in: usersToAdd.map((u) => u.ssoId) } },
+				select: { id: true, username: true, discordId: true, minecraft: true, avatar: true },
+			})
+			await sendMemberWebhook('MEMBER_ADD', team, addedUsers)
 
 			for (const u of newBuilders) {
 				if (!u.discordId) continue

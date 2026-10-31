@@ -136,6 +136,28 @@ export const getAllowedBuildTeams = async () => {
 	return buildTeams.map((bt) => bt.id)
 }
 
+/**
+ * Sends a BuildTeam webhook for a claim event, if the claim's BuildTeam has a webhook configured
+ * Failures to enqueue must never break the claim operation itself
+ */
+const sendClaimWebhook = async (
+	type: 'CLAIM_CREATE' | 'CLAIM_UPDATE' | 'CLAIM_DELETE',
+	claim: { buildTeam?: { webhook: string | null } | null },
+) => {
+	const webhook = claim.buildTeam?.webhook
+	if (!webhook) return
+
+	try {
+		await redisEventQueue.addJob(RedisEvent.BUILDTEAM_WEBHOOK, {
+			type,
+			data: { ...claim, buildTeam: undefined },
+			destination: [{ url: webhook }],
+		})
+	} catch (e) {
+		console.error(`Failed to enqueue ${type} webhook`, e)
+	}
+}
+
 const checkCanEditClaim = async (
 	userId: string,
 	session: any,
@@ -206,8 +228,9 @@ export const saveClaim = async (data: {
 			}
 		}
 
-		await prisma.claim.update({
+		const updatedClaim = await prisma.claim.update({
 			where: { id: data.id },
+			include: { buildTeam: { select: { webhook: true } } },
 			data: {
 				area: data.area,
 				size,
@@ -224,6 +247,8 @@ export const saveClaim = async (data: {
 				claimId: data.id,
 			})
 		}
+
+		await sendClaimWebhook('CLAIM_UPDATE', updatedClaim)
 
 		revalidatePath('/claims/editor')
 		if (claim.buildTeam?.slug) {
@@ -289,7 +314,8 @@ export const createClaim = async (data: {
 			}
 		}
 
-		await prisma.claim.create({
+		const createdClaim = await prisma.claim.create({
+			include: { buildTeam: { select: { webhook: true } } },
 			data: {
 				id: data.id,
 				name: data.name || '',
@@ -307,6 +333,8 @@ export const createClaim = async (data: {
 		await redisEventQueue.addJob(RedisEvent.SYNC_CLAIM_OSM, {
 			claimId: data.id,
 		})
+
+		await sendClaimWebhook('CLAIM_CREATE', createdClaim)
 
 		revalidatePath('/claims/editor')
 	} catch (e) {
@@ -345,9 +373,12 @@ export const deleteClaim = async (data: { id: string }): Promise<void> => {
 			throw new Error('Claim not found or you do not have permission to delete this claim.')
 		}
 
-		await prisma.claim.delete({
+		const deletedClaim = await prisma.claim.delete({
 			where: { id: data.id },
+			include: { buildTeam: { select: { webhook: true } } },
 		})
+
+		await sendClaimWebhook('CLAIM_DELETE', deletedClaim)
 
 		revalidatePath('/claims/editor')
 		if (claim.buildTeam?.slug) {
