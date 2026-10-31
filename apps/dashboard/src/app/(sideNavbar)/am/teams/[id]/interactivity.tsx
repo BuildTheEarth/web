@@ -20,7 +20,16 @@ import { IconDots, IconExternalLink, IconId, IconTransfer, IconUserCheck, IconUs
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
-export function ImpersonateButton({ team }: { team: BuildTeam }) {
+export function ImpersonateButton({
+	team,
+}: {
+	team: {
+		id: string
+		slug: string
+		name: string
+		icon: string
+	}
+}) {
 	const impersonate = useImpersonateBuildTeam()
 	return (
 		<Button variant="light" color="green" leftSection={<IconUserCheck size={14} />} onClick={() => impersonate(team)}>
@@ -29,7 +38,16 @@ export function ImpersonateButton({ team }: { team: BuildTeam }) {
 	)
 }
 
-export function EditMenu({ team }: { team: BuildTeam }) {
+export function EditMenu({
+	team,
+}: {
+	team: {
+		id: string
+		slug: string
+		name: string
+		icon: string
+	}
+}) {
 	const session = useSession()
 	const clipboard = useClipboard({ timeout: 500 })
 	const impersonate = useImpersonateBuildTeam()

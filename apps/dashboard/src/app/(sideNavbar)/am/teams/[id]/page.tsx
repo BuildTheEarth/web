@@ -1,7 +1,7 @@
 import Anchor from '@/components/core/Anchor'
-import LinkButton from '@/components/core/LinkButton'
 import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
+import LinkButton from '@/components/core/LinkButton'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
 import { Protection } from '@/components/Protection'
@@ -11,7 +11,6 @@ import prisma from '@/util/db'
 import { applicationStatusToColor } from '@/util/transformers'
 import {
 	Alert,
-	Button,
 	Flex,
 	Grid,
 	GridCol,
@@ -50,7 +49,6 @@ import {
 	IconUsers,
 } from '@tabler/icons-react'
 import { Metadata } from 'next'
-import Link from 'next/link'
 import { EditMenu, ImpersonateButton } from './interactivity'
 
 export const metadata: Metadata = {
@@ -82,7 +80,12 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 				},
 			},
 		},
+		omit: {
+			webhook: true,
+			token: true,
+		},
 	})
+
 	if (!team) throw Error('Could not find Build Team')
 
 	const teamApplicationsByStatus = await prisma.application.groupBy({

@@ -14,7 +14,6 @@ export async function GET(req: NextRequest) {
 	const searchQuery = req.nextUrl.searchParams.get('query') || ''
 	const opts = {
 		includeAvatar: req.nextUrl.searchParams.get('includeAvatar') === 'true',
-		includeDiscord: req.nextUrl.searchParams.get('includeDiscord') === 'true',
 		includeMinecraft: req.nextUrl.searchParams.get('includeMinecraft') === 'true',
 		limit: Math.min(parseInt(req.nextUrl.searchParams.get('limit') || '10', 10), 50) || 10,
 	}
@@ -30,7 +29,6 @@ export async function GET(req: NextRequest) {
 		where: {
 			OR: [
 				{ username: { contains: searchQuery, mode: 'insensitive' } },
-				{ discordId: { contains: searchQuery, mode: 'insensitive' } },
 				{ id: { contains: searchQuery, mode: 'insensitive' } },
 				{ ssoId: { contains: searchQuery, mode: 'insensitive' } },
 				{ minecraft: { contains: searchQuery, mode: 'insensitive' } },
@@ -39,12 +37,11 @@ export async function GET(req: NextRequest) {
 		select: {
 			id: true,
 			username: true,
-			discordId: opts.includeDiscord ? true : false,
 			minecraft: opts.includeMinecraft ? true : false,
 			avatar: opts.includeAvatar ? true : false,
 		},
 		take: opts.limit,
-		orderBy: [{ username: 'asc' }, { minecraft: 'asc' }, { discordId: 'asc' }],
+		orderBy: [{ username: 'asc' }, { minecraft: 'asc' }],
 	})
 
 	return new Response(JSON.stringify(data), {

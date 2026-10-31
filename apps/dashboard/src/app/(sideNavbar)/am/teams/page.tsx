@@ -47,6 +47,10 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ p
 				}
 			: undefined,
 		include: { creator: { select: { id: true, username: true, ssoId: true } } },
+		omit: {
+			webhook: true,
+			token: true,
+		},
 	})
 
 	return (

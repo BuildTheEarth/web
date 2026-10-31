@@ -9,7 +9,7 @@ import { IconDots, IconExternalLink, IconId } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 
-export function EditMenu({ team }: { team: BuildTeam }) {
+export function EditMenu({ team }: { team: { id: string; slug: string } }) {
 	const session = useSession()
 	const clipboard = useClipboard({ timeout: 500 })
 

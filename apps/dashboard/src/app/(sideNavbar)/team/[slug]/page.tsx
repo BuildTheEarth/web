@@ -86,6 +86,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				},
 			},
 		},
+		omit: {
+			webhook: true,
+			token: true,
+		},
 	})
 	if (!team) throw Error('Could not find Build Team')
 

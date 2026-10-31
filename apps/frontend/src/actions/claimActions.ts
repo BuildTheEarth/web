@@ -26,7 +26,7 @@ export async function getClaimData(id: string) {
 					id: true,
 					username: true,
 					minecraft: true,
-					discordId: true,
+					// discordId: true,
 				},
 			},
 			builders: {
@@ -34,7 +34,7 @@ export async function getClaimData(id: string) {
 					id: true,
 					username: true,
 					minecraft: true,
-					discordId: true,
+					// discordId: true,
 				},
 			},
 			buildTeam: {

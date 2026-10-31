@@ -20,13 +20,10 @@ function getData(searchQuery: string, signal: AbortSignal) {
 			reject(new Error('Request aborted'))
 		})
 
-		fetch(
-			`/api/usersearch?query=${searchQuery}&includeDiscord=true&includeAvatar=true&includeMinecraft=true&limit=10`,
-			{
-				method: 'GET',
-				signal,
-			},
-		)
+		fetch(`/api/usersearch?query=${searchQuery}&includeAvatar=true&includeMinecraft=true&limit=10`, {
+			method: 'GET',
+			signal,
+		})
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error(`Network response was not ok (${response.status})`, { cause: response.status })
@@ -49,10 +46,7 @@ function getData(searchQuery: string, signal: AbortSignal) {
 
 export function UserSelect(
 	props: Omit<React.ComponentProps<typeof TextInput>, 'onChange' | 'value'> & {
-		onChange?: (
-			value: { id: string; username: string; discordId: string; minecraft: string } | null,
-			reset: () => void,
-		) => void
+		onChange?: (value: { id: string; username: string; minecraft: string } | null, reset: () => void) => void
 	},
 ) {
 	const combobox = useCombobox({
@@ -60,14 +54,11 @@ export function UserSelect(
 	})
 
 	const [loading, setLoading] = useState(false)
-	const [data, setData] = useState<{ id: string; username: string; discordId: string; minecraft: string }[] | null>(
-		null,
-	)
+	const [data, setData] = useState<{ id: string; username: string; minecraft: string }[] | null>(null)
 	const [value, setValue] = useState('')
 	const [selectedUser, setSelectedUser] = useState<{
 		id: string
 		username: string
-		discordId: string
 		minecraft: string
 	} | null>(null)
 	const [debounced] = useDebouncedValue(value, 300)

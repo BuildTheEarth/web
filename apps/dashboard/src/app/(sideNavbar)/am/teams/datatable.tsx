@@ -34,7 +34,9 @@ import type { BuildTeam } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
 import Link from 'next/link'
 
-type BuildTeamWithCreator = BuildTeam & { creator: { ssoId: string; id: string; username: string | null } }
+type BuildTeamWithCreator = Omit<BuildTeam, 'webhook' | 'token'> & {
+	creator: { ssoId: string; id: string; username: string | null }
+}
 
 export default function BuildTeamsDatatable({
 	buildTeams,
@@ -117,7 +119,7 @@ export default function BuildTeamsDatatable({
 					accessor: '',
 					title: '',
 					textAlign: 'right',
-					render: (team: BuildTeam) => (
+					render: (team: BuildTeamWithCreator) => (
 						<Group gap={4} justify="right" wrap="nowrap">
 							<Tooltip label="Impersonate BuildTeam">
 								<ActionIcon
