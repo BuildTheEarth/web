@@ -7073,6 +7073,7 @@ __metadata:
     "@bte-germany/terraconvert": "npm:^1.1.2"
     "@keycloak/keycloak-admin-client": "npm:24.0.5"
     "@prisma/adapter-pg": "npm:^7.8.0"
+    "@prisma/client": "npm:^7.3.0"
     "@repo/db": "npm:*"
     "@repo/prettier-config": "npm:*"
     "@repo/typescript-config": "npm:*"

@@ -34,6 +34,7 @@
 		"@bte-germany/terraconvert": "^1.1.2",
 		"@keycloak/keycloak-admin-client": "24.0.5",
 		"@prisma/adapter-pg": "^7.8.0",
+		"@prisma/client": "^7.3.0",
 		"@repo/db": "*",
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
