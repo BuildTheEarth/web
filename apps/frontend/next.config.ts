@@ -126,17 +126,45 @@ const nextConfig: NextConfig = {
 		]
 	},
 	async redirects() {
+		const dashboardUrl = (process.env.NEXT_PUBLIC_DASHBOARD_URL || 'https://my.buildtheearth.net').replace(/\/$/, '')
+
 		return [
-			{
-				source: '/donate',
-				destination: '/download',
-				permanent: true,
-			},
-			{
-				source: '/support-us',
-				destination: '/download',
-				permanent: true,
-			},
+			// Dashboard
+			{ source: '/teams/:slug/manage/:path*', destination: `${dashboardUrl}/team/:slug`, permanent: true },
+			{ source: '/teams/:slug/apply', destination: `${dashboardUrl}/apply/:slug`, permanent: true },
+			{ source: '/teams/:slug/join', destination: `${dashboardUrl}/apply/:slug`, permanent: true },
+			{ source: '/me', destination: `${dashboardUrl}/`, permanent: true },
+			{ source: '/me/:path*', destination: `${dashboardUrl}/`, permanent: true },
+			{ source: '/admin', destination: `${dashboardUrl}/`, permanent: true },
+			{ source: '/admin/:path*', destination: `${dashboardUrl}/`, permanent: true },
+			// External
+			{ source: '/discord', destination: 'https://go.buildtheearth.net/dc', permanent: true },
+			{ source: '/merch', destination: 'https://shop.buildtheearth.net', permanent: true },
+			{ source: '/status', destination: 'https://status.buildtheearth.net', permanent: true },
+			{ source: '/translate', destination: 'https://crowdin.com/project/buildtheearth-website', permanent: true },
+			{ source: '/docs', destination: 'https://docs.buildtheearth.net', permanent: true },
+			{ source: '/api/v1/:path*', destination: 'https://api.buildtheearth.net/api/v1/:path*', permanent: true },
+			// Internal
+			{ source: '/donate', destination: '/download', permanent: true },
+			{ source: '/support-us', destination: '/download', permanent: true },
+			{ source: '/patreon', destination: '/download', permanent: true },
+			{ source: '/map/statistics', destination: '/our-progress', permanent: true },
+			{ source: '/join', destination: '/get-started', permanent: true },
+			{ source: '/join/build', destination: '/get-started', permanent: true },
+			{ source: '/join/visit', destination: '/visit', permanent: true },
+			{ source: '/build', destination: '/get-started', permanent: true },
+			{ source: '/apply', destination: '/get-started', permanent: true },
+			{ source: '/getstarted', destination: '/get-started', permanent: true },
+			{ source: '/getstarted/build', destination: '/get-started', permanent: true },
+			{ source: '/getstarted/visit', destination: '/visit', permanent: true },
+			{ source: '/about', destination: '/about-us', permanent: true },
+			{ source: '/aboutus', destination: '/about-us', permanent: true },
+			{ source: '/credits', destination: '/contributors', permanent: true },
+			{ source: '/home', destination: '/', permanent: true },
+			{ source: '/sitemap', destination: '/sitemap.xml', permanent: true },
+			{ source: '/buildteams', destination: '/teams', permanent: true },
+			{ source: '/buildteams/:slug', destination: '/teams/:slug', permanent: true },
+			{ source: '/teams/:slug/builds', destination: '/teams/:slug', permanent: true },
 		]
 	},
 	experimental: { optimizePackageImports: ['@tabler/icons-react'] },
