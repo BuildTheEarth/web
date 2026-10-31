@@ -1,6 +1,7 @@
 'use client'
 
 import Anchor from '@/components/core/Anchor'
+import { LegalConsent } from '@/components/core/LegalConsent'
 import { Box, Button, Center, Paper, Text, Title } from '@mantine/core'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -69,6 +70,7 @@ function SignupContent() {
 					<Button fullWidth mt="xl" onClick={handleSignup}>
 						Create Builder Account
 					</Button>
+					<LegalConsent mt="md" ta="center" prefix="By creating an account you agree to our" />
 				</Paper>
 			</Box>
 		</Center>

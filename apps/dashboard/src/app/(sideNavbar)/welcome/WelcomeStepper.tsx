@@ -37,6 +37,7 @@ import useSWR from 'swr'
 import { useSession } from 'next-auth/react'
 import LinkButton from '@/components/core/LinkButton'
 import Anchor from '@/components/core/Anchor'
+import { LegalConsent } from '@/components/core/LegalConsent'
 import SkipButton from './SkipButton'
 import { completeOnboarding, updateMinecraftProfile } from '@/actions/onboarding'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
@@ -209,6 +210,7 @@ export default function WelcomeStepper({
 					<Text c="dimmed" size="md">
 						Complete the steps below to finish setting up your builder account.
 					</Text>
+					<LegalConsent mt={4} prefix="By using MyBuildTheEarth you agree to our" />
 				</div>
 				<SkipButton destination={skipDestination} />
 			</Group>

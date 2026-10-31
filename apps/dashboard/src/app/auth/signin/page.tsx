@@ -1,5 +1,6 @@
 'use client'
 
+import { LegalConsent } from '@/components/core/LegalConsent'
 import ErrorDisplay from '@/components/core/ErrorDisplay'
 import { Button } from '@mantine/core'
 import { signIn, useSession } from 'next-auth/react'
@@ -51,6 +52,7 @@ function SigninContent() {
 			>
 				Sign In or Create Account
 			</Button>
+			<LegalConsent ml="md" mt="sm" prefix="By signing in or creating an account you agree to our" />
 		</>
 	)
 }
