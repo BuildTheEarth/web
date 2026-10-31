@@ -11,6 +11,7 @@ import {
 	IconPolygon,
 	IconRadar,
 } from '@tabler/icons-react'
+import { useTranslations } from 'next-intl'
 import { useEffect, useState } from 'react'
 import { Marker, useMap } from 'react-map-gl/maplibre'
 import classes from './CustomMapControls.module.css'
@@ -36,6 +37,7 @@ export const CustomMapControls = ({
 	partialLayers = [],
 	onToggleLayer,
 }: CustomMapControlsProps) => {
+	const t = useTranslations('map.controls')
 	const { current: map } = useMap()
 	const [isFullscreen, setIsFullscreen] = useState(false)
 	const [userLocation, setUserLocation] = useState<{ longitude: number; latitude: number } | null>(null)
@@ -106,13 +108,14 @@ export const CustomMapControls = ({
 									return 'default'
 								}
 
+								const layer = t(`layers.${layerName}` as any)
 								const getTooltipLabel = () => {
 									if (supportsPartial) {
-										if (visibility === 'full') return `Hide ${layerName}`
-										if (visibility === 'partial') return `Show ${layerName} (full)`
-										return `Show ${layerName} (partial)`
+										if (visibility === 'full') return t('hideLayer', { layer })
+										if (visibility === 'partial') return t('showLayerFull', { layer })
+										return t('showLayerPartial', { layer })
 									} else {
-										return visibility === 'full' ? `Hide ${layerName}` : `Show ${layerName}`
+										return visibility === 'full' ? t('hideLayer', { layer }) : t('showLayer', { layer })
 									}
 								}
 
@@ -122,7 +125,7 @@ export const CustomMapControls = ({
 											variant={getVariant()}
 											size="lg"
 											onClick={() => onToggleLayer(layerName)}
-											aria-label={`Toggle ${layerName} layer`}
+											aria-label={t('toggleLayer', { layer })}
 											className={classes.controlButtonPrimary}
 											style={visibility === 'partial' && supportsPartial ? { opacity: 0.7 } : undefined}
 										>
@@ -158,7 +161,7 @@ export const CustomMapControls = ({
 								variant="default"
 								size="lg"
 								onClick={handleZoomIn}
-								aria-label="Zoom in"
+								aria-label={t('zoomIn')}
 								className={classes.controlButton}
 							>
 								<IconPlus size={18} stroke={2} />
@@ -167,7 +170,7 @@ export const CustomMapControls = ({
 								variant="default"
 								size="lg"
 								onClick={handleZoomOut}
-								aria-label="Zoom out"
+								aria-label={t('zoomOut')}
 								className={classes.controlButton}
 							>
 								<IconMinus size={18} stroke={2} />
@@ -180,7 +183,7 @@ export const CustomMapControls = ({
 							variant="default"
 							size="lg"
 							onClick={handleGeolocate}
-							aria-label="Geolocate"
+							aria-label={t('geolocate')}
 							className={classes.controlButton}
 						>
 							<IconCurrentLocation size={18} stroke={2} />
@@ -192,7 +195,7 @@ export const CustomMapControls = ({
 							variant="default"
 							size="lg"
 							onClick={handleFullscreen}
-							aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+							aria-label={isFullscreen ? t('exitFullscreen') : t('enterFullscreen')}
 							className={classes.controlButton}
 						>
 							<IconMaximize size={18} stroke={2} />

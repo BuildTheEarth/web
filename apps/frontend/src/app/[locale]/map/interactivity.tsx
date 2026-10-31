@@ -4,6 +4,9 @@ import { getClaimData } from '@/actions/claimActions'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
 import { CustomMapControls } from '@/components/map/CustomMapControls'
+import { MapMenuPosition } from '@/components/map/MapAnchoredMenu'
+import { ChooserClaim, MapClaimChooser } from '@/components/map/MapClaimChooser'
+import { MapContextMenu } from '@/components/map/MapContextMenu'
 import { Carousel, CarouselSlide } from '@mantine/carousel'
 import {
 	Avatar,
@@ -21,8 +24,8 @@ import {
 	Tooltip,
 } from '@mantine/core'
 import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react'
-import { useFormatter } from 'next-intl'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useFormatter, useTranslations } from 'next-intl'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre'
 
 type ClaimProperties = {
@@ -33,10 +36,30 @@ type ClaimProperties = {
 	buildings?: number
 }
 
+const LONG_PRESS_MS = 500
+const LONG_PRESS_MOVE_TOLERANCE = 10
+
+const getClientPosition = (event: any): MapMenuPosition => {
+	const original = event.originalEvent
+	const touch = original?.touches?.[0] ?? original?.changedTouches?.[0]
+	if (touch) return { x: touch.clientX, y: touch.clientY }
+	if (typeof original?.clientX === 'number') return { x: original.clientX, y: original.clientY }
+	const rect = event.target.getContainer().getBoundingClientRect()
+	return { x: rect.left + event.point.x, y: rect.top + event.point.y }
+}
+
 export const MapClient = () => {
 	const [claimPoints, setClaimPoints] = useState(null)
 	const [claimPolygons, setClaimPolygons] = useState(null)
 	const [selectedClaim, setSelectedClaim] = useState<string | null>(null)
+	const [contextMenu, setContextMenu] = useState<{
+		position: MapMenuPosition
+		lngLat: { lng: number; lat: number }
+	} | null>(null)
+	const [chooser, setChooser] = useState<{ position: MapMenuPosition; claims: ChooserClaim[] } | null>(null)
+	const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+	const longPressStart = useRef<{ x: number; y: number } | null>(null)
+	const suppressClickUntil = useRef(0)
 	const [layerVisibility, setLayerVisibility] = useState<{
 		heatmap: 'full' | 'partial' | 'hidden'
 		claims: 'full' | 'partial' | 'hidden'
@@ -81,13 +104,75 @@ export const MapClient = () => {
 	const claimPointsData = useMemo(() => claimPoints, [claimPoints])
 	const claimPolygonsData = useMemo(() => claimPolygons, [claimPolygons])
 
-	const handleClaimClick = useCallback((event: any) => {
-		const feature = event.features?.[0]
-		if (!feature?.properties) return
-
-		const properties = feature.properties as ClaimProperties
-		setSelectedClaim(String(properties.id ?? feature.id ?? ''))
+	const closeMenus = useCallback(() => {
+		setContextMenu(null)
+		setChooser(null)
 	}, [])
+
+	const handleClaimClick = useCallback((event: any) => {
+		if (Date.now() < suppressClickUntil.current) return
+		setContextMenu(null)
+
+		// The same claim can be returned multiple times (e.g. polygons split into tiles), so dedupe by id
+		const claims = new Map<string, ChooserClaim>()
+		for (const feature of event.features ?? []) {
+			const properties = (feature.properties ?? {}) as ClaimProperties
+			const id = String(properties.id ?? feature.id ?? '')
+			if (!id || claims.has(id)) continue
+			claims.set(id, { id, name: properties.name, size: properties.size })
+		}
+
+		if (claims.size === 0) {
+			setChooser(null)
+		} else if (claims.size === 1) {
+			setChooser(null)
+			setSelectedClaim(Array.from(claims.keys())[0])
+		} else {
+			setChooser({ position: getClientPosition(event), claims: Array.from(claims.values()) })
+		}
+	}, [])
+
+	const openContextMenu = useCallback((event: any) => {
+		event.originalEvent?.preventDefault?.()
+		setChooser(null)
+		setContextMenu({ position: getClientPosition(event), lngLat: { lng: event.lngLat.lng, lat: event.lngLat.lat } })
+	}, [])
+
+	const cancelLongPress = useCallback(() => {
+		if (longPressTimer.current) clearTimeout(longPressTimer.current)
+		longPressTimer.current = null
+	}, [])
+
+	const handleTouchStart = useCallback(
+		(event: any) => {
+			cancelLongPress()
+			if ((event.originalEvent?.touches?.length ?? 1) !== 1) return
+			longPressStart.current = event.point
+			longPressTimer.current = setTimeout(() => {
+				longPressTimer.current = null
+				// Swallow the click that may follow when the finger is lifted
+				suppressClickUntil.current = Date.now() + 1000
+				openContextMenu(event)
+			}, LONG_PRESS_MS)
+		},
+		[cancelLongPress, openContextMenu],
+	)
+
+	const handleTouchMove = useCallback(
+		(event: any) => {
+			const start = longPressStart.current
+			if (
+				!start ||
+				Math.hypot(event.point.x - start.x, event.point.y - start.y) > LONG_PRESS_MOVE_TOLERANCE ||
+				(event.originalEvent?.touches?.length ?? 1) !== 1
+			) {
+				cancelLongPress()
+			}
+		},
+		[cancelLongPress],
+	)
+
+	useEffect(() => cancelLongPress, [cancelLongPress])
 
 	const handleClaimHover = useCallback((event: any) => {
 		event.target.getCanvas().style.cursor = event.features?.length ? 'pointer' : ''
@@ -103,6 +188,15 @@ export const MapClient = () => {
 				maxTileCacheSize={50}
 				interactiveLayerIds={['claims']}
 				onClick={handleClaimClick}
+				onContextMenu={openContextMenu}
+				onMoveStart={() => {
+					cancelLongPress()
+					closeMenus()
+				}}
+				onTouchStart={handleTouchStart}
+				onTouchMove={handleTouchMove}
+				onTouchEnd={cancelLongPress}
+				onTouchCancel={cancelLongPress}
 				onMouseMove={handleClaimHover}
 				onMouseLeave={(event) => {
 					event.target.getCanvas().style.cursor = ''
@@ -185,13 +279,27 @@ export const MapClient = () => {
 					</Source>
 				)}
 			</MapGL>
+			<MapContextMenu
+				position={contextMenu?.position ?? null}
+				lngLat={contextMenu?.lngLat ?? null}
+				onClose={() => setContextMenu(null)}
+			/>
+			<MapClaimChooser
+				position={chooser?.position ?? null}
+				claims={chooser?.claims ?? []}
+				onSelect={(id) => {
+					setChooser(null)
+					setSelectedClaim(id)
+				}}
+				onClose={() => setChooser(null)}
+			/>
 			<MapClaimDrawer claimId={selectedClaim} closeAction={() => setSelectedClaim(null)} />
 		</>
 	)
 }
 
 export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | null; closeAction: () => void }) => {
-	// const claim = use(getClaimData(claimId!));
+	const t = useTranslations('map.claim')
 	const formatter = useFormatter()
 	const [claimData, setClaimData] = useState<Awaited<ReturnType<typeof getClaimData>> | null>(null)
 
@@ -230,7 +338,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 							<Image
 								style={{ aspectRatio: '16 / 9', height: '100%' }}
 								src={image.src}
-								alt={'Image ' + image.id + ' for claim'}
+								alt={t('imageAlt', { id: image.id })}
 							/>
 						</CarouselSlide>
 					))}
@@ -241,7 +349,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 				<Title size={'h2'} order={4}>
 					{claimData.name}, {claimData.city}{' '}
 					{claimData.externalId && (
-						<Tooltip label="Claim is externally synced. Some information might not be available" position="bottom">
+						<Tooltip label={t('externallySynced')} position="bottom">
 							<ThemeIcon variant="light" color="yellow" size="sm" radius="50%">
 								<IconInfoCircle style={{ width: '70%', height: '70%' }} />
 							</ThemeIcon>
@@ -251,9 +359,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 				<Text size="sm" c="dimmed" mb="md">
 					{claimData.center?.split(',').reverse().join(', ')}
 				</Text>
-				<Text size="md">
-					{claimData.description || claimData.osmName || 'No description was provided for this claim.'}
-				</Text>
+				<Text size="md">{claimData.description || claimData.osmName || t('noDescription')}</Text>
 				<Box
 					style={{
 						backgroundColor: 'var(--mantine-color-dark-6)',
@@ -264,14 +370,14 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 					mt="calc(var(--mantine-spacing-xl) * 2)"
 				>
 					<Title order={2} mb="md">
-						Claim Details
+						{t('details')}
 					</Title>
 					<Stack gap={0} mx="md">
 						<Divider style={{ margin: '0' }} my="xs" />
 						<Group justify="space-between">
 							<Flex align="center" gap="sm" py="xs">
 								<IconPolygon size={20} />
-								<Text c="dimmed">Size</Text>
+								<Text c="dimmed">{t('size')}</Text>
 							</Flex>
 							<Flex align="center" gap={1} py="xs">
 								<Text>{formatter.number(claimData.size)}m²</Text>
@@ -281,7 +387,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 						<Group justify="space-between">
 							<Flex align="center" gap="sm" py="xs">
 								<IconBuildings size={20} />
-								<Text c="dimmed">Buildings</Text>
+								<Text c="dimmed">{t('buildings')}</Text>
 							</Flex>
 							<Flex align="center" gap={1} py="xs">
 								<Text>{formatter.number(claimData.buildings)}</Text>
@@ -291,7 +397,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 						<Group justify="space-between">
 							<Flex align="center" gap="sm" py="xs">
 								<IconUsers size={20} />
-								<Text c="dimmed">BuildTeam</Text>
+								<Text c="dimmed">{t('buildTeam')}</Text>
 							</Flex>
 							<Flex align="center" gap={1} py="xs">
 								<BuildTeamDisplay team={claimData.buildTeam} />
@@ -301,7 +407,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 						<Group justify="space-between">
 							<Flex align="center" gap="sm" py="xs">
 								<IconUser size={20} />
-								<Text c="dimmed">Owner</Text>
+								<Text c="dimmed">{t('owner')}</Text>
 							</Flex>
 							<Flex align="center" gap={'sm'} py="xs">
 								{claimData.owner && <UserDisplay user={claimData.owner} />}
@@ -311,7 +417,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 						<Group justify="space-between">
 							<Flex align="center" gap="sm" py="xs">
 								<IconUsers size={20} />
-								<Text c="dimmed">Builders</Text>
+								<Text c="dimmed">{t('builders')}</Text>
 							</Flex>
 							<Flex align="center" gap={'sm'} py="xs">
 								{claimData.builders && claimData.builders.length > 0 ? (
@@ -337,7 +443,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 										)}
 									</>
 								) : (
-									<Text c="dimmed">No additional builders</Text>
+									<Text c="dimmed">{t('noBuilders')}</Text>
 								)}
 							</Flex>
 						</Group>
@@ -346,7 +452,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 				</Box>
 				<Box style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }} p="md">
 					<Button fullWidth variant="outline" color="dark" onClick={closeAction}>
-						Close
+						{t('close')}
 					</Button>
 				</Box>
 			</Box>
