@@ -74,6 +74,7 @@ const data: (NavbarLink | NavbarLinkGroup)[] = [
 			{ label: 'Applications', link: '/applications' },
 			{ label: 'Members', link: '/members' },
 			{ label: 'Claims', link: '/claims' },
+			{ label: 'Showcase Images', link: '/images' },
 			{ label: 'Application Questions', link: '/questions' },
 			{ label: 'Settings', link: '/edit' },
 		],

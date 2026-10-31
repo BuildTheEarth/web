@@ -15,6 +15,9 @@ const nextConfig: NextConfig = {
 	// 	'@tiptap/extension-highlight',
 	// 	'@tiptap/extension-text-align',
 	// ],
+	experimental: {
+		serverActions: { bodySizeLimit: '12mb' },
+	},
 	output: 'standalone',
 	poweredByHeader: false,
 	outputFileTracingRoot: path.join(__dirname, '../../'),

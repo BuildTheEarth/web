@@ -8380,6 +8380,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dashboard@workspace:apps/dashboard"
   dependencies:
+    "@aws-sdk/client-s3": "npm:^3.787.0"
     "@bte-germany/terraconvert": "npm:^1.1.2"
     "@keycloak/keycloak-admin-client": "npm:^26.2.0"
     "@mantine/charts": "npm:^8.2.3"
@@ -8436,6 +8437,7 @@ __metadata:
     next: "npm:16.3.0"
     next-auth: "npm:^4.24.7"
     next-transpile-modules: "npm:^10.0.1"
+    plaiceholder: "npm:^3.0.0"
     postcss: "npm:^8.5.3"
     postcss-preset-mantine: "npm:^1.17.0"
     postcss-simple-vars: "npm:^7.0.1"
@@ -8443,6 +8445,7 @@ __metadata:
     react-dom: "npm:19.2.8"
     react-map-gl: "npm:^8.1.0"
     recharts: "npm:^2.13.3"
+    sharp: "npm:^0.34.1"
     swr: "npm:^2.2.5"
     terra-draw: "npm:^1.33.0"
     terra-draw-maplibre-gl-adapter: "npm:^1.4.1"
