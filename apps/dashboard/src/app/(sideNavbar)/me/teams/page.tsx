@@ -10,6 +10,7 @@ import { IconCalendar, IconMapPin, IconPencil, IconPolygon, IconStar, IconTools 
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { Fragment } from 'react'
+import Anchor from '@/components/core/Anchor'
 
 export const metadata: Metadata = {
 	title: 'Build Teams',
@@ -50,6 +51,15 @@ export default async function Page() {
 				custom requirements, so make sure to join their server and read their information.
 			</Text>
 			<Stack gap="lg">
+				{teams.length === 0 && (
+					<Text c="dimmed" size="md">
+						You are not a member of any Build Team yet. Find a Build Team to join on the{' '}
+						<Anchor href="https://buildtheearth.net/teams" target="_blank">
+							here
+						</Anchor>
+						.
+					</Text>
+				)}
 				{teams.map((team) => {
 					return (
 						<Fragment key={team.id}>

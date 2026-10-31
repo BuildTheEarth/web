@@ -1,6 +1,6 @@
 'use server'
 import { getSession, hasRole } from '@/util/auth'
-import { revalidateWebsitePath } from '@/util/data'
+import { revalidateWebsitePath, revalidateWebsitePaths } from '@/util/data'
 import prisma from '@/util/db'
 import { revalidatePath } from 'next/cache'
 
@@ -55,4 +55,7 @@ export const adminApproveShowcase = async (id: string) => {
 			approved: true,
 		},
 	})
+
+	revalidatePath('/am/uploads/check')
+	await revalidateWebsitePaths(['/gallery', '/'])
 }
