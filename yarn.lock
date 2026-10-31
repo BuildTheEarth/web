@@ -3187,7 +3187,7 @@ __metadata:
     "@prisma/client": "npm:^7.3.0"
     "@repo/typescript-config": "npm:*"
     prisma: "npm:^7.3.0"
-    typescript: "npm:^5.6.3"
+    typescript: "npm:^5.8.3"
   languageName: unknown
   linkType: soft
 
@@ -10441,6 +10441,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "frontend@workspace:apps/frontend"
   dependencies:
+    "@bte-germany/terraconvert": "npm:^1.1.2"
     "@directus/sdk": "npm:^21.2.2"
     "@mantine/carousel": "npm:^8.3.10"
     "@mantine/charts": "npm:^8.3.10"

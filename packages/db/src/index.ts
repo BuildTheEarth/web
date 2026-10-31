@@ -3,5 +3,7 @@
  */
 // export * from '@prisma/client';
 
-export * from './generated/prisma/client';
-
+// The explicit .ts extension is rewritten to .js by tsconfig.build.json (required for Node ESM).
+// Consumers without allowImportingTsExtensions (e.g. apps/api) need the ignore.
+// @ts-ignore
+export * from './generated/prisma/client.ts'
