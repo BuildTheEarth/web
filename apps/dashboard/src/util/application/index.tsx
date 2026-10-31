@@ -45,13 +45,7 @@ export function generateInitialValues(data: any) {
 	})
 	return initialValues
 }
-export function generateValidation(data: any) {
-	const validation: any = {}
-	data.forEach((d: any) => {
-		validation[d.id] = (value: any) => ApplicationQuestions[d.type].validation(value, d.props)
-	})
-	return validation
-}
+export { generateValidation } from '@/util/application/validation'
 
 export function toReadable(question: typeof ApplicationQuestions) {
 	switch (question) {

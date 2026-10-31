@@ -77,7 +77,7 @@ export function ResponseEditor({
 	userId: string
 	buildTeamSlug: string
 }) {
-	const APPLICATION_STATUS_ACCEPTED: ApplicationStatus = 'ACCEPTED'
+	const APPLICATION_STATUS_ACCEPTED: ApplicationStatus = application.trial ? 'TRIAL' : 'ACCEPTED'
 	const APPLICATION_STATUS_DECLINED: ApplicationStatus = 'DECLINED'
 
 	const responseEditor = useEditor({
@@ -145,7 +145,9 @@ export function ResponseEditor({
 								status: APPLICATION_STATUS_ACCEPTED,
 							}).then(() => {
 								showNotification({
-									message: `Application accepted successfully.`,
+									message: application.trial
+										? `Trial application accepted successfully.`
+										: `Application accepted successfully.`,
 									title: 'Application Reviewed',
 									color: 'green',
 								})
@@ -153,7 +155,7 @@ export function ResponseEditor({
 						}
 						color="green"
 					>
-						Accept
+						{application.trial ? 'Accept as Trial' : 'Accept'}
 					</Button>
 					<Button
 						leftSection={<IconX />}

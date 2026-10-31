@@ -60,12 +60,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 	}
 }
 
-export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+export default async function Page({
+	params,
+	searchParams,
+}: {
+	params: Promise<{ slug: string }>
+	searchParams: Promise<{ trial?: string }>
+}) {
 	const session = await getSession()
 	if (!session) {
 		redirect('/auth/signin')
 	}
 	const slug = (await params).slug
+	const initialTrial = (await searchParams).trial === 'true'
 
 	await ensureUserCreated()
 
@@ -81,8 +88,9 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 			invite: true,
 			color: true,
 			allowApplications: true,
+			allowTrial: true,
 			applicationQuestions: {
-				where: { sort: { gt: 0 } },
+				where: { sort: { gte: 0 } },
 			},
 		},
 	})
@@ -238,6 +246,14 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						check them out to see how you can improve and re-apply below.
 					</Alert>
 				)}
+				{user.applications.length > 0 && user.applications[0].status === ApplicationStatus.TRIAL && (
+					<Alert variant="light" color="blue" title="Trial builder" mb="md" icon={<IconClock size={16} />}>
+						Your trial application to {joiningBuildTeam?.name} was accepted on{' '}
+						{user.applications[0].reviewedAt ? toHumanDate(user.applications[0].reviewedAt) : 'unknown date'}. You
+						should have received a message from the Build Team in your Discord DMs. Once you are ready, you can apply as
+						a full builder below.
+					</Alert>
+				)}
 				{user.applications.length > 0 && user.applications[0].status === ApplicationStatus.SEND && (
 					<Alert variant="light" color="yellow" title="Application pending" mb="md" icon={<IconClock size={16} />}>
 						Your application to {joiningBuildTeam?.name} is still pending. The Build Team will review it as soon as
@@ -370,7 +386,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 						<Stack gap="sm" align="flex-start">
 							<Text size="sm">
 								Application submission is locked because your Discord account is not connected. Linking Discord is
-								mandatory before you can submit an application to {joiningBuildTeam.name}.
+								mandatory before you can submit an application to {joiningBuildTeam.name}. You also need to be a member
+								of the BuildTheEarth.net{' '}
+								<Anchor href="https://go.buildtheearth.net/dc" target="_blank" fz="sm">
+									Discord server
+								</Anchor>
+								.
 							</Text>
 							<LinkButton
 								href={discordLinkUrl}
@@ -387,6 +408,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 				<ApplyForm
 					applyAction={applyToBuildTeamBinded}
 					questions={joiningBuildTeam.applicationQuestions.sort((a, b) => a.sort - b.sort)}
+					allowTrial={joiningBuildTeam.allowTrial}
+					initialTrial={initialTrial}
 					allowApplications={
 						Boolean(joiningBuildTeam.allowApplications) &&
 						user.applications[0]?.status !== ApplicationStatus.SEND &&
