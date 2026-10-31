@@ -26,7 +26,8 @@ import {
 import { IconBuildings, IconInfoCircle, IconPolygon, IconRadar2, IconUser, IconUsers } from '@tabler/icons-react'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import MapGL, { Layer, ScaleControl, Source } from 'react-map-gl/maplibre'
+import { useSearchParams } from 'next/navigation'
+import MapGL, { Layer, MapRef, ScaleControl, Source } from 'react-map-gl/maplibre'
 
 type ClaimProperties = {
 	id?: string
@@ -38,6 +39,7 @@ type ClaimProperties = {
 
 const LONG_PRESS_MS = 500
 const LONG_PRESS_MOVE_TOLERANCE = 10
+const CLAIM_PARAM = 'claim'
 
 const getClientPosition = (event: any): MapMenuPosition => {
 	const original = event.originalEvent
@@ -51,7 +53,11 @@ const getClientPosition = (event: any): MapMenuPosition => {
 export const MapClient = () => {
 	const [claimPoints, setClaimPoints] = useState(null)
 	const [claimPolygons, setClaimPolygons] = useState(null)
-	const [selectedClaim, setSelectedClaim] = useState<string | null>(null)
+	const searchParams = useSearchParams()
+	const mapRef = useRef<MapRef>(null)
+	const [mapLoaded, setMapLoaded] = useState(false)
+	const [selectedClaim, setSelectedClaim] = useState<string | null>(() => searchParams.get(CLAIM_PARAM) || null)
+	const pendingZoomClaim = useRef<string | null>(selectedClaim)
 	const [contextMenu, setContextMenu] = useState<{
 		position: MapMenuPosition
 		lngLat: { lng: number; lat: number }
@@ -81,6 +87,37 @@ export const MapClient = () => {
 			.then(setClaimPolygons)
 			.catch((err) => console.error('Could not load data', err))
 	}, [])
+
+	// ?claim= query param
+	useEffect(() => {
+		const url = new URL(window.location.href)
+		if (selectedClaim) url.searchParams.set(CLAIM_PARAM, selectedClaim)
+		else url.searchParams.delete(CLAIM_PARAM)
+		if (url.href !== window.location.href) window.history.replaceState(window.history.state, '', url)
+	}, [selectedClaim])
+
+	useEffect(() => {
+		const claimId = pendingZoomClaim.current
+		if (!claimId || !mapLoaded || !claimPolygons) return
+		pendingZoomClaim.current = null
+
+		const feature = (claimPolygons as any).features?.find((f: any) => f.id === claimId)
+		const ring: number[][] | undefined = feature?.geometry?.coordinates?.[0]
+		if (!ring?.length) {
+			setSelectedClaim((current) => (current === claimId ? null : current))
+			return
+		}
+
+		const lngs = ring.map((c) => c[0])
+		const lats = ring.map((c) => c[1])
+		mapRef.current?.fitBounds(
+			[
+				[Math.min(...lngs), Math.min(...lats)],
+				[Math.max(...lngs), Math.max(...lats)],
+			],
+			{ padding: 80, maxZoom: 17, duration: 1500 },
+		)
+	}, [mapLoaded, claimPolygons])
 
 	const toggleLayer = useCallback((layerName: string) => {
 		setLayerVisibility((prev) => {
@@ -181,6 +218,8 @@ export const MapClient = () => {
 	return (
 		<>
 			<MapGL
+				ref={mapRef}
+				onLoad={() => setMapLoaded(true)}
 				style={{ width: '100vw', height: 'calc(100vh - var(--root-footer-height))' }}
 				mapStyle={process.env.NEXT_PUBLIC_MAP_STYLE_URL}
 				attributionControl={{ compact: false }}
