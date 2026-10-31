@@ -1,9 +1,11 @@
 'use client'
 
 import { deleteClaim, editClaim } from '@/actions/buildTeams'
+import { transferClaim } from '@/actions/claimEditor'
 import { adminChangeTeam } from '@/actions/claims'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
+import { UserSelect } from '@/components/input/UserSelect'
 import { useFormAction, useFormActions } from '@/hooks/useFormAction'
 import { ACTION_COLORS } from '@/util/actions'
 import { hasRole } from '@/util/auth'
@@ -29,6 +31,7 @@ import {
 import { useForm } from '@mantine/form'
 import { useClipboard } from '@mantine/hooks'
 import { closeAllModals, modals, openConfirmModal } from '@mantine/modals'
+import { showNotification } from '@mantine/notifications'
 import type { BuildTeam, Claim } from '@repo/db'
 import {
 	IconCirclesRelation,
@@ -39,6 +42,7 @@ import {
 	IconId,
 	IconTransfer,
 	IconTrash,
+	IconUserExclamation,
 } from '@tabler/icons-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -149,6 +153,21 @@ export function EditMenu({
 				</MenuItem>
 				<MenuDivider />
 				<MenuLabel>Danger Zone</MenuLabel>
+				<MenuItem
+					leftSection={<IconUserExclamation style={{ width: rem(14), height: rem(14) }} />}
+					color="red"
+					aria-label="Transfer Claim"
+					onClick={() =>
+						modals.open({
+							id: 'transfer-claim',
+							title: 'Transfer Claim',
+							centered: true,
+							children: <TransferClaimModal claimId={claim.id} />,
+						})
+					}
+				>
+					Transfer Claim
+				</MenuItem>
 				<MenuItem
 					leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
 					color="red"
@@ -306,6 +325,51 @@ export function ChangeBuildTeamModal({ claim }: { claim: Claim & { buildTeam: Bu
 				}}
 			>
 				Change Build Team
+			</Button>
+		</>
+	)
+}
+
+export function TransferClaimModal({ claimId }: { claimId: string }) {
+	const router = useRouter()
+	const [transferClaimAction, isPending] = useFormAction(transferClaim)
+	const [newOwner, setNewOwner] = useState<string | null>(null)
+
+	return (
+		<>
+			<UserSelect label="New Owner" onChange={(u) => setNewOwner(u?.id || null)} />
+			<Button
+				mt="md"
+				fullWidth
+				color="red"
+				leftSection={<IconTransfer size={14} />}
+				loading={isPending}
+				disabled={!newOwner}
+				onClick={() =>
+					openConfirmModal({
+						title: 'Transfer Claim',
+						centered: true,
+						confirmProps: { color: 'red' },
+						children: <Text size="sm">Are you sure you want to transfer this claim?</Text>,
+						labels: { confirm: 'Transfer', cancel: 'Cancel' },
+						onConfirm: async () => {
+							if (!newOwner) return
+							try {
+								await transferClaimAction({ id: claimId, newOwnerId: newOwner })
+								modals.closeAll()
+								router.refresh()
+							} catch (e) {
+								showNotification({
+									title: 'Error',
+									message: e instanceof Error ? e.message : 'Failed to transfer claim',
+									color: 'red',
+								})
+							}
+						},
+					})
+				}
+			>
+				Transfer Claim
 			</Button>
 		</>
 	)

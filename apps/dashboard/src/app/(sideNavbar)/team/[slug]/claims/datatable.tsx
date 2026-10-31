@@ -24,6 +24,7 @@ import {
 	IconEye,
 	IconId,
 	IconTrash,
+	IconUserExclamation,
 } from '@tabler/icons-react'
 import { redirect, usePathname, useRouter, useSearchParams } from 'next/navigation'
 
@@ -37,7 +38,7 @@ import { closeAllModals, modals, openConfirmModal } from '@mantine/modals'
 import type { Claim } from '@repo/db'
 import { DataTable } from 'mantine-datatable'
 import Link from 'next/link'
-import { EditClaimModal } from './[id]/interactivity'
+import { EditClaimModal, TransferClaimModal } from './[id]/interactivity'
 
 export default function ClaimsDatatable({
 	claims,
@@ -180,6 +181,22 @@ export default function ClaimsDatatable({
 									</MenuItem>
 									<MenuDivider />
 									<MenuLabel>Danger Zone</MenuLabel>
+									<MenuItem
+										leftSection={<IconUserExclamation style={{ width: rem(14), height: rem(14) }} />}
+										color="red"
+										aria-label="Transfer Claim"
+										disabled={!permissions?.includes('team.claims.edit')}
+										onClick={() =>
+											modals.open({
+												id: 'transfer-claim',
+												title: 'Transfer Claim',
+												centered: true,
+												children: <TransferClaimModal claimId={claim.id} />,
+											})
+										}
+									>
+										Transfer Claim
+									</MenuItem>
 									<MenuItem
 										leftSection={<IconTrash style={{ width: rem(14), height: rem(14) }} />}
 										color="red"

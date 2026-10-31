@@ -1,9 +1,11 @@
 'use client'
 
+import { UserDisplay } from '@/components/data/User'
 import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
-import { Box, Button, Group, Stack, Switch, Text, Textarea, TextInput, Title } from '@mantine/core'
+import { UserSelect } from '@/components/input/UserSelect'
+import { ActionIcon, Box, Button, Group, Stack, Switch, Text, Textarea, TextInput, Title } from '@mantine/core'
 import { modals } from '@mantine/modals'
-import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash } from '@tabler/icons-react'
+import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash, IconUsers } from '@tabler/icons-react'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import { useClaimEditorStore } from './store'
@@ -16,6 +18,7 @@ export function ClaimToolbar() {
 	const saveGeometry = useClaimEditorStore((s) => s.saveGeometry)
 	const deleteSelectedClaim = useClaimEditorStore((s) => s.deleteSelectedClaim)
 	const updateClaimDetails = useClaimEditorStore((s) => s.updateClaimDetails)
+	const updateClaimBuilders = useClaimEditorStore((s) => s.updateClaimBuilders)
 
 	const selectedClaim = claims.find((c) => c.id === selectedClaimId)
 	let claimName = selectedClaim?.name || 'None selected'
@@ -49,6 +52,29 @@ export function ClaimToolbar() {
 						await updateClaimDetails(data)
 					}}
 					onCancel={() => modals.close(modalId)}
+					onManageBuilders={openBuildersModal}
+				/>
+			),
+		})
+	}
+
+	const openBuildersModal = () => {
+		if (!selectedClaimId) return
+
+		const modalId = 'edit-claim-builders-modal'
+		modals.open({
+			modalId,
+			title: 'Claim Builders',
+			centered: true,
+			children: (
+				<ClaimBuildersModal
+					ownerId={selectedClaim?.owner?.id}
+					initialBuilders={selectedClaim?.builders || []}
+					onSave={async (ids) => {
+						modals.close(modalId)
+						await updateClaimBuilders(ids)
+					}}
+					onCancel={() => modals.close(modalId)}
 				/>
 			),
 		})
@@ -70,7 +96,7 @@ export function ClaimToolbar() {
 							onClick={openEditDetailsModal}
 							leftSection={<IconEdit size={16} />}
 						>
-							Edit Info
+							Edit Claim
 						</Button>
 						<Button
 							variant="outline"
@@ -198,6 +224,7 @@ export function EditClaimDetailsModal({
 	initialData,
 	onSave,
 	onCancel,
+	onManageBuilders,
 }: {
 	initialData: {
 		name: string
@@ -208,6 +235,7 @@ export function EditClaimDetailsModal({
 	}
 	onSave: (data: { name: string; description: string; city: string; active: boolean; finished: boolean }) => void
 	onCancel: () => void
+	onManageBuilders?: () => void
 }) {
 	const [name, setName] = useState(initialData.name)
 	const [description, setDescription] = useState(initialData.description)
@@ -245,6 +273,11 @@ export function EditClaimDetailsModal({
 				checked={finished}
 				onChange={(e) => setFinished(e.currentTarget.checked)}
 			/>
+			{onManageBuilders && (
+				<Button variant="light" onClick={onManageBuilders} leftSection={<IconUsers size={16} />}>
+					Manage Builders
+				</Button>
+			)}
 			<Group justify="flex-end" mt="md">
 				<Button variant="default" onClick={onCancel}>
 					Cancel
@@ -262,6 +295,65 @@ export function EditClaimDetailsModal({
 					leftSection={<IconDeviceFloppy size={16} />}
 				>
 					Save Details
+				</Button>
+			</Group>
+		</Stack>
+	)
+}
+
+type ClaimBuilder = { id: string; username?: string | null; minecraft?: string | null; avatar?: string | null }
+
+export function ClaimBuildersModal({
+	ownerId,
+	initialBuilders,
+	onSave,
+	onCancel,
+}: {
+	ownerId?: string | null
+	initialBuilders: ClaimBuilder[]
+	onSave: (builderIds: string[]) => void
+	onCancel: () => void
+}) {
+	const [builders, setBuilders] = useState<ClaimBuilder[]>(initialBuilders)
+
+	return (
+		<Stack gap="md">
+			<Stack gap="xs">
+				{builders.length === 0 && (
+					<Text size="sm" c="dimmed">
+						No builders added.
+					</Text>
+				)}
+				{builders.map((b) => (
+					<Group key={b.id} justify="space-between" wrap="nowrap">
+						<UserDisplay user={{ id: b.id, username: b.username || b.minecraft }} noAnchor />
+						<ActionIcon
+							variant="subtle"
+							color="red"
+							aria-label="Remove Builder"
+							onClick={() => setBuilders((prev) => prev.filter((p) => p.id !== b.id))}
+						>
+							<IconTrash size={16} />
+						</ActionIcon>
+					</Group>
+				))}
+			</Stack>
+			<UserSelect
+				label="Add Builder"
+				onChange={(user, reset) => {
+					if (!user) return
+					if (user.id !== ownerId) {
+						setBuilders((prev) => (prev.some((p) => p.id === user.id) ? prev : [...prev, user]))
+					}
+					reset()
+				}}
+			/>
+			<Group justify="flex-end" mt="md">
+				<Button variant="default" onClick={onCancel}>
+					Cancel
+				</Button>
+				<Button onClick={() => onSave(builders.map((b) => b.id))} leftSection={<IconDeviceFloppy size={16} />}>
+					Save Builders
 				</Button>
 			</Group>
 		</Stack>

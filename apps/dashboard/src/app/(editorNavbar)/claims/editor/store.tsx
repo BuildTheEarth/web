@@ -4,6 +4,7 @@ import {
 	getClaim,
 	getPersonalClaims,
 	saveClaim as saveClaimAction,
+	setClaimBuilders,
 } from '@/actions/claimEditor'
 import { modals } from '@mantine/modals'
 import { showNotification, updateNotification } from '@mantine/notifications'
@@ -61,6 +62,7 @@ interface ClaimEditorState {
 		active?: boolean
 		finished?: boolean
 	}) => Promise<void>
+	updateClaimBuilders: (builderIds: string[]) => Promise<void>
 	createClaim: (data: {
 		id: string
 		area: string[]
@@ -400,6 +402,33 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 				})
 			} finally {
 				set({ isLoading: false })
+			}
+		},
+
+		updateClaimBuilders: async (builderIds) => {
+			const id = get().selectedClaimId
+			if (!id) return
+
+			try {
+				const builders = await setClaimBuilders({ id, builderIds })
+				set({
+					claims: get().claims.map((c) =>
+						c.id === id ? { ...c, builders: builders as ClaimEditorClaim['builders'] } : c,
+					),
+				})
+				showNotification({
+					title: 'Builders Updated',
+					message: 'Claim builders have been updated.',
+					color: 'green',
+					icon: <IconCheck size={18} />,
+				})
+			} catch (e) {
+				showNotification({
+					title: 'Error',
+					message: e instanceof Error ? e.message : 'Failed to update builders',
+					color: 'red',
+					icon: <IconX size={18} />,
+				})
 			}
 		},
 

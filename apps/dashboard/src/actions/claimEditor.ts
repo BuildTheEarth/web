@@ -158,17 +158,19 @@ const sendClaimWebhook = async (
 	}
 }
 
-const checkCanEditClaim = async (
-	userId: string,
-	session: any,
-	claim: {
-		owner?: { ssoId?: string | null; id?: string | null } | null
-		buildTeam?: { id: string; slug: string; creator?: { ssoId: string } | null } | null
-	},
-): Promise<boolean> => {
+type ClaimPermissionTarget = {
+	owner?: { ssoId?: string | null; id?: string | null } | null
+	buildTeam?: { id: string; slug: string; creator?: { ssoId: string } | null } | null
+}
+
+const checkCanEditClaim = async (userId: string, session: any, claim: ClaimPermissionTarget): Promise<boolean> => {
 	const isOwner = claim.owner?.ssoId === userId || claim.owner?.id === userId
 	if (isOwner) return true
 
+	return checkIsClaimStaff(userId, session, claim)
+}
+
+const checkIsClaimStaff = async (userId: string, session: any, claim: ClaimPermissionTarget): Promise<boolean> => {
 	const isAdmin = hasRole(session, 'edit-claims') || hasRole(session, 'review-claims')
 	if (isAdmin) return true
 
@@ -393,4 +395,85 @@ export const deleteClaim = async (data: { id: string }): Promise<void> => {
 		}
 		throw new Error(msg)
 	}
+}
+
+const claimPermissionSelect = {
+	id: true,
+	owner: { select: { ssoId: true, id: true } },
+	buildTeam: { select: { id: true, slug: true, creator: { select: { ssoId: true } } } },
+} satisfies Prisma.ClaimSelect
+
+const revalidateClaimPaths = (claim: { id: string; buildTeam?: { slug: string } | null }) => {
+	revalidatePath('/claims/editor')
+	if (claim.buildTeam?.slug) {
+		revalidatePath(`/team/${claim.buildTeam.slug}/claims`)
+		revalidatePath(`/team/${claim.buildTeam.slug}/claims/${claim.id}`)
+	}
+}
+
+export const setClaimBuilders = async (data: { id: string; builderIds: string[] }) => {
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
+
+	const claim = await prisma.claim.findUnique({ where: { id: data.id }, select: claimPermissionSelect })
+	if (!claim || !(await checkCanEditClaim(userId, session, claim))) {
+		throw new Error('Claim not found or you do not have permission to edit this claim.')
+	}
+
+	const builderIds = Array.from(new Set(data.builderIds))
+	if (claim.owner && builderIds.includes(claim.owner.id)) {
+		throw new Error('The owner of a claim cannot be added as a builder.')
+	}
+
+	const users = await prisma.user.findMany({ where: { id: { in: builderIds } }, select: { id: true } })
+	if (users.length !== builderIds.length) throw new Error('One or more users could not be found.')
+
+	const updatedClaim = await prisma.claim.update({
+		where: { id: data.id },
+		include: {
+			buildTeam: { select: { webhook: true, slug: true } },
+			builders: { select: { id: true, avatar: true, minecraft: true, username: true } },
+		},
+		data: { builders: { set: builderIds.map((id) => ({ id })) } },
+	})
+
+	await sendClaimWebhook('CLAIM_UPDATE', updatedClaim)
+	revalidateClaimPaths(updatedClaim)
+
+	return updatedClaim.builders
+}
+
+export const transferClaim = async (data: { id: string; newOwnerId: string }) => {
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+	const userId = session.user.id
+
+	const claim = await prisma.claim.findUnique({ where: { id: data.id }, select: claimPermissionSelect })
+	if (!claim || !(await checkIsClaimStaff(userId, session, claim))) {
+		throw new Error('Claim not found or you do not have permission to transfer this claim.')
+	}
+
+	if (claim.owner?.id === data.newOwnerId) throw new Error('This user already owns the claim.')
+
+	const newOwner = await prisma.user.findFirst({
+		where: { id: data.newOwnerId, joinedBuildTeams: { some: { id: claim.buildTeam.id } } },
+		select: { id: true },
+	})
+	if (!newOwner) throw new Error("The new owner must be a member of the claim's Build Team.")
+
+	const updatedClaim = await prisma.claim.update({
+		where: { id: data.id },
+		include: { buildTeam: { select: { webhook: true, slug: true } } },
+		data: {
+			owner: { connect: { id: newOwner.id } },
+			builders: {
+				disconnect: [{ id: newOwner.id }],
+				...(claim.owner ? { connect: [{ id: claim.owner.id }] } : {}),
+			},
+		},
+	})
+
+	await sendClaimWebhook('CLAIM_UPDATE', updatedClaim)
+	revalidateClaimPaths(updatedClaim)
 }
