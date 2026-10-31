@@ -75,7 +75,7 @@
 			"image": {
 				"alt": "Rotonda nunha cidade francesa, imaxe de fondo."
 			},
-			"title": "Building The Earth In Minecraft",
+			"title": "Construíndo a Terra en Minecraft",
 			"cta": {
 				"label": "Únete a nós!",
 				"alt": "Únete á comunidade de BuildTheEarth"
@@ -129,6 +129,10 @@
 		"description": "A páxina que estás a tentar abrir non existe. Pode que escribises mal o enderezo, o que a páxina moveuse a outra dirección.",
 		"cta": "Voltar"
 	},
+	"error": {
+		"title": "Algo saíu mal",
+		"description": "Produciuse un erro inesperado ao cargar esta páxina. Téntao de novo máis tarde."
+	},
 	"teams": {
 		"seo": {
 			"title": "Equipos de construción",
@@ -144,7 +148,7 @@
 			"location": "Unha lista de países nas que constrúe cada equipo",
 			"members": "Número de membros neste equipo"
 		},
-		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}",
+		"memberCount": "{count, plural, =0 {sen membros} =1 {1 membro} other {# membros}}",
 		"ownPage": {
 			"seo": {
 				"notFoundTitle": "Non se atopou o equipo de construción.",
@@ -269,7 +273,7 @@
 			"ctaMap": "Explora a páxina do mapa"
 		},
 		"joinServer": {
-			"title": "Explore {country}",
+			"title": "Explora {country}",
 			"description": "Únete ao servidor de Minecraft {name} para explorar lugares marabillosos desta rexión.<br></br><br></br>Se precisas axuda ao navegar nesta páxina, non dudes en acudir a nós en Discord!",
 			"ctaDiscord": "Únete ao servidor de Discord",
 			"ctaHub": "Servidor de Discord do Hub",
@@ -329,7 +333,7 @@
 		},
 		"cards": {
 			"claimCompletion": {
-				"title": "Claim Completion",
+				"title": "Completación de parcelas",
 				"description": "{finishedClaims} de {activeClaims} son as parcelas marcadas como rematadas."
 			},
 			"landCoverage": {
@@ -337,7 +341,7 @@
 				"description": "Progreso ({trackedAreaKm2} km²) da superficie terrestre."
 			},
 			"totalCoverage": {
-				"title": "Earth Total Area Coverage",
+				"title": "Cobertura total da superficie terrestre",
 				"description": "Progreso ({trackedAreaKm2} km²) da superficie total da Terra."
 			}
 		},
@@ -398,6 +402,55 @@
 		"readMore": "Ler máis"
 	},
 	"map": {
+		"controls": {
+			"hideLayer": "Agochar {layer}",
+			"showLayerFull": "Amosar {layer} (completo)",
+			"showLayerPartial": "Amosar {layer} (parcial)",
+			"showLayer": "Amosar {layer}",
+			"toggleLayer": "Alternar a capa de {layer}",
+			"layers": {
+				"heatmap": "mapa de calor",
+				"claims": "reclamacións"
+			},
+			"zoomIn": "Achegar",
+			"zoomOut": "Afastar",
+			"geolocate": "Amosar a miña localización",
+			"enterFullscreen": "Pantalla completa",
+			"exitFullscreen": "Saír da pantalla completa"
+		},
+		"claim": {
+			"details": "Detalles da reclamación",
+			"size": "Tamaño",
+			"buildings": "Edificios",
+			"buildTeam": "BuildTeam",
+			"owner": "Propietario",
+			"builders": "Construtores",
+			"noBuilders": "Sen construtores adicionais",
+			"noDescription": "Non se proporcionou ningunha descrición para esta reclamación.",
+			"externallySynced": "A reclamación sincronízase externamente. Pode que falte información",
+			"imageAlt": "Imaxe {id} da reclamación",
+			"close": "Pechar"
+		},
+		"contextMenu": {
+			"noCoordinates": "Sen coordenadas",
+			"copy": "Copiar",
+			"coordinates": "Coordenadas",
+			"blockCoordinates": "Coordenadas de bloque",
+			"chunkCoordinates": "Coordenadas de chunk",
+			"regionFile": "Nome do ficheiro de rexión",
+			"open": "Abrir",
+			"googleMaps": "Google Maps",
+			"bingMaps": "Bing Maps",
+			"openStreetMap": "OpenStreetMap",
+			"googleEarth": "Google Earth Web",
+			"copiedTitle": "Copiado",
+			"copiedMessage": "Pégao onde queiras."
+		},
+		"chooser": {
+			"title": "Varias reclamacións aquí",
+			"unnamed": "Reclamación sen nome",
+			"size": "{size} m²"
+		},
 		"seo": {
 			"title": "Mapa do proxecto",
 			"description": "Explora as parcelas activas e finalizadas de BuildTheEarth no mapa interactivo do mundo."

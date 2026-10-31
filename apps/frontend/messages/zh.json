@@ -118,6 +118,10 @@
 		"description": "您嘗試開啟的頁面不存在。您可能打錯網址，或者該頁面已移至其他網址。",
 		"cta": "返回"
 	},
+	"error": {
+		"title": "發生錯誤",
+		"description": "載入此頁面時發生未預期的錯誤，請稍後再試。"
+	},
 	"teams": {
 		"seo": {
 			"title": "建築團隊",
@@ -387,6 +391,55 @@
 		"readMore": "閱讀更多"
 	},
 	"map": {
+		"controls": {
+			"hideLayer": "隱藏{layer}",
+			"showLayerFull": "顯示{layer}（完整）",
+			"showLayerPartial": "顯示{layer}（部分）",
+			"showLayer": "顯示{layer}",
+			"toggleLayer": "切換{layer}圖層",
+			"layers": {
+				"heatmap": "熱力圖",
+				"claims": "建案範圍"
+			},
+			"zoomIn": "放大",
+			"zoomOut": "縮小",
+			"geolocate": "顯示我的位置",
+			"enterFullscreen": "進入全螢幕",
+			"exitFullscreen": "離開全螢幕"
+		},
+		"claim": {
+			"details": "建案詳情",
+			"size": "面積",
+			"buildings": "建築數量",
+			"buildTeam": "建築團隊",
+			"owner": "擁有者",
+			"builders": "建築師",
+			"noBuilders": "沒有其他建築師",
+			"noDescription": "此建案沒有提供說明。",
+			"externallySynced": "此建案為外部同步，部分資訊可能無法顯示",
+			"imageAlt": "建案圖片 {id}",
+			"close": "關閉"
+		},
+		"contextMenu": {
+			"noCoordinates": "沒有座標",
+			"copy": "複製",
+			"coordinates": "座標",
+			"blockCoordinates": "方塊座標",
+			"chunkCoordinates": "區塊座標",
+			"regionFile": "區域檔案名稱",
+			"open": "開啟",
+			"googleMaps": "Google Maps",
+			"bingMaps": "Bing Maps",
+			"openStreetMap": "OpenStreetMap",
+			"googleEarth": "Google Earth Web",
+			"copiedTitle": "已複製",
+			"copiedMessage": "可貼到任何地方。"
+		},
+		"chooser": {
+			"title": "此處有多個建案",
+			"unnamed": "未命名建案",
+			"size": "{size} m²"
+		},
 		"seo": {
 			"title": "專案地圖",
 			"description": "在互動式世界地圖上探索 BuildTheEarth 進行中和已完成的建案。"

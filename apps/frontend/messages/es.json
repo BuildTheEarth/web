@@ -129,6 +129,10 @@
 		"description": "La página que estás intentando abrir no existe. Es posible que la dirección sea incorrecta o que la página se haya movido a otro enlace.",
 		"cta": "Volver"
 	},
+	"error": {
+		"title": "Algo salió mal",
+		"description": "Ocurrió un error inesperado al cargar esta página. Inténtalo de nuevo más tarde."
+	},
 	"teams": {
 		"seo": {
 			"title": "Equipos de construcción",
@@ -144,7 +148,7 @@
 			"location": "Una lista de países en los que este equipo construye",
 			"members": "Número de miembros en este equipo"
 		},
-		"memberCount": "{count, plural, =0 {no members} =1 {1 member} other {# members}}",
+		"memberCount": "{count, plural, =0 {sin miembros} =1 {1 miembro} other {# miembros}}",
 		"ownPage": {
 			"seo": {
 				"notFoundTitle": "Equipo de construcción no encontrado",
@@ -398,6 +402,55 @@
 		"readMore": "Leer más"
 	},
 	"map": {
+		"controls": {
+			"hideLayer": "Ocultar {layer}",
+			"showLayerFull": "Mostrar {layer} (completo)",
+			"showLayerPartial": "Mostrar {layer} (parcial)",
+			"showLayer": "Mostrar {layer}",
+			"toggleLayer": "Alternar capa de {layer}",
+			"layers": {
+				"heatmap": "mapa de calor",
+				"claims": "reclamaciones"
+			},
+			"zoomIn": "Acercar",
+			"zoomOut": "Alejar",
+			"geolocate": "Mostrar mi ubicación",
+			"enterFullscreen": "Pantalla completa",
+			"exitFullscreen": "Salir de pantalla completa"
+		},
+		"claim": {
+			"details": "Detalles de la reclamación",
+			"size": "Tamaño",
+			"buildings": "Edificios",
+			"buildTeam": "BuildTeam",
+			"owner": "Propietario",
+			"builders": "Constructores",
+			"noBuilders": "Sin constructores adicionales",
+			"noDescription": "No se proporcionó ninguna descripción para esta reclamación.",
+			"externallySynced": "La reclamación se sincroniza externamente. Es posible que falte información",
+			"imageAlt": "Imagen {id} de la reclamación",
+			"close": "Cerrar"
+		},
+		"contextMenu": {
+			"noCoordinates": "Sin coordenadas",
+			"copy": "Copiar",
+			"coordinates": "Coordenadas",
+			"blockCoordinates": "Coordenadas de bloque",
+			"chunkCoordinates": "Coordenadas de chunk",
+			"regionFile": "Nombre del archivo de región",
+			"open": "Abrir",
+			"googleMaps": "Google Maps",
+			"bingMaps": "Bing Maps",
+			"openStreetMap": "OpenStreetMap",
+			"googleEarth": "Google Earth Web",
+			"copiedTitle": "Copiado",
+			"copiedMessage": "Pégalo donde quieras."
+		},
+		"chooser": {
+			"title": "Varias reclamaciones aquí",
+			"unnamed": "Reclamación sin nombre",
+			"size": "{size} m²"
+		},
 		"seo": {
 			"title": "Mapa del proyecto",
 			"description": "Explora parcelas activas o completadas de BuildTheEarth en el mapa mundial interactivo."

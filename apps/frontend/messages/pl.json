@@ -129,6 +129,10 @@
 		"description": "Strona, którą próbujesz otworzyć, nie istnieje. Być może błędnie wpisano adres lub strona została przeniesiona pod inny adres URL.",
 		"cta": "Wróć"
 	},
+	"error": {
+		"title": "Coś poszło nie tak",
+		"description": "Podczas ładowania tej strony wystąpił nieoczekiwany błąd. Spróbuj ponownie później."
+	},
 	"teams": {
 		"seo": {
 			"title": "Zespoły budowlane",
@@ -398,6 +402,55 @@
 		"readMore": "Czytaj więcej"
 	},
 	"map": {
+		"controls": {
+			"hideLayer": "Ukryj: {layer}",
+			"showLayerFull": "Pokaż: {layer} (pełne)",
+			"showLayerPartial": "Pokaż: {layer} (częściowo)",
+			"showLayer": "Pokaż: {layer}",
+			"toggleLayer": "Przełącz warstwę: {layer}",
+			"layers": {
+				"heatmap": "mapa cieplna",
+				"claims": "claimy"
+			},
+			"zoomIn": "Przybliż",
+			"zoomOut": "Oddal",
+			"geolocate": "Pokaż moją lokalizację",
+			"enterFullscreen": "Pełny ekran",
+			"exitFullscreen": "Zamknij pełny ekran"
+		},
+		"claim": {
+			"details": "Szczegóły claima",
+			"size": "Rozmiar",
+			"buildings": "Budynki",
+			"buildTeam": "BuildTeam",
+			"owner": "Właściciel",
+			"builders": "Budowniczowie",
+			"noBuilders": "Brak dodatkowych budowniczych",
+			"noDescription": "Nie podano opisu tego claima.",
+			"externallySynced": "Claim jest synchronizowany zewnętrznie. Niektóre informacje mogą być niedostępne",
+			"imageAlt": "Obraz {id} claima",
+			"close": "Zamknij"
+		},
+		"contextMenu": {
+			"noCoordinates": "Brak współrzędnych",
+			"copy": "Kopiuj",
+			"coordinates": "Współrzędne",
+			"blockCoordinates": "Współrzędne bloku",
+			"chunkCoordinates": "Współrzędne chunka",
+			"regionFile": "Nazwa pliku regionu",
+			"open": "Otwórz",
+			"googleMaps": "Google Maps",
+			"bingMaps": "Bing Maps",
+			"openStreetMap": "OpenStreetMap",
+			"googleEarth": "Google Earth Web",
+			"copiedTitle": "Skopiowano",
+			"copiedMessage": "Wklej to gdziekolwiek."
+		},
+		"chooser": {
+			"title": "Wiele claimów w tym miejscu",
+			"unnamed": "Claim bez nazwy",
+			"size": "{size} m²"
+		},
 		"seo": {
 			"title": "Mapa projektu",
 			"description": "Przeglądaj aktywne i ukończone działki BuildTheEarth na interaktywnej mapie świata."

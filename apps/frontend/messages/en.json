@@ -129,6 +129,10 @@
 		"description": "The page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL.",
 		"cta": "Go back"
 	},
+	"error": {
+		"title": "Something went wrong",
+		"description": "An unexpected error occurred while loading this page. Please try again later."
+	},
 	"teams": {
 		"seo": {
 			"title": "Build Teams",
@@ -398,6 +402,55 @@
 		"readMore": "Read more"
 	},
 	"map": {
+		"controls": {
+			"hideLayer": "Hide {layer}",
+			"showLayerFull": "Show {layer} (full)",
+			"showLayerPartial": "Show {layer} (partial)",
+			"showLayer": "Show {layer}",
+			"toggleLayer": "Toggle {layer} layer",
+			"layers": {
+				"heatmap": "heatmap",
+				"claims": "claims"
+			},
+			"zoomIn": "Zoom in",
+			"zoomOut": "Zoom out",
+			"geolocate": "Show my location",
+			"enterFullscreen": "Enter fullscreen",
+			"exitFullscreen": "Exit fullscreen"
+		},
+		"claim": {
+			"details": "Claim Details",
+			"size": "Size",
+			"buildings": "Buildings",
+			"buildTeam": "BuildTeam",
+			"owner": "Owner",
+			"builders": "Builders",
+			"noBuilders": "No additional builders",
+			"noDescription": "No description was provided for this claim.",
+			"externallySynced": "Claim is externally synced. Some information might not be available",
+			"imageAlt": "Image {id} for claim",
+			"close": "Close"
+		},
+		"contextMenu": {
+			"noCoordinates": "No coordinates",
+			"copy": "Copy",
+			"coordinates": "Coordinates",
+			"blockCoordinates": "Block coordinates",
+			"chunkCoordinates": "Chunk coordinates",
+			"regionFile": "Region file name",
+			"open": "Open",
+			"googleMaps": "Google Maps",
+			"bingMaps": "Bing Maps",
+			"openStreetMap": "OpenStreetMap",
+			"googleEarth": "Google Earth Web",
+			"copiedTitle": "Copied",
+			"copiedMessage": "Paste it anywhere."
+		},
+		"chooser": {
+			"title": "Multiple claims here",
+			"unnamed": "Unnamed claim",
+			"size": "{size} m²"
+		},
 		"seo": {
 			"title": "Project Map",
 			"description": "Explore active and finished BuildTheEarth claims on the interactive world map."

@@ -129,6 +129,10 @@
 		"description": "La page que tu veux ouvrir n'existe pas. Tu as peut-être mal saisi l'adresse, ou bien la page a été déplacée vers une autre URL.",
 		"cta": "Retour"
 	},
+	"error": {
+		"title": "Une erreur est survenue",
+		"description": "Une erreur inattendue s’est produite lors du chargement de cette page. Veuillez réessayer plus tard."
+	},
 	"teams": {
 		"seo": {
 			"title": "Equipes de construction",
@@ -141,8 +145,8 @@
 		],
 		"viewTeamOnMap": "Explore les équipes sur la carte",
 		"tooltip": {
-			"location": "A list of countries this team builds in",
-			"members": "Number of members in this team"
+			"location": "Liste des pays dans lesquels cette équipe construit",
+			"members": "Nombre de membres de cette équipe"
 		},
 		"memberCount": "{count, plural, =0 {aucun membre} =1 {1 membre} other {# membres}}",
 		"ownPage": {
@@ -398,6 +402,55 @@
 		"readMore": "En savoir plus"
 	},
 	"map": {
+		"controls": {
+			"hideLayer": "Masquer {layer}",
+			"showLayerFull": "Afficher {layer} (complet)",
+			"showLayerPartial": "Afficher {layer} (partiel)",
+			"showLayer": "Afficher {layer}",
+			"toggleLayer": "Basculer la couche {layer}",
+			"layers": {
+				"heatmap": "la carte de chaleur",
+				"claims": "les claims"
+			},
+			"zoomIn": "Zoom avant",
+			"zoomOut": "Zoom arrière",
+			"geolocate": "Afficher ma position",
+			"enterFullscreen": "Passer en plein écran",
+			"exitFullscreen": "Quitter le plein écran"
+		},
+		"claim": {
+			"details": "Détails du claim",
+			"size": "Taille",
+			"buildings": "Bâtiments",
+			"buildTeam": "BuildTeam",
+			"owner": "Propriétaire",
+			"builders": "Constructeurs",
+			"noBuilders": "Aucun constructeur supplémentaire",
+			"noDescription": "Aucune description n'a été fournie pour ce claim.",
+			"externallySynced": "Ce claim est synchronisé en externe. Certaines informations peuvent être indisponibles",
+			"imageAlt": "Image {id} du claim",
+			"close": "Fermer"
+		},
+		"contextMenu": {
+			"noCoordinates": "Pas de coordonnées",
+			"copy": "Copier",
+			"coordinates": "Coordonnées",
+			"blockCoordinates": "Coordonnées de bloc",
+			"chunkCoordinates": "Coordonnées de chunk",
+			"regionFile": "Nom du fichier de région",
+			"open": "Ouvrir",
+			"googleMaps": "Google Maps",
+			"bingMaps": "Bing Maps",
+			"openStreetMap": "OpenStreetMap",
+			"googleEarth": "Google Earth Web",
+			"copiedTitle": "Copié",
+			"copiedMessage": "Collez-le où vous voulez."
+		},
+		"chooser": {
+			"title": "Plusieurs claims ici",
+			"unnamed": "Claim sans nom",
+			"size": "{size} m²"
+		},
 		"seo": {
 			"title": "Carte du projet",
 			"description": "Découvre les projets BuildTheEarth en cours et achevés sur la carte interactive du monde."
@@ -413,7 +466,7 @@
 				"clickForInfo": "Cliquer pour plus d'informations"
 			},
 			"infoNotice": {
-				"title": "Note: {country}",
+				"title": "Remarque : {country}",
 				"description": "Le pays ou la région sur lequel tu as cliqué n'est actuellement pris en charge par aucune équipe de construction. Nous sommes en train de régler ce problème, mais en attendant, si tu souhaites nous aider, pense à rejoindre une autre équipe de construction !",
 				"descriptionUs": "Les États-Unis sont actuellement en cours de construction par plusieurs équipes de développement. Si tu souhaites apporter ton aide, n'hésite pas à rejoindre l'une des équipes de construction suivantes qui travaillent aux États-Unis :"
 			}
