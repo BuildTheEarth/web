@@ -11,7 +11,9 @@ export async function Protection(
 		| { children: JSX.Element; requiredRole: string }
 		| {
 				children: JSX.Element
-				requiredBuildTeam: ({ id: string } | { slug: string }) & { permission: Permisision['id'] | 'any' }
+				requiredBuildTeam: ({ id: string } | { slug: string }) & {
+					permission: Permisision['id'] | 'any' | Permisision['id'][]
+				}
 		  },
 ) {
 	const session = await getSession()
@@ -31,7 +33,15 @@ export async function Protection(
 	}
 
 	if ('requiredBuildTeam' in props && props.requiredBuildTeam) {
-		const hasPermission = await checkBuildTeamPermission(session.user.id, props.requiredBuildTeam)
+		const { permission, ...team } = props.requiredBuildTeam
+		const alternatives = Array.isArray(permission) ? permission : [permission]
+		let hasPermission = false
+		for (const alt of alternatives) {
+			if (await checkBuildTeamPermission(session.user.id, { ...team, permission: alt })) {
+				hasPermission = true
+				break
+			}
+		}
 
 		if (!hasPermission) {
 			return (

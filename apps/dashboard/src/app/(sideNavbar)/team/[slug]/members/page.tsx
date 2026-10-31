@@ -147,7 +147,12 @@ export default async function Page({
 	}
 
 	return (
-		<Protection requiredBuildTeam={{ permission: 'team.settings.edit', slug }}>
+		<Protection
+			requiredBuildTeam={{
+				permission: ['permission.add', 'permission.remove', 'team.members.remove', 'team.settings.edit'],
+				slug,
+			}}
+		>
 			<ContentWrapper maw="90vw">
 				<Group justify="space-between" w="100%" mt="xl" mb="md">
 					<Title order={1} mt="xl" mb="md">

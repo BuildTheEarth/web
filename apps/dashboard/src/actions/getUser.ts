@@ -140,7 +140,7 @@ export const checkBuildTeamPermission = async (
 			return true
 		}
 		if (
-			(req === 'team.application.edit' || req === 'team.application.review') &&
+			(req === 'team.application.edit' || req === 'team.application.review' || req === 'team.application.list') &&
 			(hasRole(session, 'edit-applications') ||
 				hasRole(session, 'get-applications') ||
 				hasRole(session, 'get-team-questions') ||
