@@ -1,30 +1,22 @@
 'use client'
 
 import ErrorDisplay from '@/components/core/ErrorDisplay'
-import { NextIntlClientProvider } from 'next-intl'
+import { NextIntlClientProvider, useTranslations } from 'next-intl'
 import messages from '../../messages/en.json'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
-const LEGACY_BASE_URL = 'https://beta.buildtheearth.net'
-
-export default function NotFound() {
-	const [targetUrl] = useState<string>(() =>
-		typeof window !== 'undefined'
-			? `${LEGACY_BASE_URL}${window.location.pathname}${window.location.search}${window.location.hash}`
-			: LEGACY_BASE_URL,
-	)
+function NotFoundContent() {
+	const t = useTranslations('notfound')
 
 	useEffect(() => {
-		if (typeof window === 'undefined') return
-
-		const fullUrl = `${LEGACY_BASE_URL}${window.location.pathname}${window.location.search}${window.location.hash}`
-
 		let active = true
 		const track = () => {
-			const umami = (window as any).umami
-			if (umami) {
-				umami.track('notfound_redirect', { page: window.location.pathname, target: fullUrl })
-				return true
+			if (typeof window !== 'undefined') {
+				const umami = (window as any).umami
+				if (umami) {
+					umami.track('notfound', { page: window.location.pathname })
+					return true
+				}
 			}
 			return false
 		}
@@ -36,24 +28,20 @@ export default function NotFound() {
 					clearInterval(interval)
 				}
 			}, 100)
-		}
-
-		// Redirect to the legacy site
-		window.location.replace(fullUrl)
-
-		return () => {
-			active = false
+			return () => {
+				active = false
+				clearInterval(interval)
+			}
 		}
 	}, [])
 
+	return <ErrorDisplay title={t('title')} message={t('description')} backButton={t('cta')} />
+}
+
+export default function NotFound() {
 	return (
 		<NextIntlClientProvider locale="en" messages={messages}>
-			<ErrorDisplay
-				title="Redirecting..."
-				message="This page has moved to our legacy platform. Redirecting you to beta.buildtheearth.net..."
-				backButton="Continue to beta.buildtheearth.net"
-				backHref={targetUrl}
-			/>
+			<NotFoundContent />
 		</NextIntlClientProvider>
 	)
 }
