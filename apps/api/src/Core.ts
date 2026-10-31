@@ -55,32 +55,32 @@ class Core {
 			// this.prisma.$use(middlewareUploadSrc);
 			this.web = new Web(this)
 			this.web.startWebserver()
-			this.cron = new CronHandler(this, [
-				{
-					id: 'purge_claims',
-					params: {
-						cronTime: '1 */24 * * *',
-						start: true,
-						onTick: () => purgeClaims(this),
-					},
-				},
-				{
-					id: 'remind_application',
-					params: {
-						cronTime: '1 1 */14 * *',
-						start: true,
-						onTick: () => applicationReminder(this),
-					},
-				},
-				{
-					id: 'purge_verifications',
-					params: {
-						cronTime: '1 */24 * * *',
-						start: true,
-						onTick: () => purgeVerifications(this),
-					},
-				},
-			])
+			// this.cron = new CronHandler(this, [
+			// 	{
+			// 		id: 'purge_claims',
+			// 		params: {
+			// 			cronTime: '1 */24 * * *',
+			// 			start: true,
+			// 			onTick: () => purgeClaims(this),
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'remind_application',
+			// 		params: {
+			// 			cronTime: '1 1 */14 * *',
+			// 			start: true,
+			// 			onTick: () => applicationReminder(this),
+			// 		},
+			// 	},
+			// 	{
+			// 		id: 'purge_verifications',
+			// 		params: {
+			// 			cronTime: '1 */24 * * *',
+			// 			start: true,
+			// 			onTick: () => purgeVerifications(this),
+			// 		},
+			// 	},
+			// ])
 		})
 	}
 
