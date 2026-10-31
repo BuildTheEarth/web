@@ -134,28 +134,30 @@ export const authOptions: AuthOptions = {
 			}
 		},
 
-		jwt: async ({ token, account, user, trigger, session: updateSession }) => {
-			if (trigger === 'update' && updateSession) {
-				if (typeof updateSession.username !== 'undefined') {
-					if (token.user) {
-						;(token.user as any).username = updateSession.username
+		jwt: async ({ token, account, user, trigger }) => {
+			// Never trust client-supplied values from useSession().update(); refresh from the database instead
+			if (trigger === 'update' && token.sub && typeof window === 'undefined') {
+				try {
+					const { default: prisma } = await import('./db')
+					const dbUser = await prisma.user.findFirst({
+						where: { ssoId: token.sub },
+						select: { username: true, minecraft: true, onboardingCompletedAt: true, onboardingDismissed: true },
+					})
+					if (dbUser) {
+						if (token.user && dbUser.username) {
+							;(token.user as any).username = dbUser.username
+						}
+						if ((dbUser.minecraft ?? null) !== (token.minecraft ?? null)) {
+							token.minecraftVerified = false
+						}
+						token.minecraft = dbUser.minecraft
+						token.onboardingCompletedAt = dbUser.onboardingCompletedAt
+							? dbUser.onboardingCompletedAt.toISOString()
+							: null
+						token.onboardingDismissed = dbUser.onboardingDismissed ?? false
 					}
-				}
-				if (typeof updateSession.minecraft !== 'undefined') {
-					token.minecraft = updateSession.minecraft
-				}
-				if (typeof updateSession.minecraftVerified !== 'undefined') {
-					token.minecraftVerified = updateSession.minecraftVerified
-				} else if (typeof updateSession.minecraft_verified !== 'undefined') {
-					token.minecraftVerified = updateSession.minecraft_verified
-				} else if (typeof updateSession.minecraft !== 'undefined') {
-					token.minecraftVerified = false
-				}
-				if (typeof updateSession.onboardingCompletedAt !== 'undefined') {
-					token.onboardingCompletedAt = updateSession.onboardingCompletedAt
-				}
-				if (typeof updateSession.onboardingDismissed !== 'undefined') {
-					token.onboardingDismissed = updateSession.onboardingDismissed
+				} catch (error) {
+					console.error('Failed to refresh token from database on session update:', error)
 				}
 			}
 
