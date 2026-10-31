@@ -37,13 +37,13 @@ function SignupContent() {
 			}
 			router.push(destination)
 		} else if (status === 'unauthenticated') {
-			void signIn('keycloak', { callbackUrl: destination, redirect: true }, { prompt: 'create' })
+			void signIn('keycloak', { callbackUrl: destination, redirect: true })
 		}
 	}, [status, router, destination])
 
 	const handleSignup = async () => {
 		try {
-			await signIn('keycloak', { callbackUrl: destination, redirect: true }, { prompt: 'create' })
+			await signIn('keycloak', { callbackUrl: destination, redirect: true })
 		} catch (error) {
 			console.error('Sign up flow failed:', error)
 		}
