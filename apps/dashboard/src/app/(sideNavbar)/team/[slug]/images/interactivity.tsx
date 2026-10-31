@@ -1,7 +1,7 @@
 'use client'
 
-import { createShowcase, editShowcase } from '@/actions/showcases'
-import { Button, FileInput, Group, TextInput } from '@mantine/core'
+import { createShowcase, createStandaloneUpload, editShowcase } from '@/actions/showcases'
+import { Button, CopyButton, FileInput, Group, Stack, TextInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
 import { closeAllModals, openModal } from '@mantine/modals'
 import { showNotification } from '@mantine/notifications'
@@ -76,6 +76,84 @@ export function UploadShowcaseButton({ slug }: { slug: string }) {
 			}
 		>
 			Upload Image
+		</Button>
+	)
+}
+
+function StandaloneUploadForm({ slug }: { slug: string }) {
+	const [loading, setLoading] = useState(false)
+	const [url, setUrl] = useState<string | null>(null)
+	const form = useForm<{ image: File | null }>({
+		initialValues: { image: null },
+		validate: { image: (v) => (v ? null : 'Select an image') },
+	})
+
+	if (url) {
+		return (
+			<Stack>
+				<TextInput label="Image URL" value={url} readOnly />
+				<Group justify="end" mt="lg">
+					<CopyButton value={url}>
+						{({ copied, copy }) => (
+							<Button color="green" onClick={copy}>
+								{copied ? 'Copied' : 'Copy URL'}
+							</Button>
+						)}
+					</CopyButton>
+					<Button variant="default" onClick={() => closeAllModals()}>
+						Done
+					</Button>
+				</Group>
+			</Stack>
+		)
+	}
+
+	return (
+		<form
+			onSubmit={form.onSubmit(async (values) => {
+				setLoading(true)
+				const data = new FormData()
+				data.set('image', values.image!)
+				await createStandaloneUpload(slug, data)
+					.then(setUrl)
+					.catch(onError)
+					.finally(() => setLoading(false))
+			})}
+		>
+			<FileInput
+				label="Image"
+				placeholder="Select an image (PNG, JPEG, WebP, max. 10MB)"
+				accept="image/png,image/jpeg,image/webp"
+				required
+				{...form.getInputProps('image')}
+			/>
+			<Group justify="end" mt="lg">
+				<Button type="submit" color="green" loading={loading}>
+					Upload
+				</Button>
+				<Button variant="default" onClick={() => closeAllModals()}>
+					Cancel
+				</Button>
+			</Group>
+		</form>
+	)
+}
+
+export function UploadStandaloneImageButton({ slug }: { slug: string }) {
+	return (
+		<Button
+			variant="light"
+			color="green"
+			leftSection={<IconUpload size={14} />}
+			onClick={() =>
+				openModal({
+					title: 'Upload Standalone Image',
+					centered: true,
+					children: <StandaloneUploadForm slug={slug} />,
+				})
+			}
+		>
+			Upload Standalone Image
 		</Button>
 	)
 }

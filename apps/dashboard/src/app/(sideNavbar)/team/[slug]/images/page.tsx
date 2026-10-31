@@ -4,7 +4,7 @@ import prisma from '@/util/db'
 import { Group, Title } from '@mantine/core'
 import { Metadata } from 'next'
 import ShowcasesDatatable from './datatable'
-import { UploadShowcaseButton } from './interactivity'
+import { UploadShowcaseButton, UploadStandaloneImageButton } from './interactivity'
 
 export const metadata: Metadata = {
 	title: 'Showcase Images',
@@ -33,7 +33,10 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 					<Title order={1} mt="xl" mb="md">
 						Showcase Images
 					</Title>
-					<UploadShowcaseButton slug={slug} />
+					<Group>
+						<UploadStandaloneImageButton slug={slug} />
+						<UploadShowcaseButton slug={slug} />
+					</Group>
 				</Group>
 				<ShowcasesDatatable
 					slug={slug}

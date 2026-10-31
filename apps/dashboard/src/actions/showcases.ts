@@ -36,19 +36,9 @@ async function rerenderFrontend(slug: string) {
 	await revalidateWebsitePaths(['/gallery', `/teams/${slug}`])
 }
 
-export const createShowcase = async (slug: string, formData: FormData) => {
-	await assertCanEditShowcases(slug)
-
-	const file = formData.get('image')
-	const title = String(formData.get('title') ?? '').trim()
-	const city = String(formData.get('city') ?? '').trim()
-
+async function readImage(file: FormDataEntryValue | null) {
 	if (!(file instanceof File) || file.size === 0) throw Error('No image provided')
 	if (file.size > MAX_FILE_SIZE) throw Error('Image must be smaller than 10MB')
-	if (!title) throw Error('A title is required')
-
-	const team = await prisma.buildTeam.findFirst({ where: { slug }, select: { id: true } })
-	if (!team) throw Error('Could not find Build Team')
 
 	const buffer = Buffer.from(await file.arrayBuffer())
 	const metadata = await sharp(buffer)
@@ -62,15 +52,40 @@ export const createShowcase = async (slug: string, formData: FormData) => {
 	const height = rotated ? metadata.width : metadata.height
 	const hash = (await getPlaiceholder(buffer)).base64
 
-	const name = randomBytes(32).toString('hex')
+	return { buffer, contentType, width, height, hash }
+}
+
+async function putImage(name: string, image: { buffer: Buffer; contentType: string }) {
 	await s3Client().send(
 		new PutObjectCommand({
 			Bucket: process.env.AWS_BUCKET_NAME,
 			Key: uploadKey(name),
-			Body: buffer,
-			ContentType: contentType,
+			Body: image.buffer,
+			ContentType: image.contentType,
 		}),
 	)
+}
+
+async function deleteImage(name: string) {
+	await s3Client()
+		.send(new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: uploadKey(name) }))
+		.catch(() => {})
+}
+
+export const createShowcase = async (slug: string, formData: FormData) => {
+	await assertCanEditShowcases(slug)
+
+	const title = String(formData.get('title') ?? '').trim()
+	const city = String(formData.get('city') ?? '').trim()
+
+	if (!title) throw Error('A title is required')
+
+	const team = await prisma.buildTeam.findFirst({ where: { slug }, select: { id: true } })
+	if (!team) throw Error('Could not find Build Team')
+
+	const image = await readImage(formData.get('image'))
+	const name = randomBytes(32).toString('hex')
+	await putImage(name, image)
 
 	try {
 		await prisma.showcase.create({
@@ -78,17 +93,34 @@ export const createShowcase = async (slug: string, formData: FormData) => {
 				title,
 				city,
 				buildTeam: { connect: { id: team.id } },
-				image: { create: { name, width, height, hash } },
+				image: { create: { name, width: image.width, height: image.height, hash: image.hash } },
 			},
 		})
 	} catch (e) {
-		await s3Client()
-			.send(new DeleteObjectCommand({ Bucket: process.env.AWS_BUCKET_NAME, Key: uploadKey(name) }))
-			.catch(() => {})
+		await deleteImage(name)
 		throw e
 	}
 
 	await rerenderFrontend(slug)
+}
+
+// Uploads an image that is not linked to a showcase, so it can be used elsewhere on the website (e.g. team logos)
+export const createStandaloneUpload = async (slug: string, formData: FormData) => {
+	await assertCanEditShowcases(slug)
+
+	const image = await readImage(formData.get('image'))
+	const name = randomBytes(32).toString('hex')
+	await putImage(name, image)
+
+	try {
+		const upload = await prisma.upload.create({
+			data: { name, width: image.width, height: image.height, hash: image.hash },
+		})
+		return upload.src
+	} catch (e) {
+		await deleteImage(name)
+		throw e
+	}
 }
 
 export const editShowcase = async (slug: string, id: string, data: { title: string; city: string }) => {
