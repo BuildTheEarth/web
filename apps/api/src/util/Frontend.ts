@@ -10,9 +10,14 @@ export async function rerenderFrontend(query: string, props: any) {
 			}
 			return r
 		})
-	const res = await fetch(
-		process.env.FRONTEND_URL + `/api/revalidate?secret=${process.env.FRONTEND_KEY}&paths=${JSON.stringify(routes)}`,
-	)
+	const res = await fetch(process.env.FRONTEND_URL + `/api/revalidate`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: `Bearer ${process.env.FRONTEND_KEY}`,
+		},
+		body: JSON.stringify({ paths: routes }),
+	})
 	if (res.status !== 200) core.getLogger().warn('Website Frontend is down, cannot rerender pages.')
 	else core.getLogger().info(`Rerendered ${routes.length} pages.`)
 }
