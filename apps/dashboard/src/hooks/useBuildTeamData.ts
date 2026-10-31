@@ -4,8 +4,8 @@ import { getUserBuildTeams } from '@/actions/user'
 import { useLocalStorage } from '@mantine/hooks'
 import { showNotification } from '@mantine/notifications'
 import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useCallback } from 'react'
+import { usePathname, useRouter } from 'next/navigation'
+import { useCallback, useEffect, useRef } from 'react'
 import useSWR from 'swr'
 
 type BuildTeam = {
@@ -32,6 +32,29 @@ export default function useSelectableBuildTeams() {
 			dedupingInterval: 10 * 60 * 1000,
 		},
 	)
+
+	// When a /team/<slug> page is opened (e.g. from a Discord DM) for a team the user can select but has not
+	// selected, switch the selector to that team so it matches the page. Only runs when the slug changes,
+	// so deselecting a team while staying on the page is not undone.
+	const pathname = usePathname()
+	const routeSlug = pathname.match(/^\/team\/([^/]+)/)?.[1]
+	const syncedSlug = useRef<string | null>(null)
+
+	useEffect(() => {
+		if (!routeSlug || buildteams.length === 0 || syncedSlug.current === routeSlug) return
+		syncedSlug.current = routeSlug
+
+		if (activeBuildTeam?.slug === routeSlug) return
+		const team = buildteams.find((buildTeam) => buildTeam.slug === routeSlug)
+		if (!team) return
+
+		setActiveBuildTeam(team)
+		showNotification({
+			title: 'BuildTeam switched',
+			message: `Now showing data for ${team.name}`,
+			color: 'blue',
+		})
+	}, [routeSlug, buildteams, activeBuildTeam, setActiveBuildTeam])
 
 	const selectBuildTeam = useCallback(
 		(id: string) => {
