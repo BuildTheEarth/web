@@ -37,14 +37,11 @@ jobs:
       - name: Login to Docker
         run: |
           echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-      - name: Create env files
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          printf 'DATABASE_URL=%s\n' "$DATABASE_URL" > apps/api/.env
-          printf 'DATABASE_URL=%s\n' "$DATABASE_URL" > packages/db/.env
       - name: Build the Docker image
-        run: docker build . --file apps/api/Dockerfile --tag ghcr.io/buildtheearth/website-node-backend:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/website-node-backend:latest
+        env:
+          DOCKER_BUILDKIT: 1
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: docker build . --secret id=database_url,env=DATABASE_URL --file apps/api/Dockerfile --tag ghcr.io/buildtheearth/website-node-backend:$(git rev-parse --short HEAD) --tag ghcr.io/buildtheearth/website-node-backend:latest
       - name: Docker push tag
         run: docker push ghcr.io/buildtheearth/website-node-backend:$(git rev-parse --short HEAD)
       - name: Docker push latest

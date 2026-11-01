@@ -25,7 +25,8 @@ RUN yarn install
 
 # Build the project
 COPY --from=builder /app/out/full/ .
-RUN yarn turbo run build --filter=api...
+RUN --mount=type=secret,id=database_url \
+  sh -c 'export DATABASE_URL=$(cat /run/secrets/database_url) && yarn turbo run build --filter=api...'
 
 FROM base AS runner
 WORKDIR /app
