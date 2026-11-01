@@ -2,18 +2,19 @@
 
 Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
 
+For the contributor-facing process (issue forms, labels, PR rules, branch and commit conventions), see [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
+
 ## Conventions
 
-- **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies. Always assign the `plane` label.
+- **Create an issue**: `gh issue create --title "..." --body "..."`. Use a heredoc for multi-line bodies. Issues created from the issue forms get `needs-triage` automatically; see [CONTRIBUTING.md](../../CONTRIBUTING.md#issues).
 - **Read an issue**: `gh issue view <number> --json number,title,body,labels,comments`.
 - **List issues**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'` with appropriate `--label` and `--state` filters.
 - **Make an issue a sub-issue of a parent**: `gh issue create --parent <parent> ...`, or `gh issue edit <parent> --add-sub-issue <child>` afterwards (`gh` 2.94+). Older `gh`: `gh api --method POST repos/<owner>/<repo>/issues/<parent>/sub_issues -F sub_issue_id=<child-db-id>` (database id, as in **Blocking** below). Without sub-issues, put `Part of #<parent>` at the top of the child body.
 - **Comment on an issue**: `gh issue comment <number> --body "..."`
-- **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`. Never remove the `plane` label.
+- **Apply / remove labels**: `gh issue edit <number> --add-label "..."` / `--remove-label "..."`. Triage labels are described in [triage-labels.md](triage-labels.md).
 - **Close**: `gh issue close <number> --comment "..."`
 
 Infer the repo from `git remote -v`; `gh` does this automatically when run inside a clone.
-Every issue should have the `plane` label.
 Use conventional commits with emojis (`type(scope): emoji description`) for issue titles.
 
 ## Pull requests as a triage surface
@@ -30,7 +31,7 @@ GitHub shares one number space across issues and PRs, so a bare `#42` may be eit
 
 ## When a skill says "publish to the issue tracker"
 
-Create a GitHub issue and always assign the `plane` label.
+Create a GitHub issue using the issue forms (see [CONTRIBUTING.md](../../CONTRIBUTING.md#issues)).
 
 ## When a skill says "fetch the relevant ticket"
 

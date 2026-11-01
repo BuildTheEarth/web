@@ -1,0 +1,48 @@
+name: '⭐ Feature request'
+description: Suggest something new or a change to existing behaviour
+title: 'feat(?): ⭐ '
+labels: ['needs-triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion! Please search existing issues first. Describing the problem you want solved is more useful than describing the exact solution.
+  - type: dropdown
+    id: app
+    attributes:
+      label: Affected app
+      options:
+        - dashboard
+        - frontend
+        - api
+        - worker
+        - several / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or motivation
+      description: What are you trying to do, and what gets in the way today?
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: A clear and concise description of what you would like to add or change.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: textarea
+    id: inspiration
+    attributes:
+      label: Screenshots or inspiration
+      description: Mockups, screenshots from other sites, or links.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

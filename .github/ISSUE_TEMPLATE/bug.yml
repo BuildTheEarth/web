@@ -1,0 +1,52 @@
+name: '🐛 Bug report'
+description: Something is broken or behaves unexpectedly
+title: 'fix(?): 🐛 '
+labels: ['bug', 'needs-triage']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug! Please search existing issues first. For questions, use [Discord](https://go.buildtheearth.net/dc) instead.
+  - type: dropdown
+    id: app
+    attributes:
+      label: Affected app
+      options:
+        - dashboard
+        - frontend
+        - api
+        - worker
+        - not sure
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: What did you see, and what did you expect to happen instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to …
+        2. Click …
+        3. See error
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Screenshots or logs
+      description: Browser console errors (F12), API responses, or worker logs. Remove anything containing passwords, tokens or other secrets.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: For example `dashboard-v1.3.1` or a commit, if you know it.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context

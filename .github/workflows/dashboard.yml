@@ -6,36 +6,11 @@ permissions:
 
 on:
   push:
-    branches: [main]
     tags: ['dashboard-v*']
 
 jobs:
-  check:
-    runs-on: ubuntu-latest
-    outputs:
-      has_changes: ${{ steps.check_for_changes.outputs.has_changes }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22.14.0'
-      - name: Install turbo
-        run: npm install -g turbo@^2 && npm install -g turbo-ignore
-      - name: Check for changes
-        id: check_for_changes
-        run: |
-          if [[ "${GITHUB_REF}" == refs/tags/dashboard-v* ]]; then
-            echo "has_changes=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          npx turbo-ignore dashboard --fallback=HEAD^1 && echo "has_changes=false" >> "$GITHUB_OUTPUT" || echo "has_changes=true" >> "$GITHUB_OUTPUT"
   build:
     runs-on: ubuntu-latest
-    needs: check
-    if: needs.check.outputs.has_changes == 'true'
     steps:
       - uses: actions/checkout@v4
         with:
