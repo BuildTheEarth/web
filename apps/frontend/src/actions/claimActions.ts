@@ -64,5 +64,13 @@ export async function getClaimData(id: string) {
 		},
 	})
 
-	return res
+	if (!res) return null
+
+	// Prisma results can carry non-plain objects, which server actions cannot pass to client components
+	return {
+		...res,
+		images: res.images.map(({ id, hash, src, width, height }) => ({ id, hash, src, width, height })),
+	}
 }
+
+export type ClaimData = NonNullable<Awaited<ReturnType<typeof getClaimData>>>
