@@ -220,7 +220,12 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 				try {
 					const fetched = await getClaim(claimId)
 					if (fetched) {
-						set((state) => ({ claims: [...state.claims, fetched as ClaimEditorClaim] }))
+						// The initial claim list may have finished loading while this was fetching
+						set((state) =>
+							state.claims.some((c) => c.id === claimId)
+								? state
+								: { claims: [...state.claims, fetched as ClaimEditorClaim] },
+						)
 					}
 				} catch (e) {
 					console.warn('Failed to fetch claim:', e)
