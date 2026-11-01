@@ -203,7 +203,11 @@ export const MapClient = () => {
 				onLoad={() => setMapLoaded(true)}
 				style={{ width: '100vw', height: 'calc(100vh - var(--root-footer-height))' }}
 				mapStyle={process.env.NEXT_PUBLIC_MAP_STYLE_URL}
-				attributionControl={{ compact: false }}
+				attributionControl={{
+					compact: false,
+					customAttribution:
+						'<a href="https://bte-germany.de" target="_blank" rel="noopener noreferrer">© BTE Germany</a>',
+				}}
 				dragRotate={false}
 				maxTileCacheSize={50}
 				interactiveLayerIds={['claims']}
