@@ -1,4 +1,4 @@
-import { ApplicationStatus } from '@prisma/client'
+import { ApplicationStatus } from '@repo/db'
 
 export function parseApplicationStatus(status: string, isTrial?: boolean): ApplicationStatus {
 	switch (status.toLowerCase()) {

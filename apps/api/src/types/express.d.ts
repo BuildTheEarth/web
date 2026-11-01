@@ -1,5 +1,5 @@
 import UserRepresentation from '@keycloak/keycloak-admin-client/lib/defs/userRepresentation.js'
-import { BuildTeam, User } from '@prisma/client'
+import { BuildTeam, User } from '@repo/db'
 
 interface kAuth {
 	grant: any
