@@ -2,6 +2,7 @@
 
 import Anchor from '@/components/core/Anchor'
 import { LegalConsent } from '@/components/core/LegalConsent'
+import { getSessionCookieDomain } from '@/util/sessionCookie'
 import { Box, Button, Center, Paper, Text, Title } from '@mantine/core'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -29,8 +30,8 @@ function SignupContent() {
 	useEffect(() => {
 		if (status === 'authenticated') {
 			if (typeof document !== 'undefined') {
-				const isProd = window.location.hostname.endsWith('buildtheearth.net')
-				const domainPart = isProd ? '; domain=.buildtheearth.net' : ''
+				const cookieDomain = getSessionCookieDomain(window.location.hostname)
+				const domainPart = cookieDomain ? `; domain=${cookieDomain}` : ''
 				const securePart = window.location.protocol === 'https:' ? '; secure' : ''
 				document.cookie = `bte_has_session=true; path=/; max-age=31536000; samesite=lax${domainPart}${securePart}`
 				document.cookie = `bte_active_session=true; path=/; max-age=2592000; samesite=lax${domainPart}${securePart}`

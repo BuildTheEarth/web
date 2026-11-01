@@ -1,10 +1,11 @@
 import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
+import { getSessionCookieDomain } from './util/sessionCookie'
 
 function applySessionCookies(response: NextResponse, req: any) {
 	const isProd = process.env.NODE_ENV === 'production'
-	const hostname = req.nextUrl.hostname
-	const cookieDomain = isProd && hostname.endsWith('buildtheearth.net') ? '.buildtheearth.net' : undefined
+	const hostname = req.headers.get('x-forwarded-host') ?? req.headers.get('host') ?? req.nextUrl.hostname
+	const cookieDomain = getSessionCookieDomain(hostname)
 
 	response.cookies.set('bte_has_session', 'true', {
 		path: '/',
