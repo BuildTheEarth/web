@@ -4,8 +4,10 @@ import { constructClaimGeoJSONQuery } from '@/app/(sideNavbar)/api/data/claims.g
 import { getSession, hasRole } from '@/util/auth'
 import turf, { toPolygon } from '@/util/coordinates'
 import prisma from '@/util/db'
+import { deleteImage, putImage, readImage } from '@/util/uploads'
 import { Prisma } from '@repo/db'
 import redisEventQueue, { RedisEvent } from '@repo/shared/utils/redis'
+import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { checkBuildTeamPermission } from './getUser'
 
@@ -69,13 +71,32 @@ export const getClaimEditorPermissions = async (): Promise<{
 	}
 }
 
+// Prisma result extensions add non-plain objects, which cannot be passed to Client Components
+const toPlainImage = (image: {
+	id: string
+	name: string
+	hash: string
+	height: number
+	width: number
+	createdAt: Date
+	src: string
+}) => ({
+	id: image.id,
+	name: image.name,
+	hash: image.hash,
+	height: image.height,
+	width: image.width,
+	createdAt: image.createdAt,
+	src: image.src,
+})
+
 export const getPersonalClaims = async () => {
 	const session = await getSession()
 	if (!session) throw new Error('Unauthorized')
 	const userId = session.user.id
 
 	const claims = await prisma.claim.findMany(constructClaimGeoJSONQuery({ user: userId, extended: true }))
-	return claims
+	return claims.map((c) => ({ ...c, images: c.images.map(toPlainImage) }))
 }
 
 export const getClaim = async (id: string) => {
@@ -87,7 +108,7 @@ export const getClaim = async (id: string) => {
 		where: { id },
 		select: query.select,
 	})
-	return claim
+	return claim && { ...claim, images: claim.images.map(toPlainImage) }
 }
 
 export const getAllowedBuildTeams = async () => {
@@ -363,6 +384,7 @@ export const deleteClaim = async (data: { id: string }): Promise<void> => {
 				buildTeamId: true,
 				owner: { select: { ssoId: true, id: true } },
 				buildTeam: { select: { id: true, slug: true, creator: { select: { ssoId: true } } } },
+				images: { select: { id: true, name: true, Showcase: { select: { id: true }, take: 1 } } },
 			},
 		})
 
@@ -375,10 +397,16 @@ export const deleteClaim = async (data: { id: string }): Promise<void> => {
 			throw new Error('Claim not found or you do not have permission to delete this claim.')
 		}
 
-		const deletedClaim = await prisma.claim.delete({
-			where: { id: data.id },
-			include: { buildTeam: { select: { webhook: true } } },
-		})
+		// Images still used by a showcase stay around, all others are removed with the claim
+		const unusedImages = claim.images.filter((image) => image.Showcase.length === 0)
+		const [, deletedClaim] = await prisma.$transaction([
+			prisma.upload.deleteMany({ where: { id: { in: unusedImages.map((image) => image.id) } } }),
+			prisma.claim.delete({
+				where: { id: data.id },
+				include: { buildTeam: { select: { webhook: true } } },
+			}),
+		])
+		await Promise.all(unusedImages.map((image) => deleteImage(image.name)))
 
 		await sendClaimWebhook('CLAIM_DELETE', deletedClaim)
 
@@ -476,4 +504,56 @@ export const transferClaim = async (data: { id: string; newOwnerId: string }) =>
 
 	await sendClaimWebhook('CLAIM_UPDATE', updatedClaim)
 	revalidateClaimPaths(updatedClaim)
+}
+
+export const uploadClaimImage = async (claimId: string, formData: FormData) => {
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+
+	const claim = await prisma.claim.findUnique({ where: { id: claimId }, select: claimPermissionSelect })
+	if (!claim || !(await checkCanEditClaim(session.user.id, session, claim))) {
+		throw new Error('Claim not found or you do not have permission to edit this claim.')
+	}
+
+	const image = await readImage(formData.get('image'))
+	const name = randomBytes(32).toString('hex')
+	await putImage(name, image)
+
+	try {
+		const upload = await prisma.upload.create({
+			data: { name, width: image.width, height: image.height, hash: image.hash, Claim: { connect: { id: claimId } } },
+		})
+		revalidateClaimPaths(claim)
+		return toPlainImage(upload)
+	} catch (e) {
+		await deleteImage(name)
+		throw e
+	}
+}
+
+export const deleteClaimImage = async (data: { id: string; imageId: string }) => {
+	const session = await getSession()
+	if (!session) throw new Error('Unauthorized')
+
+	const claim = await prisma.claim.findUnique({
+		where: { id: data.id },
+		select: { ...claimPermissionSelect, images: { where: { id: data.imageId }, select: { id: true, name: true } } },
+	})
+	if (!claim || !(await checkCanEditClaim(session.user.id, session, claim))) {
+		throw new Error('Claim not found or you do not have permission to edit this claim.')
+	}
+
+	const image = claim.images[0]
+	if (!image) throw new Error('Image not found.')
+
+	// Showcases reference their upload, so the row must stay if the image is still used there
+	const showcases = await prisma.showcase.count({ where: { uploadId: image.id } })
+	if (showcases) {
+		await prisma.upload.update({ where: { id: image.id }, data: { Claim: { disconnect: true } } })
+	} else {
+		await prisma.upload.delete({ where: { id: image.id } })
+		await deleteImage(image.name)
+	}
+
+	revalidateClaimPaths(claim)
 }

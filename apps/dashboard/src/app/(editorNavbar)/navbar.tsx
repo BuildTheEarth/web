@@ -65,7 +65,8 @@ export default function EditorNavbar({ claims: initialClaims }: { claims: (Claim
 					})
 					.map((claim: any) => {
 						const imgSrc =
-							claim.imgSrc || (claim.images?.[0]?.name ? `/api/media/image/${claim.images[0].name}` : undefined)
+							claim.imgSrc ||
+							(claim.images?.[0]?.name ? `https://cdn.buildtheearth.net/uploads/${claim.images[0].name}` : undefined)
 						return (
 							<Card
 								key={claim.id}

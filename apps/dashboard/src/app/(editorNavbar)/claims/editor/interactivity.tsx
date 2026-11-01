@@ -1,14 +1,29 @@
 'use client'
 
+import { deleteClaimImage, uploadClaimImage } from '@/actions/claimEditor'
 import { UserDisplay } from '@/components/data/User'
 import { BuildTeamSelect } from '@/components/input/BuildTeamSelect'
 import { UserSelect } from '@/components/input/UserSelect'
-import { ActionIcon, Box, Button, Group, Stack, Switch, Text, Textarea, TextInput, Title } from '@mantine/core'
+import {
+	ActionIcon,
+	Box,
+	Button,
+	FileInput,
+	Group,
+	Image,
+	Stack,
+	Switch,
+	Text,
+	Textarea,
+	TextInput,
+	Title,
+} from '@mantine/core'
 import { modals } from '@mantine/modals'
-import { IconDeviceFloppy, IconEdit, IconPlus, IconTrash, IconUsers } from '@tabler/icons-react'
+import { showNotification } from '@mantine/notifications'
+import { IconDeviceFloppy, IconEdit, IconPhoto, IconPlus, IconTrash, IconUpload, IconUsers } from '@tabler/icons-react'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { useClaimEditorStore } from './store'
+import { ClaimEditorClaim, useClaimEditorStore } from './store'
 
 export function ClaimToolbar() {
 	const selectedClaimId = useClaimEditorStore((s) => s.selectedClaimId)
@@ -19,6 +34,7 @@ export function ClaimToolbar() {
 	const deleteSelectedClaim = useClaimEditorStore((s) => s.deleteSelectedClaim)
 	const updateClaimDetails = useClaimEditorStore((s) => s.updateClaimDetails)
 	const updateClaimBuilders = useClaimEditorStore((s) => s.updateClaimBuilders)
+	const setClaimImages = useClaimEditorStore((s) => s.setClaimImages)
 
 	const selectedClaim = claims.find((c) => c.id === selectedClaimId)
 	let claimName = selectedClaim?.name || 'None selected'
@@ -53,6 +69,24 @@ export function ClaimToolbar() {
 					}}
 					onCancel={() => modals.close(modalId)}
 					onManageBuilders={openBuildersModal}
+					onManageImages={openImagesModal}
+				/>
+			),
+		})
+	}
+
+	const openImagesModal = () => {
+		if (!selectedClaimId) return
+
+		modals.open({
+			modalId: 'edit-claim-images-modal',
+			title: 'Claim Images',
+			centered: true,
+			children: (
+				<ClaimImagesModal
+					claimId={selectedClaimId}
+					initialImages={selectedClaim?.images || []}
+					onChange={(images) => setClaimImages(selectedClaimId, images)}
 				/>
 			),
 		})
@@ -225,6 +259,7 @@ export function EditClaimDetailsModal({
 	onSave,
 	onCancel,
 	onManageBuilders,
+	onManageImages,
 }: {
 	initialData: {
 		name: string
@@ -236,6 +271,7 @@ export function EditClaimDetailsModal({
 	onSave: (data: { name: string; description: string; city: string; active: boolean; finished: boolean }) => void
 	onCancel: () => void
 	onManageBuilders?: () => void
+	onManageImages?: () => void
 }) {
 	const [name, setName] = useState(initialData.name)
 	const [description, setDescription] = useState(initialData.description)
@@ -276,6 +312,11 @@ export function EditClaimDetailsModal({
 			{onManageBuilders && (
 				<Button variant="light" onClick={onManageBuilders} leftSection={<IconUsers size={16} />}>
 					Manage Builders
+				</Button>
+			)}
+			{onManageImages && (
+				<Button variant="light" onClick={onManageImages} leftSection={<IconPhoto size={16} />}>
+					Manage Images
 				</Button>
 			)}
 			<Group justify="flex-end" mt="md">
@@ -354,6 +395,102 @@ export function ClaimBuildersModal({
 				</Button>
 				<Button onClick={() => onSave(builders.map((b) => b.id))} leftSection={<IconDeviceFloppy size={16} />}>
 					Save Builders
+				</Button>
+			</Group>
+		</Stack>
+	)
+}
+
+type ClaimImage = ClaimEditorClaim['images'][number]
+
+export function ClaimImagesModal({
+	claimId,
+	initialImages,
+	onChange,
+}: {
+	claimId: string
+	initialImages: ClaimImage[]
+	onChange: (images: ClaimImage[]) => void
+}) {
+	const [images, setImages] = useState<ClaimImage[]>(initialImages)
+	const [file, setFile] = useState<File | null>(null)
+	const [loading, setLoading] = useState(false)
+
+	const update = (next: ClaimImage[]) => {
+		setImages(next)
+		onChange(next)
+	}
+
+	const showError = (e: unknown) =>
+		showNotification({ title: 'Error', message: e instanceof Error ? e.message : 'Something went wrong', color: 'red' })
+
+	const upload = async () => {
+		if (!file) return
+		setLoading(true)
+		try {
+			const formData = new FormData()
+			formData.set('image', file)
+			const image = await uploadClaimImage(claimId, formData)
+			update([...images, image])
+			setFile(null)
+		} catch (e) {
+			showError(e)
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	const remove = async (image: ClaimImage) => {
+		setLoading(true)
+		try {
+			await deleteClaimImage({ id: claimId, imageId: image.id })
+			update(images.filter((i) => i.id !== image.id))
+		} catch (e) {
+			showError(e)
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	return (
+		<Stack gap="md">
+			<Stack gap="xs">
+				{images.length === 0 && (
+					<Text size="sm" c="dimmed">
+						No images added.
+					</Text>
+				)}
+				{images.map((image) => (
+					<Group key={image.id} justify="space-between" wrap="nowrap">
+						<Image
+							src={`https://cdn.buildtheearth.net/uploads/${image.name}`}
+							alt="Claim image"
+							w={160}
+							style={{ aspectRatio: `${image.width}/${image.height}` }}
+						/>
+						<ActionIcon
+							variant="subtle"
+							color="red"
+							aria-label="Delete Image"
+							disabled={loading}
+							onClick={() => remove(image)}
+						>
+							<IconTrash size={16} />
+						</ActionIcon>
+					</Group>
+				))}
+			</Stack>
+			<FileInput
+				label="Add Image"
+				placeholder="PNG, JPEG or WebP, max. 10MB"
+				accept="image/png,image/jpeg,image/webp"
+				value={file}
+				onChange={setFile}
+				clearable
+			/>
+			<Group justify="flex-end">
+				<Button onClick={upload} loading={loading} disabled={!file} leftSection={<IconUpload size={16} />}>
+					Upload Image
 				</Button>
 			</Group>
 		</Stack>

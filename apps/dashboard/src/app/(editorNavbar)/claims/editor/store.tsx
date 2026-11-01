@@ -63,6 +63,7 @@ interface ClaimEditorState {
 		finished?: boolean
 	}) => Promise<void>
 	updateClaimBuilders: (builderIds: string[]) => Promise<void>
+	setClaimImages: (claimId: string, images: ClaimEditorClaim['images']) => void
 	createClaim: (data: {
 		id: string
 		area: string[]
@@ -430,6 +431,10 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					icon: <IconX size={18} />,
 				})
 			}
+		},
+
+		setClaimImages: (claimId, images) => {
+			set({ claims: get().claims.map((c) => (c.id === claimId ? { ...c, images } : c)) })
 		},
 
 		createClaim: async (data) => {
