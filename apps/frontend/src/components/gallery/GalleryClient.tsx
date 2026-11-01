@@ -184,7 +184,7 @@ export default function GalleryClient({
 
 					return (
 						<Box key={`gallery-block-${featured.id}`}>
-							<Grid gutter="lg" mb={rowItems.length > 0 ? 'lg' : 0} align="stretch">
+							<Grid gap="lg" mb={rowItems.length > 0 ? 'lg' : 0} align="stretch">
 								{!featuredOnRight && (
 									<GridCol span={8} style={{ display: 'flex' }}>
 										{renderShowcaseCard(
@@ -224,7 +224,7 @@ export default function GalleryClient({
 							</Grid>
 
 							{rowItems.length > 0 && (
-								<Grid gutter="lg">
+								<Grid gap="lg">
 									{rowItems.map((item, rowItemIndex) => (
 										<GridCol key={item.id} span={4}>
 											{renderShowcaseCard(
@@ -241,7 +241,7 @@ export default function GalleryClient({
 				})}
 			</Stack>
 
-			<Grid gutter="lg" hiddenFrom="lg">
+			<Grid gap="lg" hiddenFrom="lg">
 				{pagedShowcases.map((showcase, index) => (
 					<GridCol key={showcase.id} span={{ base: 12, sm: index === 0 ? 12 : 6 }}>
 						{renderShowcaseCard(showcase, index, '(min-width: 48em) 50vw, 100vw')}

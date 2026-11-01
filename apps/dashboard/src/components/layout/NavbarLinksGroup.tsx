@@ -108,7 +108,7 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 					{content}
 				</UnstyledButton>
 			)}
-			{isGroup ? <Collapse in={isOpened}>{items}</Collapse> : null}
+			{isGroup ? <Collapse expanded={isOpened}>{items}</Collapse> : null}
 		</>
 	)
 }

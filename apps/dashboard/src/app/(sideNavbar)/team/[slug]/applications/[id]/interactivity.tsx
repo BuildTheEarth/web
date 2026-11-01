@@ -28,7 +28,6 @@ import Placeholder from '@tiptap/extension-placeholder'
 import SubScript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import TextAlign from '@tiptap/extension-text-align'
-import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import { Fragment } from 'react'
@@ -82,8 +81,7 @@ export function ResponseEditor({
 
 	const responseEditor = useEditor({
 		extensions: [
-			StarterKit,
-			Underline,
+			StarterKit.configure({ link: false }),
 			Link,
 			Superscript,
 			SubScript,
@@ -93,6 +91,7 @@ export function ResponseEditor({
 			Markdown,
 		],
 		immediatelyRender: false,
+		shouldRerenderOnTransaction: true,
 	})
 
 	return (
@@ -141,7 +140,7 @@ export function ResponseEditor({
 							reviewApplication({
 								buildTeamSlug,
 								applicationId: application.id,
-								reason: responseEditor?.storage.markdown.getMarkdown(),
+								reason: (responseEditor?.storage as any)?.markdown.getMarkdown(),
 								status: APPLICATION_STATUS_ACCEPTED,
 							}).then(() => {
 								showNotification({
@@ -163,7 +162,7 @@ export function ResponseEditor({
 							reviewApplication({
 								buildTeamSlug,
 								applicationId: application.id,
-								reason: responseEditor?.storage.markdown.getMarkdown(),
+								reason: (responseEditor?.storage as any)?.markdown.getMarkdown(),
 								status: APPLICATION_STATUS_DECLINED,
 							}).then(() => {
 								showNotification({

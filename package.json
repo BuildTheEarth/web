@@ -32,7 +32,7 @@
 		"@repo/typescript-config": "*",
 		"husky": "^9.1.7",
 		"prettier": "^3.5.3",
-		"turbo": "^2.5.4"
+		"turbo": "^2.11.10"
 	},
 	"workspaces": [
 		"apps/*",

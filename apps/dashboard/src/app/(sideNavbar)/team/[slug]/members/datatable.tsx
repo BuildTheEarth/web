@@ -384,7 +384,7 @@ export default function MembersDatatable({
 															</Text>
 
 															{!allowNotify && (
-																<Text color="red" mb="sm">
+																<Text c="red" mb="sm">
 																	To prevent spamming, notifications can only be sent when less than 10 users are
 																	selected.
 																</Text>

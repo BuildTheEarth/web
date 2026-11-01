@@ -202,7 +202,7 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 							/>
 						</SimpleGrid>
 
-						<Grid gutter="md" mt={0}>
+						<Grid gap="md" mt={0}>
 							<GridCol span={{ base: 12 }}>
 								<TextCard title="Claim Growth Over Time">
 									{data.growthData && data.growthData.length > 0 ? (
@@ -268,7 +268,7 @@ export default function StatsExplorer({ teams }: { teams: { id: string; name: st
 							</GridCol>
 						</Grid>
 
-						<Grid gutter="md">
+						<Grid gap="md">
 							{!teamId && data.topTeams && data.topTeams.length > 0 && (
 								<GridCol span={{ base: 12, md: 6 }}>
 									<TextCard title="Top Build Teams by Claims">

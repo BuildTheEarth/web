@@ -145,7 +145,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 					) : null
 
 					return (
-						<Grid key={item.id} w="100%" align="center" gutter={60}>
+						<Grid key={item.id} w="100%" align="center" gap={60}>
 							{isEven ? [textCol, imageCol] : [imageCol, textCol]}
 						</Grid>
 					)

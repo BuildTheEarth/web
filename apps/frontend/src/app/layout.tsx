@@ -4,7 +4,7 @@ import '@mantine/charts/styles.layer.css'
 import '@mantine/core/styles.layer.css'
 import '@mantine/notifications/styles.layer.css'
 
-import { MantineProvider } from '@mantine/core'
+import { MantineProvider, v8CssVariablesResolver } from '@mantine/core'
 import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck'
 import { theme } from '@/util/theme'
 import { ModalsProvider } from '@mantine/modals'
@@ -42,9 +42,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					color: '#c1c2c5',
 				}}
 			>
-				<MantineProvider theme={theme} forceColorScheme="dark">
+				<MantineProvider theme={theme} forceColorScheme="dark" cssVariablesResolver={v8CssVariablesResolver}>
 					<ModalsProvider>
-						<Notifications limit={3} />
+						<Notifications limit={3} pauseResetOnHover="notification" />
 						{
 							// Only in development
 							process.env.NODE_ENV === 'development' && <DEBUG_ScreenSizeCheck />

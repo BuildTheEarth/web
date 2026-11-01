@@ -1,6 +1,6 @@
 import '@/styles/global.css'
 import '@mantine/charts/styles.layer.css'
-import { ColorSchemeScript, MantineProvider } from '@mantine/core'
+import { ColorSchemeScript, MantineProvider, v8CssVariablesResolver } from '@mantine/core'
 import '@mantine/core/styles.layer.css'
 // @ts-ignore
 import '@mantine/code-highlight/styles.layer.css'
@@ -77,7 +77,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 		>
 			<head />
 			<body>
-				<MantineProvider theme={theme} forceColorScheme="dark">
+				<MantineProvider theme={theme} forceColorScheme="dark" cssVariablesResolver={v8CssVariablesResolver}>
 					<AuthProvider session={session}>
 						<SWRSetup>
 							<ModalsProvider>

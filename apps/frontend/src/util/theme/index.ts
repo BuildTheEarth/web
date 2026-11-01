@@ -14,6 +14,7 @@ export const theme = createTheme({
 	cursorType: 'pointer',
 	defaultGradient: { from: 'indigo', to: 'cyan', deg: 60 },
 	// fontWeights: { regular: 400, medium: 600, bold: 900 },
+	fontWeights: { medium: '500' },
 	primaryShade: 6,
 	colors: {
 		dark: [

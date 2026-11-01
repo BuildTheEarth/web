@@ -408,7 +408,7 @@ export default async function Page() {
 							</Paper>
 						)}
 
-						<Grid gutter="md">
+						<Grid gap="md">
 							<GridCol span={{ xl: 6, base: 12 }}>
 								<TextCard title="Joined Teams" icon={IconUsersGroup} isText href="/me/teams" hrefText="View">
 									{joinedTeamsCount}

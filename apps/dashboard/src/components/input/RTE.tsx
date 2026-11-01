@@ -8,7 +8,6 @@ import Highlight from '@tiptap/extension-highlight'
 import SubScript from '@tiptap/extension-subscript'
 import Superscript from '@tiptap/extension-superscript'
 import TextAlign from '@tiptap/extension-text-align'
-import Underline from '@tiptap/extension-underline'
 import { useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
@@ -25,8 +24,7 @@ export default function RichTextEditor({
 }) {
 	const editor = useEditor({
 		extensions: [
-			StarterKit,
-			Underline,
+			StarterKit.configure({ link: false }),
 			Link,
 			Superscript,
 			SubScript,
@@ -39,6 +37,7 @@ export default function RichTextEditor({
 			onClick && onClick(e)
 		},
 		immediatelyRender: false,
+		shouldRerenderOnTransaction: true,
 	})
 
 	useEffect(() => {

@@ -314,7 +314,7 @@ export const MapClaimDrawer = ({ claimId, closeAction }: { claimId: string | nul
 													/>
 												</Group>
 											</UnstyledButton>
-											<Collapse in={detailsOpened}>
+											<Collapse expanded={detailsOpened}>
 												<Stack gap="sm" pt="sm">
 													{claim.osmName && (
 														<div>

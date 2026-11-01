@@ -25,8 +25,8 @@ function applySessionCookies(response: NextResponse, req: any) {
 	return response
 }
 
-export default withAuth(
-	function middleware(req) {
+const proxy = withAuth(
+	function handler(req) {
 		const token = req.nextauth.token
 		const { pathname } = req.nextUrl
 
@@ -85,6 +85,8 @@ export default withAuth(
 		},
 	},
 )
+
+export { proxy }
 
 export const config = {
 	matcher: ['/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|auth|missing-role).*)'],

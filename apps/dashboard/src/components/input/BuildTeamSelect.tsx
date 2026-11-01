@@ -1,7 +1,7 @@
 'use client'
 
 import { getBuildTeams } from '@/actions/buildTeams'
-import { Select } from '@mantine/core'
+import { Select, SelectProps } from '@mantine/core'
 import { useEffect, useState } from 'react'
 
 export interface BuildTeamOption {
@@ -13,7 +13,7 @@ export interface BuildTeamOption {
 }
 
 export function BuildTeamSelect(
-	props: Omit<React.ComponentProps<typeof Select>, 'filter' | 'data'> & {
+	props: Omit<SelectProps, 'filter' | 'data'> & {
 		filter?: (buildTeam: BuildTeamOption) => boolean
 	},
 ) {

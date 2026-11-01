@@ -117,7 +117,7 @@ export default function GeographyStats({ initialData }: GeographyStatsProps) {
 					data is temporarily unavailable, the system falls back to the BuildTeam&apos;s primary country.
 				</Alert>
 
-				<Grid gutter="lg">
+				<Grid gap="lg">
 					<GridCol span={12}>
 						<TextCard title="Active Build Distribution (Top Countries by Claims)">
 							{chartData.length > 0 ? (
