@@ -90,7 +90,7 @@ export function LinksGroup(props: NavbarLinkGroup | NavbarLink) {
 	return (
 		<>
 			{isGroup ? (
-				<UnstyledButton className={classes.control} onClick={() => setOpened((o) => !o)}>
+				<UnstyledButton className={classes.control} data-tour={props.tourId} onClick={() => setOpened((o) => !o)}>
 					{content}
 				</UnstyledButton>
 			) : (

@@ -16,6 +16,7 @@ import Image from 'next/image'
 import { LinksGroup } from './NavbarLinksGroup'
 import { UserButton } from './UserButton'
 import BuildTeamSelector from './BuildTeamSelector'
+import { BUILD_TEAM_MANAGEMENT_TOUR_ID } from './BuildTeamTour'
 import logo from '../../../public/logo.png'
 
 export interface Navbar {
@@ -28,6 +29,7 @@ export interface NavbarLinkShared {
 	permissionType?: 'permission' | 'teamPermission' | 'public'
 	label: string
 	icon: React.FC<any>
+	tourId?: string
 }
 export interface NavbarLink extends NavbarLinkShared {
 	link: string
@@ -70,6 +72,7 @@ const data: (NavbarLink | NavbarLinkGroup)[] = [
 	{
 		label: 'BuildTeam Management',
 		icon: IconManualGearbox,
+		tourId: BUILD_TEAM_MANAGEMENT_TOUR_ID,
 		prefix: '/team/[team_slug]',
 		teamPermission: 'get-teams',
 		links: [

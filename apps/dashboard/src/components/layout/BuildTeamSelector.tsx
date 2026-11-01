@@ -18,6 +18,7 @@ import {
 } from '@mantine/core'
 import { IconSelector } from '@tabler/icons-react'
 import classes from '@/styles/UserButton.module.css'
+import BuildTeamTour, { BUILD_TEAM_SELECTOR_TOUR_ID } from './BuildTeamTour'
 
 const BuildTeamSelector = () => {
 	const [buildteams, activeBuildTeam, selectBuildTeam] = useSelectableBuildTeams()
@@ -45,6 +46,7 @@ const BuildTeamSelector = () => {
 			>
 				<ComboboxTarget>
 					<InputBase
+						data-tour={BUILD_TEAM_SELECTOR_TOUR_ID}
 						component="button"
 						style={{
 							borderBottom: ' 1px solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4))',
@@ -84,6 +86,7 @@ const BuildTeamSelector = () => {
 				</ComboboxDropdown>
 			</Combobox>
 			<Divider orientation="vertical" />
+			<BuildTeamTour buildteams={buildteams} activeBuildTeam={activeBuildTeam} selectBuildTeam={selectBuildTeam} />
 		</>
 	)
 }
