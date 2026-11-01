@@ -274,6 +274,8 @@ export const saveClaim = async (data: {
 		await sendClaimWebhook('CLAIM_UPDATE', updatedClaim)
 
 		revalidatePath('/claims/editor')
+		revalidatePath('/me/claims')
+		revalidatePath(`/me/claims/${claim.id}`)
 		if (claim.buildTeam?.slug) {
 			revalidatePath(`/team/${claim.buildTeam.slug}/claims`)
 			revalidatePath(`/team/${claim.buildTeam.slug}/claims/${claim.id}`)
@@ -411,6 +413,7 @@ export const deleteClaim = async (data: { id: string }): Promise<void> => {
 		await sendClaimWebhook('CLAIM_DELETE', deletedClaim)
 
 		revalidatePath('/claims/editor')
+		revalidatePath('/me/claims')
 		if (claim.buildTeam?.slug) {
 			revalidatePath(`/team/${claim.buildTeam.slug}/claims`)
 		}
@@ -433,6 +436,8 @@ const claimPermissionSelect = {
 
 const revalidateClaimPaths = (claim: { id: string; buildTeam?: { slug: string } | null }) => {
 	revalidatePath('/claims/editor')
+	revalidatePath('/me/claims')
+	revalidatePath(`/me/claims/${claim.id}`)
 	if (claim.buildTeam?.slug) {
 		revalidatePath(`/team/${claim.buildTeam.slug}/claims`)
 		revalidatePath(`/team/${claim.buildTeam.slug}/claims/${claim.id}`)
