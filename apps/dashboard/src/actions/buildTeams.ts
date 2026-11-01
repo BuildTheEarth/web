@@ -989,6 +989,13 @@ export const reviewApplication = async ({
 }
 
 /**
+ * Errors with a message that is safe and useful to show to the applicant.
+ * Next.js replaces the message of errors thrown from server actions with a generic one in production builds,
+ * so these are returned to the client as a result instead of being thrown.
+ */
+class ApplicationError extends Error {}
+
+/**
  * Checks the Minecraft name given in an application against the user's profile.
  * - verified profile name: the answer has to match it, otherwise the application is rejected
  * - unverified profile name: the profile is updated to the given name (stays unverified)
@@ -1006,12 +1013,12 @@ const syncApplicationMinecraftName = async (ssoId: string, answer: string) => {
 		profileName = (Array.isArray(nameAttr) ? nameAttr[0] : nameAttr) || null
 	} catch (e) {
 		console.error('Failed to check Minecraft verification in applyToBuildTeam:', e)
-		throw Error('Could not check your Minecraft account verification, please try again later')
+		throw new ApplicationError('Could not check your Minecraft account verification, please try again later')
 	}
 
 	if (verified && profileName) {
 		if (profileName.toLowerCase() !== answer.toLowerCase()) {
-			throw Error(
+			throw new ApplicationError(
 				`The Minecraft name you entered does not match your verified Minecraft account (${profileName}). Please use your verified name.`,
 			)
 		}
@@ -1019,17 +1026,21 @@ const syncApplicationMinecraftName = async (ssoId: string, answer: string) => {
 	}
 
 	if (profileName !== answer) {
-		await updateMinecraftProfile(answer)
+		try {
+			await updateMinecraftProfile(answer)
+		} catch (e) {
+			throw new ApplicationError(e instanceof Error ? e.message : 'Could not update your Minecraft name')
+		}
 	}
 }
 
-export const applyToBuildTeam = async (
+const submitBuildTeamApplication = async (
 	data: { userId?: string; buildTeamSlug: string },
 	formData: FormData,
 ): Promise<void> => {
 	const session = await getSession()
 	if (!session) {
-		throw Error('Unauthorized')
+		throw new ApplicationError('Unauthorized')
 	}
 
 	let buildteam = await prisma.buildTeam.findUnique({
@@ -1054,11 +1065,11 @@ export const applyToBuildTeam = async (
 	})
 
 	if (!buildteam) {
-		throw Error('Build Team not found')
+		throw new ApplicationError('Build Team not found')
 	}
 
 	if (!user) {
-		throw Error('User not found')
+		throw new ApplicationError('User not found')
 	}
 
 	let discordId = user.discordId
@@ -1080,16 +1091,16 @@ export const applyToBuildTeam = async (
 	}
 
 	if (!discordId) {
-		throw Error('You must connect your Discord account before applying to a Build Team')
+		throw new ApplicationError('You must connect your Discord account before applying to a Build Team')
 	}
 
 	if (!(await isOnBteDiscord(discordId))) {
-		throw Error('Please join the BuildTheEarth.net Discord server before applying to a Build Team')
+		throw new ApplicationError('Please join the BuildTheEarth.net Discord server before applying to a Build Team')
 	}
 
 	const trial = formData.get('trial') === 'true'
 	if (trial && !buildteam.allowTrial) {
-		throw Error('This Build Team does not accept trial applications')
+		throw new ApplicationError('This Build Team does not accept trial applications')
 	}
 
 	const pastApplications = await prisma.application.findMany({
@@ -1098,17 +1109,17 @@ export const applyToBuildTeam = async (
 	})
 
 	if (pastApplications[0]?.status === ApplicationStatus.ACCEPTED) {
-		throw Error('You have already been accepted to this Build Team in the past, you cannot apply again')
+		throw new ApplicationError('You have already been accepted to this Build Team in the past, you cannot apply again')
 	}
 
 	if (!buildteam.allowApplications) {
-		throw Error('This Build Team is not accepting applications at the moment')
+		throw new ApplicationError('This Build Team is not accepting applications at the moment')
 	}
 
 	if (
 		pastApplications.some((app) => app.status === ApplicationStatus.SEND || app.status === ApplicationStatus.REVIEWING)
 	) {
-		throw Error(
+		throw new ApplicationError(
 			'You already have a pending application to this Build Team, please wait for it to be reviewed before applying again',
 		)
 	}
@@ -1155,13 +1166,13 @@ export const applyToBuildTeam = async (
 
 		const raw = formData.get(question.id)
 		if (raw !== null && typeof raw !== 'string') {
-			throw Error(`Invalid answer for "${question.title}"`)
+			throw new ApplicationError(`Invalid answer for "${question.title}"`)
 		}
 		const answer = (raw ?? '').trim()
 
 		const error = validateAnswer(question, answer)
 		if (error) {
-			throw Error(`${question.title}: ${error}`)
+			throw new ApplicationError(`${question.title}: ${error}`)
 		}
 
 		if (answer !== '') {
@@ -1174,8 +1185,12 @@ export const applyToBuildTeam = async (
 	}
 
 	// Save answers
-	if (validatedAnswers.length <= 0) {
-		throw Error('No valid answers provided')
+	// Teams without questions for the chosen mode accept an application without answers
+	const hasQuestions = buildteam.applicationQuestions.some(
+		(q) => q.trial === trial && q.sort >= 0 && q.type !== ApplicationQuestionType.TEXT,
+	)
+	if (hasQuestions && validatedAnswers.length <= 0) {
+		throw new ApplicationError('Please answer at least one of the application questions')
 	}
 
 	if (minecraftAnswer) {
@@ -1188,14 +1203,16 @@ export const applyToBuildTeam = async (
 			status: ApplicationStatus.SEND,
 			createdAt: new Date(),
 			trial,
-			ApplicationAnswer: {
-				createMany: {
-					data: validatedAnswers.map((a) => ({
-						answer: a.answer,
-						questionId: a.id,
-					})),
+			...(validatedAnswers.length > 0 && {
+				ApplicationAnswer: {
+					createMany: {
+						data: validatedAnswers.map((a) => ({
+							answer: a.answer,
+							questionId: a.id,
+						})),
+					},
 				},
-			},
+			}),
 		},
 		include: {
 			reviewer: true,
@@ -1234,6 +1251,24 @@ export const applyToBuildTeam = async (
 
 	revalidatePath(`/team/${buildteam.slug}/applications`)
 	return
+}
+
+export type ApplyToBuildTeamResult = { error?: string }
+
+export const applyToBuildTeam = async (
+	data: { userId?: string; buildTeamSlug: string },
+	formData: FormData,
+): Promise<ApplyToBuildTeamResult> => {
+	try {
+		await submitBuildTeamApplication(data, formData)
+		return {}
+	} catch (e) {
+		if (e instanceof ApplicationError) {
+			return { error: e.message }
+		}
+		console.error('Failed to submit Build Team application:', e)
+		return { error: 'Something went wrong while sending your application. Please try again later.' }
+	}
 }
 
 export const saveBuildTeamApplicationQuestions = async ({ buildTeamSlug, questions }: any) => {

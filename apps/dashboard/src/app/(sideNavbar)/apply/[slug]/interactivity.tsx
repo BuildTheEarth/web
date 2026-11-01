@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 type ApplyFormProps = {
-	applyAction: (formData: FormData) => Promise<void>
+	applyAction: (formData: FormData) => Promise<{ error?: string }>
 	questions: any[]
 	allowApplications: boolean
 	allowTrial?: boolean
@@ -41,7 +41,11 @@ export function ApplyForm({ applyAction, questions, allowApplications, allowTria
 
 				setIsSubmitting(true)
 				try {
-					await applyAction(new FormData(form))
+					const result = await applyAction(new FormData(form))
+					if (result?.error) {
+						showNotification({ title: 'Could not submit application', message: result.error, color: 'red' })
+						return
+					}
 					showNotification({
 						title: 'Application submitted',
 						message: 'Your application was sent successfully. The team will review it soon.',
