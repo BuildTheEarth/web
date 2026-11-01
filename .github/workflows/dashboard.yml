@@ -15,14 +15,14 @@ jobs:
     outputs:
       has_changes: ${{ steps.check_for_changes.outputs.has_changes }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: '22.14.0'
       - name: Install turbo
-        run: npm install -g turbo@2.4.4 && npm install -g turbo-ignore
+        run: npm install -g turbo@^2 && npm install -g turbo-ignore
       - name: Check for changes
         id: check_for_changes
         run: |
@@ -91,10 +91,6 @@ jobs:
           TAGS=(
             --tag "${IMAGE}:sha-$(git rev-parse --short=12 HEAD)"
           )
-
-          if [[ "${GITHUB_REF}" == "refs/heads/dashboard/v2" ]]; then
-            TAGS+=(--tag "${IMAGE}:edge-dashboard-v2")
-          fi
 
           if [[ "${IS_RELEASE}" == "true" ]]; then
             TAGS+=(

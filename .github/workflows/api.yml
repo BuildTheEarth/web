@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22
       - name: Install turbo
-        run: npm install -g turbo@2.4.4 && npm install -g turbo-ignore
+        run: npm install -g turbo@^2 && npm install -g turbo-ignore
       - name: Check for changes
         id: check_for_changes
         run: npx turbo-ignore api --fallback=HEAD^1 && echo "has_changes=false" >> "$GITHUB_OUTPUT" || echo "has_changes=true" >> "$GITHUB_OUTPUT"
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install turbo
-        run: npm install -g turbo@2.4.4
+        run: npm install -g turbo@^2
       - name: Login to Docker
         run: |
           echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
