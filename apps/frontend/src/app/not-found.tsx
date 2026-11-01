@@ -40,7 +40,7 @@ function NotFoundContent() {
 
 export default function NotFound() {
 	return (
-		<NextIntlClientProvider locale="en" messages={messages}>
+		<NextIntlClientProvider locale="en" messages={messages} timeZone="UTC">
 			<NotFoundContent />
 		</NextIntlClientProvider>
 	)
