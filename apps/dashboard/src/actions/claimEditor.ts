@@ -11,6 +11,18 @@ import { randomBytes } from 'crypto'
 import { revalidatePath } from 'next/cache'
 import { checkBuildTeamPermission } from './getUser'
 
+/**
+ * Bounding box center of an area in "lng, lat" format, matching the SYNC_CLAIM_OSM worker task.
+ * Set directly so a claim shows up on the map (which requires a center) without waiting for the worker.
+ */
+const calculateCenter = (area: string[]): string | undefined => {
+	const points = area.map((p) => p.split(', ').map(Number)).filter((p) => p.length >= 2 && !p.some(isNaN))
+	if (points.length === 0) return undefined
+	const lngs = points.map((p) => p[0])
+	const lats = points.map((p) => p[1])
+	return `${(Math.min(...lngs) + Math.max(...lngs)) / 2}, ${(Math.min(...lats) + Math.max(...lats)) / 2}`
+}
+
 export const getClaimEditorPermissions = async (): Promise<{
 	userId: string
 	isAdmin: boolean
@@ -256,6 +268,7 @@ export const saveClaim = async (data: {
 			include: { buildTeam: { select: { webhook: true } } },
 			data: {
 				area: data.area,
+				center: data.area ? calculateCenter(data.area) : undefined,
 				size,
 				name: data.name !== undefined ? data.name : undefined,
 				description: data.description !== undefined ? data.description : undefined,
@@ -349,6 +362,7 @@ export const createClaim = async (data: {
 				owner: { connect: { ssoId: userId } },
 				buildTeam: { connect: { id: data.buildTeamId } },
 				area: data.area,
+				center: calculateCenter(data.area),
 				size,
 				active: true,
 				finished: false,

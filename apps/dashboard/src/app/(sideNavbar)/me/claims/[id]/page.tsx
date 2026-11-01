@@ -22,7 +22,7 @@ import { getSession } from '@/util/auth'
 import { getCountryNames } from '@/util/countries'
 import { toHumanDate } from '@/util/date'
 import prisma from '@/util/db'
-import { IconAlertCircle, IconCheck, IconClockExclamation, IconExternalLink } from '@tabler/icons-react'
+import { IconAlertCircle, IconCheck, IconClockExclamation, IconExternalLink, IconMap } from '@tabler/icons-react'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ClaimMenu, EditClaimButton } from './interactivity'
@@ -93,6 +93,14 @@ export default async function Page({ params }: { params: Promise<{ id: string }>
 						rightSection={<IconExternalLink size={14} />}
 					>
 						Open on Map
+					</LinkButton>
+					<LinkButton
+						variant="light"
+						color="grape"
+						href={`/claims/editor?id=${id}`}
+						rightSection={<IconMap size={14} />}
+					>
+						Open in Editor
 					</LinkButton>
 					<EditClaimButton claim={claimData} />
 					<ClaimMenu claim={claimData} ownerId={claim.owner?.id ?? null} builders={builders} images={images} />
