@@ -33,8 +33,12 @@ const buildStoreUrl = () => {
 
 export default async function Page() {
 	const session = await getSession()
+	const ssoId = session?.user.id
+	// Members, team creators and users with any team-specific permission are eligible
 	const teamCount = await prisma.buildTeam.count({
-		where: { members: { some: { ssoId: session?.user.id } } },
+		where: {
+			OR: [{ members: { some: { ssoId } } }, { creator: { ssoId } }, { UserPermission: { some: { user: { ssoId } } } }],
+		},
 	})
 
 	if (teamCount > 0) redirect(buildStoreUrl())
@@ -46,8 +50,8 @@ export default async function Page() {
 			</Title>
 			<Text c="dimmed" size="md">
 				BuildTheEarth was awarded the Guinness World Record for the largest project in Minecraft. Participant
-				certificates are available to verified builders only, meaning you need to be a member of at least one Build
-				Team. You are not a member of any Build Team yet. Find a Build Team to join{' '}
+				certificates are available to verified builders only, meaning you need to be a member, creator or permission
+				holder of at least one Build Team. You are not part of any Build Team yet. Find a Build Team to join{' '}
 				<Anchor href="https://buildtheearth.net/teams" target="_blank">
 					here
 				</Anchor>
