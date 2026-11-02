@@ -24,6 +24,7 @@ import { TextCard } from '@/components/core/card/TextCard'
 import ContentWrapper from '@/components/core/ContentWrapper'
 import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { Greeting } from '@/components/data/Greeting'
+import { WorldRecordBanner } from '@/components/data/WorldRecordBanner'
 import { StatsGroup } from '@/components/data/StatsGroup'
 import { getSession } from '@/util/auth'
 import { toHumanDateTime } from '@/util/date'
@@ -31,12 +32,14 @@ import prisma from '@/util/db'
 import { ApplicationStatus } from '@repo/db'
 import {
 	IconCheck,
+	IconClockHour4,
 	IconDeviceAnalytics,
 	IconForms,
 	IconManualGearbox,
 	IconMap,
 	IconPolygon,
 	IconUsersGroup,
+	IconX,
 } from '@tabler/icons-react'
 import moment from 'moment'
 import { Metadata } from 'next'
@@ -223,10 +226,22 @@ export default async function Page() {
 			</Text>
 
 			<Grid>
+				<GridCol span={12}>
+					<WorldRecordBanner />
+				</GridCol>
 				{recentApplication && (
 					<GridCol span={12}>
 						<Alert
 							title="Your Recent Application"
+							icon={
+								recentApplication.status == ApplicationStatus.SEND ? (
+									<IconClockHour4 />
+								) : recentApplication.status == ApplicationStatus.DECLINED ? (
+									<IconX />
+								) : (
+									<IconCheck />
+								)
+							}
 							color={
 								recentApplication.status == ApplicationStatus.SEND
 									? 'blue'
