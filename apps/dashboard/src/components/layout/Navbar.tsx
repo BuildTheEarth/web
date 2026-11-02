@@ -67,6 +67,7 @@ const data: (NavbarLink | NavbarLinkGroup)[] = [
 		links: [
 			{ label: 'Participating Teams', link: '/me/teams' },
 			{ label: 'Your Applications', link: '/me/applications' },
+			{ label: 'World Record Certificate', link: '/world-record' },
 		],
 	},
 	{
