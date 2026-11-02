@@ -14,6 +14,8 @@ import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { CreateClaimModal } from './interactivity'
 
+const DRAW_COORDINATE_PRECISION = 9
+
 export type ClaimEditorClaim = Awaited<ReturnType<typeof getPersonalClaims>>[0]
 
 function ensureClosedCoordinates(coords: number[][]): number[][] {
@@ -24,6 +26,22 @@ function ensureClosedCoordinates(coords: number[][]): number[][] {
 		return [...coords, [first[0], first[1]]]
 	}
 	return coords
+}
+
+function roundCoordinates(coords: number[][]): number[][] {
+	return coords.map(([lng, lat]) => [
+		Number(lng.toFixed(DRAW_COORDINATE_PRECISION)),
+		Number(lat.toFixed(DRAW_COORDINATE_PRECISION)),
+	])
+}
+
+function addFeatureToDraw(draw: TerraDraw, feature: any): boolean {
+	const [result] = draw.addFeatures([feature])
+	if (result && !result.valid) {
+		console.warn('Rejecting drawing claim:', result.reason)
+		return false
+	}
+	return true
 }
 
 interface ClaimEditorState {
@@ -124,7 +142,7 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 					if (geom && geom.type === 'Polygon' && geom.coordinates?.[0]) {
 						geom = {
 							...geom,
-							coordinates: [ensureClosedCoordinates(geom.coordinates[0])],
+							coordinates: [roundCoordinates(ensureClosedCoordinates(geom.coordinates[0]))],
 						}
 					}
 					const f = {
@@ -137,10 +155,12 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 							mode: 'polygon',
 						},
 					}
-					draw.addFeatures([f])
+					addFeatureToDraw(draw, f)
 					feature = draw.hasFeature(claimId) ? draw.getSnapshotFeature(claimId) : null
 				} else if (claim && claim.area && claim.area.length >= 3) {
-					const coords = ensureClosedCoordinates(claim.area.map((str: string) => str.split(', ').map(Number)))
+					const coords = roundCoordinates(
+						ensureClosedCoordinates(claim.area.map((str: string) => str.split(', ').map(Number))),
+					)
 					const f = {
 						id: claimId,
 						type: 'Feature' as const,
@@ -156,9 +176,18 @@ export const useClaimEditorStore = create<ClaimEditorState>()(
 							mode: 'polygon',
 						},
 					}
-					draw.addFeatures([f])
+					addFeatureToDraw(draw, f)
 					feature = draw.hasFeature(claimId) ? draw.getSnapshotFeature(claimId) : null
 				}
+			}
+
+			if (!draw.hasFeature(claimId)) {
+				showNotification({
+					title: 'Error',
+					message: 'This claim could not be loaded into the editor.',
+					color: 'red',
+				})
+				return false
 			}
 
 			const userId = get().userId
