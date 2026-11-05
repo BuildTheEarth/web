@@ -51,7 +51,7 @@
 		"dayjs": "^1.11.11",
 		"mantine-contextmenu": "^9.4.0",
 		"mantine-datatable": "^9.4.0",
-		"mapbox-gl": "2.13.0",
+		"mapbox-gl": "3.34.1",
 		"mapbox-gl-draw-snap-mode": "^0.4.0",
 		"mapbox-gl-style-switcher": "^1.0.11",
 		"maplibre-gl": "^5.18.0",
@@ -76,7 +76,7 @@
 	"devDependencies": {
 		"@repo/prettier-config": "*",
 		"@repo/typescript-config": "*",
-		"@types/mapbox-gl": "^3.4.1",
+		"@types/mapbox-gl": "^3.5.0",
 		"@types/mapbox__mapbox-gl-draw": "^1.4.8",
 		"@types/node": "^20",
 		"@types/react": "19.2.18",
