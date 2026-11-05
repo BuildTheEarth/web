@@ -302,7 +302,7 @@ export default async function Page() {
 														{claim.city ? `, ${claim.city}` : ''}
 													</Text>
 													<Text size="xs" c="dimmed">
-														{claim.center}, by{' '}
+														{claim.center?.split(', ')[1]}, {claim.center?.split(', ')[0]}, by{' '}
 														<Text span fw={500}>
 															{claim.owner?.username || 'Unknown Builder'}
 														</Text>
