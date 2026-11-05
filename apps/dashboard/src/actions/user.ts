@@ -54,33 +54,6 @@ const requireEditUsersPermission = async () => {
 
 export const externalSyncUserRoles = async (prevState: any, data: { discordId: string }): Promise<any> => {
 	try {
-		const session = await getSession()
-		if (!session) {
-			return { status: 'error', error: true, message: 'Unauthorized' }
-		}
-
-		const isAdmin = hasRole(session, 'edit-users')
-
-		// Verify session authorization prior to reading user records or queuing background jobs
-		const currentUser = await prisma.user.findFirst({
-			where: { ssoId: session.user.id },
-			select: { id: true, discordId: true, ssoId: true },
-		})
-
-		let isSelf = currentUser?.discordId === data.discordId
-		if (!isAdmin && !isSelf && !currentUser?.discordId) {
-			// Check Keycloak federated identities as fallback
-			const kcUser = await keycloakAdmin.users.findOne({ id: session.user.id })
-			const discordIdentity = kcUser?.federatedIdentities?.find((fi: any) => fi.identityProvider === 'discord')
-			if (discordIdentity?.userId === data.discordId) {
-				isSelf = true
-			}
-		}
-
-		if (!isAdmin && !isSelf) {
-			return { status: 'error', error: true, message: 'Unauthorized' }
-		}
-
 		const user = await prisma.user.findFirst({
 			where: { discordId: data.discordId },
 			select: { ssoId: true, discordId: true, joinedBuildTeams: { select: { slug: true } } },
@@ -91,10 +64,6 @@ export const externalSyncUserRoles = async (prevState: any, data: { discordId: s
 				status: 'success',
 				error: false,
 			}
-		}
-
-		if (!isAdmin && user.ssoId !== session.user.id) {
-			return { status: 'error', error: true, message: 'Unauthorized' }
 		}
 
 		await redisEventQueue.addJob(RedisEvent.SYNC_DISCORD_ROLES, {
