@@ -6785,7 +6785,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.31.0"
     express: "npm:^5.1.0"
     express-session: "npm:^1.18.1"
-    express-validator: "npm:^7.2.1"
+    express-validator: "npm:^7.3.2"
     express-yup-middleware: "npm:^2.0.0"
     jsonwebtoken: "npm:^9.0.2"
     keycloak-connect: "npm:^22.0.0"
@@ -9681,13 +9681,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"express-validator@npm:^7.2.1":
-  version: 7.2.1
-  resolution: "express-validator@npm:7.2.1"
+"express-validator@npm:^7.3.2":
+  version: 7.3.2
+  resolution: "express-validator@npm:7.3.2"
   dependencies:
-    lodash: "npm:^4.17.21"
-    validator: "npm:~13.12.0"
-  checksum: 10c0/f859b29ecfb0b5bcdd608e2593bbb928a144d5cf0ead7832c8c496c87edf880b79b812a204544c96ad88e25d4beea6f5fd78cfba138e5d80e7c4cd97a87ea15e
+    lodash: "npm:^4.18.1"
+    validator: "npm:~13.15.23"
+  checksum: 10c0/83301e0171ec2f1b5ff73f538f36ebe73d86a4e63b621c88b13b580a5334bd221405cbe37a619bec261512e09b3029d03ca3d7b703f2ec4e6b2890270f114fcb
   languageName: node
   linkType: hard
 
@@ -11761,10 +11761,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.21, lodash@npm:^4.17.15, lodash@npm:^4.17.21":
+"lodash@npm:4.17.21, lodash@npm:^4.17.15":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
+  languageName: node
+  linkType: hard
+
+"lodash@npm:^4.18.1":
+  version: 4.18.1
+  resolution: "lodash@npm:4.18.1"
+  checksum: 10c0/757228fc68805c59789e82185135cf85f05d0b2d3d54631d680ca79ec21944ec8314d4533639a14b8bcfbd97a517e78960933041a5af17ecb693ec6eecb99a27
   languageName: node
   linkType: hard
 
@@ -16226,10 +16233,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"validator@npm:~13.12.0":
-  version: 13.12.0
-  resolution: "validator@npm:13.12.0"
-  checksum: 10c0/21d48a7947c9e8498790550f56cd7971e0e3d724c73388226b109c1bac2728f4f88caddfc2f7ed4b076f9b0d004316263ac786a17e9c4edf075741200718cd32
+"validator@npm:~13.15.23":
+  version: 13.15.35
+  resolution: "validator@npm:13.15.35"
+  checksum: 10c0/1958ebcad578128d154853a2b9bf5b95e7738dcc7d1d065e50a969812272312ec379dcaf375b9d7545e04a71de6755f60f5a4b49c1405737a9c80e11da297eef
   languageName: node
   linkType: hard
 
