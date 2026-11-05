@@ -69,7 +69,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const t = await getTranslations('home')
 	const formatter = await getFormatter()
 
-	const [buildingsAgg, finishedAreasAgg, communityMembers] = await prisma.$transaction([
+	const [buildingsAgg, finishedAreasAgg, communityMembers] = await Promise.all([
 		prisma.claim.aggregate({
 			_sum: { buildings: true },
 			where: { active: true },

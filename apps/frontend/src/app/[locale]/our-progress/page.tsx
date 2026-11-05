@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: Promise<{ locale: Local
 	const t = await getTranslations('our-progress')
 	const formatter = new Intl.NumberFormat(locale)
 
-	const [activeClaims, finishedClaims, buildings, areas, finishedAreas, communityMembers] = await prisma.$transaction([
+	const [activeClaims, finishedClaims, buildings, areas, finishedAreas, communityMembers] = await Promise.all([
 		prisma.claim.count({ where: { active: true } }),
 		prisma.claim.count({ where: { active: true, finished: true } }),
 		prisma.claim.aggregate({
