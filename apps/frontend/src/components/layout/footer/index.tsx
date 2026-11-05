@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Group, Text } from '@mantine/core'
+import { ActionIcon, Box, Divider, Group, Text } from '@mantine/core'
 import Anchor from '@/components/core/Anchor'
 
 import Link from '@/components/core/Link'
@@ -10,6 +10,12 @@ import React from 'react'
 const links = [
 	{ link: '/contact', key: 'contact' },
 	{ link: 'https://status.buildtheearth.net', key: 'status' },
+]
+
+const legalLinks = [
+	{ link: '/legal/impressum', key: 'impressum' },
+	{ link: '/legal/privacy', key: 'privacy' },
+	{ link: '/legal/terms-of-service', key: 'tos' },
 ]
 
 interface FooterProps {
@@ -25,10 +31,16 @@ export default function Footer({ style }: FooterProps) {
 			c="dimmed"
 			key={link.link}
 			href={link.link}
-			size="sm"
+			size="xs"
 			data-umami-event={`footer-link-click`}
 			data-umami-event-url={link.link}
 		>
+			{tLinks(link.key)}
+		</Anchor>
+	))
+
+	const legalItems = legalLinks.map((link) => (
+		<Anchor c="dimmed" key={link.link} href={link.link} size="xs">
 			{tLinks(link.key)}
 		</Anchor>
 	))
@@ -39,8 +51,8 @@ export default function Footer({ style }: FooterProps) {
 				<Text style={{ fontSize: '14px' }} c="dimmed" variant="text" className={classes.copyright}>
 					{t('copyright', { year: new Date().getFullYear() })}
 				</Text>
-				<Group className={classes.links}>
-					{items}
+				<Group gap="xs" wrap="wrap">
+					{' '}
 					<ActionIcon
 						component={Link}
 						href="https://go.buildtheearth.net/dc"
@@ -54,6 +66,9 @@ export default function Footer({ style }: FooterProps) {
 					>
 						<IconBrandDiscord />
 					</ActionIcon>
+					{items}
+					<Divider orientation="vertical" />
+					{legalItems}
 				</Group>
 			</Box>
 		</Box>

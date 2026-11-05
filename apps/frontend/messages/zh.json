@@ -46,7 +46,10 @@
 			"status": "狀態",
 			"gallery": "畫廊",
 			"map": "地圖",
-			"discord": "Discord"
+			"discord": "Discord",
+			"tos": "服務條款",
+			"privacy": "隱私政策",
+			"impressum": "法律聲明"
 		},
 		"cookieBanner": {
 			"title": "Cookie 設定",
