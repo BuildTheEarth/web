@@ -57,7 +57,10 @@
 			"status": "Statut",
 			"gallery": "Galerie",
 			"map": "Carte",
-			"discord": "Discord"
+			"discord": "Discord",
+			"tos": "Conditions d'utilisation",
+			"privacy": "Politique de confidentialité",
+			"impressum": "Mentions légales"
 		},
 		"cookieBanner": {
 			"title": "Paramètres des cookies",
