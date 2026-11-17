@@ -7,16 +7,16 @@ For local setup (Node, Yarn, env files, database), see the [README](README.md).
 ## Branches
 
 - `main` is the only long-lived branch and is in a releasable state
-- Create a short-lived branch from `main` for each piece of work:
+- Create a short-lived branch from `main` for each piece of work, named after its Kaneo task:
 
   ```
-  <type>/<app>-<short-description>[-<issue>]
+  web-<number>-<short-description>
   ```
 
-  Examples: `fix/dashboard-apply-errors-123`, `feat/frontend-legal-pages-87`, `chore/worker-deps`
+  Examples: `web-42-apply-errors`, `web-87-legal-pages`
 
-- `<type>` is one of the commit types below. `<app>` is one of `dashboard`, `frontend`, `api`, `worker`, `db`, `shared` or `mono`.
-- Urgent fixes use the `hotfix/` prefix instead of `fix/`. See [Hotfixes](#hotfixes).
+- `<number>` is the Kaneo task number (the `WEB-<number>` shown on the task). Kaneo links the branch to the task automatically, and pushing the branch moves the task to in-progress.
+- The type (`feat`, `fix`, …) is not part of the branch name. It goes in the PR title, see [Commits and pull request titles](#commits-and-pull-request-titles).
 - Delete the branch after it is merged.
 
 ## Commits and pull request titles
@@ -35,7 +35,7 @@ Pull requests are **squash-merged**, so the **PR title** becomes the commit mess
 
 ## Issues
 
-Use the issue forms.
+Use the issue forms. GitHub is the source of truth: every issue syncs two ways with Kaneo and gets its task (`WEB-<number>`) automatically. Create issues here, not tasks in Kaneo.
 
 - **Bug report**: something is broken or behaves unexpectedly.
 - **Feature request**: something new you would like to see.
@@ -51,6 +51,20 @@ Every new issue gets `needs-triage`.
 
 To work on an issue, comment or assign yourself so others know it is taken.
 
+Labels can be added, removed or changed during triage, directly on the GitHub issue. The change syncs to Kaneo. The `status:*` and `priority:*` labels follow the task in Kaneo. Do not edit `status:*` by hand.
+
+## Task status
+
+Kaneo moves each task automatically from its branch and pull request:
+
+| Event                          | Kaneo status  |
+| ------------------------------ | ------------- |
+| Branch `web-<number>-…` pushed | `in-progress` |
+| PR opened                      | `in-review`   |
+| PR merged                      | `done`        |
+
+A `done` task does not move again when its branch gets more pushes. For follow-up work, open a new issue and branch.
+
 ## Pull requests
 
 1. Open the PR as a **draft** while it is still in progress.
@@ -65,7 +79,7 @@ Keep PRs small. One issue, one branch, one PR is the goal.
 
 Use a hotfix for a bug that is breaking a released app and cannot wait for the normal flow.
 
-1. Branch from `main`: `git switch -c hotfix/<app>-<short-description>`. Keep the change as small as possible.
+1. Make sure the bug has its own issue, and so its own Kaneo task. Branch from `main`: `git switch -c web-<number>-<short-description>`. Keep the change as small as possible.
 2. Open the PR as usual, with a `fix(<app>): 🐛 …` title and the word "Hotfix" at the top of the description.
 3. One approving review is still the default. If no reviewer is available in time, a maintainer with bypass rights may merge without one. Say so in the PR.
 4. After the merge, release a patch from an up-to-date `main` (see [Releases](#releases)).
@@ -77,7 +91,7 @@ Because `main` is always releasable, a hotfix can be released straight from `mai
 AI coding agents are welcome if a human stays responsible for the result. The detailed rules for agents are in [`AGENTS.md`](AGENTS.md) and [`docs/agents/`](docs/agents/). In short:
 
 - Agents only pick up issues labelled `ready-for-agent`.
-- An agent claims its issue by assigning itself before starting work.
+- An agent claims its issue by assigning itself before starting work. Pushing its `web-<number>-…` branch moves the task to in-progress.
 - Changes are left uncommitted until a human has checked them.
 - Agent-authored PRs are opened as drafts, and a human reviews and merges them.
 - Agents do not write automated tests in this repository. Verification is done by a person, described in the PR.
