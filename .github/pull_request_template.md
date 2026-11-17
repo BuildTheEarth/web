@@ -4,6 +4,8 @@
 
 Closes #
 
+<!-- The branch name links this PR to its Kaneo task automatically. -->
+
 ## How to verify
 
 <!-- Steps a reviewer can follow to check the change. Automated tests are not required. -->

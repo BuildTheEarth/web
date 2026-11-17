@@ -1,6 +1,6 @@
 # Issue tracker: GitHub
 
-Issues and specs for this repo live as GitHub issues. Use the `gh` CLI for all operations.
+Issues and specs for this repo live as GitHub issues, and GitHub is the source of truth. Each issue syncs two ways with the Kaneo project `WEB`, which creates its task automatically. Don't create tasks directly in Kaneo. Use the `gh` CLI for all operations.
 
 For the contributor-facing process (issue forms, labels, PR rules, branch and commit conventions), see [`CONTRIBUTING.md`](../../CONTRIBUTING.md).
 
