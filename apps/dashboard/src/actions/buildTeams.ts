@@ -888,7 +888,12 @@ export const reviewApplication = async ({
 			reviewedAt: new Date(),
 			reason,
 		},
-		include: { user: true, buildteam: true },
+		include: {
+			user: true,
+			buildteam: true,
+			reviewer: true,
+			ApplicationAnswer: { include: { question: true } },
+		},
 	})
 
 	if (status === ApplicationStatus.TRIAL) {
@@ -1217,6 +1222,7 @@ const submitBuildTeamApplication = async (
 		include: {
 			reviewer: true,
 			user: true,
+			ApplicationAnswer: { include: { question: true } },
 		},
 	})
 
