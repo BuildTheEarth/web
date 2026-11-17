@@ -1,6 +1,15 @@
 'use client'
-import { ActionIcon, Stack, Tooltip } from '@mantine/core'
-import { IconCurrentLocation, IconHome, IconMaximize, IconMinus, IconPlus } from '@tabler/icons-react'
+import type { BaseLayer } from '@/util/mapLayers'
+import { ActionIcon, Menu, Stack, Tooltip } from '@mantine/core'
+import {
+	IconCheck,
+	IconCurrentLocation,
+	IconHome,
+	IconLayersSubtract,
+	IconMaximize,
+	IconMinus,
+	IconPlus,
+} from '@tabler/icons-react'
 import { useEffect, useState } from 'react'
 import { Marker, useMap } from 'react-map-gl/maplibre'
 import classes from './CustomMapControls.module.css'
@@ -14,6 +23,9 @@ interface CustomMapControlsProps {
 	layers?: { [layerName: string]: React.ElementType }
 	partialLayers?: string[]
 	onToggleLayer?: (layerName: string) => void
+	baseLayers?: BaseLayer[]
+	activeBaseLayerId?: string
+	onBaseLayerChange?: (id: string) => void
 }
 
 export const CustomMapControls = ({
@@ -25,6 +37,9 @@ export const CustomMapControls = ({
 	layers = {},
 	partialLayers = [],
 	onToggleLayer,
+	baseLayers = [],
+	activeBaseLayerId,
+	onBaseLayerChange,
 }: CustomMapControlsProps) => {
 	const { current: map } = useMap()
 	const [isFullscreen, setIsFullscreen] = useState(false)
@@ -78,6 +93,32 @@ export const CustomMapControls = ({
 		<>
 			<div className={classes.controlsContainer} data-position={position}>
 				<Stack gap="xs">
+					{/* Base layer switcher */}
+					{baseLayers.length > 1 && onBaseLayerChange && (
+						<Menu position="left-start" withinPortal={false} shadow="md">
+							<Menu.Target>
+								<ActionIcon
+									variant="default"
+									size="lg"
+									aria-label="Change base layer"
+									className={classes.controlButton}
+								>
+									<IconLayersSubtract size={18} stroke={2} />
+								</ActionIcon>
+							</Menu.Target>
+							<Menu.Dropdown>
+								{baseLayers.map((layer) => (
+									<Menu.Item
+										key={layer.id}
+										onClick={() => layer.id !== activeBaseLayerId && onBaseLayerChange(layer.id)}
+										rightSection={layer.id === activeBaseLayerId ? <IconCheck size={14} /> : null}
+									>
+										{layer.name}
+									</Menu.Item>
+								))}
+							</Menu.Dropdown>
+						</Menu>
+					)}
 					{/* Layer visibility controls */}
 					{layerVisibility && onToggleLayer && (
 						<div className={classes.controlGroup}>

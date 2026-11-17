@@ -34,7 +34,8 @@ See the global Readme file.
 | INTERNAL_API_KEY             | internalsecret                                                 | A secret used by the website to send custom api requests to itself |
 | NEXT_PUBLIC_FRONTEND_URL     | https://yourserver.net                                         | The URL to your local or deployed BuildTheEarth Website            |
 | FRONTEND_KEY                 | thirdtopsecret                                                 | The Key used to Authenticate against the BuildTheEarth Website     |
-| NEXT_PUBLIC_MAPBOX_TOKEN     | fourthtopsecret                                                | Your personal mapbox studio token                                  |
+| NEXT_PUBLIC_MAPBOX_TOKEN     | fourthtopsecret                                                | Your mapbox token (only used for satellite imagery)                |
+| NEXT_PUBLIC_MAP_STYLE_URL    | Light&#124;https://…/style.json,Satellite&#124;satellite       | Comma separated list of map base layers as Name&#124;URL           |
 | DATABASE_URL                 | postgresql://user:password@server:5432/database?pool_timeout=0 | Your Database connection string                                    |
 | REPORTS_WEBHOOK              | https://discord.com/api/webhooks/...                           | A discord webhook to send reports to                               |
 | DISCORD_BOT_URL              | https://bot.yourserver.net/...                                 | The URL to your local or delpolyed BuildTheEarth Main Bot          |

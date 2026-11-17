@@ -53,8 +53,12 @@ const nextConfig: NextConfig = {
 			}
 		}
 
-		const mapStyleOrigin = getOrigin(process.env.NEXT_PUBLIC_MAP_STYLE_URL)
-		const mapStylePathPrefix = process.env.NEXT_PUBLIC_MAP_STYLE_URL?.split('/styles/')[0]
+		// NEXT_PUBLIC_MAP_STYLE_URL is a comma separated list of `Name|URL` entries
+		const mapStyleUrls = (process.env.NEXT_PUBLIC_MAP_STYLE_URL || '')
+			.split(',')
+			.map((entry) => entry.slice(entry.indexOf('|') + 1).trim())
+			.filter((url) => url.startsWith('http'))
+		const mapStyleSources = mapStyleUrls.flatMap((url) => [getOrigin(url), url.split('/styles/')[0]])
 		const keycloakOrigin = getOrigin(process.env.NEXT_PUBLIC_KEYCLOAK_URL)
 
 		const connectSources = [
@@ -62,8 +66,7 @@ const nextConfig: NextConfig = {
 			process.env.NEXT_PUBLIC_KEYCLOAK_URL,
 			keycloakOrigin,
 			process.env.NEXT_PUBLIC_CDN_URL,
-			mapStyleOrigin,
-			mapStylePathPrefix,
+			...mapStyleSources,
 			'https://api.mapbox.com',
 			'https://*.tiles.mapbox.com',
 			'https://events.mapbox.com',
