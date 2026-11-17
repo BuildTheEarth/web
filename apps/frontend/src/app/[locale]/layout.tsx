@@ -5,7 +5,7 @@ import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server
 import { notFound } from 'next/navigation'
 import CookieConsent from '@/components/CookieConsent'
 import { Metadata } from 'next'
-import { getLocalizedUrl } from '@/util/seo'
+import { getLocalizedUrl, getMetadataBase } from '@/util/seo'
 
 export function generateStaticParams() {
 	return routing.locales.map((locale) => ({ locale }))
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 	const t = (await getTranslations({ namespace: 'seo', locale })) as any
 
 	return {
-		metadataBase: new URL(process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://buildtheearth.net'),
+		metadataBase: getMetadataBase(),
 		title: { default: t('title.default'), template: t('title.template') },
 		description: t('description'),
 		generator: t('site_name'),

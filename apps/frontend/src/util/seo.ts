@@ -1,5 +1,9 @@
 import { routing } from '@/i18n/routing'
 
+export function getMetadataBase(): URL {
+	return new URL(process.env.NEXT_PUBLIC_FRONTEND_URL || 'https://buildtheearth.net')
+}
+
 export function getLocalizedPath(locale: string, path: string): string {
 	const normalizedPath = path.startsWith('/') ? path : `/${path}`
 

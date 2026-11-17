@@ -26,7 +26,7 @@ function applySessionCookies(response: NextResponse, req: any) {
 	return response
 }
 
-const proxy = withAuth(
+const authProxy = withAuth(
 	function handler(req) {
 		const token = req.nextauth.token
 		const { pathname } = req.nextUrl
@@ -86,6 +86,16 @@ const proxy = withAuth(
 		},
 	},
 )
+
+const SERVER_ACTION_ID_PATTERN = /^[0-9a-f]+$/
+
+const proxy: typeof authProxy = (req, event) => {
+	const actionId = req.headers.get('next-action')
+	if (actionId !== null && !SERVER_ACTION_ID_PATTERN.test(actionId)) {
+		return new NextResponse('Bad Request', { status: 400 })
+	}
+	return authProxy(req, event)
+}
 
 export { proxy }
 
