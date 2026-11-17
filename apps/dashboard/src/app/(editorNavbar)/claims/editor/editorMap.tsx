@@ -1,21 +1,14 @@
 'use client'
 
 import { useContextMenu } from '@/components/core/ContextMenu'
-import { CustomMapControls } from '@/components/map/CustomMapControls'
+import { BaseMap } from '@/components/map/BaseMap'
 import { MapContextMenu } from '@/components/map/MapContextMenu'
 import { showNotification } from '@mantine/notifications'
-import 'maplibre-gl/dist/maplibre-gl.css'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import MapGL, { Layer, MapRef, ScaleControl, Source } from 'react-map-gl/maplibre'
+import { Layer, MapRef, ScaleControl, Source } from 'react-map-gl/maplibre'
 import { TerraDraw, TerraDrawPolygonMode, TerraDrawSelectMode } from 'terra-draw'
 import { TerraDrawMapLibreGLAdapter } from 'terra-draw-maplibre-gl-adapter'
 import { useClaimEditorStore } from './store'
-
-const MAP_STYLE =
-	process.env.NEXT_PUBLIC_MAP_STYLE_URL ||
-	(process.env.NEXT_PUBLIC_MAPBOX_TOKEN
-		? `https://api.mapbox.com/styles/v1/mapbox/dark-v11?access_token=${process.env.NEXT_PUBLIC_MAPBOX_TOKEN}`
-		: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json')
 
 function ensureClosedCoordinates(coords: number[][]): number[][] {
 	if (!coords || coords.length === 0) return coords
@@ -41,6 +34,8 @@ export default function EditorMap() {
 	const [isTerraDrawReady, setIsTerraDrawReady] = useState(false)
 	const mapRef = useRef<MapRef>(null)
 	const drawRef = useRef<TerraDraw | null>(null)
+	// Draw state carried over while the map is rebuilt for a new base layer
+	const drawRestoreRef = useRef<{ features: any[]; mode: string; selectedId: string | null } | null>(null)
 
 	const selectedClaimId = useClaimEditorStore((s) => s.selectedClaimId)
 	const claims = useClaimEditorStore((s) => s.claims)
@@ -227,6 +222,29 @@ export default function EditorMap() {
 		}
 	}, [setDrawInstance])
 
+	// Switching the base layer rebuilds the map and drops the draw layers, so keep the drawn polygons and restore them in onLoad
+	const handleBeforeBaseLayerChange = useCallback(() => {
+		const draw = drawRef.current
+		if (!draw) return
+		try {
+			drawRestoreRef.current = {
+				features: draw
+					.getSnapshot()
+					.filter(
+						(f: any) => f.geometry.type === 'Polygon' && !f.properties?.selectionPoint && !f.properties?.midPoint,
+					),
+				mode: draw.getMode(),
+				selectedId: useClaimEditorStore.getState().selectedClaimId,
+			}
+			draw.stop()
+		} catch (e) {
+			console.warn(e)
+		}
+		drawRef.current = null
+		setDrawInstance(null)
+		setIsTerraDrawReady(false)
+	}, [setDrawInstance])
+
 	const handleContextMenu = (e: any) => {
 		const lngLat = e.lngLat || clientPosRef.current
 		if (lngLat) {
@@ -292,16 +310,16 @@ export default function EditorMap() {
 				oLat={contextCoords.lat}
 				oLng={contextCoords.lng}
 			/>
-			<MapGL
-				ref={mapRef}
+			<BaseMap
+				mapRef={mapRef}
+				controls={{ position: 'top-right', showZoom: true, showGeolocate: true, showFullscreen: true }}
+				onBeforeBaseLayerChange={handleBeforeBaseLayerChange}
 				initialViewState={{
 					longitude: 0,
 					latitude: 0,
 					zoom: 1.6,
 				}}
 				doubleClickZoom={false}
-				style={{ width: '100%', height: '100%' }}
-				mapStyle={MAP_STYLE}
 				interactiveLayerIds={['claims']}
 				onClick={handleMapClick}
 				onMouseMove={handleMapMouseMove}
@@ -401,7 +419,21 @@ export default function EditorMap() {
 					setDrawInstance(draw)
 					setIsTerraDrawReady(true)
 
-					if (typeof window !== 'undefined') {
+					const restore = drawRestoreRef.current
+					drawRestoreRef.current = null
+					if (restore) {
+						try {
+							draw.addFeatures(restore.features)
+							if (restore.selectedId && draw.hasFeature(restore.selectedId)) {
+								draw.setMode('select')
+								draw.selectFeature(restore.selectedId)
+							} else if (restore.mode === 'polygon') {
+								draw.setMode('polygon')
+							}
+						} catch (err) {
+							console.warn(err)
+						}
+					} else if (typeof window !== 'undefined') {
 						const searchParams = new URLSearchParams(window.location.search)
 						const initialClaimId = searchParams.get('id')
 						if (initialClaimId) {
@@ -470,9 +502,8 @@ export default function EditorMap() {
 						/>
 					</Source>
 				)}
-				<CustomMapControls position="top-right" showZoom={true} showGeolocate={true} showFullscreen={true} />
 				<ScaleControl position="bottom-right" />
-			</MapGL>
+			</BaseMap>
 		</div>
 	)
 }
