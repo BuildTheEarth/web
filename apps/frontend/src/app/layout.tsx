@@ -6,9 +6,11 @@ import '@mantine/notifications/styles.layer.css'
 
 import { MantineProvider, v8CssVariablesResolver } from '@mantine/core'
 import DEBUG_ScreenSizeCheck from '@/components/DEBUG_ScreenSizeCheck'
+import { getMetadataBase } from '@/util/seo'
 import { theme } from '@/util/theme'
 import { ModalsProvider } from '@mantine/modals'
 import { Notifications } from '@mantine/notifications'
+import type { Metadata } from 'next'
 import { Cairo, Inter } from 'next/font/google'
 import localFont from 'next/font/local'
 
@@ -21,6 +23,10 @@ const minecraftFont = localFont({
 	style: 'normal',
 	variable: '--font-minecraft',
 })
+
+export const metadata: Metadata = {
+	metadataBase: getMetadataBase(),
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
