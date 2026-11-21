@@ -1,4 +1,22 @@
-import { Alert, Box, CheckIcon, Code, Grid, GridCol, Group, SimpleGrid, ThemeIcon, Title } from '@mantine/core'
+import {
+	Alert,
+	Box,
+	CheckIcon,
+	Code,
+	Grid,
+	GridCol,
+	Group,
+	SimpleGrid,
+	Table,
+	TableTbody,
+	TableTd,
+	TableTh,
+	TableThead,
+	TableTr,
+	Text,
+	ThemeIcon,
+	Title,
+} from '@mantine/core'
 
 import { getUserPermissions } from '@/actions/getUser'
 import { Protection } from '@/components/Protection'
@@ -8,7 +26,7 @@ import { BuildTeamDisplay } from '@/components/data/BuildTeam'
 import { UserDisplay } from '@/components/data/User'
 import { ApplicationQuestions } from '@/util/application'
 import { getSession } from '@/util/auth'
-import { toHumanDateTime } from '@/util/date'
+import { toHumanDate, toHumanDateTime } from '@/util/date'
 import prisma from '@/util/db'
 import { ApplicationStatus } from '@repo/db'
 import { IconClockCheck, IconClockExclamation, IconClockX, IconInfoCircle } from '@tabler/icons-react'
@@ -49,6 +67,30 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 	})
 
 	if (!application) throw Error('Could not find Application')
+
+	const otherTeams = await prisma.buildTeam.findMany({
+		where: { members: { some: { id: application.userId } }, NOT: { slug } },
+		select: {
+			id: true,
+			slug: true,
+			name: true,
+			icon: true,
+			Application: {
+				where: {
+					userId: application.userId,
+					status: { in: [ApplicationStatus.ACCEPTED, ApplicationStatus.TRIAL] },
+					reviewedAt: { not: null },
+				},
+				orderBy: { reviewedAt: 'desc' },
+				take: 1,
+				select: { reviewedAt: true },
+			},
+		},
+	})
+	const joinedTeams = otherTeams
+		.map((t) => ({ ...t, joinedAt: t.Application[0]?.reviewedAt ?? null }))
+		.sort((a, b) => (b.joinedAt?.getTime() ?? -Infinity) - (a.joinedAt?.getTime() ?? -Infinity))
+	const joinedTeamsLimit = 10
 
 	return (
 		<Protection requiredBuildTeam={{ permission: 'team.application.review', slug }}>
@@ -172,6 +214,41 @@ export default async function Page({ params }: { params: Promise<{ id: string; s
 							This application does not have any questions answered. The applicant either did not answer any questions
 							or the application form did not have any questions at the time of application.
 						</Alert>
+					)}
+					<Title order={2} mt="xl" mb="md">
+						Joined Teams
+					</Title>
+					<Table>
+						<TableThead>
+							<TableTr>
+								<TableTh>Team</TableTh>
+								<TableTh>Joined</TableTh>
+							</TableTr>
+						</TableThead>
+						<TableTbody>
+							{joinedTeams.slice(0, joinedTeamsLimit).map((t) => (
+								<TableTr key={t.id}>
+									<TableTd>
+										<BuildTeamDisplay team={t} noAnchor />
+									</TableTd>
+									<TableTd>{t.joinedAt ? toHumanDate(t.joinedAt) : '-/-'}</TableTd>
+								</TableTr>
+							))}
+							{joinedTeams.length === 0 && (
+								<TableTr>
+									<TableTd colSpan={2}>
+										<Text fz="sm" c="dimmed">
+											No other teams joined
+										</Text>
+									</TableTd>
+								</TableTr>
+							)}
+						</TableTbody>
+					</Table>
+					{joinedTeams.length > joinedTeamsLimit && (
+						<Text fz="sm" c="dimmed" mt="xs">
+							+{joinedTeams.length - joinedTeamsLimit} more
+						</Text>
 					)}
 					<Title order={2} mt="xl" mb="md">
 						Review
