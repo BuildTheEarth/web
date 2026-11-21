@@ -266,3 +266,76 @@ export default function getCountryName(countryCode: string): string {
 export function getCountryNames(countryCodes: string[]): string[] {
 	return countryCodes.map((code) => getCountryName(code))
 }
+
+const LOOKUP_LOCALES = ['en', 'de', 'fr', 'es', 'it', 'nl', 'pl', 'pt', 'cs', 'tr', 'ru', 'ja', 'zh']
+
+// Names that Intl.DisplayNames or Nominatim use but our ISO list or the locales above don't
+const COUNTRY_NAME_OVERRIDES: { [name: string]: string } = {
+	'czech republic': 'CZ',
+	turkey: 'TR',
+	burma: 'MM',
+	macedonia: 'MK',
+	swaziland: 'SZ',
+	'ivory coast': 'CI',
+	'east timor': 'TL',
+	'the netherlands': 'NL',
+	'the gambia': 'GM',
+	russia: 'RU',
+	vietnam: 'VN',
+}
+
+const normalizeCountryName = (name: string) => name.normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase()
+
+const countryNameLookup: Map<string, string> = (() => {
+	const lookup = new Map<string, string>()
+	const codes = Object.keys(isoCountries).filter((code) => code.length === 2)
+
+	codes.forEach((code) => lookup.set(normalizeCountryName(isoCountries[code]), code))
+
+	LOOKUP_LOCALES.forEach((locale) => {
+		let displayNames: Intl.DisplayNames
+		try {
+			displayNames = new Intl.DisplayNames([locale], { type: 'region' })
+		} catch {
+			return
+		}
+		codes.forEach((code) => {
+			try {
+				const name = displayNames.of(code)
+				if (name && name !== code && !lookup.has(normalizeCountryName(name))) {
+					lookup.set(normalizeCountryName(name), code)
+				}
+			} catch {}
+		})
+	})
+
+	Object.entries(COUNTRY_NAME_OVERRIDES).forEach(([name, code]) => lookup.set(name, code))
+	return lookup
+})()
+
+/**
+ * Resolves a country name in any supported language to the canonical English name used in `isoCountries`.
+ * Returns `undefined` when the name is not a known country.
+ */
+export function normalizeCountryNameFromText(name: string): string | undefined {
+	const code = countryNameLookup.get(normalizeCountryName(name))
+	return code ? isoCountries[code] : undefined
+}
+
+/**
+ * Determines the country of a claim: the country at the end of its geocoded `osmName` if it is a real country,
+ * otherwise the primary country of its build team, otherwise 'Unknown'.
+ */
+export function resolveClaimCountry(osmName: string | null, teamLocation: string | null): string {
+	if (osmName) {
+		const parts = osmName.split(',')
+		const fromOsm = normalizeCountryNameFromText(parts[parts.length - 1])
+		if (fromOsm) return fromOsm
+	}
+
+	const primaryCode = teamLocation
+		?.split(',')
+		.map((c) => c.trim())
+		.filter(Boolean)[0]
+	return primaryCode ? getCountryName(primaryCode) : 'Unknown'
+}

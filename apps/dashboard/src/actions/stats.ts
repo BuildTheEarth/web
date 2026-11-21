@@ -3,7 +3,7 @@
 import { getSession } from '@/util/auth'
 import prisma from '@/util/db'
 import { ApplicationStatus } from '@repo/db'
-import getCountryName from '@/util/countries'
+import getCountryName, { resolveClaimCountry } from '@/util/countries'
 
 export interface StatsFilter {
 	teamId?: string
@@ -340,33 +340,10 @@ export const getGeographyStatisticsData = async () => {
 		return countryMap[normalized]
 	}
 
-	// Group claims using Hybrid Resolution Strategy
+	// Group claims by their resolved country
 	claims.forEach((claim) => {
 		const team = claim.buildTeam
-		let countryName = ''
-
-		// 1. Primary: actual geographical location from osmName
-		if (claim.osmName) {
-			const parts = claim.osmName.split(', ')
-			if (parts.length > 0) {
-				countryName = parts[parts.length - 1].trim()
-			}
-		}
-
-		// 2. Fallback: Build Team designated primary country code
-		if (!countryName || countryName === 'Unknown') {
-			const countryCodes = team.location
-				? team.location
-						.split(',')
-						.map((c) => c.trim())
-						.filter(Boolean)
-				: []
-			if (countryCodes.length > 0) {
-				countryName = getCountryName(countryCodes[0])
-			} else {
-				countryName = 'Unknown'
-			}
-		}
+		const countryName = resolveClaimCountry(claim.osmName, team.location)
 
 		const country = getOrCreateCountry(countryName)
 		country.claims++
@@ -412,24 +389,7 @@ export const getGeographyStatisticsData = async () => {
 			if (!cityName) return
 
 			const team = claim.buildTeam
-			let countryName = ''
-
-			if (claim.osmName) {
-				const parts = claim.osmName.split(', ')
-				if (parts.length > 0) {
-					countryName = parts[parts.length - 1].trim()
-				}
-			}
-
-			if (!countryName || countryName === 'Unknown') {
-				const countryCodes = team.location
-					? team.location
-							.split(',')
-							.map((c) => c.trim())
-							.filter(Boolean)
-					: []
-				countryName = countryCodes.length > 0 ? getCountryName(countryCodes[0]) : 'Unknown'
-			}
+			const countryName = resolveClaimCountry(claim.osmName, team.location)
 
 			const key = `${cityName}-${countryName}`
 			if (!cityMap[key]) {
@@ -465,7 +425,8 @@ export const getGeographyStatisticsData = async () => {
 		.sort((a, b) => b.claims - a.claims)
 		.slice(0, 10)
 
-	const totalCountries = countries.filter((c) => c.country !== 'Unknown').length
+	const NON_COUNTRIES = ['Unknown', 'Globe', 'Overseas Territories', 'Crown Dependencies']
+	const totalCountries = countries.filter((c) => c.claims > 0 && !NON_COUNTRIES.includes(c.country)).length
 	const totalCities = Object.keys(cityMap).length
 	const totalTeamsMapped = teams.filter((t) => t.location).length
 

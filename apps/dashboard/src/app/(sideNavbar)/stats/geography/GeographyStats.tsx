@@ -96,7 +96,7 @@ export default function GeographyStats({ initialData }: GeographyStatsProps) {
 						title="Active Countries"
 						icon={IconWorld}
 						value={formatNumber(data.globalTotals.totalCountries)}
-						subtitle="Countries represented by build teams"
+						subtitle="Countries with at least one claim"
 					/>
 					<Stat
 						title="Mapped Cities & Towns"
