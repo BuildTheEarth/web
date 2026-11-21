@@ -2,15 +2,17 @@
 
 import { createShowcase, createStandaloneUpload, editShowcase } from '@/actions/showcases'
 import { Button, CopyButton, FileInput, Group, Stack, TextInput } from '@mantine/core'
+import { DateInput } from '@mantine/dates'
 import { useForm } from '@mantine/form'
 import { closeAllModals, openModal } from '@mantine/modals'
 import { showNotification } from '@mantine/notifications'
 import { IconUpload } from '@tabler/icons-react'
+import dayjs from 'dayjs'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { ShowcaseRow } from './datatable'
 
-const toDateInput = (date: Date | string) => new Date(date).toISOString().slice(0, 10)
+const toDateInput = (date: Date | string) => dayjs(date).format('YYYY-MM-DD')
 
 const onError = (e: Error) => showNotification({ title: 'Error', message: e.message, color: 'red' })
 
@@ -57,11 +59,11 @@ function UploadForm({ slug }: { slug: string }) {
 			/>
 			<TextInput label="Title" mt="md" required {...form.getInputProps('title')} />
 			<TextInput label="City" mt="md" {...form.getInputProps('city')} />
-			<TextInput
+			<DateInput
 				label="Build date"
-				type="date"
 				mt="md"
-				max={toDateInput(new Date())}
+				maxDate={toDateInput(new Date())}
+				required
 				{...form.getInputProps('createdAt')}
 			/>
 			<Group justify="end" mt="lg">
@@ -190,11 +192,11 @@ function EditForm({ slug, showcase, onDone }: { slug: string; showcase: Showcase
 		>
 			<TextInput label="Title" required {...form.getInputProps('title')} />
 			<TextInput label="City" mt="md" {...form.getInputProps('city')} />
-			<TextInput
+			<DateInput
 				label="Build date"
-				type="date"
 				mt="md"
-				max={toDateInput(new Date())}
+				maxDate={toDateInput(new Date())}
+				required
 				{...form.getInputProps('createdAt')}
 			/>
 			<Group justify="end" mt="lg">
