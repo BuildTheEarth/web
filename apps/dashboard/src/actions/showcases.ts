@@ -15,6 +15,14 @@ async function assertCanEditShowcases(slug: string) {
 	}
 }
 
+function parseDate(value: unknown) {
+	if (value === undefined || value === null || value === '') return undefined
+	const date = new Date(`${String(value)}T12:00:00Z`)
+	if (Number.isNaN(date.getTime())) throw Error('Invalid date')
+	if (date.getTime() > Date.now() + 24 * 60 * 60 * 1000) throw Error('The date cannot be in the future')
+	return date
+}
+
 async function rerenderFrontend(slug: string) {
 	revalidatePath(`/team/${slug}/images`)
 	await revalidateWebsitePaths(['/gallery', `/teams/${slug}`])
@@ -27,6 +35,7 @@ export const createShowcase = async (slug: string, formData: FormData) => {
 	const city = String(formData.get('city') ?? '').trim()
 
 	if (!title) throw Error('A title is required')
+	const createdAt = parseDate(formData.get('createdAt'))
 
 	const team = await prisma.buildTeam.findFirst({ where: { slug }, select: { id: true } })
 	if (!team) throw Error('Could not find Build Team')
@@ -71,15 +80,20 @@ export const createStandaloneUpload = async (slug: string, formData: FormData) =
 	}
 }
 
-export const editShowcase = async (slug: string, id: string, data: { title: string; city: string }) => {
+export const editShowcase = async (
+	slug: string,
+	id: string,
+	data: { title: string; city: string; createdAt?: string },
+) => {
 	await assertCanEditShowcases(slug)
 
 	const title = data.title.trim()
 	if (!title) throw Error('A title is required')
+	const createdAt = parseDate(data.createdAt)
 
 	const { count } = await prisma.showcase.updateMany({
 		where: { id, buildTeam: { slug } },
-		data: { title, city: data.city.trim() },
+		data: { title, city: data.city.trim(), createdAt },
 	})
 	if (!count) throw Error('Showcase not found')
 
