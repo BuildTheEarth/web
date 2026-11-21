@@ -10,13 +10,15 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { ShowcaseRow } from './datatable'
 
+const toDateInput = (date: Date | string) => new Date(date).toISOString().slice(0, 10)
+
 const onError = (e: Error) => showNotification({ title: 'Error', message: e.message, color: 'red' })
 
 function UploadForm({ slug }: { slug: string }) {
 	const router = useRouter()
 	const [loading, setLoading] = useState(false)
-	const form = useForm<{ image: File | null; title: string; city: string }>({
-		initialValues: { image: null, title: '', city: '' },
+	const form = useForm<{ image: File | null; title: string; city: string; createdAt: string }>({
+		initialValues: { image: null, title: '', city: '', createdAt: toDateInput(new Date()) },
 		validate: {
 			image: (v) => (v ? null : 'Select an image'),
 			title: (v) => (v.trim() ? null : 'A title is required'),
@@ -31,6 +33,7 @@ function UploadForm({ slug }: { slug: string }) {
 				data.set('image', values.image!)
 				data.set('title', values.title)
 				data.set('city', values.city)
+				data.set('createdAt', values.createdAt)
 				await createShowcase(slug, data)
 					.then(() => {
 						closeAllModals()
@@ -54,6 +57,13 @@ function UploadForm({ slug }: { slug: string }) {
 			/>
 			<TextInput label="Title" mt="md" required {...form.getInputProps('title')} />
 			<TextInput label="City" mt="md" {...form.getInputProps('city')} />
+			<TextInput
+				label="Build date"
+				type="date"
+				mt="md"
+				max={toDateInput(new Date())}
+				{...form.getInputProps('createdAt')}
+			/>
 			<Group justify="end" mt="lg">
 				<Button type="submit" color="green" loading={loading}>
 					Upload
@@ -161,7 +171,7 @@ export function UploadStandaloneImageButton({ slug }: { slug: string }) {
 function EditForm({ slug, showcase, onDone }: { slug: string; showcase: ShowcaseRow; onDone: () => void }) {
 	const [loading, setLoading] = useState(false)
 	const form = useForm({
-		initialValues: { title: showcase.title, city: showcase.city },
+		initialValues: { title: showcase.title, city: showcase.city, createdAt: toDateInput(showcase.createdAt) },
 		validate: { title: (v: string) => (v.trim() ? null : 'A title is required') },
 	})
 
@@ -180,6 +190,13 @@ function EditForm({ slug, showcase, onDone }: { slug: string; showcase: Showcase
 		>
 			<TextInput label="Title" required {...form.getInputProps('title')} />
 			<TextInput label="City" mt="md" {...form.getInputProps('city')} />
+			<TextInput
+				label="Build date"
+				type="date"
+				mt="md"
+				max={toDateInput(new Date())}
+				{...form.getInputProps('createdAt')}
+			/>
 			<Group justify="end" mt="lg">
 				<Button type="submit" color="green" loading={loading}>
 					Save
