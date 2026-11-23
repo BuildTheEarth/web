@@ -3507,39 +3507,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tabler/icons-react@npm:^3.31.0":
-  version: 3.34.0
-  resolution: "@tabler/icons-react@npm:3.34.0"
+"@tabler/icons-react@npm:^3.52.0":
+  version: 3.52.0
+  resolution: "@tabler/icons-react@npm:3.52.0"
   dependencies:
-    "@tabler/icons": "npm:3.34.0"
+    "@tabler/icons": "npm:3.52.0"
   peerDependencies:
     react: ">= 16"
-  checksum: 10c0/b2d094c6ae02fc157d9a059e06c65b1dd49a96c7fc77a57bc9acf289899df66504bcab533e7a22d9ec3ca7c3952176c6c916e84aff827b24d2c69ecc7bfc737d
+  checksum: 10c0/356a04ea42cc4fdbe9d76d336b493e3d6d768445767cca13b5474997367de069ce4f77512c2b5dd857250b1e6f12d39b92fd47d5e27558b859581a3a4674f8e6
   languageName: node
   linkType: hard
 
-"@tabler/icons-react@npm:^3.9.0":
-  version: 3.20.0
-  resolution: "@tabler/icons-react@npm:3.20.0"
-  dependencies:
-    "@tabler/icons": "npm:3.20.0"
-  peerDependencies:
-    react: ">= 16"
-  checksum: 10c0/468aa5034c489e6db443cafbf20a3794ef5f2ad7dc719dca8ce957fd19ea5d94f6ad8ada4c68b7621d6e5cdf747e40f6b2cc65e89c5a4f2b21e4ea727dd1b67c
-  languageName: node
-  linkType: hard
-
-"@tabler/icons@npm:3.20.0":
-  version: 3.20.0
-  resolution: "@tabler/icons@npm:3.20.0"
-  checksum: 10c0/81650ed119f1a87fabe55dc33f4956a5e427cfad48629ac3ea1b8946486935c3206ff20aad080270a5df4f3080848dbb8e22c6dfa0a9290cf111a228ef1fefc9
-  languageName: node
-  linkType: hard
-
-"@tabler/icons@npm:3.34.0":
-  version: 3.34.0
-  resolution: "@tabler/icons@npm:3.34.0"
-  checksum: 10c0/7b4bb937e051ece9258ab4321363f284a4c1d53fbe0211c6976bff41d0ca031e8196156595bb30fa2bfb963f1771814d1438aa01a4422df9a6e21a46ebe6cc9b
+"@tabler/icons@npm:3.52.0":
+  version: 3.52.0
+  resolution: "@tabler/icons@npm:3.52.0"
+  checksum: 10c0/80cfbec0e159a7ec6786fd15903e75aa74c037cdcd011ec12ec497f21c85691e794b59175b283e0b667d5b223c09a71d013066b90cf06bb08e080522a47ea38f
   languageName: node
   linkType: hard
 
@@ -8050,7 +8032,7 @@ __metadata:
     "@repo/prettier-config": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/typescript-config": "npm:*"
-    "@tabler/icons-react": "npm:^3.9.0"
+    "@tabler/icons-react": "npm:^3.52.0"
     "@tiptap/core": "npm:^3.32.2"
     "@tiptap/extension-highlight": "npm:^3.32.2"
     "@tiptap/extension-link": "npm:^3.32.2"
@@ -10084,7 +10066,7 @@ __metadata:
     "@repo/prettier-config": "npm:*"
     "@repo/shared": "npm:*"
     "@repo/typescript-config": "npm:*"
-    "@tabler/icons-react": "npm:^3.31.0"
+    "@tabler/icons-react": "npm:^3.52.0"
     "@types/node": "npm:^22"
     "@types/react": "npm:19.2.18"
     "@types/react-dom": "npm:19.2.4"

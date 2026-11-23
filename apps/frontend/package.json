@@ -26,7 +26,7 @@
 		"@prisma/adapter-pg": "^7.8.0",
 		"@repo/db": "*",
 		"@repo/shared": "*",
-		"@tabler/icons-react": "^3.31.0",
+		"@tabler/icons-react": "^3.52.0",
 		"clsx": "^2.1.1",
 		"embla-carousel": "^8.5.2",
 		"embla-carousel-react": "^8.5.2",
